@@ -11,10 +11,11 @@ public import Erdos1172.ForMathlib.SetTheory.Ordinal.PartitionRelationAPI
 @[expose] public section
 
 /-!
-# Consequences and reductions for Erdős Problem 1172
+# Consequences and order bounds for Erdős Problem 1172
 
-This file records unconditional order bounds, logical reductions between Parts 1--3,
-and the sharp elementary weakenings obtained by replacing either target by `2`.
+This file records unconditional order bounds for Parts 2--3 and the partial step toward
+original Part 1, together with the sharp elementary weakenings obtained by replacing either
+binary target by `2`.
 -/
 
 open Cardinal Ordinal
@@ -26,7 +27,13 @@ universe u
 private theorem two_lt_three : (2 : Ordinal.{u}) < 3 :=
   Nat.cast_lt.mpr (by decide)
 
-/-- The blue target in Part 1 is strictly below `ω₂`. -/
+/-- The countable-color partial-step target `ω₂ + 1` is strictly below `ω₃`. -/
+theorem omega_two_add_one_lt_omega_three : (ω_ 2 : Ordinal.{u}) + 1 < ω_ 3 := by
+  apply Ordinal.isPrincipal_add_omega
+  · exact Ordinal.omega_lt_omega.mpr two_lt_three
+  · exact Ordinal.one_lt_omega0.trans_le (Ordinal.omega0_le_omega 3)
+
+/-- The blue target in Part 3 is strictly below `ω₂`. -/
 theorem omega_one_add_two_lt_omega_two : (ω_ 1 : Ordinal.{u}) + 2 < ω_ 2 := by
   apply Ordinal.isPrincipal_add_omega
   · exact Ordinal.omega_lt_omega.mpr one_lt_two
@@ -62,41 +69,6 @@ theorem omega_one_opow_omega_add_two_add_two_lt_omega_two :
     Ordinal.isPrincipal_opow_omega 2
       (Ordinal.omega_lt_omega.mpr one_lt_two) hexponent
   exact Ordinal.isPrincipal_add_omega 2 hpower htwo
-
-/-- Part 2 implies Part 1, without using GCH. -/
-theorem part2_implies_part1
-    (h : Part2.{u}) : Part1.{u} :=
-  h.mono_targets le_self_add
-    (omega_one_add_two_lt_omega_two.le.trans le_self_add)
-
-/-- Adding Part 1 to Part 2 does not strengthen the assertion. -/
-theorem part2_iff_part1_and_part2 :
-    Part2.{u} ↔ Part1.{u} ∧ Part2.{u} := by
-  constructor
-  · intro h
-    exact ⟨part2_implies_part1 h, h⟩
-  · exact And.right
-
-/-- The conjunction of Parts 1--3 is equivalent to the conjunction of Parts 2--3. -/
-theorem parts123_iff_parts23 :
-    (Part1.{u} ∧ Part2.{u} ∧ Part3.{u}) ↔ (Part2.{u} ∧ Part3.{u}) := by
-  constructor
-  · rintro ⟨_, h2, h3⟩
-    exact ⟨h2, h3⟩
-  · rintro ⟨h2, h3⟩
-    exact ⟨part2_implies_part1 h2, h2, h3⟩
-
-/-- Part 1 with its red target weakened to `2`; this is unconditional. -/
-theorem part1_red_two :
-    OrdinalRamsey (ω_ 3 : Ordinal.{u}) 2 (ω_ 1 + 2) :=
-  OrdinalRamsey.two_left
-    (omega_one_add_two_lt_omega_two.le.trans
-      (Ordinal.omega_lt_omega.mpr two_lt_three).le)
-
-/-- Part 1 with its blue target weakened to `2`; this is unconditional. -/
-theorem part1_blue_two :
-    OrdinalRamsey (ω_ 3 : Ordinal.{u}) (ω_ 2) 2 :=
-  OrdinalRamsey.two_right (Ordinal.omega_lt_omega.mpr two_lt_three).le
 
 /-- Part 2 with its red target weakened to `2`; this is unconditional. -/
 theorem part2_red_two :

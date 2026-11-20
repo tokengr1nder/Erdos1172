@@ -113,7 +113,7 @@ theorem card_omega_one_add_one : (ω_ 1 + 1).card = ℵ_ 1 := by
   · exact Cardinal.aleph0_le_aleph 1
   · exact one_le_aleph0.trans (Cardinal.aleph0_le_aleph 1)
 
-/-- The red target in Part 1 has cardinality `ℵ₁`. -/
+/-- The blue target in Part 3 (`ω₁ + 2`) has cardinality `ℵ₁`. -/
 theorem card_omega_one_add_two : (ω_ 1 + 2).card = ℵ_ 1 := by
   rw [card_add, card_omega, card_ofNat, Cardinal.add_eq_left]
   · exact Cardinal.aleph0_le_aleph 1

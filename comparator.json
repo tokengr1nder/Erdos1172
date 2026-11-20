@@ -2,11 +2,11 @@
   "challenge_module": "Challenge",
   "solution_module": "Erdos1172.Solution",
   "theorem_names": [
-    "Erdos1172.erdos_1172",
-    "Erdos1172.erdos_1172.parts.i",
     "Erdos1172.erdos_1172.parts.ii",
     "Erdos1172.erdos_1172.parts.iii",
-    "Erdos1172.erdos_1172.parts.iv"
+    "Erdos1172.erdos_1172.parts.iv",
+    "Erdos1172.erdos_1172.variants.part1_omega_two_add_one",
+    "Erdos1172.erdos_1172.variants.parts_ii_iii_iv_and_part1_step"
   ],
   "definition_names": [],
   "permitted_axioms": ["propext", "Classical.choice", "Quot.sound"],

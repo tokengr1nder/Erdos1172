@@ -23,13 +23,16 @@ problem booklet `[Va99, 7.87]`, p. 13; Erdős–Hajnal `[ErHa74, p. 272]`):
 1. **Generalized Continuum Hypothesis (`Cardinal.GCH`)**:
    - Equivalent to `∀ o, ℶ_ o = ℵ_ o` (`gch_iff_beth_eq_aleph`) and to `2 ^ κ = κ⁺` for every
      infinite cardinal `κ` (`gch_iff_infinite_two_pow_eq_succ`).
-2. **Binary Ordinal Partition Relation (`OrdinalRamsey α β γ`)**:
-   - Equivalent to the standard set-theoretic `[α]² → {0, 1}` coloring formulation: for every
-     2-coloring of strictly increasing pairs `x < y` in a well-ordered set of order type `α`,
-     there is either a color-`false` strictly increasing sequence of order type `β` or a
-     color-`true` strictly increasing sequence of order type `γ` (`ordinalRamsey_iff_pairColoring`).
-   - Instantiated directly at Parts (i), (ii), and (iii) (`parts_i_pairColoring`,
-     `parts_ii_pairColoring`, `parts_iii_pairColoring`).
+2. **Binary & Countable-Color Ordinal Partition Relations (`OrdinalRamsey α β γ` and `OrdinalCountableRamsey α β`)**:
+   - `OrdinalRamsey α β γ` is equivalent to the standard `[α]² → {0, 1}` coloring formulation
+     with strictly increasing embeddings `β.ToType ↪o α.ToType` and `γ.ToType ↪o α.ToType`
+     (`ordinalRamsey_iff_pairColoring`), instantiated at Parts (ii) and (iii)
+     (`parts_ii_pairColoring`, `parts_iii_pairColoring`).
+   - `OrdinalCountableRamsey α β` is equivalent to the standard `[α]² → ℕ` countable-color
+     formulation with strictly increasing embeddings `β.ToType ↪o α.ToType`
+     (`ordinalCountableRamsey_iff_pairColoring`), instantiated at the partial step
+     `ω₃ → (ω₂ + 1)²_ω` (`part1_omega_two_add_one_pairColoring`) toward the open original
+     `[BHT93, p. 2]` Part (i) question `ω₃ → (ω₂ + 2)²_ω`.
 3. **Huge Cardinal Hypothesis (`IsHugeWithTarget κ θ` / `IsHugeCardinal κ`)**:
    - Automatically entails strong inaccessibility of both `κ` and `θ` (`huge_inaccessible_pair`),
      and yields the ground ultrapower elementary embedding `j : ZFSet.{0} → targetClass U`
@@ -38,8 +41,8 @@ problem booklet `[Va99, 7.87]`, p. 13; Erdős–Hajnal `[ErHa74, p. 272]`):
    - Classical Tarski soundness (`model_implies_consistent`): any classical `L_ZFC`-structure
      satisfying `gchPart4Theory` witnesses `gchPart4Theory.is_consistent`.
    - Explicit refutation checks (`refutes_not_part4Sentence`, `refutes_not_fullGCHSentence`,
-     `refutes_mem_emptyset`, `refutes_omega_eq_emptyset`) confirming that `gchPart4Theory`
-     non-vacuously entails `part4Sentence`, `fullGCHSentence`, and `ZFC`'s axioms.
+     `refutes_mem_emptyset`) confirming that `gchPart4Theory` non-vacuously entails
+     `part4Sentence`, `fullGCHSentence`, and `ZFC`'s axioms.
    - Exact two-valued (`V Prop`) Tarski realization of `fullGCHSentence` and `part4Sentence`
      (`realize_fullGCHSentence_prop`, `realize_part4Sentence_prop`).
 5. **Axiom Audit**:
@@ -68,7 +71,7 @@ theorem gch_iff_infinite_two_pow_eq_succ :
   · intro h o
     rw [h (ℵ_ o) (Cardinal.aleph0_le_aleph o), Cardinal.succ_aleph, Order.succ_eq_add_one]
 
-/-! ## 2. Faithfulness of `OrdinalRamsey` (Graph Cliques ↔ Pair Colorings & Order Embeddings) -/
+/-! ## 2. Faithfulness of `OrdinalRamsey` & `OrdinalCountableRamsey` -/
 
 /-- Textbook `[α]² → {false, true}` pair-coloring formulation of `α → (β, γ)²`. -/
 def PairColoringRamsey (α β γ : Ordinal.{0}) : Prop :=
@@ -157,9 +160,58 @@ theorem ordinalRamsey_iff_pairColoring (α β γ : Ordinal.{0}) :
           simp [c, hr'] at hc
       · exact g.orderIso.ordinalType_congr.symm.trans (Ordinal.type_toType γ)
 
-theorem parts_i_pairColoring (hGCH : Cardinal.GCH) :
-    PairColoringRamsey (ω_ 3) (ω_ 2) (ω_ 1 + 2) :=
-  (ordinalRamsey_iff_pairColoring _ _ _).mp (Erdos1172.erdos_1172.parts.i hGCH)
+/-- Textbook `[α]² → ℕ` pair-coloring formulation of `α → (β)²_ω`. -/
+def PairColoringCountableRamsey (α β : Ordinal.{0}) : Prop :=
+  ∀ c : {p : α.ToType × α.ToType // p.1 < p.2} → ℕ,
+    ∃ (n : ℕ) (f : β.ToType ↪o α.ToType),
+      ∀ x y (h : x < y), c ⟨(f x, f y), f.strictMono h⟩ = n
+
+theorem ordinalCountableRamsey_iff_pairColoring (α β : Ordinal.{0}) :
+    OrdinalCountableRamsey α β ↔ PairColoringCountableRamsey α β := by
+  classical
+  constructor
+  · intro h c
+    let colFun : α.ToType → α.ToType → ℕ := fun x y =>
+      if hxy : x < y then c ⟨(x, y), hxy⟩
+      else if hyx : y < x then c ⟨(y, x), hyx⟩
+      else 0
+    have hsymm : ∀ x y, colFun x y = colFun y x := by
+      intro x y
+      dsimp only [colFun]
+      by_cases hxy : x < y
+      · have hyx : ¬ y < x := lt_asymm hxy
+        simp [hxy, hyx]
+      · by_cases hyx : y < x
+        · simp [hxy, hyx]
+        · simp [hxy, hyx]
+    obtain ⟨n, s, hs, htype⟩ := h (Sym2.lift ⟨colFun, hsymm⟩)
+    have htype' :
+        Ordinal.type ((· < ·) : β.ToType → β.ToType → Prop) =
+        Ordinal.type ((· < ·) : s → s → Prop) :=
+      (Ordinal.type_toType β).trans htype.symm
+    obtain ⟨er⟩ := Ordinal.type_eq.mp htype'
+    let e : β.ToType ≃o s := OrderIso.ofRelIsoLT er
+    let f : β.ToType ↪o α.ToType := e.toOrderEmbedding.trans (OrderEmbedding.subtype (· ∈ s))
+    refine ⟨n, f, fun x y hxy => ?_⟩
+    have hlt : f x < f y := f.strictMono hxy
+    have hcol := hs (f x) (e x).2 (f y) (e y).2 hlt.ne
+    simpa [colFun, hlt] using hcol
+  · intro h col
+    let c : {p : α.ToType × α.ToType // p.1 < p.2} → ℕ := fun p => col s(p.1.1, p.1.2)
+    obtain ⟨n, f, hf⟩ := h c
+    refine ⟨n, Set.range f, ?_, ?_⟩
+    · rintro _ ⟨x, rfl⟩ _ ⟨y, rfl⟩ hne
+      rcases lt_trichotomy x y with hlt | rfl | hgt
+      · exact hf x y hlt
+      · exact absurd rfl hne
+      · rw [Sym2.eq_swap]
+        exact hf y x hgt
+    · exact f.orderIso.ordinalType_congr.symm.trans (Ordinal.type_toType β)
+
+theorem part1_omega_two_add_one_pairColoring (hGCH : Cardinal.GCH) :
+    PairColoringCountableRamsey (ω_ 3) (ω_ 2 + 1) :=
+  (ordinalCountableRamsey_iff_pairColoring _ _).mp
+    (Erdos1172.erdos_1172.variants.part1_omega_two_add_one hGCH)
 
 theorem parts_ii_pairColoring (hGCH : Cardinal.GCH) :
     PairColoringRamsey (ω_ 3) (ω_ 2 + ω_ 1) (ω_ 2 + ω) :=
@@ -246,33 +298,32 @@ theorem realize_part4Sentence_prop :
       (bSet.ErdosPartition.part4Value : Prop) :=
   realize_part4Sentence (β := Prop)
 
-#check Erdos1172.erdos_1172
-#check Erdos1172.erdos_1172.parts.i
 #check Erdos1172.erdos_1172.parts.ii
 #check Erdos1172.erdos_1172.parts.iii
 #check Erdos1172.erdos_1172.parts.iv
-#check Erdos1172.part1_of_gch
-#check Erdos1172.erdos_1172.part1
+#check Erdos1172.erdos_1172.variants.part1_omega_two_add_one
+#check Erdos1172.erdos_1172.variants.parts_ii_iii_iv_and_part1_step
+#check Erdos1172.erdos_1172.variants.part1_omega_two_add_one_univ
 #check Erdos1172.erdos_1172.part2
 #check Erdos1172.erdos_1172.part3
-#check Erdos1172.exact_parts123
-#check Erdos1172.exact_parts123_and_gchPart4_consistency_of_huge
+#check Erdos1172.exact_parts23_and_part1_step
+#check Erdos1172.exact_parts23_part1_step_and_gchPart4_consistency_of_huge
 
-#print axioms Erdos1172.erdos_1172
-#print axioms Erdos1172.erdos_1172.parts.i
 #print axioms Erdos1172.erdos_1172.parts.ii
 #print axioms Erdos1172.erdos_1172.parts.iii
 #print axioms Erdos1172.erdos_1172.parts.iv
-#print axioms Erdos1172.part1_of_gch
-#print axioms Erdos1172.erdos_1172.part1
+#print axioms Erdos1172.erdos_1172.variants.part1_omega_two_add_one
+#print axioms Erdos1172.erdos_1172.variants.parts_ii_iii_iv_and_part1_step
+#print axioms Erdos1172.erdos_1172.variants.part1_omega_two_add_one_univ
 #print axioms Erdos1172.erdos_1172.part2
 #print axioms Erdos1172.erdos_1172.part3
-#print axioms Erdos1172.exact_parts123
-#print axioms Erdos1172.exact_parts123_and_gchPart4_consistency_of_huge
+#print axioms Erdos1172.exact_parts23_and_part1_step
+#print axioms Erdos1172.exact_parts23_part1_step_and_gchPart4_consistency_of_huge
 #print axioms gch_iff_beth_eq_aleph
 #print axioms gch_iff_infinite_two_pow_eq_succ
 #print axioms ordinalRamsey_iff_pairColoring
-#print axioms parts_i_pairColoring
+#print axioms ordinalCountableRamsey_iff_pairColoring
+#print axioms part1_omega_two_add_one_pairColoring
 #print axioms parts_ii_pairColoring
 #print axioms parts_iii_pairColoring
 #print axioms huge_inaccessible_pair

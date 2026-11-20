@@ -5,6 +5,7 @@ Licensed under the Apache License, Version 2.0.
 module
 
 public import Mathlib.Combinatorics.SimpleGraph.Clique
+public import Mathlib.Data.Sym.Sym2
 public import Mathlib.Order.Filter.CardinalInter
 public import Mathlib.Order.Filter.Ultrafilter.Basic
 public import Mathlib.SetTheory.Cardinal.Aleph
@@ -17,10 +18,11 @@ public import Mathlib.SetTheory.Ordinal.Exponential
 # Statement Definitions for Erdős Problem 1172
 
 This self-contained Mathlib-only module defines every object appearing in the formal
-statements of Parts (i)–(iv) of [Erdős Problem 1172](https://www.erdosproblems.com/1172),
-assembled from Baumgartner–Hajnal–Todorčević (`[BHT93, p. 2]`, `arXiv:math/9311207`),
-the 1999 Budapest conference problem booklet (`[Va99, 7.87]`, p. 13), and
-Erdős–Hajnal (`[ErHa74, p. 272]`):
+statements of Parts (ii)–(iv) of [Erdős Problem 1172](https://www.erdosproblems.com/1172) and
+the countable-color partial step `ω₃ → (ω₂ + 1)²_ω` toward the open original Part (i)
+(`ω₃ → (ω₂ + 2)²_ω` under `GCH`), assembled from Baumgartner–Hajnal–Todorčević
+(`[BHT93, p. 2]`, `arXiv:math/9311207`), the 1999 Budapest conference problem booklet
+(`[Va99, 7.87]`, p. 13), and Erdős–Hajnal (`[ErHa74, p. 272]`):
 
 1. First-order logic with equality (`Fol.Language`, de Bruijn terms/formulas, the classical
    natural-deduction calculus `Fol.prf`, and syntactic consistency `Fol.SentTheory.is_consistent`)
@@ -29,7 +31,8 @@ Erdős–Hajnal (`[ErHa74, p. 272]`):
 2. The closed parameter-free `L_ZFC`-sentences `fullGCHSentence` (`∀ κ ≥ ω, 2^|κ| = |κ|⁺`),
    `part4Sentence` (`ω₂ → (ω₁ + ω, ω₁ + ω)²`), and `gchPart4Theory := ZFC ∪ {fullGCHSentence, part4Sentence}`.
 3. Kanamori's canonical `[θ]^{ot = κ}` huge-cardinal predicates `IsHugeWithTarget` and `IsHugeCardinal`.
-4. `Cardinal.CH`, `Cardinal.GCH`, `OrdinalRamsey`, and the Part 1–3 abbreviations `Erdos1172.Part1`, `Part2`, `Part3`.
+4. `Cardinal.CH`, `Cardinal.GCH`, `OrdinalRamsey`, `OrdinalCountableRamsey`, and the target
+   abbreviations `Erdos1172.Part1CountableStep`, `Part2`, `Part3`.
 -/
 
 set_option autoImplicit true
@@ -724,12 +727,23 @@ def OrdinalRamsey (α β γ : Ordinal.{u}) : Prop :=
   ∀ red blue : SimpleGraph α.ToType, IsCompl red blue →
     (∃ s, red.IsClique s ∧ typeLT s = β) ∨
     (∃ s, blue.IsClique s ∧ typeLT s = γ)
+
+/-- Countable-color balanced ordinary ordinal partition relation `α → (β)²_ω`: for every
+coloring `col : Sym2 α.ToType → ℕ` of unordered pairs from `α.ToType` with `ℕ`-many colors,
+there exist a color `n : ℕ` and a subset `s : Set α.ToType` of order type `typeLT s = β`
+all of whose distinct pairs receive color `n`. -/
+def OrdinalCountableRamsey (α β : Ordinal.{u}) : Prop :=
+  ∀ col : Sym2 α.ToType → ℕ,
+    ∃ (n : ℕ) (s : Set α.ToType),
+      (∀ x ∈ s, ∀ y ∈ s, x ≠ y → col s(x, y) = n) ∧
+      typeLT s = β
 end PartitionRelation
 
 namespace Erdos1172
-/-- Catalogue Part (i) target `ω₃ → (ω₂, ω₁ + 2)²` (reconstructed on `erdosproblems.com/1172`
-from the cropped `[Va99, 7.87]` scan; settled by Erdős–Rado 1956 and implied by `Part2`). -/
-abbrev Part1 : Prop := OrdinalRamsey (ω_ 3 : Ordinal.{u}) (ω_ 2) (ω_ 1 + 2)
+/-- Countable-color partial-step target `ω₃ → (ω₂ + 1)²_ω` toward the open original
+`[BHT93, p. 2]` / `[Va99, 7.87]` Part (i) question `ω₃ → (ω₂ + 2)²_ω` under `GCH` (also
+entailed under `GCH` by Erdős–Rado / `[BHT93, Theorem 2.1]`). -/
+abbrev Part1CountableStep : Prop := OrdinalCountableRamsey (ω_ 3 : Ordinal.{u}) (ω_ 2 + 1)
 /-- Part (ii) target `ω₃ → (ω₂ + ω₁, ω₂ + ω)²` (`[BHT93, p. 2]`, `[Va99, 7.87]`). -/
 abbrev Part2 : Prop := OrdinalRamsey (ω_ 3 : Ordinal.{u}) (ω_ 2 + ω_ 1) (ω_ 2 + ω)
 /-- Part (iii) target `ω₂ → (ω₁^(ω + 2) + 2, ω₁ + 2)²` (`[BHT93, p. 2]`, `[Va99, 7.87]`). -/

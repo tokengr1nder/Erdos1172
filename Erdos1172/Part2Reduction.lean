@@ -4,7 +4,7 @@ Licensed under the Apache License, Version 2.0.
 -/
 module
 
-public import Erdos1172.Part1
+public import Erdos1172.ForMathlib.SetTheory.Ordinal.ErdosRadoHigher
 
 @[expose] public section
 

@@ -18,7 +18,7 @@ theorem erdosRado_binary_instance (hGCH : GCH) :
     OrdinalRamsey (ω_ 2 : Ordinal.{0}) (ω_ 1 + 1) (ω_ 1 + 1) :=
   ErdosRado.ordinalRamsey_omegaTwo_omegaOne_add_one hGCH.toCH
 
-/-- The same CH theorem lifted to the `ω₃` source used by Parts 1 and 2 of
+/-- The same CH theorem lifted to the `ω₃` source used in Part 2 of
 Problem 1172. -/
 theorem erdosRado_omegaThree_instance (hCH : CH) :
     OrdinalRamsey (ω_ 3 : Ordinal.{0}) (ω_ 1 + 1) (ω_ 1 + 1) :=

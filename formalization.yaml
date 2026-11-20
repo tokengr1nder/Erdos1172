@@ -2,26 +2,30 @@
 version: v0.4
 
 project:
-  name: "Erdős 1172: GCH ordinal partition relations on ω₂ and ω₃ and huge-cardinal consistency of ω₂ → (ω₁ + ω)₂²"
+  name: "Erdős 1172: GCH ordinal partition relations on ω₂ and ω₃, huge-cardinal consistency of ω₂ → (ω₁ + ω)²₂, and the ω₃ → (ω₂ + 1)²_ω step"
   description: >-
-    Lean 4 formalization addressing the four parts of Erdős Problem 1172.
+    Lean 4 formalization of Parts (ii), (iii), and (iv) of Erdős Problem 1172
+    together with a countable-color partial step toward the original Part (i).
     Parts (ii) and (iii) are new mathematical results proved in ZFC + GCH
     (Cardinal.GCH): ω₃ → (ω₂ + ω₁, ω₂ + ω)² and ω₂ → (ω₁^(ω + 2) + 2, ω₁ + 2)²,
     matching Baumgartner, Hajnal, and Todorčević (1993, p. 2) and the 1999
     Budapest problem booklet [Va99, 7.87] verbatim, both previously open in the
-    set-theory literature. Part (i) as stated on erdosproblems.com/1172
-    (ω₃ → (ω₂, ω₁ + 2)² under GCH) is flagged as a mis-reconstruction of the
-    right-margin-cropped photocopy of [Va99, 7.87], already settled by the
-    Erdős-Rado theorem (1956) and implied by Part (ii); the original un-cropped
-    infinite-color question ω₃ → (ω₂ + 2)₂^ω under GCH is not addressed here
-    and remains open. Part (iv) gives the first formalization of the known
+    set-theory literature. Part (iv) gives the first formalization of the known
     relative consistency result (Laver 1982; Foreman-Hajnal 2003) for the
     ω₁ + ω case posed by Erdős and Hajnal (1974, p. 272): relative to a huge
     cardinal κ with target θ (IsHugeWithTarget κ θ, Kanamori Theorem 24.8) and
     ground GCH at and above θ, the first-order theory ZFC + GCH +
     ω₂ → (ω₁ + ω, ω₁ + ω)² (gchPart4Theory) is syntactically consistent; the
-    stronger simultaneous all-target question ∀ ξ < ω₂, ω₂ → (ξ)₂² under GCH
-    remains open and is not addressed.
+    stronger simultaneous all-target question ∀ ξ < ω₂, ω₂ → (ξ)²₂ under GCH
+    remains open and is not addressed. For Part (i), erdosproblems.com/1172's
+    cropped-scan binary reconstruction is omitted, and the original un-cropped
+    Baumgartner-Hajnal-Todorčević (1993, p. 2) countable-color question
+    ω₃ → (ω₂ + 2)²_ω under GCH remains open. In its place we publish as a
+    partial step toward the original Part (i) the weaker countable-color
+    relation GCH → ω₃ → (ω₂ + 1)²_ω
+    (Erdos1172.erdos_1172.variants.part1_omega_two_add_one), proved via our
+    < ℵ₂-complete countable-color neighborhood-ideal machinery on ω₃, which
+    also follows from the Erdős-Rado theorem ([ErRa56]; [BHT93, Theorem 2.1]).
   authors:
     - Tokengrinder
   responsible_maintainers:
@@ -40,13 +44,15 @@ sources:
       Parts (ii) and (iii) resolve two open GCH problems posed in Baumgartner,
       Hajnal, and Todorčević (1993, p. 2) and [Va99, 7.87], using neighborhood
       pattern spectra on ω₃ and transfinite Hechler ordered-trace thinning on ω₂.
-      Part (i) as stated on erdosproblems.com/1172 was already settled by
-      Erdős-Rado (1956), and Part (iv) formalizes the known huge-cardinal
-      consistency result of Laver (1982) and Foreman-Hajnal (2003) for ω₁ + ω;
-      those prior sources use relationship: other below because Palomar's
-      provenance contract requires background or other on companion sources when
-      type: original-proof is present. Material AI involvement is recorded under
-      automation and in PALOMAR.md.
+      Part (iv) formalizes the known huge-cardinal consistency result of Laver
+      (1982) and Foreman-Hajnal (2003) for ω₁ + ω, and
+      erdos_1172.variants.part1_omega_two_add_one proves the weaker
+      countable-color partial step GCH → ω₃ → (ω₂ + 1)²_ω toward the open
+      original Part (i) ω₃ → (ω₂ + 2)²_ω (a step that also follows from
+      Erdős-Rado / BHT93 Theorem 2.1); those prior sources use relationship:
+      other below because Palomar's provenance contract requires background or
+      other on companion sources when type: original-proof is present. Material
+      AI involvement is recorded under automation and in PALOMAR.md.
     license: Apache-2.0
     author_endorsement: participated
   - title: "Extensions of the Erdős-Rado Theorem"
@@ -56,14 +62,17 @@ sources:
       - Stevo Todorčević
     id: "https://arxiv.org/abs/math/9311207"
     type: paper
-    location: "Finite and Infinite Combinatorics in Sets and Logic (NATO ASI Series, Banff 1991), Kluwer, 1993, pp. 1-17 (open problems on p. 2)"
-    relationship: background
+    location: "Finite and Infinite Combinatorics in Sets and Logic (NATO ASI Series, Banff 1991), Kluwer, 1993, pp. 1-17 (Theorem 2.1 and open problems on p. 2)"
+    relationship: other
     note: >-
       Primary source of open Parts (ii) and (iii) verbatim on p. 2 (strictly
-      beyond Theorems 3.1 and 4.1 of the paper), as well as the un-cropped first
-      GCH problem ω₃ → (ω₂ + 2)₂^ω (not addressed here). Favorable-order ideas
-      from this paper also inform background lemmas in Erdos1172/BHT*.lean. No
-      endorsement is claimed.
+      beyond Theorems 3.1 and 4.1 of the paper) and of the un-cropped original
+      Part (i) GCH problem ω₃ → (ω₂ + 2)²_ω, which remains open. Theorem 2.1
+      ((2^{<κ})⁺ → (κ + 1)²_μ for μ < κ, from Erdős-Rado) also entails the
+      weaker partial step GCH → ω₃ → (ω₂ + 1)²_ω proved here via countable-color
+      neighborhood ideals. Favorable-order ideas from this paper also inform
+      background lemmas in Erdos1172/BHT*.lean. Recorded with relationship:
+      other alongside type: original-proof. No endorsement is claimed.
   - title: "Some of Paul's favorite problems"
     contributors:
       - name: András Hajnal
@@ -80,9 +89,9 @@ sources:
       1999 Budapest conference booklet (compiled by 18 editors, cited as [Va99]
       on erdosproblems.com) restating Baumgartner-Hajnal-Todorčević's open
       problems in item 7.87 and the all-α < ω₂ consistency question in item 7.86.
-      Cropping at the right margin of p. 13 truncated ω₃ → (ω₂ + 2)₂^ω after
-      ω₃ → (ω₂, leading to erdosproblems.com/1172's Part (i) reconstruction
-      ω₃ → (ω₂, ω₁ + 2)². No endorsement is claimed.
+      Cropping at the right margin of p. 13 truncated ω₃ → (ω₂ + 2)²_ω after
+      ω₃ → (ω₂; erdosproblems.com/1172's binary reconstruction is omitted from
+      this formalization. No endorsement is claimed.
   - title: "A partition calculus in set theory"
     authors:
       - Paul Erdős
@@ -92,11 +101,14 @@ sources:
     location: "Bulletin of the American Mathematical Society 62 (1956), 427-489"
     relationship: other
     note: >-
-      Establishes (2^κ)⁺ → (κ⁺ + 1)₂^κ, which under 2^(ℵ₁) = ℵ₂ immediately
-      settles Part (i) as reconstructed on erdosproblems.com/1172
-      (ω₃ → (ω₂, ω₁ + 2)², formalized directly in Erdos1172/Part1.lean as well
-      as via Part (ii) target monotonicity). Recorded with relationship: other
-      because type: original-proof is declared for Parts (ii)-(iii).
+      Establishes (2^{<κ})⁺ → (κ + 1)²_μ for μ < κ (cited as BHT93 Theorem 2.1),
+      which under GCH at κ = ω₂, μ = ω also entails the weaker countable-color
+      partial step ω₃ → (ω₂ + 1)²_ω proved in
+      Erdos1172/CountableNeighborhoodStep.lean via our neighborhood-ideal
+      machinery, as well as background Erdős-Rado lemmas in
+      Erdos1172/ForMathlib/SetTheory/Ordinal/. Recorded with relationship: other
+      because type: original-proof is declared for Parts (ii)-(iii). No
+      endorsement is claimed.
   - title: "Unsolved and solved problems in set theory"
     authors:
       - Paul Erdős
@@ -106,7 +118,7 @@ sources:
     location: "Proceedings of the Tarski Symposium (Proc. Sympos. Pure Math., Vol. XXV), Amer. Math. Soc., 1974, pp. 269-287 (p. 272; MR0357122)"
     relationship: background
     note: >-
-      Poses Part (iv) on p. 272 ("Is ω₂ → (ω₁ + ω)₂² or even ω₂ → (ξ)₂² for
+      Poses Part (iv) on p. 272 ("Is ω₂ → (ω₁ + ω)²₂ or even ω₂ → (ξ)²₂ for
       ξ < ω₂ consistent with G.C.H.?"), revising Problem 10/B of Erdős-Hajnal
       (1971) after Prikry (1972) and Hajnal proved ω₂ ↛ [ω₁ + ω]²_{ℵ₁} is
       consistent with GCH (and holds in L). No endorsement is claimed.
@@ -122,7 +134,7 @@ sources:
       ω₂ → (ω₁ · 2 + 1, α)² for all α < ω₂, settling the ω₁ + ω consistency
       question of Erdős-Hajnal (1974, p. 272). Part (iv) of this submission
       provides the first machine-checked formalization of this consistency
-      result for ω₂ → (ω₁ + ω)₂², adapting huge-cardinal collapse and normal
+      result for ω₂ → (ω₁ + ω)²₂, adapting huge-cardinal collapse and normal
       dense-ideal ideas into an anonymous Boolean-valued Lévy-Cohen collapse.
       Recorded with relationship: other because type: original-proof is
       declared for Parts (ii)-(iii). No endorsement is claimed.
@@ -169,9 +181,11 @@ sources:
     location: "Catalogue entry (last edited 2026-04-11, citing [ErHa74, p. 272] and [Va99, 7.87])"
     relationship: background
     note: >-
-      Assembles the four-part problem statement formalized in Challenge.lean,
-      including the cropped-margin reconstruction of Part (i). No endorsement by
-      the catalogue or its editor is claimed.
+      Catalogue entry assembling Parts (ii)-(iv) from [Va99, 7.87] and
+      [ErHa74, p. 272]. Its cropped-scan binary reconstruction of Part (i) is
+      omitted here; the un-cropped [BHT93, p. 2] Part (i) question
+      ω₃ → (ω₂ + 2)²_ω remains open. No endorsement by the catalogue or its
+      editor is claimed.
 
 related_formalizations:
   - id: "https://github.com/ianklatzco/flypitch/tree/ad649f89e9f3107b7e2ea97a58b2eafdfc80b815/flypitch4"
@@ -200,15 +214,20 @@ classification:
 
 status:
   scope: >-
-    Comparator verifies Erdos1172.erdos_1172 and Erdos1172.erdos_1172.parts.i
-    through parts.iv: ZFC + GCH proofs of Parts (ii) and (iii) (matching BHT93
-    verbatim and previously open), ZFC + GCH proof of catalogue Part (i)
-    (already settled by Erdős-Rado 1956 and implied by Part (ii)), and syntactic
-    consistency of ZFC + GCH + ω₂ → (ω₁ + ω, ω₁ + ω)² from a huge cardinal
-    (formalizing the ω₁ + ω consistency result of Laver 1982 and Foreman-Hajnal
-    2003). Neither the un-cropped BHT93 Part 1 question ω₃ → (ω₂ + 2)₂^ω under
-    GCH nor the stronger simultaneous ∀ ξ < ω₂, ω₂ → (ξ)₂² consistency question
-    (nor large-cardinal optimality below a huge cardinal) is claimed.
+    Comparator verifies Erdos1172.erdos_1172.parts.ii, parts.iii, parts.iv,
+    Erdos1172.erdos_1172.variants.part1_omega_two_add_one, and
+    Erdos1172.erdos_1172.variants.parts_ii_iii_iv_and_part1_step: ZFC + GCH
+    proofs of Parts (ii) and (iii) (matching BHT93 verbatim and previously open),
+    syntactic consistency of ZFC + GCH + ω₂ → (ω₁ + ω, ω₁ + ω)² from a huge
+    cardinal (formalizing the ω₁ + ω consistency result of Laver 1982 and
+    Foreman-Hajnal 2003), and a ZFC + GCH proof of the weaker countable-color
+    partial step ω₃ → (ω₂ + 1)²_ω toward the original BHT93 Part (i) via our
+    countable-color neighborhood-ideal machinery (also entailed by Erdős-Rado /
+    BHT93 Theorem 2.1). The original BHT93 Part (i) question ω₃ → (ω₂ + 2)²_ω
+    under GCH and the stronger simultaneous ∀ ξ < ω₂, ω₂ → (ξ)²₂ consistency
+    question (as well as large-cardinal optimality below huge) remain open and
+    are not claimed; erdosproblems.com/1172's cropped-scan Part (i)
+    reconstruction is omitted.
   sorry_count: 0
   sorry_in_definitions: 0
   axioms:
@@ -216,24 +235,6 @@ status:
     - Classical.choice
     - Quot.sound
   main_results:
-    - declaration: Erdos1172.erdos_1172
-      file: Erdos1172/Solution.lean
-      sorry_count: 0
-      axioms:
-        - propext
-        - Classical.choice
-        - Quot.sound
-      comparator_config: comparator.json
-      literature_dependencies: []
-    - declaration: Erdos1172.erdos_1172.parts.i
-      file: Erdos1172/Solution.lean
-      sorry_count: 0
-      axioms:
-        - propext
-        - Classical.choice
-        - Quot.sound
-      comparator_config: comparator.json
-      literature_dependencies: []
     - declaration: Erdos1172.erdos_1172.parts.ii
       file: Erdos1172/Solution.lean
       sorry_count: 0
@@ -253,6 +254,24 @@ status:
       comparator_config: comparator.json
       literature_dependencies: []
     - declaration: Erdos1172.erdos_1172.parts.iv
+      file: Erdos1172/Solution.lean
+      sorry_count: 0
+      axioms:
+        - propext
+        - Classical.choice
+        - Quot.sound
+      comparator_config: comparator.json
+      literature_dependencies: []
+    - declaration: Erdos1172.erdos_1172.variants.part1_omega_two_add_one
+      file: Erdos1172/Solution.lean
+      sorry_count: 0
+      axioms:
+        - propext
+        - Classical.choice
+        - Quot.sound
+      comparator_config: comparator.json
+      literature_dependencies: []
+    - declaration: Erdos1172.erdos_1172.variants.parts_ii_iii_iv_and_part1_step
       file: Erdos1172/Solution.lean
       sorry_count: 0
       axioms:
@@ -298,15 +317,19 @@ fidelity:
     Parts (ii) and (iii) match Baumgartner-Hajnal-Todorčević (1993, p. 2),
     [Va99, 7.87], and erdosproblems.com/1172 verbatim under Cardinal.GCH (with
     universe-polymorphic Ordinal.{u} liftings also provided in Solution.lean and
-    pair-coloring equivalence verified in audit/Statement.lean). Part (i) matches
-    erdosproblems.com/1172's printed statement ω₃ → (ω₂, ω₁ + 2)² under GCH,
-    which was reconstructed from a cropped photocopy of [Va99, 7.87] and already
-    follows from Erdős-Rado (1956); the original un-cropped BHT93 question
-    ω₃ → (ω₂ + 2)₂^ω is not addressed. Part (iv) formalizes syntactic
-    consistency of ZFC + GCH + ω₂ → (ω₁ + ω, ω₁ + ω)² relative to a huge
-    cardinal (IsHugeWithTarget κ θ plus ground tail GCH above θ, or Cardinal.GCH
-    plus ∃ κ, IsHugeCardinal κ); the stronger ∀ ξ < ω₂, ω₂ → (ξ)₂² question and
-    large-cardinal optimality below huge are not addressed.
+    pair-coloring equivalence verified in audit/Statement.lean). Part (iv)
+    formalizes syntactic consistency of ZFC + GCH + ω₂ → (ω₁ + ω, ω₁ + ω)²
+    relative to a huge cardinal (IsHugeWithTarget κ θ plus ground tail GCH
+    above θ, or Cardinal.GCH plus ∃ κ, IsHugeCardinal κ); the stronger
+    ∀ ξ < ω₂, ω₂ → (ξ)²₂ question and large-cardinal optimality below huge are
+    not addressed. For Part (i), erdosproblems.com/1172's cropped-scan binary
+    reconstruction is omitted, and the original un-cropped BHT93 Part (i)
+    question ω₃ → (ω₂ + 2)²_ω under GCH remains open; in its place
+    erdos_1172.variants.part1_omega_two_add_one formalizes the weaker
+    countable-color partial step GCH → ω₃ → (ω₂ + 1)²_ω proved by our
+    countable-color neighborhood-ideal machinery (which also follows from
+    Erdős-Rado / BHT93 Theorem 2.1, with [ω₃]² → ℕ order-embedding equivalence
+    verified in audit/Statement.lean).
 
 review:
   status: agent-reviewed
@@ -319,14 +342,6 @@ review:
 alignment:
   namespace: Erdos1172
   statements:
-    - source: "Erdős Problem 1172, Part (i) (erdosproblems.com/1172 cropped-scan reconstruction; settled by Erdős-Rado 1956): ω₃ → (ω₂, ω₁ + 2)² under GCH"
-      lean: Erdos1172.erdos_1172.parts.i
-      module: Erdos1172.Solution
-      status: proved
-      note: >-
-        Proved under Cardinal.GCH both directly from Erdős-Rado (part1_of_gch)
-        and from Part (ii) by target monotonicity. Does not address the
-        un-cropped BHT93 infinite-color question ω₃ → (ω₂ + 2)₂^ω.
     - source: "Erdős Problem 1172, Part (ii) (Baumgartner-Hajnal-Todorčević 1993, p. 2; [Va99, 7.87]): ω₃ → (ω₂ + ω₁, ω₂ + ω)² under GCH"
       lean: Erdos1172.erdos_1172.parts.ii
       module: Erdos1172.Solution
@@ -339,15 +354,24 @@ alignment:
       status: proved
       note: >-
         New ZFC + GCH proof of a previously open problem from BHT93, p. 2.
-    - source: "Erdős Problem 1172, Part (iv) (Erdős-Hajnal 1974, p. 272; Laver 1982; Foreman-Hajnal 2003): consistency of ZFC + GCH + ω₂ → (ω₁ + ω)₂² from a huge cardinal"
+    - source: "Erdős Problem 1172, Part (iv) (Erdős-Hajnal 1974, p. 272; Laver 1982; Foreman-Hajnal 2003): consistency of ZFC + GCH + ω₂ → (ω₁ + ω)²₂ from a huge cardinal"
       lean: Erdos1172.erdos_1172.parts.iv
       module: Erdos1172.Solution
       status: proved
       note: >-
         First formalization of the known huge-cardinal consistency result for the
-        ω₁ + ω case; the stronger ∀ ξ < ω₂, ω₂ → (ξ)₂² form remains open.
-    - source: "Erdős Problem 1172, combined GCH + huge-cardinal summary"
-      lean: Erdos1172.erdos_1172
+        ω₁ + ω case; the stronger ∀ ξ < ω₂, ω₂ → (ξ)²₂ form remains open.
+    - source: "Partial step toward original BHT93 Part (i) (Baumgartner-Hajnal-Todorčević 1993, p. 2 & Theorem 2.1; Erdős-Rado 1956): ω₃ → (ω₂ + 1)²_ω under GCH"
+      lean: Erdos1172.erdos_1172.variants.part1_omega_two_add_one
+      module: Erdos1172.Solution
+      status: proved
+      note: >-
+        Weaker countable-color partial step toward the open original BHT93
+        Part (i) question ω₃ → (ω₂ + 2)²_ω under GCH, proved here via our
+        countable-color neighborhood-ideal machinery and also entailed by
+        Erdős-Rado (BHT93 Theorem 2.1).
+    - source: "Erdős Problem 1172, combined GCH + huge-cardinal summary for Parts (ii)-(iv) and the ω₃ → (ω₂ + 1)²_ω partial step"
+      lean: Erdos1172.erdos_1172.variants.parts_ii_iii_iv_and_part1_step
       module: Erdos1172.Solution
       status: proved
 
