@@ -1,0 +1,94 @@
+/-
+Copyright 2026 Tokengrinder.
+Licensed under the Apache License, Version 2.0.
+-/
+module
+
+public import Erdos1172.Part4ShioyaStringTransport
+public import Erdos1172.Part4ShioyaCoverPreservation
+public import Erdos1172.Part4PositiveBooleanCompletion
+
+@[expose] public section
+
+/-! # The two-step forcing with bounded Boolean binary strings
+
+A positive condition in the first algebra supports a binary function name
+of prescribed ground length below θ. The second string extends the first
+on the stronger condition's positive Boolean value.
+-/
+
+set_option autoImplicit false
+noncomputable section
+open Erdos1172PosetCompletion Erdos1172PositiveBoolean
+universe u
+namespace Erdos1172Shioya.CohenCover
+
+structure Condition (θ : Cardinal.{u}) (B : Type u) [NontrivialCompleteBooleanAlgebra B] where
+  value : B
+  positive : value ≠ ⊥
+  length : θ.ord.ToType
+  bits : length.toOrd.val.ToType → B
+
+variable {θ : Cardinal.{u}} {B : Type u} [NontrivialCompleteBooleanAlgebra B]
+
+namespace Condition
+
+def name (p : Condition θ B) := StringName.ofBits p.length.toOrd.val p.bits
+
+def Refines (q p : Condition θ B) : Prop :=
+  q.value ≤ p.value ∧ q.value ≤ extensionValue (CompleteLatticeHom.id B) p.name q.name
+
+instance : Preorder (Condition θ B) where
+  le := Refines
+  le_refl p := ⟨le_rfl, le_top.trans (extensionValue_refl p.name)⟩
+  le_trans q p r h₁ h₂ := ⟨h₁.1.trans h₂.1, extensionValue_trans (CompleteLatticeHom.id B)
+    (CompleteLatticeHom.id B) r.name p.name q.name h₁.1 h₂.2 h₁.2⟩
+
+theorem le_iff_extension (q p : Condition θ B) : q ≤ p ↔ q.value ≤ p.value ∧
+    q.value ≤ extensionValue (CompleteLatticeHom.id B) p.name q.name := Iff.rfl
+
+theorem le_iff (q p : Condition θ B) : q ≤ p ↔ q.value ≤ p.value ∧
+    ∃ h : p.length.toOrd.val ≤ q.length.toOrd.val, ∀ i, q.value ⊓ p.bits i =
+      q.value ⊓ q.bits (StringName.includeIndex h i) := by
+  rw [le_iff_extension, extensionValue_iff_bits _ _ _ q.positive]
+  simp only [name, StringName.bits_ofBits, CompleteLatticeHom.id_apply]
+
+theorem value_mono : Monotone (Condition.value (θ := θ) (B := B)) := fun _ _ h => h.1
+
+def withValue (p : Condition θ B) (b : B) (hb : b ≠ ⊥) : Condition θ B :=
+  { p with value := b, positive := hb }
+
+theorem withValue_le (p : Condition θ B) (b : B) (hb : b ≠ ⊥) (hbp : b ≤ p.value) :
+    p.withValue b hb ≤ p := ⟨hbp, le_top.trans (extensionValue_refl p.name)⟩
+
+theorem withValue_le_iff (p q : Condition θ B) (b : B) (hb : b ≠ ⊥) :
+    p.withValue b hb ≤ q ↔ b ≤ q.value ∧ b ≤ extensionValue (CompleteLatticeHom.id B) q.name p.name := Iff.rfl
+
+def empty (hθ : 0 < θ) (b : B) (hb : b ≠ ⊥) : Condition θ B where
+  value := b
+  positive := hb
+  length := Ordinal.ToType.mk ⟨0,Cardinal.ord_pos.mpr hθ⟩
+  bits _ := ⊥
+
+end Condition
+
+def valueProjection (θ : Cardinal.{u}) (B : Type u) [NontrivialCompleteBooleanAlgebra B] :
+    Condition θ B →o Positive B := ⟨fun p => ⟨p.value,p.positive⟩, fun _ _ h => h.1⟩
+
+theorem valueProjection_lifts : ForcingCover.Lifts (valueProjection θ B) :=
+  fun p b hb => ⟨p.withValue b.val b.property, p.withValue_le b.val b.property hb, le_rfl⟩
+
+def firstStageHom (θ : Cardinal.{u}) (B : Type u) [NontrivialCompleteBooleanAlgebra B] :
+    CompleteLatticeHom B (Completion (Condition θ B)) :=
+  (ForcingCover.booleanHom (valueProjection θ B) valueProjection_lifts).comp Erdos1172PositiveBoolean.completionHom
+
+theorem firstStageHom_injective (hθ : 0 < θ) : Function.Injective (firstStageHom θ B) :=
+  (ForcingCover.booleanHom_injective (valueProjection θ B) valueProjection_lifts
+    (fun b => ⟨Condition.empty hθ b.val b.property,le_rfl⟩)).comp Erdos1172PositiveBoolean.completionHom_injective
+
+theorem condition_le_firstStageHom_iff (p : Condition θ B) (b : B) :
+    condition p ≤ firstStageHom θ B b ↔ p.value ≤ b := by
+  rw [condition_le_iff]
+  rfl
+
+end Erdos1172Shioya.CohenCover

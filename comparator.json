@@ -1,0 +1,14 @@
+{
+  "challenge_module": "Challenge",
+  "solution_module": "Erdos1172.Solution",
+  "theorem_names": [
+    "Erdos1172.erdos_1172",
+    "Erdos1172.erdos_1172.parts.i",
+    "Erdos1172.erdos_1172.parts.ii",
+    "Erdos1172.erdos_1172.parts.iii",
+    "Erdos1172.erdos_1172.parts.iv"
+  ],
+  "definition_names": [],
+  "permitted_axioms": ["propext", "Classical.choice", "Quot.sound"],
+  "enable_nanoda": true
+}
