@@ -8,8 +8,6 @@ public import Erdos1172.Part3NamedCoverProfile
 public import Erdos1172.Part3SupportedCoverComplement
 public import Erdos1172.Part3SupportedCoverRestriction
 public import Erdos1172.Part3CliqueDecisionComposition
-public import Erdos1172.Part3NamedCliqueThinning
-public import Erdos1172.Part3IteratedHechlerPreservation
 
 @[expose] public section
 

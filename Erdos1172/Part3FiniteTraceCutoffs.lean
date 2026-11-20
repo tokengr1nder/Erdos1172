@@ -49,16 +49,6 @@ def Clears : (n : ℕ) → FunctionDecisions P (Prefix n) W1 → P → Index n �
   | n + 1, F, p, z => ∃ v : W1, F.decides p (Sum.inl ()) v ∧ v < (ofLex z).1 ∧
       Clears n (subBounds F (ofLex z).1) p (ofLex z).2
 
-theorem clears_persistent (n : ℕ) (F : FunctionDecisions P (Prefix n) W1)
-    {p q : P} {z : Index n} (hqp : q ≤ p) (h : Clears n F p z) : Clears n F q z := by
-  induction n with
-  | zero =>
-    obtain ⟨v, hv, hlt⟩ := h
-    exact ⟨v, F.persistent hqp hv, hlt⟩
-  | succ n ih =>
-    obtain ⟨v, hv, hlt, hinner⟩ := h
-    exact ⟨v, F.persistent hqp hv, hlt, ih (subBounds F (ofLex z).1) hinner⟩
-
 def assembleBounds {n : ℕ} (K : FunctionDecisions P Unit W1)
     (B : W1 → FunctionDecisions P (Prefix n) W1) : FunctionDecisions P (Prefix (n + 1)) W1 where
   decides p z v := match z with

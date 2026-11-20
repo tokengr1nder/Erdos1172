@@ -4,8 +4,6 @@ Licensed under the Apache License, Version 2.0.
 -/
 module
 
-public import Erdos1172.Statement
-public import Erdos1172.Part4InternalOmegaTwo
 public import Erdos1172.Part4InternalPartitionSemantics
 
 @[expose] public section

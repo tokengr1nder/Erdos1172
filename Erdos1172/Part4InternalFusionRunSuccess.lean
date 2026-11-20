@@ -115,40 +115,6 @@ theorem successfulRun_nonempty
         (inf_le_left.trans Hentry))))
   exact bv_absurd _ Hempty (inf_le_left.trans Hsuccess)
 
-theorem successfulRun_iff {Run : bSet 𝔹} {Γ : 𝔹} :
-    Γ ≤ successfulRun Run ↔
-      Γ ≤ ⨅ ξ, ⨅ A, ⨅ Z, ⨅ U,
-        _root_.imp (pair ξ (pair ξ (entry A Z U)) ∈ᴮ Run) (A =ᴮ (∅ : bSet 𝔹))ᶜ := by
-  constructor
-  · intro H
-    apply le_iInf
-    intro ξ
-    apply le_iInf
-    intro A
-    apply le_iInf
-    intro Z
-    apply le_iInf
-    intro U
-    rw [← deduction]
-    exact successfulRun_nonempty (inf_le_left.trans H) inf_le_right
-  · intro H
-    change Γ ≤ (emptyEntry Run)ᶜ
-    rw [← imp_bot, ← deduction]
-    unfold emptyEntry
-    rw [inf_iSup_eq]
-    apply iSup_le
-    intro ξ
-    rw [inf_iSup_eq]
-    apply iSup_le
-    intro Z
-    rw [inf_iSup_eq]
-    apply iSup_le
-    intro U
-    have Hnone := (le_inf
-      (inf_le_left.trans (H.trans ((iInf_le _ ξ).trans ((iInf_le _ (∅ : bSet 𝔹)).trans
-        ((iInf_le _ Z).trans (iInf_le _ U)))))) inf_le_right).trans bv_imp_elim
-    exact bv_absurd _ bv_refl Hnone
-
 /-- Success upgrades the actual candidate-or-empty law to genuine whole
 block membership for every stored entry of the full run. -/
 theorem successfulRun_blockObject

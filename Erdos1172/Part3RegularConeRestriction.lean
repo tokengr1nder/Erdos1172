@@ -28,18 +28,6 @@ def onCone (p0 : P) (U : RegularName P X) : RegularName (Set.Iic p0) X where
     obtain ⟨s, hsq, hs⟩ := h ⟨q, hqp.trans p.property⟩ hqp
     exact ⟨s.val, hsq, hs⟩
 
-theorem onCone_meet (p0 : P) (U V : RegularName P X) :
-    onCone p0 (meet U V) = meet (onCone p0 U) (onCone p0 V) := by
-  apply RegularName.ext
-  intro p x
-  rfl
-
-theorem onCone_ground (p0 : P) (s : Set X) :
-    onCone p0 (ground s) = ground s := by
-  apply RegularName.ext
-  intro p x
-  rfl
-
 theorem possible_onCone (p0 : P) (U : RegularName P W2) (p : Set.Iic p0) :
     possible (onCone p0 U).holds p = possible U.holds p.val := by
   ext a

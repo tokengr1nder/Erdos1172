@@ -58,23 +58,10 @@ theorem collapseName_is_surj (A : PSet.{u}) :
   exact graph_is_surj entry (fun a => check (A.Func a))
     (fun _ _ _ h => entry_inf_eq_bot h) column_iSup_eq_top
 
-theorem collapseName_is_surjective_function (A : PSet.{u}) [Nonempty A.Type] :
-    (⊤ : Algebra A.Type) ≤ is_function omega (check A) (collapseName A) ⊓
-      is_surj omega (check A) (collapseName A) :=
-  le_inf (collapseName_is_function A) (collapseName_is_surj A)
-
 /-- The forcing assertion is proved for the actual constructed algebra. -/
 theorem forces_countable_surjection (A : PSet.{u}) [Nonempty A.Type] :
     (⊤ : Algebra A.Type) ≤ surjects_onto omega (check A) :=
   le_iSup_of_le (collapseName A)
     (le_inf ((collapseName_is_function A).trans inf_le_left) (collapseName_is_surj A))
-
-theorem condition_family_positive_dense :
-    (∀ p : Condition α, condition p ≠ ⊥) ∧
-      ∀ b : Algebra α, b ≠ ⊥ → ∃ p : Condition α, condition p ≤ b :=
-  ⟨condition_ne_bot, fun _ => exists_condition_le⟩
-
-theorem condition_family_cardinal [Infinite α] :
-    Cardinal.mk (Condition α) = Cardinal.mk α := cardinal_eq_of_infinite
 
 end Erdos1172Collapse

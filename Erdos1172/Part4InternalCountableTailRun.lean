@@ -9,7 +9,6 @@ public import Erdos1172.Part4InternalBoundedImageRecursionTotal
 public import Erdos1172.Part4InternalImageRecursionInvariant
 public import Erdos1172.Part4InternalBoundedFunctionValue
 public import Erdos1172.Part4InternalSmallPoolOperations
-public import Erdos1172.Part4InternalCountableImage
 
 @[expose] public section
 

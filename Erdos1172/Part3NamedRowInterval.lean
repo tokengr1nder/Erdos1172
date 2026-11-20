@@ -6,7 +6,6 @@ module
 
 public import Erdos1172.Part3NamedFinalTail
 public import Erdos1172.Part3RegularLeastMember
-public import Erdos1172.Part3RegularConeRestriction
 public import Erdos1172.Part3CofinalLineCover
 
 @[expose] public section
@@ -45,10 +44,6 @@ variable {P I V : Type} [Preorder P] [LinearOrder I] [LinearOrder V]
 noncomputable def rowName (data : LineCoverData V) (U : RegularName P V) (i : W1) :
     RegularName P V :=
   meet U (ground {x : V | data.row x = i})
-
-theorem rowName_holds_iff (data : LineCoverData V) (U : RegularName P V)
-    (i : W1) (p : P) (x : V) :
-    (rowName data U i).holds p x ↔ U.holds p x ∧ data.row x = i := Iff.rfl
 
 /-- Restrict both the condition cone and the enumeration domain. -/
 def intervalE (E : FunctionDecisions P I V) (q : P) (a b : I) :

@@ -38,12 +38,6 @@ variable {I : Type u} (U : Ultrafilter I) [CountableInterFilter (U : Filter I)]
 abbrev AbstractModel := (U : Filter I).Product (fun _ : I => ZFSet.{u})
 def targetClass : Set ZFSet.{u} := Set.range (collapse U)
 
-theorem targetClass_transitive {x y : ZFSet.{u}} (hx : x ∈ targetClass U) (hy : y ∈ x) :
-    y ∈ targetClass U := by
-  obtain ⟨a, rfl⟩ := hx
-  obtain ⟨b, _, hb⟩ := (mem_collapse_iff U _ a).mp hy
-  exact ⟨b, hb⟩
-
 instance targetStructure : setLanguage.Structure (targetClass U) where
   RelMap | .mem => fun x => (x 0).val ∈ (x 1).val
 
@@ -72,8 +66,5 @@ def abstractDiagonal : ZFSet.{u} ↪ₑ[setLanguage] AbstractModel U where
 
 def groundEmbedding : ZFSet.{u} ↪ₑ[setLanguage] targetClass U :=
   (collapseIso U).toElementaryEmbedding.comp (abstractDiagonal U)
-
-theorem groundEmbedding_val (x : ZFSet.{u}) :
-    (groundEmbedding U x).val = diagonal U x := rfl
 
 end Erdos1172GroundUltrapower

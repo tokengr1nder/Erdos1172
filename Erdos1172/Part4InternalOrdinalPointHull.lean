@@ -5,7 +5,6 @@ Licensed under the Apache License, Version 2.0.
 module
 
 public import Erdos1172.Part4InternalCountablePast
-public import Erdos1172.Part4InternalInitialSegments
 public import Erdos1172.Part4InternalOmegaTwoBounded
 
 @[expose] public section

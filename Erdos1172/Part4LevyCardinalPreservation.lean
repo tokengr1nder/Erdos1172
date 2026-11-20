@@ -46,26 +46,4 @@ theorem below_small_domain_surjects_onto_eq_bot (κ : Cardinal.{u})
     (fun w hpos hdisj => below_completion_disjoint_family_cardinal_lt κ Hκ Hunc
       w hpos hdisj) X Y HX HY Hsep
 
-/-- The actual algebra admits no such surjection, including when the smaller
-ground domain itself already has cardinality at least κ. -/
-theorem below_surjects_onto_eq_bot_of_cardinal_lt (κ : Cardinal.{u})
-    (Hκ : κ.IsRegular) (Hunc : Cardinal.aleph0 < κ)
-    (X Y : PSet.{u}) (Hlt : Cardinal.mk X.Type < Cardinal.mk Y.Type)
-    (HY : κ ≤ Cardinal.mk Y.Type)
-    (Hsep : ∀ i j : Y.Type, i ≠ j → ¬ PSet.Equiv (Y.Func i) (Y.Func j)) :
-    (surjects_onto (check X) (check Y) : Completion (BelowCondition κ)) = ⊥ :=
-  bSet.ErdosCardinalPreservation.surjects_onto_eq_bot_of_cardinal_lt Hκ
-    (fun w hpos hdisj => below_completion_disjoint_family_cardinal_lt κ Hκ Hunc
-      w hpos hdisj) X Y Hlt HY Hsep
-
-theorem not_forces_below_ground_surjection (κ : Cardinal.{u})
-    (Hκ : κ.IsRegular) (Hunc : Cardinal.aleph0 < κ)
-    (X Y : PSet.{u}) (Hlt : Cardinal.mk X.Type < Cardinal.mk Y.Type)
-    (HY : κ ≤ Cardinal.mk Y.Type)
-    (Hsep : ∀ i j : Y.Type, i ≠ j → ¬ PSet.Equiv (Y.Func i) (Y.Func j))
-    {Γ : Completion (BelowCondition κ)} (HΓ : Γ ≠ ⊥) :
-    ¬ Γ ≤ surjects_onto (check X) (check Y) := by
-  rw [below_surjects_onto_eq_bot_of_cardinal_lt κ Hκ Hunc X Y Hlt HY Hsep]
-  exact fun h => HΓ (bot_unique h)
-
 end Erdos1172LevyCollapse

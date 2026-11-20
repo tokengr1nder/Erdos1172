@@ -53,36 +53,4 @@ theorem omegaTwo_pigeonhole_of_large_domain {X f : bSet 𝔹} {Γ : 𝔹}
       (ErdosCardinalSquare.omegaOne_square_injects (inf_le_left.trans HCH))))
     omegaTwo_not_injects
 
-theorem omegaTwo_pigeonhole_of_is_function {f : bSet 𝔹} {Γ : 𝔹}
-    (HCH : Γ ≤ (CH : 𝔹)) (Hf : Γ ≤ is_function omegaTwo omegaOne f) :
-    Γ ≤ ⨆ i, (i ∈ᴮ omegaOne) ⊓ injects_into omegaTwo (fiber omegaTwo f i) :=
-  omegaTwo_pigeonhole_of_large_domain HCH Hf injects_into_refl
-
-theorem fiber_mono {X f g i : bSet 𝔹} {Γ : 𝔹}
-    (Hsub : Γ ≤ f ⊆ᴮ g) : Γ ≤ fiber X f i ⊆ᴮ fiber X g i := by
-  rw [subset_unfold']
-  apply le_iInf; intro x; rw [← deduction]
-  have Hx := (ErdosRelationGraph.mem_comprehend_and B_ext_pair_mem_left).mp
-    (show Γ ⊓ x ∈ᴮ fiber X f i ≤ x ∈ᴮ comprehend (fun x => pair x i ∈ᴮ f) X
-      from inf_le_right)
-  exact (ErdosRelationGraph.mem_comprehend_and B_ext_pair_mem_left).mpr
-    ⟨Hx.1, mem_of_mem_subset (inf_le_left.trans Hsub) Hx.2⟩
-
-/-- Extra unused graph entries are harmless: restrict to the supported
-function, find its full-sized fiber, and include that fiber in the original. -/
-theorem omegaTwo_pigeonhole {f : bSet 𝔹} {Γ : 𝔹}
-    (HCH : Γ ≤ (CH : 𝔹)) (Hf : Γ ≤ is_func' omegaTwo omegaOne f) :
-    Γ ≤ ⨆ i, (i ∈ᴮ omegaOne) ⊓ injects_into omegaTwo (fiber omegaTwo f i) := by
-  have Hfound := omegaTwo_pigeonhole_of_is_function HCH
-    (function_of_func'_is_function Hf)
-  apply (le_inf (le_refl Γ) Hfound).trans
-  rw [inf_iSup_eq]
-  apply iSup_le
-  intro i
-  apply le_iSup_of_le i
-  refine le_inf (inf_le_right.trans inf_le_left) ?_
-  exact injects_into_trans (inf_le_right.trans inf_le_right)
-    (injects_into_of_subset (fiber_mono
-      (inf_le_left.trans (function_of_func'_subset (H_is_func' := Hf)))))
-
 end bSet.ErdosOmegaTwoPigeonhole

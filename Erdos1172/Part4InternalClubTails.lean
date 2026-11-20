@@ -78,29 +78,10 @@ theorem club_upperTail {b : bSet 𝔹} {Γ : 𝔹}
     Γ ≤ club omegaTwo (upperTail b) :=
   le_inf upperTail_subset (le_inf (unboundedIn_upperTail HCH Hb) (closedIn_upperTail b))
 
-theorem club_omegaTwo {Γ : 𝔹} (HCH : Γ ≤ (CH : 𝔹)) :
-    Γ ≤ club omegaTwo omegaTwo := by
-  refine le_inf subset_self (le_inf ?_ ?_)
-  · apply le_iInf
-    intro a
-    rw [← deduction]
-    obtain ⟨b, Hb⟩ := exists_above_omegaTwo_member (inf_le_left.trans HCH) inf_le_right
-    exact le_iSup_of_le b (le_inf (le_inf (Hb.trans inf_le_left) (Hb.trans inf_le_left))
-      (Hb.trans inf_le_right))
-  · apply le_iInf
-    intro a
-    rw [← deduction]
-    exact inf_le_right.trans (inf_le_left.trans inf_le_left)
-
 theorem exists_mem_club {C : bSet 𝔹} {Γ : 𝔹}
     (HC : Γ ≤ club omegaTwo C) : ∃ x : bSet 𝔹, Γ ≤ x ∈ᴮ C := by
   obtain ⟨x, Hx⟩ := exists_club_above HC omegaOne_mem_omegaTwo
   exact ⟨x, Hx.trans (inf_le_left.trans inf_le_left)⟩
-
-theorem club_nonempty {C : bSet 𝔹} {Γ : 𝔹}
-    (HC : Γ ≤ club omegaTwo C) : Γ ≤ (C =ᴮ (∅ : bSet 𝔹))ᶜ := by
-  obtain ⟨x, Hx⟩ := exists_mem_club HC
-  exact nonempty_of_exists_mem C (le_iSup_of_le x Hx)
 
 theorem subset_complement_upperTail_of_bound {A b : bSet 𝔹} {Γ : 𝔹}
     (HA : Γ ≤ A ⊆ᴮ omegaTwo) (Hbound : Γ ≤ A ⊆ᴮ b) :

@@ -49,28 +49,12 @@ def anonymousSubset (κ : Cardinal.{u}) : bSet (anonymousAlgebra κ) :=
   Erdos1172CohenIteration.generatedName (B := FirstAlgebra κ)
     (PSet.ordinalMk κ.ord)
 
-theorem cohenSubset_subset (κ : Cardinal.{u}) :
-    (⊤ : Algebra κ) ≤ cohenSubset κ ⊆ᴮ check (PSet.ordinalMk κ.ord) :=
-  Erdos1172CohenIteration.subsetName_subset (PSet.ordinalMk κ.ord)
-
 theorem cohenSubset_member_eq_bitValue (κ : Cardinal.{u})
     (i : (PSet.ordinalMk κ.ord).Type) :
     (check ((PSet.ordinalMk κ.ord).Func i) : bSet (Algebra κ)) ∈ᴮ cohenSubset κ =
       Erdos1172CohenIteration.bitValue (ErdosOmegaTwo.omegaOne : bSet (FirstAlgebra κ))
         (check ((PSet.ordinalMk κ.ord).Func i)) (1 : bSet (FirstAlgebra κ)) :=
   Erdos1172CohenIteration.subsetName_member_eq_bitValue (PSet.ordinalMk_inj κ.ord) i
-
-/-- Coverage is proved using the first-stage identification of checked κ,
-not an assumed identification with the second-stage internal omega-one. -/
-theorem coordinate_binary_coverage (κ : Cardinal.{u})
-    (Hκ : κ.IsRegular) (Hunc : Cardinal.aleph0 < κ)
-    (i : (PSet.ordinalMk κ.ord).Type) :
-    Erdos1172CohenIteration.bitValue (ErdosOmegaTwo.omegaOne : bSet (FirstAlgebra κ))
-        (check ((PSet.ordinalMk κ.ord).Func i)) (0 : bSet (FirstAlgebra κ)) ⊔
-      Erdos1172CohenIteration.bitValue (ErdosOmegaTwo.omegaOne : bSet (FirstAlgebra κ))
-        (check ((PSet.ordinalMk κ.ord).Func i)) (1 : bSet (FirstAlgebra κ)) = ⊤ :=
-  Erdos1172CohenIteration.bitValue_zero_sup_one_eq_top
-    ErdosOmegaTwo.omegaOne_property (firstStage_coordinate_mem κ Hκ Hunc i)
 
 theorem anonymousSubset_subset (κ : Cardinal.{u}) :
     (⊤ : anonymousAlgebra κ) ≤ anonymousSubset κ ⊆ᴮ check (PSet.ordinalMk κ.ord) :=

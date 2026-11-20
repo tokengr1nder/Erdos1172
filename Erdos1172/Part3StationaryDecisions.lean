@@ -6,7 +6,6 @@ module
 
 public import Erdos1172.Part3HechlerCentering
 public import Erdos1172.Part3RedPredecessorReflection
-public import Mathlib.Order.Zorn
 
 @[expose] public section
 
@@ -30,10 +29,6 @@ open Erdos1172Part3ClosedDecisionSystem (DenseBelow)
 variable {P : Type} [Preorder P]
 
 def Compatible (p q : P) : Prop := ∃ r : P, r ≤ p ∧ r ≤ q
-
-theorem compatible_symm {p q : P} (h : Compatible p q) : Compatible q p := by
-  obtain ⟨r, hrp, hrq⟩ := h
-  exact ⟨r, hrq, hrp⟩
 
 def IncompatibleFamily (A : Set P) : Prop :=
   ∀ p ∈ A, ∀ q ∈ A, p ≠ q → ¬Compatible p q
@@ -92,11 +87,6 @@ definition alone does not assert stationarity in an external universe. -/
 def StationaryAt (U : P → W2 → Prop) (p : P) : Prop :=
   ∀ q : P, q ≤ p → IsStationary (possible U q)
 
-theorem possible_mono (U : P → W2 → Prop) {p q : P} (hpq : p ≤ q) :
-    possible U p ⊆ possible U q := by
-  rintro a ⟨r, hrp, hra⟩
-  exact ⟨r, hrp.trans hpq, hra⟩
-
 theorem stationaryAt_mono {U : P → W2 → Prop} {p q : P}
     (h : StationaryAt U p) (hqp : q ≤ p) : StationaryAt U q :=
   fun r hrq => h r (hrq.trans hqp)
@@ -144,12 +134,5 @@ theorem exists_stationary_refinement (hcc : OmegaTwoCC P)
   intro r hrq
   exact ((stationaryAt_mono hp hqp) r hrq).mono
     (by rintro b ⟨s, hsr, hs0, hsb⟩; exact ⟨s, hsr, hsb⟩)
-
-/-- A concrete instance supplied by the previously constructed order. -/
-theorem hechler_omegaTwoCC (hCH : CH) :
-    OmegaTwoCC Erdos1172Part3HechlerOrder.Condition := by
-  intro A hA
-  exact (Erdos1172Part3HechlerCentering.antichain_card_le hCH A hA).trans_lt
-    (Cardinal.aleph_lt_aleph.mpr (by norm_num : (1 : Ordinal.{0}) < 2))
 
 end Erdos1172Part3StationaryDecisions

@@ -54,14 +54,6 @@ theorem bounded_support_in_range (hGCH : GCH) (a : W2) (p : Full hGCH)
   intro i hi
   exact WithTop.coe_lt_coe.mpr (hp i hi)
 
-theorem full_condition_bounded (hGCH : GCH) (p : Full hGCH) :
-    ∃ a : W2, ∃ q : Earlier hGCH a, (restriction hGCH a).embed q = p := by
-  obtain ⟨a, ha⟩ := Erdos1172Part3CoreObjectCode.exists_objectBound
-    ⟨conditionSupport hGCH p,
-      (Cardinal.le_aleph0_iff_set_countable.mpr (support_countable hGCH p)).trans
-        (Cardinal.aleph0_le_aleph 1)⟩
-  exact ⟨a, bounded_support_in_range hGCH a p ha⟩
-
 /-- At a cut of cofinality omegaOne, a condition already belongs to a
 strictly earlier stage. This is literal inclusion, not compatibility. -/
 theorem earlier_condition_bounded (hGCH : GCH) {a : W2} (ha : IsOmegaOneSup a)
@@ -94,30 +86,5 @@ theorem eventually_local_code (hGCH : GCH) (G H : SimpleGraph W2)
   Erdos1172Part3RegularStageLocality.eventuallyLocal_eval
     (Earlier hGCH) (restriction hGCH) (conditionSupport hGCH) (support_countable hGCH)
     (bounded_support_in_range hGCH) G H hI c
-
-theorem club_local_sources (hGCH : GCH) (G H : SimpleGraph W2) (hI : #I ≤ ℵ_ 1) :
-    ∃ club : Set W2, IsClub club ∧ ∀ a ∈ club, ∀ c : Code (Full hGCH) I G,
-      rank hGCH (mk_stage_le hGCH ⊤) hI G c < a →
-        Erdos1172Part3RegularStageLocality.Factors (restriction hGCH a) (eval G H c) :=
-  Erdos1172Part3RegularStageLocality.exists_club_local_code_sources
-    (Earlier hGCH) (restriction hGCH) (conditionSupport hGCH) (support_countable hGCH)
-    (bounded_support_in_range hGCH) G H hI (rank hGCH (mk_stage_le hGCH ⊤) hI G)
-
-/-- Canonical ranks and actual constructed stages: no abstract support
-system, projection, or locality assumption remains in this statement. -/
-theorem club_ranked_tests_local (hGCH : GCH) (G H : SimpleGraph W2) (hI : #I ≤ ℵ_ 1) :
-    ∃ club : Set W2, IsClub club ∧ ∀ a ∈ club, ∀ c : Code (Full hGCH) I G,
-      rank hGCH (mk_stage_le hGCH ⊤) hI G c < a →
-        ∃ U : RegularName (Earlier hGCH a) Unit,
-          (∀ p : Full hGCH,
-            (rankedAvailability (blockRank hGCH (mk_stage_le hGCH ⊤) hI G)
-              (eval G H c)).holds p a ↔ U.holds ((restriction hGCH a).restrict p) ()) ∧
-          ∀ p : Full hGCH,
-            (neg (rankedAvailability (blockRank hGCH (mk_stage_le hGCH ⊤) hI G)
-              (eval G H c))).holds p a ↔ (neg U).holds ((restriction hGCH a).restrict p) () :=
-  Erdos1172Part3RankedWitnessRestriction.exists_club_ranked_tests_local
-    (Earlier hGCH) (restriction hGCH) (conditionSupport hGCH) (support_countable hGCH)
-    (bounded_support_in_range hGCH) G H hI
-    (rank hGCH (mk_stage_le hGCH ⊤) hI G) (blockRank hGCH (mk_stage_le hGCH ⊤) hI G)
 
 end Erdos1172Part3TransfiniteStageLocality

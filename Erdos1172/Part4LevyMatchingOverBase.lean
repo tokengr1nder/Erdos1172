@@ -6,7 +6,6 @@ module
 
 public import Erdos1172.Part4LevyMatchingStage
 public import Erdos1172.Part4LevyMatchingRelativeTree
-public import Erdos1172.Part4InternalHartogsUniqueness
 
 @[expose] public section
 

@@ -4,10 +4,7 @@ Licensed under the Apache License, Version 2.0.
 -/
 module
 
-public import Erdos1172.Part4BooleanQuotientDenseSets
-public import Erdos1172.Part4BooleanQuotientFactorization
 public import Erdos1172.Part4ResidualNameDensity
-public import Erdos1172.Part4GroundIndexNameBound
 
 @[expose] public section
 

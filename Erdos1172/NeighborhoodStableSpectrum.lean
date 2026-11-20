@@ -20,8 +20,7 @@ open Cardinal Ordinal Set Order
 
 namespace Erdos1172NeighborhoodStableSpectrum
 
-open Erdos1172NeighborhoodCode Erdos1172NeighborhoodIdeal
-  Erdos1172NeighborhoodIdealCore Erdos1172NeighborhoodDerivedIdeal
+open Erdos1172NeighborhoodCode Erdos1172NeighborhoodIdeal Erdos1172NeighborhoodIdealCore Erdos1172NeighborhoodDerivedIdeal
 
 abbrev WordCode := Fin 4
 

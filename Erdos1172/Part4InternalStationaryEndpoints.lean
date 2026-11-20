@@ -83,15 +83,4 @@ theorem stationaryEndpoints_stationary {Γ : 𝔹}
     ⟨mem_of_mem_subset (club_subset HC) (HL.trans inf_le_left), HL.trans inf_le_right⟩
   exact le_iSup_of_le L (le_inf HE (HL.trans inf_le_left))
 
-theorem stationaryEndpoints_injects_omegaTwo {Γ : 𝔹}
-    (HCH : Γ ≤ (CH : 𝔹)) (HB : Γ ≤ countablyBounded omegaOne) :
-    Γ ≤ injects_into omegaTwo stationaryEndpoints :=
-  stationary_injects_omegaTwo HCH (stationaryEndpoints_stationary HCH HB)
-
-theorem stationaryEndpoints_of_rowIdeals {S : bSet 𝔹} {Γ : 𝔹}
-    (HCH : Γ ≤ (CH : 𝔹))
-    (Hrows : Γ ≤ ⨅ σ, _root_.imp (σ ∈ᴮ omegaOne) (⨆ J, rowIdealData S σ J)) :
-    Γ ≤ positive omegaTwo nonstationaryIdeal stationaryEndpoints :=
-  stationaryEndpoints_stationary HCH (countablyBounded_of_rowIdeals Hrows)
-
 end bSet.ErdosStationaryEndpoints

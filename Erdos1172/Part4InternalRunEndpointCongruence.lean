@@ -150,10 +150,6 @@ theorem runLaw_ext_top (color : Bool) (R S P : bSet 𝔹) :
     B_ext_imp (h₁ := B_ext_const)
       (h₂ := entryValid_ext_top color i R S (vertexHistory P) (coordinateHistory P) y Z))))
 
-theorem runPartial_ext_top (color : Bool) (R S P : bSet 𝔹) :
-    B_ext (fun top => runPartial color R S top P) :=
-  B_ext_inf B_ext_const (runLaw_ext_top color R S P)
-
 end ErdosSimultaneousRun
 
 end bSet

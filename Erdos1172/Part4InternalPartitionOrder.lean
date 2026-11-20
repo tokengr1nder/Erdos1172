@@ -58,20 +58,6 @@ theorem increasingOn_injective_on {A f i j x y : bSet 𝔹} {Γ : 𝔹}
         (inf_le_left.trans Hjy) (inf_le_left.trans Hix)
     exact bot_of_mem_self' (mem_congr (inf_le_left.trans (bv_symm Hxy)) bv_refl Hmem)
 
-/-- Strict separation rules out any common point of the guarded ranges. -/
-theorem separatedRanges_no_common_value {A B f g x : bSet 𝔹} {Γ : 𝔹}
-    (Hsep : Γ ≤ separatedRanges A B f g)
-    (Hf : Γ ≤ rangeMem A f x) (Hg : Γ ≤ rangeMem B g x) : Γ ≤ ⊥ :=
-  bot_of_mem_self' (separatedRanges_apply Hsep Hf Hg)
-
-theorem separatedRanges_overlap_eq_bot {A B f g x : bSet 𝔹} {Γ : 𝔹}
-    (Hsep : Γ ≤ separatedRanges A B f g) :
-    (Γ ⊓ rangeMem A f x) ⊓ rangeMem B g x = ⊥ := by
-  apply le_antisymm _ bot_le
-  exact separatedRanges_no_common_value
-    (inf_le_left.trans (inf_le_left.trans Hsep))
-    (inf_le_left.trans inf_le_right) inf_le_right
-
 /-- The standard product restriction turns a total functional relation into
 an exact internal function graph, without changing its used domain. -/
 theorem function_of_func'_is_function {A κ f : bSet 𝔹} {Γ : 𝔹}
@@ -94,41 +80,5 @@ theorem function_of_func'_is_function {A κ f : bSet 𝔹} {Γ : 𝔹}
     exact mem_binary_inter_iff.mpr
       ⟨Hx.trans inf_le_right, mem_prod_iff.mpr ⟨inf_le_right, Hx.trans inf_le_left⟩⟩
   · exact binary_inter_subset_right
-
-/-- The restricted increasing total map is a genuine injective function;
-extraneous graph pairs outside the stated domain are not retained. -/
-theorem increasing_function_of_func'_is_injective {A κ f : bSet 𝔹} {Γ : 𝔹}
-    (Hf : Γ ≤ is_func' A κ f) (HA : Γ ≤ Ord A)
-    (Hinc : Γ ≤ increasingOn A f) :
-    Γ ≤ is_injective_function A κ (function_of_func' Hf) := by
-  have Hfunction : Γ ≤ is_function A κ (function_of_func' Hf) :=
-    function_of_func'_is_function Hf
-  have Hsub : Γ ≤ function_of_func' Hf ⊆ᴮ f :=
-    function_of_func'_subset (H_is_func' := Hf)
-  refine le_inf Hfunction ?_
-  unfold is_inj
-  apply le_iInf
-  intro i
-  apply le_iInf
-  intro j
-  apply le_iInf
-  intro x
-  apply le_iInf
-  intro y
-  rw [← deduction]
-  have Hix : Γ ⊓ (pair i x ∈ᴮ function_of_func' Hf ⊓
-      pair j y ∈ᴮ function_of_func' Hf ⊓ x =ᴮ y) ≤
-      pair i x ∈ᴮ function_of_func' Hf :=
-    inf_le_right.trans (inf_le_left.trans inf_le_left)
-  have Hjy : Γ ⊓ (pair i x ∈ᴮ function_of_func' Hf ⊓
-      pair j y ∈ᴮ function_of_func' Hf ⊓ x =ᴮ y) ≤
-      pair j y ∈ᴮ function_of_func' Hf :=
-    inf_le_right.trans (inf_le_left.trans inf_le_right)
-  exact increasingOn_injective_on (inf_le_left.trans HA) (inf_le_left.trans Hinc)
-    (mem_domain_of_is_function Hix (inf_le_left.trans Hfunction))
-    (mem_domain_of_is_function Hjy (inf_le_left.trans Hfunction))
-    (mem_of_mem_subset (inf_le_left.trans Hsub) Hix)
-    (mem_of_mem_subset (inf_le_left.trans Hsub) Hjy)
-    (inf_le_right.trans inf_le_right)
 
 end bSet.ErdosPartition

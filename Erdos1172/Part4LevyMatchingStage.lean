@@ -4,9 +4,7 @@ Licensed under the Apache License, Version 2.0.
 -/
 module
 
-public import Erdos1172.Part4LevyMatchingCollapse
-public import Erdos1172.Part4CountableMatrixName
-public import Erdos1172.Part4GroundIndexNameBound
+public import Erdos1172.Part4LevyMatchingPartitions
 
 @[expose] public section
 
@@ -45,20 +43,5 @@ def matrixOfSurjection (A : PSet.{u}) (sep : ∀ i j : A.Type, i ≠ j → ¬PSe
     rw [← @bounded_exists B _ omega (fun x => pair x (check (A.Func j)) ∈ᴮ f) (h_congr := B_ext_pair_mem_left)] at h
     exact h.trans (iSup_le (fun n => inf_le_right.trans
       (le_iSup (fun k : ℕ => pair (of_nat k) (check (A.Func j)) ∈ᴮ f) n.down)))
-
-/-- At each regular uncountable stage of a reasonable collapse, the forced
-surjection and the size bound identify the completion with Col(ω,λ). -/
-def stageCollapseIso (μ : Cardinal.{u}) (hμ : ℵ₀ < μ) (reg : μ.IsRegular)
-    (f : bSet B) (hf : (⊤ : B) ≤ is_function omega (check (PSet.ordinalMk μ.ord)) f)
-    (hs : (⊤ : B) ≤ is_surj omega (check (PSet.ordinalMk μ.ord)) f)
-    (d : μ.ord.ToType → Positive B) (dense : ∀ b, ∃ i, d i ≤ b) :
-    B ≃o Completion (Erdos1172Collapse.Condition μ.ord.ToType) := by
-  let A : PSet.{u} := .mk μ.ord.ToType (fun i => PSet.ordinalMk i.toOrd.val)
-  have code : PSet.ordinalMk μ.ord = A := PSet.ordinalMk_eq_def _
-  rw [code] at hf hs
-  let M : CollapseMatrix μ.ord.ToType B := matrixOfSurjection A
-    (fun i j h e => h (Ordinal.ToType.mk.symm.injective (Subtype.ext (PSet.eq_of_mk_equiv e)))) f hf hs
-  exact collapseOrderIso M (by simpa only [Cardinal.mk_ord_toType] using hμ)
-    (by simpa only [Cardinal.mk_ord_toType] using reg) d dense
 
 end Erdos1172LevyCollapse.Matching

@@ -116,52 +116,7 @@ theorem exists_ground_embedding
   obtain ⟨p, hp, hpi, hpj⟩ := hcommon i j
   exact hordered p hp i j (e i) (e j) hij hpi hpj
 
-/-- The existing clique-decision API gives both a ground embedding and
-a ground clique inside the same ground cover. -/
-theorem exists_ground_clique_map
-    (F : FunctionDecisions P W1 W1) {G : SimpleGraph X}
-    (sys : CliqueDecisions P I X G) (C : (W1 → W1) → Set X)
-    (hclosed : CountablyClosed P) (p0 : P) (hI : #I ≤ ℵ_ 1)
-    (hmem : ∀ p : P, p ≤ p0 → ∀ i x, sys.decides p i x →
-      (coverName F C).holds p x) :
-    ∃ f : W1 → W1, ∃ e : I → X,
-      StrictMono e ∧ G.IsClique (Set.range e) ∧ Set.range e ⊆ C f := by
-  let E : FunctionDecisions P I X := {
-    decides := sys.decides
-    dense := sys.dense
-    persistent := sys.persistent
-    unique := sys.unique }
-  obtain ⟨f, e, hsub, hcommon⟩ :=
-    exists_ground_cover_and_values F E C hclosed p0 hI hmem
-  refine ⟨f, e, ?_, ?_, hsub⟩
-  · intro i j hij
-    obtain ⟨p, _, hpi, hpj⟩ := hcommon i j
-    exact sys.ordered hij hpi hpj
-  · rintro _ ⟨i, rfl⟩ _ ⟨j, rfl⟩ hne
-    obtain ⟨p, _, hpi, hpj⟩ := hcommon i j
-    exact sys.adjacent (fun heq => hne (congrArg e heq)) hpi hpj
-
 variable [WellFoundedLT I] [WellFoundedLT X]
-
-/-- A bound on every whole ground cover bounds any small ordered
-decision domain whose decided points are actual cover members. -/
-theorem typeLT_le_of_embedding_decisions
-    (F : FunctionDecisions P W1 W1) (E : FunctionDecisions P I X)
-    (C : (W1 → W1) → Set X) (hclosed : CountablyClosed P)
-    (p0 : P) (hI : #I ≤ ℵ_ 1)
-    (hmem : ∀ p : P, p ≤ p0 → ∀ i x, E.decides p i x →
-      (coverName F C).holds p x)
-    (hordered : ∀ p : P, p ≤ p0 → ∀ i j x y,
-      i < j → E.decides p i x → E.decides p j y → x < y)
-    (bound : Ordinal.{0}) (hbound : ∀ f, typeLT (C f) ≤ bound) :
-    typeLT I ≤ bound := by
-  obtain ⟨f, e, hstrict, hsub⟩ :=
-    exists_ground_embedding F E C hclosed p0 hI hmem hordered
-  calc
-    typeLT I = typeLT (Set.range e) :=
-      (Ordinal.typeLT_range_of_strictMono e hstrict).symm
-    _ ≤ typeLT (C f) := Ordinal.type_mono hsub
-    _ ≤ bound := hbound f
 
 /-- The strict version rules out an ordered decision name at the loss
 threshold. It does not rely on a bound only for fixed-condition members. -/

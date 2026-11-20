@@ -63,12 +63,6 @@ theorem union_Ord_of_subset {A : bSet 𝔹} {Γ : 𝔹}
     mem_of_mem_subset (inf_le_left.trans HA) inf_le_right
   exact le_inf (Ord_of_mem_Ord Ha omegaOne_Ord) (subset_of_mem_Ord Ha omegaOne_Ord)
 
-theorem union_mem_omegaOne {A : bSet 𝔹} {Γ : 𝔹}
-    (HA : Γ ≤ A ⊆ᴮ omegaOne) (Hcount : Γ ≤ injects_into A bSet.omega) :
-    Γ ≤ bv_union A ∈ᴮ omegaOne :=
-  countable_ordinal_mem_omegaOne (union_Ord_of_subset HA)
-    (union_countable_of_subset HA Hcount)
-
 /-- Taking a successor gives a strict bound, even if the family has a maximum
 or is empty. No internally supplied upper bound is assumed. -/
 theorem succ_union_mem_omegaOne {A : bSet 𝔹} {Γ : 𝔹}
@@ -100,19 +94,5 @@ theorem exists_bound_of_countable {A : bSet 𝔹} {Γ : 𝔹}
     (HA : Γ ≤ A ⊆ᴮ omegaOne) (Hcount : Γ ≤ injects_into A bSet.omega) :
     ∃ b : bSet 𝔹, Γ ≤ b ∈ᴮ omegaOne ⊓ A ⊆ᴮ b :=
   ⟨succ (bv_union A), le_inf (succ_union_mem_omegaOne HA Hcount) (subset_succ_union HA)⟩
-
-/-- Countable boundedness follows from the existing internal choice and
-countable-union constructions, without a supplied ideal. -/
-theorem countablyBounded_omegaOne {Γ : 𝔹} :
-    Γ ≤ ErdosOmegaOneIdealBounded.countablyBounded (omegaOne : bSet 𝔹) := by
-  apply le_iInf
-  intro A
-  rw [← deduction]
-  obtain ⟨b, Hb⟩ := exists_bound_of_countable
-    (show Γ ⊓ (A ⊆ᴮ omegaOne ⊓ injects_into A bSet.omega) ≤ A ⊆ᴮ omegaOne from
-      inf_le_right.trans inf_le_left)
-    (show Γ ⊓ (A ⊆ᴮ omegaOne ⊓ injects_into A bSet.omega) ≤
-        injects_into A bSet.omega from inf_le_right.trans inf_le_right)
-  exact le_iSup_of_le b Hb
 
 end bSet.ErdosOmegaOneCountablyBounded

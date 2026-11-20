@@ -7,7 +7,6 @@ module
 public import Erdos1172.Part4InternalCountableProduct
 public import Erdos1172.Part4InternalCountableSuccessor
 public import Erdos1172.Part4InternalSimultaneousRunLaws
-public import Erdos1172.Part4InternalCountableImage
 
 @[expose] public section
 
@@ -217,81 +216,10 @@ theorem stoppedCoordinateTriangle_is_func {ρ P : bSet 𝔹} {Γ : 𝔹}
     Γ ≤ is_func (stoppedCoordinateTriangle ρ P) :=
   is_func_subset_of_is_func HX stoppedCoordinateTriangle_subset_history
 
-/-- The triangular restriction is total on precisely the entire active
-triangle whenever the decoded coordinate graph is total on the square. -/
-theorem stoppedCoordinateTriangle_is_function {ρ P : bSet 𝔹} {Γ : 𝔹}
-    (Hρ : Γ ≤ ρ ∈ᴮ omegaOne)
-    (HX : Γ ≤ is_function (prod omegaOne omegaOne) omegaOne (coordinateHistory P)) :
-    Γ ≤ is_function (triangleDomain ρ) omegaOne (stoppedCoordinateTriangle ρ P) := by
-  apply relationGraph_is_function (P := fun q v => pair q v ∈ᴮ coordinateHistory P)
-    (fun _ => B_ext_pair_mem_left) (fun _ => B_ext_pair_mem_right)
-  · exact is_total_of_is_func' (is_func'_subset_of_is_func'
-      (is_func'_of_is_function HX) (triangleDomain_subset_omegaOne_square Hρ))
-  · intro q₁ q₂ v₁ v₂ Δ HΔ _ _ _ _ H₁ H₂ Heq
-    exact eq_of_is_func_of_eq
-      (HΔ.trans (HX.trans (inf_le_left.trans inf_le_left))) Heq H₁ H₂
-
 theorem stoppedCoordinateTriangle_countable {ρ P : bSet 𝔹} {Γ : 𝔹}
     (Hρ : Γ ≤ ρ ∈ᴮ omegaOne) (HX : Γ ≤ is_func (coordinateHistory P)) :
     Γ ≤ injects_into (stoppedCoordinateTriangle ρ P) bSet.omega :=
   graph_countable_of_domain (stoppedCoordinateTriangle_is_func HX)
     stoppedCoordinateTriangle_subset_product (triangleDomain_countable Hρ)
-
-def stoppedCoordinateValues (ρ P : bSet 𝔹) : bSet 𝔹 :=
-  image (triangleDomain ρ) omegaOne (coordinateHistory P)
-
-theorem mem_stoppedCoordinateValues_iff {ρ P v : bSet 𝔹} {Γ : 𝔹} :
-    Γ ≤ v ∈ᴮ stoppedCoordinateValues ρ P ↔ Γ ≤ v ∈ᴮ omegaOne ∧
-      Γ ≤ ⨆ q, q ∈ᴮ triangleDomain ρ ⊓ pair q v ∈ᴮ coordinateHistory P :=
-  mem_image_iff
-
-theorem stoppedCoordinateValues_subset {ρ P : bSet 𝔹} {Γ : 𝔹} :
-    Γ ≤ stoppedCoordinateValues ρ P ⊆ᴮ omegaOne := image_subset
-
-theorem stoppedCoordinateTriangle_image_eq {ρ P : bSet 𝔹} {Γ : 𝔹} :
-    Γ ≤ image (triangleDomain ρ) omegaOne (stoppedCoordinateTriangle ρ P) =ᴮ
-      stoppedCoordinateValues ρ P := by
-  apply mem_ext
-  · apply le_iInf
-    intro v
-    rw [← deduction]
-    have Hv := mem_image_iff.mp
-      (show Γ ⊓ v ∈ᴮ image (triangleDomain ρ) omegaOne (stoppedCoordinateTriangle ρ P) ≤
-        v ∈ᴮ image (triangleDomain ρ) omegaOne (stoppedCoordinateTriangle ρ P) from inf_le_right)
-    obtain ⟨q, Hq⟩ := exists_convert Hv.2 (B_ext_inf B_ext_mem_left B_ext_pair_mem_left)
-    exact mem_stoppedCoordinateValues_iff.mpr ⟨Hv.1, le_iSup_of_le q
-      (le_inf (Hq.trans inf_le_left)
-        (mem_stoppedCoordinateTriangle_iff.mp (Hq.trans inf_le_right)).2.2)⟩
-  · apply le_iInf
-    intro v
-    rw [← deduction]
-    have Hv := mem_stoppedCoordinateValues_iff.mp
-      (show Γ ⊓ v ∈ᴮ stoppedCoordinateValues ρ P ≤
-        v ∈ᴮ stoppedCoordinateValues ρ P from inf_le_right)
-    obtain ⟨q, Hq⟩ := exists_convert Hv.2 (B_ext_inf B_ext_mem_left B_ext_pair_mem_left)
-    exact mem_image_iff.mpr ⟨Hv.1, le_iSup_of_le q (le_inf (Hq.trans inf_le_left)
-      (mem_stoppedCoordinateTriangle_iff.mpr
-        ⟨Hq.trans inf_le_left, Hv.1, Hq.trans inf_le_right⟩))⟩
-
-theorem stoppedCoordinateValues_countable {ρ P : bSet 𝔹} {Γ : 𝔹}
-    (Hρ : Γ ≤ ρ ∈ᴮ omegaOne)
-    (HX : Γ ≤ is_function (prod omegaOne omegaOne) omegaOne (coordinateHistory P)) :
-    Γ ≤ injects_into (stoppedCoordinateValues ρ P) bSet.omega :=
-  restricted_image_countable (is_func'_of_is_function HX)
-    (triangleDomain_subset_omegaOne_square Hρ) (triangleDomain_countable Hρ)
-
-/-- The actual full run supplies the required coordinate functionality;
-neither stopping nor successful vertex choice is needed for this bound. -/
-theorem stoppedCoordinateTriangle_of_run
-    {color : Bool} {R S top P ρ : bSet 𝔹} {Γ : 𝔹}
-    (HP : Γ ≤ is_function omegaOne entrySpace P)
-    (Hlaw : Γ ≤ runLaw color R S top P) (Hρ : Γ ≤ ρ ∈ᴮ omegaOne) :
-    Γ ≤ is_function (triangleDomain ρ) omegaOne (stoppedCoordinateTriangle ρ P) ⊓
-      (injects_into (stoppedCoordinateTriangle ρ P) bSet.omega ⊓
-        injects_into (stoppedCoordinateValues ρ P) bSet.omega) := by
-  have HX := coordinateHistory_is_function_of_run HP Hlaw
-  exact le_inf (stoppedCoordinateTriangle_is_function Hρ HX)
-    (le_inf (stoppedCoordinateTriangle_countable Hρ
-      (HX.trans (inf_le_left.trans inf_le_left))) (stoppedCoordinateValues_countable Hρ HX))
 
 end bSet.ErdosStoppedCoordinateTriangle

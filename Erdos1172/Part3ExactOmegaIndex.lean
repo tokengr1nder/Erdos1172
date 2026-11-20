@@ -72,19 +72,6 @@ theorem typeLT_omegaSuccessor : typeLT OmegaSuccessor = (ω_ 1 : Ordinal.{0}) ^ 
   change (typeLT OmegaIndex) * (typeLT W1) = _
   rw [typeLT_omegaIndex, Ordinal.type_toType, Ordinal.opow_add_one]
 
-def boundedLevels (n : ℕ) : Set OmegaIndex := {z | (ofLex z).1 ≤ n}
-
-theorem boundedLevels_type_lt (n : ℕ) : typeLT (boundedLevels n) < (ω_ 1 : Ordinal.{0}) ^ ω := by
-  let f : boundedLevels n → ((ω_ 1 : Ordinal.{0}) ^ ((n + 1 : ℕ) : Ordinal)).ToType :=
-    fun z => Ordinal.ToType.mk ⟨value z.val, (levelValue_lt _ _).trans_le
-      (Ordinal.opow_le_opow_right (Ordinal.omega_pos 1)
-        (by exact_mod_cast Nat.succ_le_succ z.property))⟩
-  have hf : StrictMono f := fun _ _ h => Ordinal.ToType.mk.strictMono (value_strict h)
-  have htype := (RelEmbedding.ofMonotone f hf).ordinal_type_le
-  rw [Ordinal.type_toType] at htype
-  exact htype.trans_lt ((Ordinal.opow_lt_opow_iff_right
-    (Ordinal.one_lt_omega0.trans_le (Ordinal.omega0_le_omega 1))).mpr (Ordinal.natCast_lt_omega0 (n + 1)))
-
 def boundedRows (bound : W1) : Set OmegaSuccessor := {z | (ofLex z).1 ≤ bound}
 
 theorem boundedRows_type_lt (bound : W1) :

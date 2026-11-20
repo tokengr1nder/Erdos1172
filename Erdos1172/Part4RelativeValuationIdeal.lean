@@ -6,7 +6,6 @@ module
 
 public import Erdos1172.Part4RelativeNormalValuation
 public import Erdos1172.Part4BooleanWeightedDenseBasis
-public import Erdos1172.Part4BooleanSeedKernelClosure
 
 @[expose] public section
 

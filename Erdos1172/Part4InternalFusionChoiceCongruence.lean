@@ -100,18 +100,6 @@ theorem maskedCandidates_congr_top (color : Bool) (R E ξ Blocks X ν : bSet �
         (t := fun top => rowCandidatesAt color R E top ξ Blocks X ν)
         B_ext_mem_right (rowCandidatesAt_congr_top color R E ξ Blocks X ν)))
 
-theorem maskedCandidates_congr
-    {color : Bool} {R E top other ξ η Blocks Other X Y ν μ : bSet 𝔹} {Γ : 𝔹}
-    (Htop : Γ ≤ top =ᴮ other) (Hξη : Γ ≤ ξ =ᴮ η) (HBlocks : Γ ≤ Blocks =ᴮ Other)
-    (HXY : Γ ≤ X =ᴮ Y) (Hνμ : Γ ≤ ν =ᴮ μ) :
-    Γ ≤ maskedCandidates color R E top ξ Blocks X ν =ᴮ
-      maskedCandidates color R E other η Other Y μ :=
-  bv_trans (maskedCandidates_congr_top color R E ξ Blocks X ν Htop)
-    (bv_trans (maskedCandidates_congr_stage color R E other Blocks X ν Hξη)
-      (bv_trans (maskedCandidates_congr_blocks color R E other η X ν HBlocks)
-        (bv_trans (maskedCandidates_congr_coordinates color R E other η Other ν HXY)
-          (maskedCandidates_congr_row color R E other η Other Y Hνμ))))
-
 theorem currentChoices_congr_stage (color : Bool) (R E top Blocks X : bSet 𝔹) :
     B_congr (fun ξ => currentChoices color R E top ξ Blocks X) :=
   relationGraph_parameter_congr omegaOne omegaOne

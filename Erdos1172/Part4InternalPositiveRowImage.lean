@@ -42,26 +42,6 @@ theorem omegaOne_injects_row_image {J C h : bSet 𝔹} {Γ : 𝔹}
     (injects_into_of_injection_into
       (le_iSup_of_le h (factor_image_is_injective_function Hh)))
 
-/-- Every used value of a function into the restricted image is used by
-the original row at an index in the original restricted domain. All names
-and the Boolean condition are arbitrary. -/
-theorem rangeMem_image_of_subset {U C K h r f x : bSet 𝔹} {Γ : 𝔹}
-    (Hf : Γ ≤ is_func' U (image C K h) f)
-    (Hhr : Γ ≤ h ⊆ᴮ r) (Hx : Γ ≤ rangeMem U f x) :
-    Γ ≤ rangeMem C r x := by
-  have Him : Γ ≤ x ∈ᴮ image C K h := rangeMem_le_codomain Hf Hx
-  exact ErdosFunctionRestriction.rangeMem_of_subsets subset_self Hhr
-    ((mem_image_iff.mp Him).2)
-
-/-- Fullness supplies an arbitrary internal original-row preimage at the
-same Boolean condition; it does not select a ground-model index. -/
-theorem exists_original_row_preimage {U C K h r f x : bSet 𝔹} {Γ : 𝔹}
-    (Hf : Γ ≤ is_func' U (image C K h) f)
-    (Hhr : Γ ≤ h ⊆ᴮ r) (Hx : Γ ≤ rangeMem U f x) :
-    ∃ i : bSet 𝔹, Γ ≤ i ∈ᴮ C ⊓ pair i x ∈ᴮ r :=
-  exists_convert (rangeMem_image_of_subset Hf Hhr Hx)
-    (B_ext_inf B_ext_mem_left B_ext_pair_mem_left)
-
 /-- Restrict an actual injective row to positive indices and increasingly
 enumerate its image. No increasingness of the given row, CH, normality,
 or positivity of the row image is assumed. -/

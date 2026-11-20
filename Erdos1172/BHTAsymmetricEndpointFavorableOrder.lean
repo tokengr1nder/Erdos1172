@@ -5,7 +5,6 @@ Licensed under the Apache License, Version 2.0.
 module
 
 public import Erdos1172.Part2BlockCriterion
-public import Erdos1172.ForMathlib.SetTheory.Cardinal.GCHConsequences1172
 
 @[expose] public section
 
@@ -261,56 +260,29 @@ private theorem blue_target_of_positive_transversal
     data.blue_core (blueRows data q) hrowSub hpositive
   obtain ⟨tail, htailSub, htailBlue, htailType⟩ :=
     exists_blue_tail_of_transversal data q
-  have hbefore : BlocksBefore core tail := by
-    intro x hx y hy
-    have hxRows : x ∈ data.rows := hrowSub (hcoreSub hx)
+  refine Erdos1172BlockCriterion.exists_clique_type_omegaTwo_add_of_later_block
+    blue hcoreBlue hcoreType ⟨tail, htailBlue, htailType, ?_, ?_⟩
+  · intro x hx y hy
     obtain ⟨n, rfl⟩ := htailSub hy
-    exact data.rows_before_blocks x hxRows (q.1 n).1
-      (q.point n) (point_mem_block data q n)
-  have hcross : ∀ x ∈ core, ∀ y ∈ tail, blue.Adj x y := by
-    intro x hx y hy
+    exact data.rows_before_blocks x (hrowSub (hcoreSub hx)) (q.1 n).1 (q.point n)
+      (point_mem_block data q n)
+  · intro x hx y hy
     obtain ⟨n, rfl⟩ := htailSub hy
     exact (hcoreSub hx).2 n
-  apply Erdos1172BlockCriterion.exists_clique_type_omegaTwo_add_of_later_block
-    blue hcoreBlue hcoreType
-  exact ⟨tail, htailBlue, htailType, hbefore, hcross⟩
 
 private theorem remaining_row_blueSupport_finite
     (data : FavorableEndpointData red blue)
-    (bad : Set W3)
-    (hbadDef : bad = ⋃ q : BlueTransversalCode data, blueRows data q)
-    {x : W3} (hx : x ∈ data.rows \ bad) :
+    {x : W3} (hx : x ∈ data.rows \ ⋃ q : BlueTransversalCode data, blueRows data q) :
     (blueBlockSupport data x).Finite := by
   classical
   by_contra hinfinite
-  have hinf : (blueBlockSupport data x).Infinite := hinfinite
   let indices : Nat ↪ blueBlockSupport data x :=
-    hinf.natEmbedding (blueBlockSupport data x)
-  have hexists (n : Nat) :
-      ∃ y : W3,
-        y ∈ data.blocks (indices n).1 ∧ blue.Adj x y :=
-    (indices n).2
-  let selected (n : Nat) : W3 := Classical.choose (hexists n)
-  have hselected (n : Nat) :
-      selected n ∈ data.blocks (indices n).1 ∧
-        blue.Adj x (selected n) :=
-    Classical.choose_spec (hexists n)
-  let raw : Nat → BlockPoint data := fun n =>
-    ⟨(indices n).1, ⟨selected n, (hselected n).1⟩⟩
-  have hrawIndexInjective :
-      Function.Injective (fun n => (raw n).1) := by
-    intro m n hmn
-    apply indices.injective
-    exact Subtype.ext hmn
-  let q : BlueTransversalCode data := ⟨raw, hrawIndexInjective⟩
-  have hxBlue : x ∈ blueRows data q := by
-    refine ⟨hx.1, ?_⟩
-    intro n
-    simpa only [BlueTransversalCode.point, q, raw] using (hselected n).2
-  have hxBad : x ∈ bad := by
-    rw [hbadDef]
-    exact Set.mem_iUnion.mpr ⟨q, hxBlue⟩
-  exact hx.2 hxBad
+    Set.Infinite.natEmbedding (blueBlockSupport data x) hinfinite
+  choose selected hsel_mem hsel_adj using fun n : Nat => (indices n).2
+  let q : BlueTransversalCode data :=
+    ⟨fun n => ⟨(indices n).1, ⟨selected n, hsel_mem n⟩⟩,
+     fun m n hmn => indices.injective (Subtype.ext hmn)⟩
+  exact hx.2 (Set.mem_iUnion.mpr ⟨q, hx.1, hsel_adj⟩)
 
 /-- The favorable maximal-sequence order closes the asymmetric endpoint:
 either a positive blue countable transversal gives the blue target, or a
@@ -324,73 +296,33 @@ theorem part2Targets_of_favorableEndpoint
   let : Infinite I1 := Cardinal.infinite_iff.2 <| by
     simpa only [I1, Cardinal.mk_toType, Ordinal.card_omega] using
       Cardinal.aleph0_le_aleph (1 : Ordinal)
-  by_cases hblue : ∃ q : BlueTransversalCode data,
-      ¬data.smallness.small (blueRows data q)
+  by_cases hblue : ∃ q : BlueTransversalCode data, ¬data.smallness.small (blueRows data q)
   · obtain ⟨q, hq⟩ := hblue
     exact Or.inr (blue_target_of_positive_transversal data q hq)
-  · have hallSmall (q : BlueTransversalCode data) :
-        data.smallness.small (blueRows data q) := by
-      by_contra hq
-      exact hblue ⟨q, hq⟩
-    let bad : Set W3 := ⋃ q : BlueTransversalCode data, blueRows data q
-    have hbadSmall : data.smallness.small bad := by
-      exact data.smallness.iUnion_small
-        (fun q : BlueTransversalCode data => blueRows data q)
-        (blueTransversalCode_card_lt_alephTwo hCH data) hallSmall
-    let remaining : Set W3 := data.rows \ bad
-    have hremainingPositive :
-        ¬data.smallness.small remaining := by
-      exact data.smallness.positive_sdiff data.rows_positive hbadSmall
-    have hsupportFinite : ∀ x ∈ remaining,
-        (blueBlockSupport data x).Finite := by
-      intro x hx
-      exact remaining_row_blueSupport_finite data bad rfl hx
-    let supportCode : W3 → Finset I1 := fun x =>
-      if hx : x ∈ remaining then
-        (hsupportFinite x hx).toFinset
-      else ∅
-    obtain ⟨fixedSupport, hfixedPositive⟩ :=
-      data.smallness.exists_positive_fiber remaining
-        hremainingPositive supportCode finset_I1_card_lt_alephTwo
-    let fiber : Set W3 :=
-      remaining ∩ supportCode ⁻¹' {fixedSupport}
-    have hfiberPositive : ¬data.smallness.small fiber := by
-      simpa only [fiber] using hfixedPositive
-    have hfiberSubRows : fiber ⊆ data.rows := by
-      intro x hx
-      exact hx.1.1
-    obtain ⟨outsideBlock, houtside⟩ :=
-      Infinite.exists_notMem_finset fixedSupport
-    have hcrossRed : ∀ x ∈ fiber,
-        ∀ y ∈ data.blocks outsideBlock, red.Adj x y := by
-      intro x hx y hy
-      have hxRemaining : x ∈ remaining := hx.1
-      have hcodeEq : supportCode x = fixedSupport := by
-        simpa only [Set.mem_preimage, Set.mem_singleton_iff] using hx.2
-      have houtsideSupport : outsideBlock ∉ blueBlockSupport data x := by
-        intro hs
-        have hmemCode : outsideBlock ∈ supportCode x := by
-          simp only [supportCode, dif_pos hxRemaining]
-          exact (hsupportFinite x hxRemaining).mem_toFinset.mpr hs
-        rw [hcodeEq] at hmemCode
-        exact houtside hmemCode
-      have hnblue : ¬blue.Adj x y := by
-        intro hxy
-        exact houtsideSupport ⟨y, hy, hxy⟩
-      rw [← hcompl.symm.compl_eq, SimpleGraph.compl_adj]
-      exact ⟨(data.rows_before_blocks x (hfiberSubRows hx)
-        outsideBlock y hy).ne, hnblue⟩
+  · push Not at hblue
+    let remaining : Set W3 := data.rows \ ⋃ q : BlueTransversalCode data, blueRows data q
+    have hremPos : ¬data.smallness.small remaining :=
+      data.smallness.positive_sdiff data.rows_positive
+        (data.smallness.iUnion_small _ (blueTransversalCode_card_lt_alephTwo hCH data) hblue)
+    let supportCode (x : W3) : Finset I1 :=
+      if hx : x ∈ remaining then (remaining_row_blueSupport_finite data hx).toFinset else ∅
+    obtain ⟨fixedSupport, hfixedPos⟩ :=
+      data.smallness.exists_positive_fiber remaining hremPos supportCode finset_I1_card_lt_alephTwo
+    let fiber : Set W3 := remaining ∩ supportCode ⁻¹' {fixedSupport}
+    obtain ⟨outsideBlock, houtside⟩ := Infinite.exists_notMem_finset fixedSupport
     obtain ⟨core, hcoreSub, hcoreRed, hcoreType⟩ :=
-      data.red_core fiber hfiberSubRows hfiberPositive
-    have hbefore : BlocksBefore core (data.blocks outsideBlock) := by
-      intro x hx y hy
-      exact data.rows_before_blocks x (hfiberSubRows (hcoreSub hx))
-        outsideBlock y hy
-    apply Or.inl
-    apply Erdos1172BlockCriterion.exists_clique_type_omegaTwo_add_of_later_block
-      red hcoreRed hcoreType
-    exact ⟨data.blocks outsideBlock, data.block_red outsideBlock,
-      data.block_type outsideBlock, hbefore,
-      fun x hx y hy => hcrossRed x (hcoreSub hx) y hy⟩
+      data.red_core fiber (fun _ hx => hx.1.1) hfixedPos
+    refine Or.inl (Erdos1172BlockCriterion.exists_clique_type_omegaTwo_add_of_later_block
+      red hcoreRed hcoreType ⟨data.blocks outsideBlock, data.block_red outsideBlock,
+        data.block_type outsideBlock,
+        fun x hx y hy => data.rows_before_blocks x (hcoreSub hx).1.1 outsideBlock y hy, ?_⟩)
+    intro x hx y hy
+    have hxf := hcoreSub hx
+    rw [← hcompl.symm.compl_eq, SimpleGraph.compl_adj]
+    refine ⟨(data.rows_before_blocks x hxf.1.1 outsideBlock y hy).ne, fun hxy => houtside ?_⟩
+    have hcode : supportCode x = fixedSupport := hxf.2
+    rw [← hcode]
+    simp only [supportCode, dif_pos hxf.1, Set.Finite.mem_toFinset]
+    exact ⟨y, hy, hxy⟩
 
 end Erdos1172BHTAsymmetricEndpointFavorableOrder

@@ -135,30 +135,3 @@ theorem part4Value_of_normal_dense_ideal
     HD HDpos Hdense HI
 
 end bSet.ErdosPartitionFromIdeal
-
-namespace Erdos1172Part4InternalIdealPartition
-
-open Fol
-open bSet bSet.ErdosOmegaTwo bSet.ErdosIdeal bSet.ErdosDenseBasis
-open Erdos1172Part4InternalPartitionSentence
-
-variable {β : Type 0} [NontrivialCompleteBooleanAlgebra β]
-
-/-- The already verified closed sentence has precisely the constructed
-partition value. This forcing statement retains every ideal hypothesis. -/
-theorem forces_part4Sentence_of_normal_dense_ideal
-    {J I D : bSet β} {Γ : β}
-    (HCH : Γ ≤ (CH : β))
-    (HJ : Γ ≤ properIdeal omegaOne J)
-    (Habsorb : Γ ≤ countableAbsorption omegaOne J)
-    (Hclosure : Γ ≤ countableClosure J)
-    (Hdiag : Γ ≤ diagonalClosure omegaOne J)
-    (HD : Γ ≤ is_function I (bv_powerset omegaOne) D)
-    (HDpos : Γ ≤ positiveValues omegaOne J I D)
-    (Hdense : Γ ≤ denseValues omegaOne J I D)
-    (HI : Γ ≤ injects_into I omegaOne) : Γ ⊩[V β] part4Sentence :=
-  forces_part4Sentence_iff.mpr
-    (bSet.ErdosPartitionFromIdeal.part4Value_of_normal_dense_ideal
-      HCH HJ Habsorb Hclosure Hdiag HD HDpos Hdense HI)
-
-end Erdos1172Part4InternalIdealPartition

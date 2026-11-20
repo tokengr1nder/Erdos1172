@@ -40,10 +40,6 @@ def Control (H : SimpleGraph W2) (index : Local r a ↪ W1) (i : W1) (p : P) (y 
   ∀ c : Local r a, index c < i → ∀ q : P, q ≤ p →
     (eval G H c.val).holds q a → (eval G H c.val).holds q y
 
-theorem control_persistent {index : Local r a ↪ W1} {i : W1} {p q : P} {y : W2}
-    (hqp : q ≤ p) (h : Control H index i p y) : Control H index i q y :=
-  fun c hc s hsq => h c hc s (hsq.trans hqp)
-
 abbrev Active (index : Local r a ↪ W1) (i : W1) := {c : Local r a // index c < i}
 
 theorem mk_active_le (index : Local r a ↪ W1) (i : W1) : #(Active index i) ≤ ℵ₀ := by

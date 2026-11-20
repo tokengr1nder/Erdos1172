@@ -157,13 +157,4 @@ theorem exists_club_goodCut (hCH : CH) (hcc : OmegaTwoCC P) (hI : #I ≤ ℵ_ 1)
       ⟨N.values, N.mk_values_le hI⟩ x hx).trans (hmem 5 N hN)
   · exact h6 a (hmem 6)
 
-theorem exists_club_goodCut_of_gch (hGCH : GCH) (hP : #P ≤ ℵ_ 2)
-    (hcc : OmegaTwoCC P) (hI : #I ≤ ℵ_ 1)
-    (G H : SimpleGraph W2) (source : RegularName P W2) :
-    ∃ club : Set W2, IsClub club ∧ ∀ a ∈ club,
-      ErdosRadoCHAsym.IsOmegaOneSup a →
-        GoodCut (rank hGCH hP hI G) (blockRank hGCH hP hI G) H source a :=
-  exists_club_goodCut hGCH.toCH hcc hI G H
-    (rank hGCH hP hI G) (blockRank hGCH hP hI G) source
-
 end Erdos1172Part3RegularNeighborhoodCode

@@ -5,7 +5,6 @@ Licensed under the Apache License, Version 2.0.
 module
 
 public import Erdos1172.Part4InternalIndexedIntersection
-public import Erdos1172.Part4InternalCountableImage
 public import Erdos1172.Part4InternalPartitionGraph
 
 @[expose] public section

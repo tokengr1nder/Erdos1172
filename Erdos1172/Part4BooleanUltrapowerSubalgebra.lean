@@ -5,7 +5,8 @@ Licensed under the Apache License, Version 2.0.
 module
 
 public import Erdos1172.Part4BooleanUltrapowerScalar
-public import Erdos1172.Part4LevyPreparationBoundedSeed
+public import Erdos1172.Part4LevyPreparationBoundedChecked
+public import Erdos1172.Part4ShioyaUltrapowerSeedDecision
 public import Erdos1172.Part4ShioyaInterpretedMasterLift
 
 @[expose] public section
@@ -699,21 +700,6 @@ theorem boundedAnon_seed (hk' : κ < θ) :
       (congrArg Ordinal.toZFSet (criticalOrdinalPoint_ord U a hf hn ht hk'))
   apply bv_trans (boundedAnon_checked_family U a hk'.le hf hn ht hκ v S supp hw)
   exact check_bv_eq (PSet.equiv_iff_eq.mpr ((ZFSet.mk_out _).trans hv))
-
-include hk hf hn ht hκ in
-theorem boundedAnon_omegaOne :
-    (⊤ : VA) ≤ liftA (fun _ => (omegaOne : bSet A)) =ᴮ check (PSet.ordinalMk θ.ord) := by
-  have heq_ord : ordinalImage U a κ.ord = θ.ord :=
-    Ordinal.toZFSet_injective ((ordinalImage_code U a κ.ord).trans
-      (boundedDiagonal_critical_image U κ θ a hf hn ht))
-  have h1 : (⊤ : VA) ≤ liftA (fun _ => (omegaOne : bSet A)) =ᴮ
-      liftA (fun _ => check (PSet.ordinalMk κ.ord)) :=
-    boundedAnon_congr U a hk hf hn ht hκ (Supported.const _) (Supported.const _)
-      (Eventually.of_forall fun _ =>
-        top_unique (bv_symm (anonymous_checked_upper_eq_omegaOne κ hκ)))
-  have h2 := boundedAnon_ordinal U a hk hf hn ht hκ κ.ord
-  rw [heq_ord] at h2
-  exact bv_trans h1 h2
 
 end BoundedAnonymousNames
 

@@ -5,7 +5,6 @@ Licensed under the Apache License, Version 2.0.
 module
 
 public import Erdos1172.Part4InternalHartogsUniqueness
-public import Erdos1172.Part4InternalCHHartogs
 public import Erdos1172.Part4InternalCantor
 
 @[expose] public section
@@ -60,16 +59,6 @@ theorem gchAt_witness_ext (κ : bSet 𝔹) :
     B_ext (fun δ => hartogsProperty κ δ ⊓ injects_into (bv_powerset κ) δ) :=
   B_ext_inf (hartogsProperty_ext_witness κ) B_ext_injects_into_right
 
-theorem gchAt_ext : B_ext (gchAt : bSet 𝔹 → 𝔹) := by
-  unfold gchAt
-  apply B_ext_iSup
-  intro δ
-  refine B_ext_inf B_ext_hartogsProperty_base ?_
-  apply B_ext_term (fun X => injects_into X δ) bv_powerset
-    B_ext_injects_into_left
-  intro x y Γ Hxy
-  exact bv_powerset_congr Hxy
-
 theorem gchAt_of_witness {κ δ : bSet 𝔹} {Γ : 𝔹}
     (Hδ : Γ ≤ hartogsProperty κ δ)
     (Hpower : Γ ≤ injects_into (bv_powerset κ) δ) : Γ ≤ gchAt κ :=
@@ -107,73 +96,5 @@ theorem hartogs_predecessor_injects {κ δ γ : bSet 𝔹} {Γ : 𝔹}
     Γ ≤ injects_into γ κ :=
   (le_inf (Hδ.trans (inf_le_right.trans (inf_le_right.trans (iInf_le _ γ))))
     Hγ).trans bv_imp_elim
-
-/-- Initiality follows locally from the specification; no global `Hone` is used. -/
-theorem initialOrdinal_of_hartogsProperty {κ δ : bSet 𝔹} {Γ : 𝔹}
-    (Hδ : Γ ≤ hartogsProperty κ δ) : Γ ≤ initialOrdinal δ := by
-  refine le_inf (Hδ.trans inf_le_left) ?_
-  apply le_iInf
-  intro γ
-  rw [← deduction, ← imp_bot, ← deduction]
-  have Hδ' : (Γ ⊓ γ ∈ᴮ δ) ⊓ injects_into δ γ ≤ hartogsProperty κ δ :=
-    inf_le_left.trans (inf_le_left.trans Hδ)
-  have Hγ : (Γ ⊓ γ ∈ᴮ δ) ⊓ injects_into δ γ ≤ γ ∈ᴮ δ :=
-    inf_le_left.trans inf_le_right
-  exact bv_absurd _
-    (injects_into_trans inf_le_right (hartogs_predecessor_injects Hδ' Hγ))
-    (Hδ'.trans (inf_le_right.trans inf_le_left))
-
-/-- The base is no larger than its specified Hartogs initial ordinal. -/
-theorem base_injects_hartogs {κ δ : bSet 𝔹} {Γ : 𝔹}
-    (Hδ : Γ ≤ hartogsProperty κ δ) : Γ ≤ injects_into κ δ := by
-  apply (le_inf (le_refl Γ)
-    (ErdosPartialInjection.ordinal_cardinal_dichotomy (S := κ)
-      (Hδ.trans inf_le_left))).trans
-  rw [inf_sup_left]
-  apply sup_le
-  · exact (bv_absurd _ inf_le_right
-      (inf_le_left.trans (Hδ.trans (inf_le_right.trans inf_le_left)))).trans bot_le
-  · rw [inf_iSup_eq]
-    apply iSup_le
-    intro γ
-    exact injects_into_trans (inf_le_right.trans inf_le_right)
-      (injects_into_of_subset (subset_of_mem_Ord
-        (inf_le_right.trans inf_le_left)
-        (inf_le_left.trans (Hδ.trans inf_le_left))))
-
-/-- Cantor's theorem rules out every smaller-ordinal alternative for the
-powerset. This lower bound does not assume GCH or infinitude of the base. -/
-theorem hartogs_injects_powerset {κ δ : bSet 𝔹} {Γ : 𝔹}
-    (Hδ : Γ ≤ hartogsProperty κ δ) :
-    Γ ≤ injects_into δ (bv_powerset κ) := by
-  apply (le_inf (le_refl Γ)
-    (ErdosPartialInjection.ordinal_cardinal_dichotomy (S := bv_powerset κ)
-      (Hδ.trans inf_le_left))).trans
-  rw [inf_sup_left]
-  apply sup_le
-  · exact inf_le_right
-  · rw [inf_iSup_eq]
-    apply iSup_le
-    intro γ
-    have Hsmall : Γ ⊓ (γ ∈ᴮ δ ⊓ injects_into (bv_powerset κ) γ) ≤
-        injects_into γ κ :=
-      hartogs_predecessor_injects (inf_le_left.trans Hδ)
-        (inf_le_right.trans inf_le_left)
-    exact (bv_absurd _
-      (injects_into_trans (inf_le_right.trans inf_le_right) Hsmall)
-      ErdosCantor.powerset_not_injects).trans bot_le
-
-/-- GCH supplies both injections with the successor initial ordinal, with
-one actual witness at the original Boolean condition. -/
-theorem exists_gchAt_mutual_injections {κ : bSet 𝔹} {Γ : 𝔹}
-    (H : Γ ≤ gchAt κ) :
-    ∃ δ, Γ ≤ hartogsProperty κ δ ⊓
-      (initialOrdinal δ ⊓
-        (injects_into (bv_powerset κ) δ ⊓ injects_into δ (bv_powerset κ))) := by
-  obtain ⟨δ, Hδ⟩ := exists_gchAt_witness H
-  exact ⟨δ, le_inf (Hδ.trans inf_le_left)
-    (le_inf (initialOrdinal_of_hartogsProperty (Hδ.trans inf_le_left))
-      (le_inf (Hδ.trans inf_le_right)
-        (hartogs_injects_powerset (Hδ.trans inf_le_left))))⟩
 
 end bSet.ErdosFullGCH

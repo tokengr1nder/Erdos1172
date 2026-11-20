@@ -5,7 +5,6 @@ Licensed under the Apache License, Version 2.0.
 module
 
 public import Erdos1172.Part4InternalIndexedIntersection
-public import Erdos1172.Part4InternalRelationGraph
 
 @[expose] public section
 
@@ -48,27 +47,12 @@ theorem unboundedIn_ext_set (κ : bSet 𝔹) : B_ext (unboundedIn κ) :=
     (h₂ := B_ext_iSup (h := fun _ =>
       B_ext_inf (B_ext_inf B_ext_mem_right B_ext_const) B_ext_const)))
 
-theorem unboundedIn_ext_bound (C : bSet 𝔹) :
-    B_ext (fun κ => unboundedIn κ C) :=
-  B_ext_iInf (h := fun _ => B_ext_imp (h₁ := B_ext_mem_right)
-    (h₂ := B_ext_iSup (h := fun _ =>
-      B_ext_inf (B_ext_inf B_ext_const B_ext_mem_right) B_ext_const)))
-
 theorem closedIn_ext_set (κ : bSet 𝔹) : B_ext (closedIn κ) :=
   B_ext_iInf (h := fun a => B_ext_imp
     (h₁ := B_ext_inf B_ext_const (unboundedIn_ext_set a)) (h₂ := B_ext_mem_right))
 
-theorem closedIn_ext_bound (C : bSet 𝔹) :
-    B_ext (fun κ => closedIn κ C) :=
-  B_ext_iInf (h := fun _ => B_ext_imp
-    (h₁ := B_ext_inf (B_ext_inf B_ext_mem_right B_ext_const) B_ext_const)
-    (h₂ := B_ext_const))
-
 theorem club_ext_set (κ : bSet 𝔹) : B_ext (club κ) :=
   B_ext_inf B_ext_subset_left (B_ext_inf (unboundedIn_ext_set κ) (closedIn_ext_set κ))
-
-theorem club_ext_bound (C : bSet 𝔹) : B_ext (fun κ => club κ C) :=
-  B_ext_inf B_ext_subset_right (B_ext_inf (unboundedIn_ext_bound C) (closedIn_ext_bound C))
 
 theorem unboundedIn_apply {κ C a : bSet 𝔹} {Γ : 𝔹}
     (HU : Γ ≤ unboundedIn κ C) (Ha : Γ ≤ a ∈ᴮ κ) :

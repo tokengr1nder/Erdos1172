@@ -43,21 +43,6 @@ def ofFactor (e : CompleteLatticeHom B C) (p : FactorCondition e) :
     Condition (quotientName e) :=
   ⟨p.source, p.source_ne_bot, (⟨p.target, p.target_ne_bot⟩ : Positive C), p.compatible⟩
 
-theorem toFactor_source (e : CompleteLatticeHom B C) (p : Condition (quotientName e)) :
-    (toFactor e p).source = p.value := rfl
-
-theorem toFactor_target (e : CompleteLatticeHom B C) (p : Condition (quotientName e)) :
-    (toFactor e p).target = (show Positive C from p.index).val := rfl
-
-theorem ofFactor_value (e : CompleteLatticeHom B C) (p : FactorCondition e) :
-    (ofFactor e p).value = p.source := rfl
-
-theorem ofFactor_index (e : CompleteLatticeHom B C) (p : FactorCondition e) :
-    (ofFactor e p).index = (⟨p.target, p.target_ne_bot⟩ : Positive C) := rfl
-
-theorem ofFactor_name (e : CompleteLatticeHom B C) (p : FactorCondition e) :
-    name (ofFactor e p) = check (upperSetCode (⟨p.target, p.target_ne_bot⟩ : Positive C)) := rfl
-
 theorem ofFactor_toFactor (e : CompleteLatticeHom B C) (p : Condition (quotientName e)) :
     ofFactor e (toFactor e p) = p := rfl
 
@@ -87,14 +72,5 @@ def factorOrderIso (e : CompleteLatticeHom B C) :
 
 @[simp] theorem factorOrderIso_symm_apply (e : CompleteLatticeHom B C)
     (p : FactorCondition e) : (factorOrderIso e).symm p = ofFactor e p := rfl
-
-theorem factorOrderIso_source (e : CompleteLatticeHom B C)
-    (p : Condition (quotientName e)) :
-    ((factorOrderIso e p).source) = (projection (quotientName e) p).val := rfl
-
-theorem evaluation_factorOrderIso (e : CompleteLatticeHom B C)
-    (p : Condition (quotientName e)) :
-    (evaluation e (factorOrderIso e p)).val =
-      e p.value ⊓ (show Positive C from p.index).val := rfl
 
 end Erdos1172BooleanQuotient

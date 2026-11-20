@@ -6,9 +6,6 @@ module
 
 public import Erdos1172.Part4InternalBoundedFunctionValue
 public import Erdos1172.Part4InternalCanonicalBlockEnumeration
-public import Erdos1172.Part4InternalSimultaneousTraces
-public import Erdos1172.Part4InternalRowCandidates
-public import Erdos1172.Part4InternalRowCandidateCongruence
 
 @[expose] public section
 
@@ -85,11 +82,6 @@ theorem canonicalRow_pair {color : Bool} {R E b : bSet 𝔹} {Γ : 𝔹}
     (HE : Γ ≤ is_function (blockObjects color R) blockEnumerationCodes E)
     (Hb : Γ ≤ b ∈ᴮ blockObjects color R) : Γ ≤ pair b (canonicalRow E b) ∈ᴮ E :=
   graphValue_pair_mem HE Hb
-
-theorem canonicalRow_eq_of_pair {color : Bool} {R E b r : bSet 𝔹} {Γ : 𝔹}
-    (HE : Γ ≤ is_function (blockObjects color R) blockEnumerationCodes E)
-    (Hbr : Γ ≤ pair b r ∈ᴮ E) : Γ ≤ canonicalRow E b =ᴮ r :=
-  graphValue_eq_of_pair HE Hbr
 
 theorem canonicalRow_data {color : Bool} {R E b : bSet 𝔹} {Γ : 𝔹}
     (HE : Γ ≤ is_function (blockObjects color R) blockEnumerationCodes E)
@@ -346,24 +338,6 @@ theorem fusionCandidate_cross_previous_block
     (Hvx : Γ ≤ pair v x ∈ᴮ canonicalRow E b) (Hy : Γ ≤ y ∈ᴮ c) :
     Γ ≤ graphColor edgeColor R x y :=
   fusionSection_apply (fusionCandidate_mem_section HX Hν Hv Hjξ Hνj) Hjc Hvx Hy
-
-/-- The whole-block condition applies to every point of the same fixed
-canonical enumeration of an intermediate successful object. -/
-theorem fusionCandidate_cross_selected_enumeration
-    {color edgeColor : Bool} {R E b top ξ ν Blocks X v j c r x k y : bSet 𝔹} {Γ : 𝔹}
-    (HE : Γ ≤ is_function (blockObjects color R) blockEnumerationCodes E)
-    (Hlaw : Γ ≤ blockEnumerationFamilyLaw color R E)
-    (HX : Γ ≤ is_func' (prod ξ omegaOne) omegaOne X) (Hν : Γ ≤ ν ∈ᴮ omegaOne)
-    (Hv : Γ ≤ v ∈ᴮ fusionRowCandidates edgeColor R E b top ξ ν Blocks X)
-    (Hjξ : Γ ≤ j ∈ᴮ ξ) (Hνj : Γ ≤ ν ∈ᴮ j) (Hjc : Γ ≤ pair j c ∈ᴮ Blocks)
-    (Hvx : Γ ≤ pair v x ∈ᴮ canonicalRow E b)
-    (Hcr : Γ ≤ pair c r ∈ᴮ E) (Hky : Γ ≤ pair k y ∈ᴮ r) :
-    Γ ≤ graphColor edgeColor R x y := by
-  have Hr : Γ ≤ is_function omegaOne omegaTwo r :=
-    (selected_enumeration_data HE Hlaw Hcr).trans (inf_le_left.trans inf_le_left)
-  have Hy : Γ ≤ y ∈ᴮ c := mem_congr bv_refl (selected_enumeration_image HE Hlaw Hcr)
-    (mem_image Hky (mem_domain_of_is_function Hky Hr) (mem_codomain_of_is_function Hky Hr))
-  exact fusionCandidate_cross_previous_block HX Hν Hv Hjξ Hνj Hjc Hvx Hy
 
 theorem fusionRowCandidates_colarge
     {edgeColor : Bool} {R J E b top ξ ν Blocks X : bSet 𝔹} {Γ : 𝔹}

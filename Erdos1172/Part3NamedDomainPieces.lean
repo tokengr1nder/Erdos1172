@@ -6,7 +6,6 @@ module
 
 public import Erdos1172.Part3FinitePowerDecomposition
 public import Erdos1172.Part3NamedFinalTail
-public import Erdos1172.Part3RegularConeRestriction
 
 @[expose] public section
 
@@ -142,15 +141,6 @@ theorem exists_named_domain_pieces (n : ℕ) (E : FunctionDecisions P I V)
   intro B hBD
   exact ⟨powerPiece_nonempty (hDpiece B hBD), hDpiece B hBD, pieceE_ordered E hordered B,
     pieceU_denseCoverage E B, pieceE_actual E U hmem B⟩
-
-/-- In an empty domain the nonempty-piece requirement forces the family
-itself to be empty; no artificial singleton index is introduced. -/
-theorem pieces_eq_empty_of_isEmpty [IsEmpty I] (D : Set (Set I))
-    (hpieces : ∀ B ∈ D, B.Nonempty) : D = ∅ := by
-  apply Set.Subset.antisymm _ (Set.empty_subset _)
-  intro B hBD
-  obtain ⟨i, _⟩ := hpieces B hBD
-  exact isEmptyElim i
 
 /-- Once the unique coordinate of a singleton-type domain is decided,
 its actual regularized range is exactly that value throughout the cone. -/

@@ -6,7 +6,6 @@ module
 
 public import Erdos1172.Part4InternalDenseBasisCore
 public import Erdos1172.Part4InternalGraphNeighborhood
-public import Erdos1172.Part4InternalRelationGraph
 
 @[expose] public section
 
@@ -51,16 +50,6 @@ theorem mem_forwardSection_iff {color : Bool} {R r y i : bSet 𝔹} {Γ : 𝔹} 
       (Γ ≤ i ∈ᴮ omegaOne) ∧
         Γ ≤ ⨆ x, pair i x ∈ᴮ r ⊓ (x ∈ᴮ y ⊓ graphColor color R x y) :=
   mem_comprehend_and (section_predicate_ext_index color R r y)
-
-/-- Exact Boolean membership, including the omega-one domain guard. -/
-theorem mem_forwardSection (color : Bool) (R r y i : bSet 𝔹) :
-    i ∈ᴮ forwardSection color R r y = (i ∈ᴮ omegaOne) ⊓
-      (⨆ x, pair i x ∈ᴮ r ⊓ (x ∈ᴮ y ⊓ graphColor color R x y)) := by
-  apply le_antisymm
-  · have H := mem_forwardSection_iff.mp
-      (le_refl (i ∈ᴮ forwardSection color R r y))
-    exact le_inf H.1 H.2
-  · exact mem_forwardSection_iff.mpr ⟨inf_le_left, inf_le_right⟩
 
 theorem forwardSection_subset {color : Bool} {R r y : bSet 𝔹} {Γ : 𝔹} :
     Γ ≤ forwardSection color R r y ⊆ᴮ omegaOne :=

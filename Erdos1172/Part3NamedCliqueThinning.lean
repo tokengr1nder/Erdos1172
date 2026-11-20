@@ -78,11 +78,4 @@ def thinningClique (hclosed : CountablyClosed P) {G : SimpleGraph W2}
       · exact (selectedIndex_lt hrow hgt hw hv).ne.symm
     exact core.adjacent hne hx hy
 
-theorem thinningClique_origin (hclosed : CountablyClosed P) {G : SimpleGraph W2}
-    (core : CliqueDecisions P Square W2 G) (row : W1 → W1) (hrow : StrictMono row) :
-    ∀ p i x, (thinningClique hclosed core row hrow).decides p i x →
-      ∃ j : Square, core.decides p.base j x := by
-  rintro p i x ⟨v, _, hx⟩
-  exact ⟨selectedIndex row v i, hx⟩
-
 end Erdos1172Part3NamedCliqueThinning

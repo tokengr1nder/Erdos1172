@@ -66,15 +66,6 @@ theorem union_countable {T : bSet 𝔹} {Γ : 𝔹}
     (injects_into_trans (ErdosMixedProductInjection.injects_into_prod HT injects_into_refl)
       omega_square_injects)
 
-/-- An actual supported injection exists at the same Boolean condition,
-including for empty or mixed families. -/
-theorem exists_union_injection {T : bSet 𝔹} {Γ : 𝔹}
-    (HT : Γ ≤ injects_into T bSet.omega)
-    (Hmembers : Γ ≤ ⨅ A, _root_.imp (A ∈ᴮ T) (injects_into A bSet.omega)) :
-    ∃ e : bSet 𝔹, Γ ≤ is_injective_function (bv_union T) bSet.omega e :=
-  exists_convert (injection_into_of_injects_into (union_countable HT Hmembers))
-    B_ext_injective_code
-
 /-- The countability law is guarded by actual internal indices and
 actual graph values. It imposes no external presentation on the family. -/
 def countableValues (Q F : bSet 𝔹) : 𝔹 :=
@@ -108,13 +99,5 @@ theorem indexed_union_countable {Q K F : bSet 𝔹} {Γ : 𝔹}
     (Hvalues : Γ ≤ countableValues Q F) :
     Γ ≤ injects_into (bv_union (image Q K F)) bSet.omega :=
   union_countable (image_countable HF HQ) (countableValues_image Hvalues)
-
-/-- Actual same-condition injection for the union of the indexed values. -/
-theorem exists_indexed_union_injection {Q K F : bSet 𝔹} {Γ : 𝔹}
-    (HF : Γ ≤ is_func' Q K F) (HQ : Γ ≤ injects_into Q bSet.omega)
-    (Hvalues : Γ ≤ countableValues Q F) :
-    ∃ e : bSet 𝔹,
-      Γ ≤ is_injective_function (bv_union (image Q K F)) bSet.omega e :=
-  exists_union_injection (image_countable HF HQ) (countableValues_image Hvalues)
 
 end bSet.ErdosCountableFamilyUnion

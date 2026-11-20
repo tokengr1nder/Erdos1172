@@ -44,28 +44,4 @@ theorem boundedGroundEmbedding_small_range {L : Type u} (hL : Cardinal.mk L < κ
   · rintro ⟨t,rfl⟩
     exact ⟨boundedConst U θ a (f t),Eventually.of_forall (fun _ => ZFSet.mem_range.mpr ⟨t,rfl⟩),rfl⟩
 
-private theorem map_doubleton (hκ : Cardinal.aleph0 ≤ κ) (x y : ZFSet.{u}) :
-    (j ({x,y} : ZFSet.{u})).val = ({(j x).val,(j y).val} : ZFSet.{u}) := by
-  let f (s t : ZFSet.{u}) (b : ULift.{u} Bool) := if b.down then s else t
-  have h (s t : ZFSet.{u}) : ZFSet.range (f s t) = ({s,t} : ZFSet.{u}) := by
-    ext z
-    rw [ZFSet.mem_range,ZFSet.mem_pair]
-    constructor
-    · rintro ⟨⟨b⟩,rfl⟩
-      cases b <;> simp [f]
-    · rintro (rfl | rfl)
-      · exact ⟨⟨true⟩,rfl⟩
-      · exact ⟨⟨false⟩,rfl⟩
-  rw [← h x y, boundedGroundEmbedding_small_range U κ θ a (Cardinal.mk_lt_aleph0.trans_le hκ), ← h (j x).val (j y).val]
-  apply congrArg ZFSet.range
-  funext b
-  cases b with | up b => cases b <;> rfl
-
-theorem boundedGroundEmbedding_pair (hκ : Cardinal.aleph0 ≤ κ) (x y : ZFSet.{u}) :
-    (j (ZFSet.pair x y)).val = ZFSet.pair (j x).val (j y).val := by
-  have hsingle : (j ({x} : ZFSet.{u})).val = ({(j x).val} : ZFSet.{u}) := by
-    simpa only [ZFSet.pair_eq_singleton] using map_doubleton U κ θ a hκ x x
-  change (j ({{x},{x,y}} : ZFSet.{u})).val = ({{(j x).val},{(j x).val,(j y).val}} : ZFSet.{u})
-  rw [map_doubleton U κ θ a hκ,hsingle,map_doubleton U κ θ a hκ]
-
 end Erdos1172GroundUltrapower

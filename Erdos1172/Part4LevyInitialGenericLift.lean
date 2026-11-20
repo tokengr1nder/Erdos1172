@@ -4,7 +4,9 @@ Licensed under the Apache License, Version 2.0.
 -/
 module
 
-public import Erdos1172.Part4LevyInitialGenericRestriction
+public import Erdos1172.Part4PosetGenericFilter
+public import Erdos1172.Part4LevyInitialSegmentProjection
+public import Erdos1172.Part4LevyCollapseNames
 
 @[expose] public section
 
@@ -69,16 +71,6 @@ theorem initialProjection_le_iff_le_zeroExtension (h : κ ≤ θ) (r : BelowCond
   · intro hr
     exact ((initialProjection h).monotone hr).trans_eq (initialProjection_zeroExtension h p)
 
-def initialConditionEmbedding (h : κ ≤ θ) : BelowCondition κ ↪o BelowCondition θ where
-  toFun := zeroExtension h
-  inj' := by
-    intro p q hpq
-    simpa only [initialProjection_zeroExtension] using congrArg (initialProjection h) hpq
-  map_rel_iff' := by
-    intro p q
-    change zeroExtension h p ≤ zeroExtension h q ↔ p ≤ q
-    rw [← initialProjection_le_iff_le_zeroExtension, initialProjection_zeroExtension]
-
 theorem initialCollapseHom_condition (h : κ ≤ θ) (p : BelowCondition κ) :
     initialCollapseHom h (condition p) = condition (zeroExtension h p) := by
   unfold initialCollapseHom
@@ -88,12 +80,5 @@ theorem initialCollapseHom_condition (h : κ ≤ θ) (p : BelowCondition κ) :
     intro r
     exact condition_mono ((initialProjection_le_iff_le_zeroExtension h r.val p).mp r.property)
   · exact le_iSup_of_le ⟨zeroExtension h p, (initialProjection_zeroExtension h p).le⟩ le_rfl
-
-theorem initial_collapseGeneric_single_condition (h : κ ≤ θ) (p : BelowCondition κ) :
-    (check (genericLabel (positiveCondition p)) ∈ᴮ mapNames (initialCollapseHom h) (collapseGeneric κ)) =
-    (check (genericLabel (positiveCondition (zeroExtension h p))) ∈ᴮ collapseGeneric θ) := by
-  unfold collapseGeneric
-  rw [mapped_genericFilterName_mem, genericFilterName_mem]
-  exact initialCollapseHom_condition h p
 
 end Erdos1172LevyCollapse

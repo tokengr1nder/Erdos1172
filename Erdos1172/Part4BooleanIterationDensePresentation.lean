@@ -5,7 +5,6 @@ Licensed under the Apache License, Version 2.0.
 module
 
 public import Flypitch4.BvmExtras
-public import Mathlib.SetTheory.Cardinal.Basic
 public import Erdos1172.Part4BooleanNameIteration
 
 @[expose] public section

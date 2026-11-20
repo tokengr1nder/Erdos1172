@@ -48,9 +48,6 @@ def finalPoints (color : Bool) (R Run : bSet 𝔹) : bSet 𝔹 :=
 theorem finalObjects_subset {color : Bool} {R Run : bSet 𝔹} {Γ : 𝔹} :
     Γ ≤ finalObjects color R Run ⊆ᴮ blockObjects color R := aggregateLeft_subset
 
-theorem finalPoints_subset {color : Bool} {R Run : bSet 𝔹} {Γ : 𝔹} :
-    Γ ≤ finalPoints color R Run ⊆ᴮ omegaTwo := aggregateRight_subset
-
 theorem state_objects_subset_final {color : Bool} {R Run i B P : bSet 𝔹} {Γ : 𝔹}
     (HRun : Γ ≤ is_function omegaOne (stateSpace color R) Run)
     (Hpair : Γ ≤ pair i (pair B P) ∈ᴮ Run) :
@@ -281,39 +278,6 @@ theorem selected_output_in_final_pools
   have HAC : Δ ≤ A ∈ᴮ C :=
     mem_congr bv_refl (bv_symm (inf_le_left.trans (Hentry.trans inf_le_left))) Hnext
   exact mem_of_mem_subset (inf_le_left.trans (state_objects_subset_final HRun Hjstate)) HAC
-
-theorem selected_value_subset_finalPoints
-    {color : Bool} {R J E S F Run Earlier Active A : bSet 𝔹} {Γ : 𝔹}
-    (HB : Γ ≤ countablyBounded omegaOne)
-    (HRun : Γ ≤ is_function omegaOne (stateSpace color R) Run)
-    (Hrec : Γ ≤ imageRecLaw (stateSpace color R)
-      (fun _ T => poolUpdate color R F T) Run)
-    (HF : Γ ≤ is_function (choicePoolDomain (blockObjects color R) omegaTwo)
-      (bv_powerset omegaTwo) F)
-    (Hlaw : Γ ≤ blockSelectorLaw color R J E S F)
-    (HEarlier : Γ ≤ Earlier ∈ᴮ countableSubsets (finalObjects color R Run))
-    (HActive : Γ ≤ Active ∈ᴮ countableSubsets (finalPoints color R Run))
-    (Hselected : Γ ≤ pair (pair Earlier Active) A ∈ᴮ F) :
-    Γ ≤ A ⊆ᴮ finalPoints color R Run :=
-  (selected_output_in_final_pools HB HRun Hrec HF Hlaw HEarlier HActive Hselected).trans
-    inf_le_left
-
-theorem nonempty_selected_value_mem_finalObjects
-    {color : Bool} {R J E S F Run Earlier Active A : bSet 𝔹} {Γ : 𝔹}
-    (HB : Γ ≤ countablyBounded omegaOne)
-    (HRun : Γ ≤ is_function omegaOne (stateSpace color R) Run)
-    (Hrec : Γ ≤ imageRecLaw (stateSpace color R)
-      (fun _ T => poolUpdate color R F T) Run)
-    (HF : Γ ≤ is_function (choicePoolDomain (blockObjects color R) omegaTwo)
-      (bv_powerset omegaTwo) F)
-    (Hlaw : Γ ≤ blockSelectorLaw color R J E S F)
-    (HEarlier : Γ ≤ Earlier ∈ᴮ countableSubsets (finalObjects color R Run))
-    (HActive : Γ ≤ Active ∈ᴮ countableSubsets (finalPoints color R Run))
-    (Hselected : Γ ≤ pair (pair Earlier Active) A ∈ᴮ F)
-    (Hnonempty : Γ ≤ (A =ᴮ (∅ : bSet 𝔹))ᶜ) :
-    Γ ≤ A ∈ᴮ finalObjects color R Run :=
-  (le_inf ((selected_output_in_final_pools HB HRun Hrec HF Hlaw HEarlier HActive
-    Hselected).trans inf_le_right) Hnonempty).trans bv_imp_elim
 
 theorem final_pools_small {color : Bool} {R J E S F Run : bSet 𝔹} {Γ : 𝔹}
     (HCH : Γ ≤ (CH : 𝔹))

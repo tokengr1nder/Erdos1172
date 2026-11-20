@@ -4,7 +4,7 @@ Licensed under the Apache License, Version 2.0.
 -/
 module
 
-public import Erdos1172.Part4InternalNonstationaryFiniteIdeal
+public import Erdos1172.Part4InternalBinaryClubs
 public import Erdos1172.Part4InternalNonstationarySmallUnion
 public import Erdos1172.Part4InternalNonstationaryNormal
 public import Erdos1172.Part4InternalColargeIntersection
@@ -33,19 +33,6 @@ variable {𝔹 : Type u} [NontrivialCompleteBooleanAlgebra 𝔹]
 
 open ErdosOmegaTwo ErdosIdeal ErdosClubs ErdosColargeIntersection
 
-theorem nonstationaryIdeal_package {Γ : 𝔹} (HCH : Γ ≤ (CH : 𝔹)) :
-    Γ ≤ properIdeal omegaTwo nonstationaryIdeal ⊓
-      (countableAbsorption omegaTwo nonstationaryIdeal ⊓
-        (countableClosure nonstationaryIdeal ⊓ diagonalClosure omegaTwo nonstationaryIdeal)) :=
-  le_inf (nonstationaryIdeal_proper HCH)
-    (le_inf (nonstationaryIdeal_countableAbsorption HCH)
-      (le_inf (nonstationaryIdeal_countableClosure HCH)
-        (nonstationaryIdeal_diagonalClosure HCH)))
-
-theorem omegaTwo_stationary {Γ : 𝔹} :
-    Γ ≤ positive omegaTwo nonstationaryIdeal omegaTwo :=
-  le_inf subset_self omegaTwo_not_mem_nonstationaryIdeal
-
 /-- Stationarity of the actual name implies omega-two cardinal size.
 The converse is deliberately not asserted. -/
 theorem stationary_injects_omegaTwo {S : bSet 𝔹} {Γ : 𝔹}
@@ -60,24 +47,6 @@ theorem stationary_injects_omegaTwo {S : bSet 𝔹} {Γ : 𝔹}
         (inf_le_left.trans (HS.trans inf_le_left)) inf_le_right)
       (inf_le_left.trans (HS.trans inf_le_right))).trans bot_le
   · exact inf_le_right
-
-theorem exists_mem_stationary_club {S C : bSet 𝔹} {Γ : 𝔹}
-    (HCH : Γ ≤ (CH : 𝔹)) (HS : Γ ≤ positive omegaTwo nonstationaryIdeal S)
-    (HC : Γ ≤ club omegaTwo C) :
-    ∃ x : bSet 𝔹, Γ ≤ x ∈ᴮ S ⊓ x ∈ᴮ C := by
-  have Hsmall : Γ ≤ difference omegaTwo C ∈ᴮ nonstationaryIdeal :=
-    mem_nonstationaryIdeal_of_club HC subset_self
-  have Hpositive := positive_difference_of_small (nonstationaryIdeal_isIdeal HCH) HS Hsmall
-  obtain ⟨x, Hx⟩ := exists_mem_of_positive (nonstationaryIdeal_isIdeal HCH) Hpositive
-  rw [mem_difference] at Hx
-  have Hxω : Γ ≤ x ∈ᴮ omegaTwo := mem_of_mem_subset (HS.trans inf_le_left)
-    (Hx.trans inf_le_left)
-  refine ⟨x, le_inf (Hx.trans inf_le_left) ?_⟩
-  rw [← compl_compl (x ∈ᴮ C), ← imp_bot, ← deduction]
-  have Hbad : Γ ⊓ (x ∈ᴮ C)ᶜ ≤ x ∈ᴮ difference omegaTwo C := by
-    rw [mem_difference]
-    exact le_inf (inf_le_left.trans Hxω) inf_le_right
-  exact bv_absurd _ Hbad (inf_le_left.trans (Hx.trans inf_le_right))
 
 /-- Meeting every internally named club suffices for positivity of the
 constructed nonstationary ideal, without assuming stationarity separately. -/

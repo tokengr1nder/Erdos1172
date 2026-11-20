@@ -210,23 +210,4 @@ theorem exists_external_matching_sequence_from
   · intro p x
     simpa [run,extend,List.foldl_append] using (step (run p) x).2
 
-theorem exists_external_matching_sequence
-    (hb : ∀ {i j} (h : i ≤ j), Function.Injective (b h))
-    (hc : ∀ {i j} (h : i ≤ j), Function.Injective (c h))
-    (bid : ∀ i (x : B i), b (le_refl i) x = x)
-    (cid : ∀ i (x : C i), c (le_refl i) x = x)
-    (bcomp : ∀ {i j k} (h : i ≤ j) (h' : j ≤ k) x, b (h.trans h') x = b h' (b h x))
-    (ccomp : ∀ {i j k} (h : i ≤ j) (h' : j ≤ k) x, c (h.trans h') x = c h' (c h x))
-    (pairing : ∀ i t, CollapsingPair B C i t) (start : StageMatch B C) :
-    ∃ f : bSet (Algebra J),
-      (⊤ : Algebra J) ≤ is_function omega (check (.mk (StageMatch B C) (stageCode B C))) f ∧
-      (∀ {Γ : Algebra J} {i j x y : bSet (Algebra J)}, Γ ≤ i ∈ᴮ j →
-        Γ ≤ pair i x ∈ᴮ f → Γ ≤ pair j y ∈ᴮ f →
-        Γ ≤ ⨆ v : {v : StageMatch B C × StageMatch B C // ExtendsMatch B C b c v.1 v.2},
-          (x =ᴮ check (stageCode B C v.val.1)) ⊓ (y =ᴮ check (stageCode B C v.val.2))) ∧
-      ∀ i : J, (⊤ : Algebra J) ≤ ⨆ n : ℕ, ⨆ v : {v : StageMatch B C // i ≤ v.1},
-        pair (of_nat n) (check (stageCode B C v.val)) ∈ᴮ f := by
-  obtain ⟨f,_,funct,ordered,cofinal⟩ := exists_external_matching_sequence_from b c hb hc bid cid bcomp ccomp pairing start
-  exact ⟨f,funct,ordered,cofinal⟩
-
 end Erdos1172LevyCollapse.Matching

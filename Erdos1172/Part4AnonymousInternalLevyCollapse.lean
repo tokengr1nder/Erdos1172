@@ -4,14 +4,8 @@ Licensed under the Apache License, Version 2.0.
 -/
 module
 
-public import Erdos1172.Part4ShioyaAnonymousOrdinalPresentation
 public import Erdos1172.Part4ShioyaInternalCollapseStructure
 public import Erdos1172.Part4ShioyaLevyChainCondition
-public import Erdos1172.Part4ShioyaDenseCoverIso
-public import Erdos1172.Part4BooleanNameIteration
-public import Erdos1172.Part4BooleanUltrapowerCountableCover
-public import Erdos1172.Part4BooleanCheckedIndicatorAgreement
-public import Erdos1172.Part4InternalFusionActiveHistory
 public import Erdos1172.Part4LevyMatchingTowerReading
 
 @[expose] public section

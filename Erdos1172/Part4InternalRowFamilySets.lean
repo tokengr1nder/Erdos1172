@@ -202,9 +202,6 @@ theorem rowExceptionFamily_is_function {color : Bool} {R J Q V Rows : bSet 𝔹}
 theorem unionRowValues_subset {Q Rows : bSet 𝔹} {Γ : 𝔹} :
     Γ ≤ unionRowValues Q Rows ⊆ᴮ omegaTwo := indexed_union_subset
 
-theorem unionRowExceptions_subset {color : Bool} {R J Q Rows : bSet 𝔹} {Γ : 𝔹} :
-    Γ ≤ unionRowExceptions color R J Q Rows ⊆ᴮ omegaTwo := indexed_union_subset
-
 theorem row_image_subset_union {Q V Rows q r : bSet 𝔹} {Γ : 𝔹}
     (HRows : Γ ≤ is_function Q V Rows) (Hq : Γ ≤ q ∈ᴮ Q)
     (Hqr : Γ ≤ pair q r ∈ᴮ Rows) :
@@ -245,33 +242,6 @@ theorem row_exception_subset_union {color : Bool} {R J Q V Rows q r : bSet 𝔹}
     (transformedFamily_pair (φ := positiveSectionExceptions color R J)
       positiveSectionExceptions_subset
       (inf_le_left.trans Hq) (inf_le_left.trans Hqr)) inf_le_right
-
-theorem exists_row_image_of_mem_union {Q Rows x : bSet 𝔹} {Γ : 𝔹}
-    (Hx : Γ ≤ x ∈ᴮ unionRowValues Q Rows) :
-    ∃ q r : bSet 𝔹, Γ ≤ (q ∈ᴮ Q ⊓ pair q r ∈ᴮ Rows) ⊓
-      x ∈ᴮ image omegaOne omegaTwo r := by
-  obtain ⟨q, X, HX⟩ := exists_indexed_union_witness Hx
-  have Hpair := (mem_relationGraph_iff
-    (transformedValue_ext_left Rows (fun r => image omegaOne omegaTwo r))
-    (transformedValue_ext_right Rows (fun r => image omegaOne omegaTwo r))).mp
-    (HX.trans (inf_le_left.trans inf_le_right))
-  obtain ⟨r, Hr⟩ := transformedValue_exists B_congr_image_right Hpair.2.2
-  exact ⟨q, r, le_inf (le_inf (HX.trans (inf_le_left.trans inf_le_left))
-    (Hr.trans inf_le_left)) (mem_congr bv_refl (Hr.trans inf_le_right) (HX.trans inf_le_right))⟩
-
-theorem exists_row_exception_of_mem_union {color : Bool} {R J Q Rows x : bSet 𝔹} {Γ : 𝔹}
-    (Hx : Γ ≤ x ∈ᴮ unionRowExceptions color R J Q Rows) :
-    ∃ q r : bSet 𝔹, Γ ≤ (q ∈ᴮ Q ⊓ pair q r ∈ᴮ Rows) ⊓
-      x ∈ᴮ positiveSectionExceptions color R J r := by
-  obtain ⟨q, X, HX⟩ := exists_indexed_union_witness Hx
-  have Hpair := (mem_relationGraph_iff
-    (transformedValue_ext_left Rows (positiveSectionExceptions color R J))
-    (transformedValue_ext_right Rows (positiveSectionExceptions color R J))).mp
-    (HX.trans (inf_le_left.trans inf_le_right))
-  obtain ⟨r, Hr⟩ := transformedValue_exists
-    (positiveSectionExceptions_row_congr color R J) Hpair.2.2
-  exact ⟨q, r, le_inf (le_inf (HX.trans (inf_le_left.trans inf_le_left))
-    (Hr.trans inf_le_left)) (mem_congr bv_refl (Hr.trans inf_le_right) (HX.trans inf_le_right))⟩
 
 theorem unionRowValues_injects_omegaOne {Q V Rows : bSet 𝔹} {Γ : 𝔹}
     (HCH : Γ ≤ (CH : 𝔹)) (HRows : Γ ≤ is_function Q V Rows)

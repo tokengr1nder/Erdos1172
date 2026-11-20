@@ -6,7 +6,7 @@ module
 
 public import Mathlib.Order.Hom.Set
 public import Mathlib.Data.Set.Card
-public import Erdos1172.ForMathlib.SetTheory.Ordinal.PartitionRelation
+public import Erdos1172.Statement
 
 @[expose] public section
 
@@ -47,16 +47,6 @@ theorem mono_targets {α β β' γ γ' : Ordinal.{u}}
       Ordinal.exists_subset_typeLT_eq s (hγ.trans_eq hstype.symm)
     exact Or.inr ⟨t, hs.subset hts, httype⟩
 
-/-- The binary ordinal partition relation is monotone downwards in the red target. -/
-theorem mono_red {α β β' γ : Ordinal.{u}}
-    (h : OrdinalRamsey α β γ) (hβ : β' ≤ β) : OrdinalRamsey α β' γ :=
-  h.mono_targets hβ le_rfl
-
-/-- The binary ordinal partition relation is monotone downwards in the blue target. -/
-theorem mono_blue {α β γ γ' : Ordinal.{u}}
-    (h : OrdinalRamsey α β γ) (hγ : γ' ≤ γ) : OrdinalRamsey α β γ' :=
-  h.mono_targets le_rfl hγ
-
 /-- Swapping the two complementary colors swaps the two targets. -/
 theorem swap {α β γ : Ordinal.{u}} (h : OrdinalRamsey α β γ) :
     OrdinalRamsey α γ β := by
@@ -64,61 +54,6 @@ theorem swap {α β γ : Ordinal.{u}} (h : OrdinalRamsey α β γ) :
   obtain ⟨s, hs, hstype⟩ | ⟨s, hs, hstype⟩ := h blue red hcompl.symm
   · exact Or.inr ⟨s, hs, hstype⟩
   · exact Or.inl ⟨s, hs, hstype⟩
-
-/-- Color symmetry as an equivalence. -/
-theorem swap_iff {α β γ : Ordinal.{u}} :
-    OrdinalRamsey α β γ ↔ OrdinalRamsey α γ β :=
-  ⟨swap, swap⟩
-
-/-- Enlarging the source preserves a binary ordinal partition relation. -/
-theorem mono_source {α α' β γ : Ordinal.{u}}
-    (h : OrdinalRamsey α β γ) (hα : α ≤ α') : OrdinalRamsey α' β γ := by
-  classical
-  have htype : typeLT α.ToType ≤ typeLT α'.ToType := by
-    simpa only [Ordinal.type_toType] using hα
-  let f := Classical.choice (Ordinal.type_le_iff.mp htype)
-  let e : α.ToType ↪o α'.ToType := f.toOrderEmbedding
-  intro red blue hcompl
-  obtain ⟨s, hs, hstype⟩ | ⟨s, hs, hstype⟩ :=
-    h (red.comap e) ((red.comap e)ᶜ) isCompl_compl
-  · refine Or.inl ⟨e '' s, ?_, ?_⟩
-    · rintro _ ⟨x, hx, rfl⟩ _ ⟨y, hy, rfl⟩ hxy
-      exact hs hx hy fun hxy' ↦ hxy (congrArg e hxy')
-    · have heq : typeLT s = typeLT (e '' s) :=
-        ((e.strictMono.strictMonoOn s).orderIso e s).ordinalType_congr
-      exact heq.symm.trans hstype
-  · refine Or.inr ⟨e '' s, ?_, ?_⟩
-    · rintro _ ⟨x, hx, rfl⟩ _ ⟨y, hy, rfl⟩ hxy
-      have hedge := hs hx hy fun hxy' ↦ hxy (congrArg e hxy')
-      rw [SimpleGraph.compl_adj] at hedge
-      rw [← hcompl.compl_eq, SimpleGraph.compl_adj]
-      exact ⟨hxy, hedge.2⟩
-    · have heq : typeLT s = typeLT (e '' s) :=
-        ((e.strictMono.strictMonoOn s).orderIso e s).ordinalType_congr
-      exact heq.symm.trans hstype
-
-/-- Simultaneous source and target monotonicity. -/
-theorem mono {α α' β β' γ γ' : Ordinal.{u}}
-    (h : OrdinalRamsey α β γ) (hα : α ≤ α') (hβ : β' ≤ β) (hγ : γ' ≤ γ) :
-    OrdinalRamsey α' β' γ' :=
-  (h.mono_source hα).mono_targets hβ hγ
-
-/-- Transport the three ordinal parameters across equalities. -/
-theorem congr {α α' β β' γ γ' : Ordinal.{u}}
-    (hα : α = α') (hβ : β = β') (hγ : γ = γ') :
-    OrdinalRamsey α β γ ↔ OrdinalRamsey α' β' γ' := by
-  subst α'
-  subst β'
-  subst γ'
-  rfl
-
-/-- An order isomorphism between the source types transports the partition relation. -/
-theorem iff_of_source_orderIso {α α' β γ : Ordinal.{u}}
-    (e : α.ToType ≃o α'.ToType) :
-    OrdinalRamsey α β γ ↔ OrdinalRamsey α' β γ := by
-  have hα : α = α' := by
-    simpa only [Ordinal.type_toType] using e.ordinalType_congr
-  exact congr hα rfl rfl
 
 /-- If the source contains the blue target, then `α → (2, γ)²`. -/
 theorem two_left {α γ : Ordinal.{u}} (hγ : γ ≤ α) : OrdinalRamsey α 2 γ := by

@@ -36,23 +36,6 @@ theorem upper_persistent {U : RegularName P V} {p q : P} {y : V}
     (hqp : q ≤ p) (h : Upper U p y) : Upper U q y :=
   fun r hrq x hx => h r (hrq.trans hqp) x hx
 
-theorem upper_mono_bound {U : RegularName P V} {p : P} {y z : V}
-    (h : Upper U p y) (hyz : y ≤ z) : Upper U p z :=
-  fun q hqp x hx => (h q hqp x hx).trans_le hyz
-
-/-- Dense bounds already bound all actual members at the original cone. -/
-theorem upper_of_dense {U : RegularName P V} {p : P} {y : V}
-    (h : DenseTruth (Upper U) p y) : Upper U p y := by
-  intro q hqp x hx
-  obtain ⟨r, hrq, hr⟩ := h q hqp
-  exact hr r le_rfl x (U.persistent hrq hx)
-
-/-- The displayed upper-bound predicate is actual regular membership. -/
-def upperName (U : RegularName P V) : RegularName P V where
-  holds := Upper U
-  persistent := upper_persistent
-  of_dense _ _ h := upper_of_dense h
-
 /-- Actual members occur arbitrarily high strictly below the endpoint,
 densely below every strengthening. Equality with the test point is allowed. -/
 def CofinalBelow (U : RegularName P V) (p : P) (y : V) : Prop :=

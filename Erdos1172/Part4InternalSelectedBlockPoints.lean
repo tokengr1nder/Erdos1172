@@ -107,39 +107,6 @@ theorem selectedPoints_witness {i x : bSet 𝔹}
       (Hpoint.trans (inf_le_right.trans inf_le_left))⟩
 
 include HE HElaw HBlocks Hvalues Hcoords in
-theorem selectedPoints_pair_of_witness {i b v x : bSet 𝔹}
-    (Hib : Γ ≤ pair i b ∈ᴮ Blocks) (Hiv : Γ ≤ pair i v ∈ᴮ coords)
-    (Hvx : Γ ≤ pair v x ∈ᴮ canonicalRow E b) :
-    Γ ≤ pair i x ∈ᴮ selectedPoints K E Blocks coords := by
-  have Hi := mem_domain_of_is_function Hib HBlocks
-  have Hb : Γ ≤ b ∈ᴮ blockObjects color R :=
-    (le_inf (Hvalues.trans ((iInf_le _ i).trans (iInf_le _ b))) (le_inf Hi Hib)).trans
-      bv_imp_elim
-  have Hr := canonicalRow_data HE HElaw Hb
-  have Hbeq : Γ ≤ blockValue Blocks i =ᴮ b := graphValue_eq_of_pair HBlocks Hib
-  have Hrow : Γ ≤ rowValue E Blocks i =ᴮ canonicalRow E b :=
-    graphValue_congr_input blockEnumerationCodes E Hbeq
-  have Hveq := graphValue_eq_of_pair Hcoords Hiv
-  have Hxeq : Γ ≤ currentPoint E Blocks coords i =ᴮ x :=
-    bv_trans (graphValue_congr_graph omegaTwo _ Hrow)
-      (bv_trans (graphValue_congr_input omegaTwo (canonicalRow E b) Hveq)
-        (graphValue_eq_of_pair (Hr.trans (inf_le_left.trans inf_le_left)) Hvx))
-  exact mem_selectedPoints_iff.mpr ⟨Hi,
-    mem_codomain_of_is_function Hvx (Hr.trans (inf_le_left.trans inf_le_left)), bv_symm Hxeq⟩
-
-include HE HElaw HBlocks Hvalues Hcoords in
-/-- Both directions retain actual witnesses under the original Boolean
-condition; there is no external selection of an internal index. -/
-theorem selectedPoints_pair_iff {i x : bSet 𝔹} :
-    (Γ ≤ pair i x ∈ᴮ selectedPoints K E Blocks coords) ↔
-      ∃ b v : bSet 𝔹, Γ ≤ pair i b ∈ᴮ Blocks ∧ Γ ≤ pair i v ∈ᴮ coords ∧
-        Γ ≤ pair v x ∈ᴮ canonicalRow E b := by
-  constructor
-  · exact selectedPoints_witness HE HElaw HBlocks Hvalues Hcoords
-  · rintro ⟨b, v, Hib, Hiv, Hvx⟩
-    exact selectedPoints_pair_of_witness HE HElaw HBlocks Hvalues Hcoords Hib Hiv Hvx
-
-include HE HElaw HBlocks Hvalues Hcoords in
 theorem selectedPoints_mem_block {i b x : bSet 𝔹}
     (Hpair : Γ ≤ pair i x ∈ᴮ selectedPoints K E Blocks coords)
     (Hib : Γ ≤ pair i b ∈ᴮ Blocks) : Γ ≤ x ∈ᴮ b := by

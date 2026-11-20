@@ -163,20 +163,4 @@ theorem eventuallyLocal_eval (G H : SimpleGraph W2) (hI : #I ≤ ℵ_ 1)
         change EventuallyLocal Stage restriction (afterClique N.toClique)
         exact eventuallyLocal_afterClique Stage restriction conditionSupport hsmall hlocal N hI
 
-/-- Local code rank now implies actual earlier-stage factorization on a
-club, uniformly for every condition of the full order. The stage-system
-and support-inclusion hypotheses have not been dropped. -/
-theorem exists_club_local_code_sources (G H : SimpleGraph W2) (hI : #I ≤ ℵ_ 1)
-    (rank : Code P I G ↪ W2) :
-    ∃ club : Set W2, IsClub club ∧ ∀ a ∈ club, ∀ c : Code P I G, rank c < a →
-      Factors (restriction a) (eval G H c) := by
-  classical
-  choose bound hb using fun c => eventuallyLocal_eval Stage restriction
-    conditionSupport hsmall hlocal G H hI c
-  refine ⟨{a | ∀ c, rank c < a → bound c < a},
-    ClubClosure.isClub_rankClosed rank bound
-      Erdos1172Part3NeighborhoodCode.alephZero_lt_cof_W2, ?_⟩
-  intro a ha c hc
-  exact hb c a (ha c hc).le
-
 end Erdos1172Part3RegularStageLocality

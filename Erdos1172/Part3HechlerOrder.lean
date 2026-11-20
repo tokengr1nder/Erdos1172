@@ -134,26 +134,11 @@ theorem unionCondition_le {C : Set Condition} (hC : C.Countable)
       rw [hpi] at hpv
       cases hpv
 
-theorem countablyClosed : CountablyClosed Condition := by
-  intro C _ hC hc
-  exact ⟨unionCondition C hC, fun p hp => unionCondition_le hC hc hp⟩
-
 def track (p : Condition) (f : W1 → W1) : Condition where
   stem := p.stem
   stem_countable := p.stem_countable
   side := insert f p.side
   side_countable := p.side_countable.insert f
-
-theorem track_le (p : Condition) (f : W1 → W1) : track p f ≤ p := by
-  refine ⟨fun _ _ h => h, Set.subset_insert _ _, ?_⟩
-  intro i hi v hv _ _
-  change p.stem i = some v at hv
-  rw [hi] at hv
-  cases hv
-
-theorem tracking_dense (f : W1 → W1) : DenseBelow {p : Condition | f ∈ p.side} := by
-  intro p
-  exact ⟨track p f, Set.mem_insert _ _, track_le p f⟩
 
 theorem cof_W1 : Order.cof W1 = ℵ_ 1 := by
   have hreg : (ℵ_ 1 : Cardinal.{0}).IsRegular := by
@@ -170,17 +155,6 @@ theorem exists_bound_of_countable (s : Set W1) (hs : s.Countable) :
       (Cardinal.aleph0_lt_aleph.mpr (by norm_num))
   exact not_isCofinal_iff.mp (fun h => hcard.not_ge (Order.cof_le h))
 
-theorem exists_coordinate_bound (p : Condition) (i : W1) :
-    ∃ v : W1, ∀ f ∈ p.side, f i < v := by
-  let values : Set W1 := Set.range (fun f : p.side => f.val i)
-  have hcard : #values < Order.cof W1 := by
-    rw [cof_W1]
-    apply (Cardinal.mk_range_le.trans (Cardinal.le_aleph0_iff_set_countable.mpr
-      p.side_countable)).trans_lt
-    exact Cardinal.aleph0_lt_aleph.mpr (by norm_num)
-  obtain ⟨v, hv⟩ := not_isCofinal_iff.mp (fun h => hcard.not_ge (Order.cof_le h))
-  exact ⟨v, fun f hf => hv (f i) ⟨⟨f, hf⟩, rfl⟩⟩
-
 noncomputable def setValue (p : Condition) (i v : W1) : Condition where
   stem := Function.update p.stem i (some v)
   stem_countable := by
@@ -195,49 +169,5 @@ noncomputable def setValue (p : Condition) (i v : W1) : Condition where
       simpa only [Function.update_of_ne hji] using hj
   side := p.side
   side_countable := p.side_countable
-
-theorem setValue_le {p : Condition} {i v : W1} (hi : p.stem i = none)
-    (hv : ∀ f ∈ p.side, f i < v) : setValue p i v ≤ p := by
-  classical
-  refine ⟨?_, Set.Subset.rfl, ?_⟩
-  · intro j w hj
-    by_cases hji : j = i
-    · subst j
-      rw [hi] at hj
-      cases hj
-    · exact (Function.update_of_ne hji _ _).trans hj
-  · intro j hj w hnew f hf
-    by_cases hji : j = i
-    · subst j
-      have heq : v = w := Option.some.inj (by simpa only [setValue,
-        Function.update_self] using hnew)
-      exact (hv f hf).trans_eq heq
-    · have hold : p.stem j = some w := by
-        simpa only [setValue, Function.update_of_ne hji] using hnew
-      rw [hj] at hold
-      cases hold
-
-theorem coordinate_dense (i : W1) : DenseBelow {p : Condition | ∃ v, p.stem i = some v} := by
-  classical
-  intro p
-  cases hi : p.stem i with
-  | none =>
-    obtain ⟨v, hv⟩ := exists_coordinate_bound p i
-    exact ⟨setValue p i v, ⟨v, Function.update_self _ _ _⟩, setValue_le hi hv⟩
-  | some v => exact ⟨p, ⟨v, hi⟩, le_rfl⟩
-
-/-- Once a function is tracked, every subsequent decision beyond one
-fixed countable-stage bound is strictly above that function. -/
-theorem tracked_eventual_lower_bound (p : Condition) (f : W1 → W1) (hf : f ∈ p.side) :
-    ∃ bound : W1, ∀ q : Condition, q ≤ p → ∀ i : W1, bound < i →
-      ∀ v : W1, q.stem i = some v → f i < v := by
-  classical
-  obtain ⟨bound, hbound⟩ := exists_bound_of_countable _ p.stem_countable
-  refine ⟨bound, ?_⟩
-  intro q hqp i hi v hv
-  have hnone : p.stem i = none := by
-    by_contra h
-    exact (hbound i h).asymm hi
-  exact hqp.2.2 i hnone v hv f hf
 
 end Erdos1172Part3HechlerOrder

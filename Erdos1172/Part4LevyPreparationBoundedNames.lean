@@ -124,14 +124,6 @@ variable [CardinalInterFilter (U : Filter I) κ]
 local notation "j" => boundedPreparedName U a hk hf hn ht
 
 include hκ in
-theorem boundedPrepared_eq (X Y : bSet A) : (j X =ᴮ j Y) = initialCollapseHom hk (X =ᴮ Y) := by
-  unfold boundedPreparedName
-  apply (map_bv_eq hom _ _).symm.trans
-  apply (congrArg (fun d => (φ) d) (boundedName_eq U a hk hf hn ht hκ (fun _ => X) (fun _ => Y)
-    (Supported.const _) (Supported.const _)).symm).trans
-  exact collapseCompletionIso_constant U a hk hf hn ht hκ.isRegular hκ.aleph0_lt _
-
-include hκ in
 theorem boundedPrepared_mem (X Y : bSet A) : (j X ∈ᴮ j Y) = initialCollapseHom hk (X ∈ᴮ Y) := by
   unfold boundedPreparedName
   apply (map_mem hom _ _).symm.trans

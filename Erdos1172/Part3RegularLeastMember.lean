@@ -4,7 +4,6 @@ Licensed under the Apache License, Version 2.0.
 -/
 module
 
-public import Erdos1172.Part3FunctionDecisions
 public import Erdos1172.Part3RegularMembership
 
 @[expose] public section
@@ -61,17 +60,6 @@ theorem leastDecision_unique {U : RegularName P V} {p : P} {v w : Option V}
           · exact congrArg some hxy
           · exact (hv.2 p le_rfl y hyx hw.1).elim
 
-theorem actual_of_leastDecision_some {U : RegularName P V} {p : P} {x : V}
-    (h : LeastDecision U p (some x)) : U.holds p x := h.1
-
-theorem not_actual_of_leastDecision_none {U : RegularName P V} {p q : P}
-    (h : LeastDecision U p none) (hqp : q ≤ p) (x : V) : ¬U.holds q x :=
-  h q hqp x
-
-theorem no_smaller_of_leastDecision_some {U : RegularName P V} {p q : P} {x y : V}
-    (h : LeastDecision U p (some x)) (hqp : q ≤ p) (hyx : y < x) : ¬U.holds q y :=
-  h.2 q hqp y hyx
-
 variable [WellFoundedLT V]
 
 /-- Choose the least possible member, not the least member of the
@@ -100,43 +88,5 @@ def leastMember (U : RegularName P V) : FunctionDecisions P Unit (Option V) wher
   dense p _ := exists_least_deciding_refinement U p
   persistent hqp h := leastDecision_persistent hqp h
   unique hv hw := leastDecision_unique hv hw
-
-theorem leastMember_some_iff (U : RegularName P V) (p : P) (x : V) :
-    (leastMember U).decides p () (some x) ↔ U.holds p x ∧
-      ∀ q : P, q ≤ p → ∀ y : V, y < x → ¬U.holds q y := Iff.rfl
-
-theorem leastMember_none_iff (U : RegularName P V) (p : P) :
-    (leastMember U).decides p () none ↔
-      ∀ q : P, q ≤ p → ∀ x : V, ¬U.holds q x := Iff.rfl
-
-/-- On a ground set the nonempty outcome is exactly its ordinary least
-element; it is independent of the chosen condition. -/
-theorem leastMember_ground_some_iff (s : Set V) (p : P) (x : V) :
-    (leastMember (ground s)).decides p () (some x) ↔ IsLeast s x := by
-  constructor
-  · intro h
-    refine ⟨h.1, ?_⟩
-    intro y hy
-    exact le_of_not_gt (fun hyx => h.2 p le_rfl y hyx hy)
-  · intro h
-    refine ⟨h.1, ?_⟩
-    intro q _ y hyx hy
-    exact (not_le_of_gt hyx) (h.2 hy)
-
-/-- On a ground set the empty outcome is equivalent to actual emptiness. -/
-theorem leastMember_ground_none_iff (s : Set V) (p : P) :
-    (leastMember (ground s)).decides p () none ↔ s = ∅ := by
-  constructor
-  · intro h
-    ext x
-    constructor
-    · intro hx
-      exact (h p le_rfl x hx).elim
-    · intro hx
-      exact hx.elim
-  · intro hs
-    subst s
-    intro q _ x hx
-    exact hx
 
 end Erdos1172Part3RegularLeastMember

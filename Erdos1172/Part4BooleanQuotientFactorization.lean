@@ -87,9 +87,6 @@ def factorization (e : CompleteLatticeHom B C) : C ≃o Algebra (quotientName e)
     (retractionCompletionOrderIso (iterationEvaluation e) (iterationEvaluation_lifts e)
       (iterationSection e) (iterationEvaluation_section e) (iterationSection_evaluation_le e))
 
-theorem mem_factorization (e : CompleteLatticeHom B C) (p : Condition (quotientName e)) (c : C) :
-    p ∈ (factorization e c).val ↔ (iterationEvaluation e p).val ≤ c := Iff.rfl
-
 def firstStage (e : CompleteLatticeHom B C) : CompleteLatticeHom B (Algebra (quotientName e)) :=
   (firstStageHom (quotientName e)).comp Erdos1172PositiveBoolean.completionHom
 
@@ -109,11 +106,5 @@ theorem factorization_image (e : CompleteLatticeHom B C) (b : B) :
   change (evaluation e (factorOrderIso e p)).val ≤ e b ↔ (toFactor e p).source ≤ b
   rw [← lowerProjection_le_iff, lowerProjection_evaluation]
   rfl
-
-theorem factorization_comp (e : CompleteLatticeHom B C) :
-    (CompleteLatticeHom.OrderIso.toCompleteLatticeHom (factorization e)).comp e =
-      firstStage e := by
-  ext b
-  exact factorization_image e b
 
 end Erdos1172BooleanQuotient

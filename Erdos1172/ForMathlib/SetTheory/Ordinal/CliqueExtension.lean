@@ -93,16 +93,4 @@ theorem exists_clique_type_add_one_of_common_later
   · change typeLT (Set.insert x s : Set V) = β + 1
     rw [Ordinal.typeLT_insert_of_forall_lt hlater, htype]
 
-/-- Reservoir formulation of one-point clique extension: it suffices that the
-set of common later neighbors is nonempty. -/
-theorem exists_clique_type_add_one_of_common_later_reservoir
-    {V : Type u} [LinearOrder V] [WellFoundedLT V]
-    (G : SimpleGraph V) {s : Set V} {β : Ordinal.{u}}
-    (hs : G.IsClique s) (htype : typeLT s = β)
-    (hreservoir : Set.Nonempty
-      {x : V | (∀ y ∈ s, y < x) ∧ ∀ y ∈ s, G.Adj y x}) :
-    ∃ t : Set V, G.IsClique t ∧ typeLT t = β + 1 := by
-  obtain ⟨x, hlater, hadj⟩ := hreservoir
-  exact G.exists_clique_type_add_one_of_common_later hs htype hlater hadj
-
 end SimpleGraph

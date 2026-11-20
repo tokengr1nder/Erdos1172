@@ -52,10 +52,6 @@ private theorem pullbackEdge_ext_right (R e i : bSet 𝔹) :
 def pullbackRelation (κ R e : bSet 𝔹) : bSet 𝔹 :=
   relationGraph κ κ (pullbackEdge R e)
 
-theorem pullbackRelation_subset {κ R e : bSet 𝔹} {Γ : 𝔹} :
-    Γ ≤ pullbackRelation κ R e ⊆ᴮ prod κ κ :=
-  relationGraph_subset
-
 theorem mem_pullbackRelation {κ R e i j : bSet 𝔹} {Γ : 𝔹} :
     Γ ≤ pair i j ∈ᴮ pullbackRelation κ R e ↔
       Γ ≤ i ∈ᴮ κ ∧ Γ ≤ j ∈ᴮ κ ∧ Γ ≤ pullbackEdge R e i j :=
@@ -149,72 +145,5 @@ theorem increasingOn_mem_iff {κ e i j x y : bSet 𝔹} {Γ : 𝔹}
         (inf_le_left.trans Hinc) (inf_le_left.trans Hj) (inf_le_left.trans Hi)
         inf_le_right (inf_le_left.trans Hjy) (inf_le_left.trans Hix)
       exact (bot_of_mem_mem' x y (inf_le_left.trans Hxy) Hyx).trans bot_le
-
-private theorem oriented_branch_pullback_iff (color : Bool)
-    {κ R e i j x y : bSet 𝔹} {Γ : 𝔹}
-    (Hκ : Γ ≤ Ord κ) (Hfunc : Γ ≤ is_func e)
-    (Hinc : Γ ≤ increasingOn κ e) (Hi : Γ ≤ i ∈ᴮ κ) (Hj : Γ ≤ j ∈ᴮ κ)
-    (Hix : Γ ≤ pair i x ∈ᴮ e) (Hjy : Γ ≤ pair j y ∈ᴮ e) :
-    Γ ≤ i ∈ᴮ j ⊓ (if color then pair i j ∈ᴮ pullbackRelation κ R e
-      else (pair i j ∈ᴮ pullbackRelation κ R e)ᶜ) ↔
-    Γ ≤ x ∈ᴮ y ⊓ (if color then pair x y ∈ᴮ R else (pair x y ∈ᴮ R)ᶜ) := by
-  rw [le_inf_iff, le_inf_iff, increasingOn_mem_iff Hκ Hfunc Hinc Hi Hj Hix Hjy,
-    orientedColor_pullback_iff color Hfunc Hi Hj Hix Hjy]
-
-/-- Both graph colors agree, without assuming the vertices are distinct
-and without selecting a ground ordinal orientation. -/
-theorem graphColor_pullback_iff (color : Bool)
-    {κ R e i j x y : bSet 𝔹} {Γ : 𝔹}
-    (Hκ : Γ ≤ Ord κ) (Hfunc : Γ ≤ is_func e)
-    (Hinc : Γ ≤ increasingOn κ e) (Hi : Γ ≤ i ∈ᴮ κ) (Hj : Γ ≤ j ∈ᴮ κ)
-    (Hix : Γ ≤ pair i x ∈ᴮ e) (Hjy : Γ ≤ pair j y ∈ᴮ e) :
-    Γ ≤ graphColor color (pullbackRelation κ R e) i j ↔
-      Γ ≤ graphColor color R x y := by
-  constructor
-  · intro H
-    apply (le_inf le_rfl H).trans
-    unfold graphColor
-    rw [inf_sup_left]
-    apply sup_le
-    · exact ((oriented_branch_pullback_iff color
-        (inf_le_left.trans Hκ) (inf_le_left.trans Hfunc) (inf_le_left.trans Hinc)
-        (inf_le_left.trans Hi) (inf_le_left.trans Hj)
-        (inf_le_left.trans Hix) (inf_le_left.trans Hjy)).mp inf_le_right).trans le_sup_left
-    · exact ((oriented_branch_pullback_iff color
-        (inf_le_left.trans Hκ) (inf_le_left.trans Hfunc) (inf_le_left.trans Hinc)
-        (inf_le_left.trans Hj) (inf_le_left.trans Hi)
-        (inf_le_left.trans Hjy) (inf_le_left.trans Hix)).mp inf_le_right).trans le_sup_right
-  · intro H
-    apply (le_inf le_rfl H).trans
-    unfold graphColor
-    rw [inf_sup_left]
-    apply sup_le
-    · exact ((oriented_branch_pullback_iff color
-        (inf_le_left.trans Hκ) (inf_le_left.trans Hfunc) (inf_le_left.trans Hinc)
-        (inf_le_left.trans Hi) (inf_le_left.trans Hj)
-        (inf_le_left.trans Hix) (inf_le_left.trans Hjy)).mpr inf_le_right).trans le_sup_left
-    · exact ((oriented_branch_pullback_iff color
-        (inf_le_left.trans Hκ) (inf_le_left.trans Hfunc) (inf_le_left.trans Hinc)
-        (inf_le_left.trans Hj) (inf_le_left.trans Hi)
-        (inf_le_left.trans Hjy) (inf_le_left.trans Hix)).mpr inf_le_right).trans le_sup_right
-
-/-- Equality of the localized Boolean values, not merely a top-level
-equivalence or one-direction preservation statement. -/
-theorem graphColor_pullback_eq (color : Bool)
-    {κ R e i j x y : bSet 𝔹} {Γ : 𝔹}
-    (Hκ : Γ ≤ Ord κ) (Hfunc : Γ ≤ is_func e)
-    (Hinc : Γ ≤ increasingOn κ e) (Hi : Γ ≤ i ∈ᴮ κ) (Hj : Γ ≤ j ∈ᴮ κ)
-    (Hix : Γ ≤ pair i x ∈ᴮ e) (Hjy : Γ ≤ pair j y ∈ᴮ e) :
-    Γ ⊓ graphColor color (pullbackRelation κ R e) i j =
-      Γ ⊓ graphColor color R x y := by
-  apply le_antisymm
-  · exact le_inf inf_le_left ((graphColor_pullback_iff color
-      (inf_le_left.trans Hκ) (inf_le_left.trans Hfunc) (inf_le_left.trans Hinc)
-      (inf_le_left.trans Hi) (inf_le_left.trans Hj)
-      (inf_le_left.trans Hix) (inf_le_left.trans Hjy)).mp inf_le_right)
-  · exact le_inf inf_le_left ((graphColor_pullback_iff color
-      (inf_le_left.trans Hκ) (inf_le_left.trans Hfunc) (inf_le_left.trans Hinc)
-      (inf_le_left.trans Hi) (inf_le_left.trans Hj)
-      (inf_le_left.trans Hix) (inf_le_left.trans Hjy)).mpr inf_le_right)
 
 end bSet.ErdosGraphPullback

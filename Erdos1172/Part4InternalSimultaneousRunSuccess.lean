@@ -6,7 +6,6 @@ module
 
 public import Erdos1172.Part4InternalSimultaneousRunStopping
 public import Erdos1172.Part4InternalSimultaneousRunLaws
-public import Erdos1172.Part4InternalPartitionOrder
 
 @[expose] public section
 
@@ -46,38 +45,6 @@ theorem run_vertex_ne_top_of_success {P top i y : bSet 𝔹} {Γ : 𝔹}
     le_iSup_of_le i (le_inf
       (inf_le_left.trans (mem_vertexHistory_iff.mp Hcurrent).1) HtopPair)
   exact bv_absurd _ Hrange (inf_le_left.trans Hsuccess)
-
-theorem run_vertex_below_top_color
-    {color : Bool} {R S top P i y : bSet 𝔹} {Γ : 𝔹}
-    (Hlaw : Γ ≤ runLaw color R S top P)
-    (Hsuccess : Γ ≤ (rangeMem omegaOne (vertexHistory P) top)ᶜ)
-    (Hcurrent : Γ ≤ pair i y ∈ᴮ vertexHistory P) :
-    Γ ≤ y ∈ᴮ top ⊓ graphColor color R y top := by
-  have Hne := run_vertex_ne_top_of_success Hsuccess Hcurrent
-  exact le_inf (nonstop_stage_below_top Hlaw Hcurrent Hne)
-    (nonstop_stage_color_top Hlaw Hcurrent Hne)
-
-theorem run_vertex_range_below_top_color
-    {color : Bool} {R S top P y : bSet 𝔹} {Γ : 𝔹}
-    (Hlaw : Γ ≤ runLaw color R S top P)
-    (Hsuccess : Γ ≤ (rangeMem omegaOne (vertexHistory P) top)ᶜ)
-    (Hy : Γ ≤ rangeMem omegaOne (vertexHistory P) y) :
-    Γ ≤ y ∈ᴮ top ⊓ graphColor color R y top := by
-  obtain ⟨i, Hi⟩ := exists_convert Hy
-    (B_ext_inf B_ext_mem_left B_ext_pair_mem_left)
-  exact run_vertex_below_top_color Hlaw Hsuccess (Hi.trans inf_le_right)
-
-theorem run_vertex_image_subset_top
-    {color : Bool} {R S top P : bSet 𝔹} {Γ : 𝔹}
-    (Hlaw : Γ ≤ runLaw color R S top P)
-    (Hsuccess : Γ ≤ (rangeMem omegaOne (vertexHistory P) top)ᶜ) :
-    Γ ≤ image omegaOne omegaTwo (vertexHistory P) ⊆ᴮ top := by
-  rw [subset_unfold']
-  apply le_iInf
-  intro y
-  rw [← deduction]
-  exact (run_vertex_range_below_top_color (inf_le_left.trans Hlaw)
-    (inf_le_left.trans Hsuccess) ((mem_image_iff.mp inf_le_right).2)).trans inf_le_left
 
 /-- Increasingness needs only the entry laws and absence of the sentinel;
 full totality is used later to identify an actual omega-one injection. -/
@@ -200,18 +167,5 @@ theorem run_vertex_homogeneous
     (inf_le_left.trans Hsuccess)
     (inf_le_right.trans (inf_le_left.trans inf_le_left))
     (inf_le_right.trans (inf_le_left.trans inf_le_right)) Hxy
-
-/-- The exact successful-branch conclusion for the same decoded graph.
-The displayed success hypothesis remains an explicit, unconstructed premise. -/
-theorem run_vertex_increasing_injective_homogeneous
-    {color : Bool} {R S top P : bSet 𝔹} {Γ : 𝔹}
-    (HP : Γ ≤ is_function omegaOne entrySpace P)
-    (Hlaw : Γ ≤ runLaw color R S top P)
-    (Hsuccess : Γ ≤ (rangeMem omegaOne (vertexHistory P) top)ᶜ) :
-    Γ ≤ is_injective_function omegaOne omegaTwo (vertexHistory P) ⊓
-      (increasingOn omegaOne (vertexHistory P) ⊓
-        homogeneousUnion color R omegaOne omegaOne (vertexHistory P) (vertexHistory P)) :=
-  le_inf (run_vertex_is_injective HP Hlaw Hsuccess)
-    (le_inf (run_vertex_increasing Hlaw Hsuccess) (run_vertex_homogeneous HP Hlaw Hsuccess))
 
 end bSet.ErdosSimultaneousRun

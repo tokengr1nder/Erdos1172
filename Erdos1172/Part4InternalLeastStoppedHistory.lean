@@ -7,8 +7,6 @@ module
 public import Erdos1172.Part4InternalCountablyBoundedSup
 public import Erdos1172.Part4InternalSimultaneousRunLaws
 public import Erdos1172.Part4InternalSimultaneousRunStopping
-public import Erdos1172.Part4InternalOrdinalLeast
-public import Erdos1172.Part4InternalCountableImage
 
 @[expose] public section
 

@@ -147,12 +147,4 @@ theorem fullBlockFamily_subset
     (inf_le_left.trans HF) (inf_le_left.trans HFlaw) (inf_le_left.trans HRun)
     (inf_le_left.trans Hlaw) (inf_le_left.trans Hsuccess) (Hν.trans inf_le_right)
 
-theorem fullBlockFamily_mem_of_pair
-    {color : Bool} {R E F top Run ν b : bSet 𝔹} {Γ : 𝔹}
-    (HRun : Γ ≤ is_function omegaOne runSpace Run)
-    (Hlaw : Γ ≤ runLaw color R E F top Run)
-    (Hpair : Γ ≤ pair ν b ∈ᴮ fullBlocks Run) : Γ ≤ b ∈ᴮ fullBlockFamily Run :=
-  mem_image Hpair (mem_domain_of_is_function Hpair (fullBlocks_is_function HRun Hlaw))
-    (mem_codomain_of_is_function Hpair (fullBlocks_is_function HRun Hlaw))
-
 end bSet.ErdosFusionRunBlockOrder

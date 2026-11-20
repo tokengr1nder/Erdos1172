@@ -12,9 +12,7 @@ open Cardinal Ordinal Set Order
 
 namespace Erdos1172Part3RedCoreDerivedIdeal
 
-open Erdos1172Part3NeighborhoodCode Erdos1172Part3NeighborhoodIdeal
-  Erdos1172Part3NeighborhoodIdealCore Erdos1172Part3FiniteIdealEndpoint
-  Erdos1172Part3RedCoreIdeal
+open Erdos1172Part3NeighborhoodCode Erdos1172Part3NeighborhoodIdeal Erdos1172Part3NeighborhoodIdealCore Erdos1172Part3FiniteIdealEndpoint Erdos1172Part3RedCoreIdeal
 
 def blueSection (H : SimpleGraph W2) (a b : W2) (s : Set W2) : Set W2 :=
   (s ∩ {x | H.Adj x a}) ∩ Set.Iio b

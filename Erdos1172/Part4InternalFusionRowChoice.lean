@@ -5,8 +5,6 @@ Licensed under the Apache License, Version 2.0.
 module
 
 public import Erdos1172.Part4InternalFusionRowCandidateCongruence
-public import Erdos1172.Part4InternalFusionHistoryCongruence
-public import Erdos1172.Part4InternalOrdinalFallback
 
 @[expose] public section
 
@@ -95,21 +93,6 @@ theorem maskedCandidates_eq_of_active
       ⟨mem_of_mem_subset fusionRowCandidates_subset inf_le_right,
         le_inf (inf_le_left.trans Hactive) inf_le_right⟩
 
-theorem maskedCandidates_empty_of_inactive
-    {color : Bool} {R E top ξ Blocks X ν : bSet 𝔹} {Γ : 𝔹}
-    (Hinactive : Γ ≤ (ν ∈ᴮ successfulRows color R ξ Blocks)ᶜ) :
-    Γ ≤ maskedCandidates color R E top ξ Blocks X ν =ᴮ (∅ : bSet 𝔹) := by
-  apply subset_ext ?_ empty_subset
-  rw [subset_unfold']
-  apply le_iInf
-  intro v
-  rw [← deduction]
-  have Hactive := ((mem_maskedCandidates_iff.mp
-    (show Γ ⊓ v ∈ᴮ maskedCandidates color R E top ξ Blocks X ν ≤
-      v ∈ᴮ maskedCandidates color R E top ξ Blocks X ν from inf_le_right)).2).trans
-        inf_le_left
-  exact (bv_absurd _ Hactive (inf_le_left.trans Hinactive)).trans bot_le
-
 def currentChoices (color : Bool) (R E top ξ Blocks X : bSet 𝔹) : bSet 𝔹 :=
   relationGraph omegaOne omegaOne
     (fun ν v => leastOrTop (maskedCandidates color R E top ξ Blocks X ν) 0 v)
@@ -145,18 +128,6 @@ theorem currentChoices_is_function
     exact leastOrTop_unique_of_eq
       (maskedCandidates_congr_row color R E top ξ Blocks X Hνμ) Hv Hw
 
-theorem currentChoices_mem_code
-    {color : Bool} {R E top ξ Blocks X : bSet 𝔹} {Γ : 𝔹} :
-    Γ ≤ currentChoices color R E top ξ Blocks X ∈ᴮ bv_powerset (prod omegaOne omegaOne) :=
-  mem_powerset_iff.mpr (currentChoices_is_function.trans inf_le_right)
-
-theorem currentChoices_zero_of_inactive
-    {color : Bool} {R E top ξ Blocks X ν v : bSet 𝔹} {Γ : 𝔹}
-    (Hpair : Γ ≤ pair ν v ∈ᴮ currentChoices color R E top ξ Blocks X)
-    (Hinactive : Γ ≤ (ν ∈ᴮ successfulRows color R ξ Blocks)ᶜ) : Γ ≤ v =ᴮ 0 :=
-  eq_top_of_leastOrTop_empty (mem_currentChoices_iff.mp Hpair).2.2
-    (maskedCandidates_empty_of_inactive Hinactive)
-
 theorem currentChoices_least_of_witness
     {color : Bool} {R E top ξ Blocks X ν v w : bSet 𝔹} {Γ : 𝔹}
     (Hpair : Γ ≤ pair ν v ∈ᴮ currentChoices color R E top ξ Blocks X)
@@ -168,22 +139,5 @@ theorem currentChoices_least_of_witness
       (mem_currentChoices_iff.mp Hpair).2.2 (leastOrTop_ext_set 0 v)
   have Heq : Γ ≤ v =ᴮ w := leastOrTop_unique Hchoice (leastOrTop_of_least Hleast)
   exact bv_rw' Heq (h_congr := leastIn_ext_value _) (H_new := Hleast)
-
-/-- Co-largeness hypotheses establish legality of the actual total
-choice graph; they are not needed to define that graph. -/
-theorem currentChoices_least
-    {color : Bool} {R J E top ξ Blocks X ν v : bSet 𝔹} {Γ : 𝔹}
-    (HJ : Γ ≤ properIdeal omegaOne J) (Habsorb : Γ ≤ countableAbsorption omegaOne J)
-    (Hclosure : Γ ≤ countableClosure J) (Hξ : Γ ≤ ξ ∈ᴮ omegaOne)
-    (HX : Γ ≤ is_func' (prod ξ omegaOne) omegaOne X)
-    (Hpair : Γ ≤ pair ν v ∈ᴮ currentChoices color R E top ξ Blocks X)
-    (Hactive : Γ ≤ ν ∈ᴮ successfulRows color R ξ Blocks)
-    (Hseed : Γ ≤ colarge omegaOne J (fusionSeed (!color) R E (blockValue Blocks ν) top))
-    (Hsections : Γ ≤ ⨅ j, _root_.imp (j ∈ᴮ ξ ⊓ ν ∈ᴮ j)
-      (colarge omegaOne J (fusionSection (!color) R E (blockValue Blocks ν) Blocks j))) :
-    Γ ≤ leastIn (rowCandidatesAt color R E top ξ Blocks X ν) v := by
-  obtain ⟨w, Hw⟩ := exists_least_fusionRowCandidate HJ Habsorb Hclosure Hξ
-    (mem_currentChoices_iff.mp Hpair).1 HX Hseed Hsections
-  exact currentChoices_least_of_witness Hpair Hactive (Hw.trans inf_le_right)
 
 end bSet.ErdosFusionRowChoice

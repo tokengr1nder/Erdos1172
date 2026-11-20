@@ -6,7 +6,6 @@ module
 
 public import Erdos1172.Part4InternalBlockPoolRecursion
 public import Erdos1172.Part4InternalCountableChainCapture
-public import Erdos1172.Part4InternalIncreasingComposition
 
 @[expose] public section
 

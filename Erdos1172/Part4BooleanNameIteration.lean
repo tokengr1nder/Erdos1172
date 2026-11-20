@@ -71,12 +71,6 @@ def shrink {Q : bSet B} (p : Condition Q) (b : B) (hb : b ≠ ⊥)
     (hbp : b ≤ p.value) : Condition Q :=
   ⟨b, hb, p.index, hbp.trans p.valid⟩
 
-theorem shrink_value {Q : bSet B} (p : Condition Q) (b : B) (hb : b ≠ ⊥)
-    (hbp : b ≤ p.value) : (shrink p b hb hbp).value = b := rfl
-
-theorem shrink_name {Q : bSet B} (p : Condition Q) (b : B) (hb : b ≠ ⊥)
-    (hbp : b ≤ p.value) : name (shrink p b hb hbp) = name p := rfl
-
 theorem shrink_le {Q : bSet B} (p : Condition Q) (b : B) (hb : b ≠ ⊥)
     (hbp : b ≤ p.value) : shrink p b hb hbp ≤ p :=
   ⟨hbp, subset_self⟩

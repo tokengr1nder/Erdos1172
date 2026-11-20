@@ -201,22 +201,4 @@ theorem merge_active {a : Cut} {C : Set (Carrier a)} (hC : C.Countable)
       rw [het] at hce
       exact hce
 
-theorem support_merge {a : Cut} {C : Set (Carrier a)} (hC : C.Countable)
-    (hc : CoordinateChains C) : support (merge C hC).val = supportUnion C := by
-  apply Set.Subset.antisymm
-  · intro i hi
-    by_contra hn
-    exact hi ((pack_eq_none_iff _).mpr (unionData_empty_of_not_mem hC hn))
-  · intro i hi
-    obtain ⟨p, hp⟩ := Set.mem_iUnion.mp hi
-    obtain ⟨hpC, hip⟩ := Set.mem_iUnion.mp hp
-    change value p i ≠ none at hip
-    cases hd : value p i with
-    | none => exact (hip hd).elim
-    | some d =>
-      obtain ⟨e, he⟩ := merge_active hC hc hpC hd
-      change value (merge C hC) i ≠ none
-      rw [he]
-      exact Option.some_ne_none e
-
 end Erdos1172Part3SparseIterationUnions

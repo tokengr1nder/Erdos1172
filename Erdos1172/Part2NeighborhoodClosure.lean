@@ -12,10 +12,7 @@ open Cardinal Ordinal Set Order
 
 namespace Erdos1172Part2NeighborhoodClosure
 
-open Erdos1172NeighborhoodCode Erdos1172NeighborhoodIdeal
-  Erdos1172NeighborhoodIdealCore Erdos1172NeighborhoodDerivedIdeal
-  Erdos1172NeighborhoodStableSpectrum Erdos1172NeighborhoodFutureTransfer
-  Erdos1172NeighborhoodFavorableClosure
+open Erdos1172NeighborhoodCode Erdos1172NeighborhoodIdeal Erdos1172NeighborhoodIdealCore Erdos1172NeighborhoodDerivedIdeal Erdos1172NeighborhoodStableSpectrum Erdos1172NeighborhoodFutureTransfer Erdos1172NeighborhoodFavorableClosure
 
 theorem target_of_absent_extension {r : Code ↪ W3}
     (G H : SimpleGraph W3) (hcompl : IsCompl G H) (system : StableSystem r G H)

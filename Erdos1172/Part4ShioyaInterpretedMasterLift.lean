@@ -6,8 +6,7 @@ module
 
 public import Erdos1172.Part4ShioyaInterpretedMaster
 public import Erdos1172.Part4ShioyaSeedOpenScalar
-public import Erdos1172.Part4ShioyaHereditaryDenseOpen
-public import Erdos1172.Part4BooleanUltrapowerBoundedEval
+public import Erdos1172.Part4BooleanUltrapowerNormality
 public import Erdos1172.Part4BooleanFunctionTransport
 
 @[expose] public section
@@ -73,30 +72,6 @@ theorem Formula.map_eval (p : Formula T) (d : CompleteLatticeHom B S) (env : T �
     apply map_named_someIn d (env t) _ _ (p.bound_ext _) (p.bound_ext _)
     intro y
     apply (hp (fun a => a.elim y env)).trans
-    exact congrArg p.eval (_root_.funext fun a => by cases a <;> rfl)
-
-variable (U : Ultrafilter I) [CountableInterFilter (U : Filter I)]
-
-/-- Simultaneous parameters may vary arbitrarily over the ultrafilter index. -/
-theorem Formula.hereditary_eval (p : Formula T) (env : I → T → bSet B) :
-    value U (fun i => p.eval (env i)) = p.eval (fun t => hereditary U (fun i => env i t)) := by
-  induction p with
-  | mem x y => exact value_name_mem U _ _
-  | eq x y => exact value_name_eq U _ _
-  | edge r x y => exact hereditary_edge_value U _ _ _
-  | imp p q hp hq => exact (value_imp U _ _).trans (congrArg₂ _ (hp env) (hq env))
-  | both p q hp hq => exact (value_inf U _ _).trans (congrArg₂ _ (hp env) (hq env))
-  | either p q hp hq => exact (value_sup U _ _).trans (congrArg₂ _ (hp env) (hq env))
-  | neg p hp => exact (value_compl U _).trans (congrArg (·ᶜ) (hp env))
-  | allIn t p hp =>
-    apply hereditary_allIn U (fun i => env i t) _ _ (fun i => p.bound_ext (env i)) (p.bound_ext _)
-    intro Y
-    apply (hp (fun i a => a.elim (Y i) (env i))).trans
-    exact congrArg p.eval (_root_.funext fun a => by cases a <;> rfl)
-  | someIn t p hp =>
-    apply hereditary_bounded_evaluation U (fun i => env i t) _ _ (fun i => p.bound_ext (env i)) (p.bound_ext _)
-    intro Y
-    apply (hp (fun i a => a.elim (Y i) (env i))).trans
     exact congrArg p.eval (_root_.funext fun a => by cases a <;> rfl)
 
 end bSet.ErdosShioyaInternal.InterpretedMaster

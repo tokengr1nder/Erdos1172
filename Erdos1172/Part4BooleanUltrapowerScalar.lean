@@ -67,20 +67,4 @@ theorem scalarHom_value (f : I → B) :
   intro p
   exact germ_lower_adjunction U e p.val (Germ.ofFun f)
 
-open bSet ErdosNameTransport
-open scoped Flypitch
-variable [CountableInterFilter (U : Filter I)]
-
-theorem scalarHom_hereditary_mem (X Y : I → bSet B) :
-    scalarHom U e (hereditary U X ∈ᴮ hereditary U Y) =
-      (hereditary U (fun i => mapNames e (X i)) ∈ᴮ hereditary U (fun i => mapNames e (Y i))) := by
-  rw [← value_name_mem,scalarHom_value,← value_name_mem]
-  exact congrArg (value U) (_root_.funext fun i => map_mem e (X i) (Y i))
-
-theorem scalarHom_hereditary_eq (X Y : I → bSet B) :
-    scalarHom U e (hereditary U X =ᴮ hereditary U Y) =
-      (hereditary U (fun i => mapNames e (X i)) =ᴮ hereditary U (fun i => mapNames e (Y i))) := by
-  rw [← value_name_eq,scalarHom_value,← value_name_eq]
-  exact congrArg (value U) (_root_.funext fun i => map_bv_eq e (X i) (Y i))
-
 end Erdos1172BooleanUltrapower

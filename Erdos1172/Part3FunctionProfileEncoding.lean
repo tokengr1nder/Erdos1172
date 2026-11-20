@@ -4,7 +4,6 @@ Licensed under the Apache License, Version 2.0.
 -/
 module
 
-public import Erdos1172.Part3FunctionDecisions
 public import Erdos1172.Part3CoverProfileTools
 
 @[expose] public section
@@ -110,12 +109,5 @@ theorem encodedName_row_decides_iff (F : FunctionDecisions P W1 W1)
     (R : W1 → FunctionDecisions P W1 W1) (p : P) (i j v : W1) :
     (encodedName F R).decides p (rowCoordinate i j) v ↔ (R i).decides p j v :=
   extendAlong_decides_iff profileRank _ (profileDecisions F R) p (Sum.inr (i, j)) v
-
-theorem exists_encoded_name (F : FunctionDecisions P W1 W1)
-    (R : W1 → FunctionDecisions P W1 W1) :
-    ∃ H : FunctionDecisions P W1 W1,
-      (∀ p j v, H.decides p (headCoordinate j) v ↔ F.decides p j v) ∧
-      ∀ p i j v, H.decides p (rowCoordinate i j) v ↔ (R i).decides p j v :=
-  ⟨encodedName F R, encodedName_head_decides_iff F R, encodedName_row_decides_iff F R⟩
 
 end Erdos1172Part3FunctionProfileEncoding

@@ -6,8 +6,6 @@ module
 
 public import Erdos1172.Part3BoundedPrefixCovers
 public import Erdos1172.Part3NamedCofinalPowerCovers
-public import Erdos1172.Part3NamedCofinalRealization
-public import Erdos1172.Part3SupportedCoverRealization
 
 @[expose] public section
 
@@ -87,12 +85,6 @@ theorem exists_optionalNamedCofinalCovers (hV : #V ≤ ℵ_ 1) (n : ℕ) :
         Erdos1172Part3NamedCofinalRealization.exists_ground_cofinal_set E hclosed p
           (mk_index_le n) hV hordered hcofinal
       exact (hseed ⟨A, hA, hAtype.trans (typeLT_index n)⟩).elim
-
-/-- All optional finite-rank families may be chosen before considering
-any particular regular name or condition order. -/
-theorem exists_optionalNamedCofinalFamily (hV : #V ≤ ℵ_ 1) :
-    Nonempty (∀ n : ℕ, OptionalNamedCofinalCovers n V) :=
-  ⟨fun n => Classical.choice (exists_optionalNamedCofinalCovers hV n)⟩
 
 variable {P : Type} [Preorder P] {n : ℕ}
 

@@ -7,7 +7,6 @@ module
 public import Erdos1172.Part4InternalIncreasingEnumeration
 public import Erdos1172.Part4InternalFunctionRestriction
 public import Erdos1172.Part4InternalIndependentTwoRanges
-public import Erdos1172.Part4InternalLargeDifference
 public import Erdos1172.Part4InternalDushnikMiller
 
 @[expose] public section

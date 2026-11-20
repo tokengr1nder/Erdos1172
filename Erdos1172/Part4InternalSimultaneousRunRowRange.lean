@@ -5,7 +5,6 @@ Licensed under the Apache License, Version 2.0.
 module
 
 public import Erdos1172.Part4InternalSimultaneousRunLaws
-public import Erdos1172.Part4InternalSimultaneousTraces
 public import Erdos1172.Part4InternalGreedyRange
 
 @[expose] public section
@@ -192,15 +191,6 @@ theorem run_row_increasing {color : Bool} {R S top P σ seed : bSet 𝔹} {Γ : 
   increasingOn_of_greedyLaw (is_func'_of_is_function (run_row_is_function HP Hlaw Hσ))
     (run_row_greedyLaw HP Hlaw HS Hσ Hseed)
 
-theorem run_row_is_injective {color : Bool} {R S top P σ seed : bSet 𝔹} {Γ : 𝔹}
-    (HP : Γ ≤ is_function omegaOne entrySpace P)
-    (Hlaw : Γ ≤ runLaw color R S top P)
-    (HS : Γ ≤ is_func' (prod omegaOne omegaTwo) (bv_powerset omegaOne) S)
-    (Hσ : Γ ≤ σ ∈ᴮ omegaOne) (Hseed : Γ ≤ pair (pair σ top) seed ∈ᴮ S) :
-    Γ ≤ is_injective_function omegaOne omegaOne (rowHistory omegaOne (coordinateHistory P) σ) :=
-  is_injective_function_of_greedyLaw (run_row_is_function HP Hlaw Hσ)
-    (run_row_greedyLaw HP Hlaw HS Hσ Hseed)
-
 theorem run_row_range_colarge {color : Bool} {J R S top P σ seed : bSet 𝔹} {Γ : 𝔹}
     (HJ : Γ ≤ isIdeal omegaOne J)
     (Habsorb : Γ ≤ countableAbsorption omegaOne J)
@@ -235,30 +225,5 @@ theorem run_row_range_colarge {color : Bool} {J R S top P σ seed : bSet 𝔹} {
   exact greedy_range_colarge HJ Habsorb Hclosure Hnormal HseedColarge HF Hsmall
     (is_func'_of_is_function (run_row_is_function HP Hlaw Hσ))
     (run_row_greedyLaw HP Hlaw HS Hσ Hseed)
-
-/-- All properties concern the very same explicit decoded row graph.
-Normality is supplied for this row's ideal, not inferred from rowIdealData. -/
-theorem run_row_increasing_injective_colarge
-    {color : Bool} {J R S top P σ seed : bSet 𝔹} {Γ : 𝔹}
-    (HJ : Γ ≤ isIdeal omegaOne J)
-    (Habsorb : Γ ≤ countableAbsorption omegaOne J)
-    (Hclosure : Γ ≤ countableClosure J)
-    (Hnormal : Γ ≤ diagonalClosure omegaOne J)
-    (HP : Γ ≤ is_function omegaOne entrySpace P)
-    (Hlaw : Γ ≤ runLaw color R S top P)
-    (HS : Γ ≤ is_func' (prod omegaOne omegaTwo) (bv_powerset omegaOne) S)
-    (Hσ : Γ ≤ σ ∈ᴮ omegaOne) (Hseed : Γ ≤ pair (pair σ top) seed ∈ᴮ S)
-    (HseedColarge : Γ ≤ colarge omegaOne J seed)
-    (Hvalues : Γ ≤ ⨅ y, ⨅ A, _root_.imp
-      (y ∈ᴮ omegaTwo ⊓ pair (pair σ y) A ∈ᴮ S) (colarge omegaOne J A)) :
-    Γ ≤ is_injective_function omegaOne omegaOne
-        (rowHistory omegaOne (coordinateHistory P) σ) ⊓
-      (increasingOn omegaOne (rowHistory omegaOne (coordinateHistory P) σ) ⊓
-        colarge omegaOne J
-          (image omegaOne omegaOne (rowHistory omegaOne (coordinateHistory P) σ))) :=
-  le_inf (run_row_is_injective HP Hlaw HS Hσ Hseed)
-    (le_inf (run_row_increasing HP Hlaw HS Hσ Hseed)
-      (run_row_range_colarge HJ Habsorb Hclosure Hnormal HP Hlaw HS Hσ Hseed
-        HseedColarge Hvalues))
 
 end bSet.ErdosSimultaneousRun

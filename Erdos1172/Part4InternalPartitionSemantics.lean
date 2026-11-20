@@ -81,35 +81,12 @@ theorem rangeMem_le_codomain {A κ f x : bSet 𝔹} {Γ : 𝔹}
     (B_ext_inf B_ext_mem_left B_ext_pair_mem_left)
   exact value_mem_codomain Hf (Hi.trans inf_le_left) (Hi.trans inf_le_right)
 
-/-- The domain-guarded range is the actual internal bounded image under
-the same Boolean condition; it is not a host-language range. -/
-theorem rangeMem_eq_image {A κ f x : bSet 𝔹} {Γ : 𝔹}
-    (Hf : Γ ≤ is_func' A κ f) :
-    Γ ⊓ rangeMem A f x = Γ ⊓ (x ∈ᴮ image A κ f) := by
-  apply le_antisymm
-  · refine le_inf inf_le_left ?_
-    exact mem_image_iff.mpr
-      ⟨rangeMem_le_codomain (inf_le_left.trans Hf) inf_le_right, inf_le_right⟩
-  · exact le_inf inf_le_left ((mem_image_iff.mp inf_le_right).2)
-
 theorem unionRange_le_codomain {A B κ f g x : bSet 𝔹} {Γ : 𝔹}
     (Hf : Γ ≤ is_func' A κ f) (Hg : Γ ≤ is_func' B κ g) :
     Γ ⊓ (rangeMem A f x ⊔ rangeMem B g x) ≤ x ∈ᴮ κ := by
   rw [inf_sup_left]
   exact sup_le (rangeMem_le_codomain (inf_le_left.trans Hf) inf_le_right)
     (rangeMem_le_codomain (inf_le_left.trans Hg) inf_le_right)
-
-theorem separatedRanges_apply {A B f g x y : bSet 𝔹} {Γ : 𝔹}
-    (Hsep : Γ ≤ separatedRanges A B f g)
-    (Hx : Γ ≤ rangeMem A f x) (Hy : Γ ≤ rangeMem B g y) : Γ ≤ x ∈ᴮ y := by
-  obtain ⟨i, Hi⟩ := exists_convert Hx
-    (B_ext_inf B_ext_mem_left B_ext_pair_mem_left)
-  obtain ⟨j, Hj⟩ := exists_convert Hy
-    (B_ext_inf B_ext_mem_left B_ext_pair_mem_left)
-  have Hspec := Hsep.trans ((iInf_le _ i).trans
-    ((iInf_le _ j).trans ((iInf_le _ x).trans (iInf_le _ y))))
-  exact (le_inf Hspec (le_inf (le_inf (Hi.trans inf_le_left) (Hj.trans inf_le_left))
-    (le_inf (Hi.trans inf_le_right) (Hj.trans inf_le_right)))).trans bv_imp_elim
 
 theorem homogeneousUnion_apply {color : Bool} {R A B f g x y : bSet 𝔹} {Γ : 𝔹}
     (H : Γ ≤ homogeneousUnion color R A B f g)

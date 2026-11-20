@@ -47,16 +47,6 @@ def changeCompletion (U : bSet A) : Algebra (mapNames e U) ≃o Algebra (mapName
   completionIso h (fun p q le => ⟨g q,(g.le_symm_apply.mp le),by simp [h]⟩)
     (fun a _ le => ⟨a,le_rfl,g.symm.le_iff_le.mp le⟩) (fun t => ⟨g t,by simp [h]⟩)
 
-theorem changeCompletion_scalar (U : bSet A) (b : B) :
-    changeCompletion e f φ over U (sourceHom (mapNames e U) b) = sourceHom (mapNames f U) (φ b) := by
-  apply Heyting.Regular.coe_injective
-  apply SetLike.ext
-  intro p
-  change (changeConditions e f φ over U).symm p ∈ (sourceHom (mapNames e U) b).val ↔ p ∈ (sourceHom _ _).val
-  rw [← condition_le_iff,← condition_le_iff,condition_le_source,condition_le_source]
-  cases U
-  exact φ.symm_apply_le
-
 include over in
 private theorem lower_change (c : C) :
     Erdos1172BooleanFactor.lowerProjection e (φ.symm c) = Erdos1172BooleanFactor.lowerProjection f c := by
@@ -96,10 +86,5 @@ theorem auxiliary_member {B : Type u} [NontrivialCompleteBooleanAlgebra B]
     (show (0 : Ordinal.{u}) < κ.ord from bot_lt_iff_ne_bot.mpr (by simpa using hκ.pos.ne')))
   let y := function_eval (S.enumerates.trans inf_le_left) _ hm
   exact ⟨y,function_eval_mem_codomain⟩
-
-private theorem auxiliary_nonempty {B : Type u} [NontrivialCompleteBooleanAlgebra B]
-    {e : CompleteLatticeHom (A) B} (S : SmallAuxiliary κ e) (hκ : κ.IsInaccessible) :
-    Nonempty (Condition S.forcing) :=
-  condition_nonempty_of_mem (auxiliary_member S hκ).choose_spec
 
 end bSet.ErdosShioyaInternal

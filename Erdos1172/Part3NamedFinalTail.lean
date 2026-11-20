@@ -5,7 +5,6 @@ Licensed under the Apache License, Version 2.0.
 module
 
 public import Erdos1172.Part3NamedCofinality
-public import Erdos1172.Part3DecisionSelection
 public import Erdos1172.Part3RegularMembership
 
 @[expose] public section

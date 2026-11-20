@@ -66,11 +66,4 @@ theorem exists_increasing_omegaOne_in_club {C : bSet 𝔹} {Γ : 𝔹}
   exists_increasing_injection omegaTwo_Ord (club_subset HC) omegaOne_initial
     (omegaOne_injects_club HCH HC)
 
-theorem increasing_omegaOne_in_club_value {C : bSet 𝔹} {Γ : 𝔹}
-    (HCH : Γ ≤ (CH : 𝔹)) (HC : Γ ≤ club omegaTwo C) :
-    Γ ≤ ⨆ f, is_injective_function omegaOne C f ⊓
-      (increasingOn omegaOne f ⊓ rangeInitial omegaOne C f) := by
-  obtain ⟨f, Hf⟩ := exists_increasing_omegaOne_in_club HCH HC
-  exact le_iSup_of_le f Hf
-
 end bSet.ErdosClubs

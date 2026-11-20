@@ -22,8 +22,7 @@ open Cardinal Ordinal Set Order
 
 namespace Erdos1172NeighborhoodDerivedIdeal
 
-open Erdos1172NeighborhoodCode Erdos1172NeighborhoodIdeal
-  Erdos1172NeighborhoodIdealCore
+open Erdos1172NeighborhoodCode Erdos1172NeighborhoodIdeal Erdos1172NeighborhoodIdealCore
 
 def sectionAt (G H : SimpleGraph W3) (b : Bool) (a β : W3) (s : Set W3) : Set W3 :=
   (s ∩ {x | (colorGraph G H b).Adj x a}) ∩ Set.Iio β
@@ -103,9 +102,6 @@ theorem base_le_derived (word : List Bool) {a : W3} (ha : GoodCut r G H a)
       · exact Or.inr hle
       exact (hβ.2.2 (ih hβ.2.1
         ⟨c, lt_of_not_ge hle, hmem, fun x hx => hsub hx.1.1⟩)).elim
-
-theorem derived_empty_small (word : List Bool) {a : W3} (ha : GoodCut r G H a) :
-    DerivedSmall r G H word a ∅ := base_le_derived word ha (empty_small ha)
 
 /-- Adding innermost colors only enlarges the ideal. Equivalently, positivity
 of a longer word implies positivity of every outer initial segment. -/

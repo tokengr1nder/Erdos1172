@@ -105,12 +105,4 @@ theorem column_iSup_eq_top (a : α) :
   obtain ⟨n, hn⟩ := List.getElem?_of_mem p.property
   exact (condition_le_entry hn).trans (le_iSup (fun n : ℕ => entry n a) n)
 
-/-- Every individual matrix entry has an explicit positive condition below it. -/
-theorem entry_ne_bot (n : ℕ) (a : α) : entry n a ≠ ⊥ := by
-  let p : Condition α := ⟨List.replicate (n + 1) a⟩
-  have hp : p.entries[n]? = some a :=
-    List.getElem?_replicate_of_lt (Nat.lt_succ_self n)
-  intro h
-  exact condition_ne_bot p (bot_unique ((condition_le_entry hp).trans_eq h))
-
 end Erdos1172Collapse

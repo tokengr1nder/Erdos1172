@@ -6,7 +6,6 @@ module
 
 public import Erdos1172.Part4LevyMatchingPartitions
 public import Erdos1172.Part4LevyAnonymousQuotientDistributivity
-public import Mathlib.SetTheory.Cardinal.Pigeonhole
 
 @[expose] public section
 

@@ -216,11 +216,6 @@ theorem larger_than_of_injects_into {X Y : bSet 𝔹} {Γ : 𝔹}
   · exact inj_inverse_is_total (inf_le_left.trans inf_le_left) (inf_le_left.trans inf_le_right)
   · exact inj_inverse_is_surj (inf_le_left.trans inf_le_left) (inf_le_left.trans inf_le_right)
 
-theorem larger_than_iff_injects_into_of_ordinal {X Y : bSet 𝔹} {Γ : 𝔹}
-    (HOrd : Γ ≤ Ord X) :
-    Γ ≤ larger_than X Y ↔ Γ ≤ injects_into Y X :=
-  ⟨injects_into_of_larger_than_ordinal HOrd, larger_than_of_injects_into⟩
-
 open ErdosOmegaTwo
 
 theorem omegaOne_not_countable {Γ : 𝔹} :
@@ -267,10 +262,5 @@ theorem CH₂_iff_powerset_omega_injects_omegaOne {Γ : 𝔹} :
 theorem CH_iff_powerset_omega_injects_omegaOne {Γ : 𝔹} :
     Γ ≤ CH ↔ Γ ≤ injects_into (bv_powerset bSet.omega) (omegaOne : bSet 𝔹) :=
   CH_iff_CH₂.trans CH₂_iff_powerset_omega_injects_omegaOne
-
-theorem CH_eq_powerset_omega_injects_omegaOne :
-    (CH : 𝔹) = injects_into (bv_powerset bSet.omega) (omegaOne : bSet 𝔹) :=
-  le_antisymm (CH_iff_powerset_omega_injects_omegaOne.mp le_rfl)
-    (CH_iff_powerset_omega_injects_omegaOne.mpr le_rfl)
 
 end bSet.ErdosCHHartogs

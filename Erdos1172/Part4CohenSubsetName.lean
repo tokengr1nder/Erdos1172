@@ -82,30 +82,6 @@ theorem subsetName_member_eq_bitValue {A : PSet.{u}}
     rw [bv_eq_refl]
     exact le_inf le_rfl le_top
 
-theorem condition_forces_subsetName_mem {A : PSet.{u}}
-    (Hsep : ∀ i j : A.Type, i ≠ j → ¬ PSet.Equiv (A.Func i) (A.Func j))
-    (i : A.Type) {p : Conditions (ErdosOmegaTwo.omegaOne : bSet B)}
-    (Hp : p.value ≤ pair (check (A.Func i)) (1 : bSet B) ∈ᴮ
-      Erdos1172BooleanNameIteration.name p) :
-    Erdos1172PosetCompletion.condition p ≤
-      (check (A.Func i) : bSet (omegaOneAlgebra B)) ∈ᴮ subsetName (B := B) A := by
-  rw [subsetName_member_eq_bitValue Hsep i]
-  exact condition_le_bitValue Hp
-
-theorem condition_forces_subsetName_not_mem {A : PSet.{u}}
-    (Hsep : ∀ i j : A.Type, i ≠ j → ¬ PSet.Equiv (A.Func i) (A.Func j))
-    (i : A.Type) {p : Conditions (ErdosOmegaTwo.omegaOne : bSet B)}
-    (Hp : p.value ≤ pair (check (A.Func i)) (0 : bSet B) ∈ᴮ
-      Erdos1172BooleanNameIteration.name p) :
-    Erdos1172PosetCompletion.condition p ≤
-      ((check (A.Func i) : bSet (omegaOneAlgebra B)) ∈ᴮ subsetName (B := B) A)ᶜ := by
-  rw [subsetName_member_eq_bitValue Hsep i]
-  apply (condition_le_bitValue Hp).trans
-  apply le_compl_iff_disjoint_right.mpr
-  apply disjoint_iff_inf_le.mpr
-  exact (bitValue_zero_inf_one_eq_bot (ErdosOmegaTwo.omegaOne : bSet B)
-    (check (A.Func i))).le
-
 /-- The least complete subalgebra containing this actual name's membership values. -/
 def generatedAlgebra (A : PSet.{u}) : CompleteSubalgebra (omegaOneAlgebra B) :=
   ErdosGeneratedSubset.nameAlgebra A (subsetName (B := B) A)

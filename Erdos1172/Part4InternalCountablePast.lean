@@ -120,11 +120,6 @@ theorem not_mem_past_of_above {A x : bSet 𝔹} {Γ : 𝔹}
         (Ha.trans inf_le_left)).trans bv_imp_elim
     exact bot_of_mem_mem' a x Hax (Ha.trans inf_le_right)
 
-theorem not_mem_past_iff_above {A x : bSet 𝔹} {Γ : 𝔹}
-    (HA : Γ ≤ A ⊆ᴮ omegaOne) (Hx : Γ ≤ x ∈ᴮ omegaOne) :
-    (Γ ≤ (x ∈ᴮ past A)ᶜ) ↔ Γ ≤ ⨅ a, _root_.imp (a ∈ᴮ A) (a ∈ᴮ x) :=
-  ⟨above_past HA Hx, not_mem_past_of_above⟩
-
 /-- The genuine image of a history indexed below omega-one has small past. -/
 theorem image_past_small {δ h J : bSet 𝔹} {Γ : 𝔹}
     (HJ : Γ ≤ isIdeal omegaOne J)
@@ -134,22 +129,5 @@ theorem image_past_small {δ h J : bSet 𝔹} {Γ : 𝔹}
     Γ ≤ past (image δ omegaOne h) ∈ᴮ J :=
   past_small HJ Habsorb Hclosure image_subset
     (ErdosCountableImage.image_countable Hh (omegaOne_member_injects Hδ))
-
-theorem above_image_past {δ h x : bSet 𝔹} {Γ : 𝔹}
-    (Hx : Γ ≤ x ∈ᴮ omegaOne)
-    (Hnot : Γ ≤ (x ∈ᴮ past (image δ omegaOne h))ᶜ) :
-    Γ ≤ ⨅ a, _root_.imp (a ∈ᴮ image δ omegaOne h) (a ∈ᴮ x) :=
-  above_past image_subset Hx Hnot
-
-/-- Any known pair in an actual history lies strictly below a point outside
-its past. No separate domain guard is required for a supported graph. -/
-theorem value_below_of_not_mem_image_past {δ h i a x : bSet 𝔹} {Γ : 𝔹}
-    (Hh : Γ ≤ is_function δ omegaOne h) (Hx : Γ ≤ x ∈ᴮ omegaOne)
-    (Hnot : Γ ≤ (x ∈ᴮ past (image δ omegaOne h))ᶜ)
-    (Hia : Γ ≤ pair i a ∈ᴮ h) : Γ ≤ a ∈ᴮ x := by
-  have Ha : Γ ≤ a ∈ᴮ image δ omegaOne h :=
-    mem_image Hia (mem_domain_of_is_function Hia Hh)
-      (mem_codomain_of_is_function Hia Hh)
-  exact (le_inf ((above_image_past Hx Hnot).trans (iInf_le _ a)) Ha).trans bv_imp_elim
 
 end bSet.ErdosCountablePast

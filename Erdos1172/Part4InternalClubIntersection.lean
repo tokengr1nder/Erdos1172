@@ -4,7 +4,6 @@ Licensed under the Apache License, Version 2.0.
 -/
 module
 
-public import Erdos1172.Part4InternalClubs
 public import Erdos1172.Part4InternalClubIntersectionStep
 public import Erdos1172.Part4InternalOmegaTwoSequenceSup
 

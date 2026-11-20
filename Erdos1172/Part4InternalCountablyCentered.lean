@@ -6,7 +6,6 @@ module
 
 public import Erdos1172.Part4InternalCountableImage
 public import Erdos1172.Part4InternalDenseBasis
-public import Erdos1172.Part4InternalIdealLossFamily
 
 @[expose] public section
 

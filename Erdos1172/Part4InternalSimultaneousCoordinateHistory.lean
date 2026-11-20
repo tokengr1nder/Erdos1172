@@ -43,10 +43,6 @@ def rowFunctions (P : bSet 𝔹) : 𝔹 :=
   ⨅ i, ⨅ y, ⨅ Z, _root_.imp (pair i (pair y Z) ∈ᴮ P)
     (is_function omegaOne omegaOne Z)
 
-theorem rowFunctions_ext_graph : B_ext (rowFunctions (𝔹 := 𝔹)) :=
-  B_ext_iInf (h := fun _ => B_ext_iInf (h := fun _ => B_ext_iInf
-    (h := fun _ => B_ext_imp (h₁ := B_ext_mem_right) (h₂ := B_ext_const))))
-
 theorem rowFunctions_apply {P i y Z : bSet 𝔹} {Γ : 𝔹}
     (Hrows : Γ ≤ rowFunctions P) (Hpair : Γ ≤ pair i (pair y Z) ∈ᴮ P) :
     Γ ≤ is_function omegaOne omegaOne Z :=
@@ -141,17 +137,6 @@ theorem coordinateHistory_apply {P i σ w y Z : bSet 𝔹} {Γ : 𝔹}
     Γ ≤ pair (pair i σ) w ∈ᴮ coordinateHistory P :=
   coordinateHistory_pair_iff.mpr ⟨Hi, Hσ, Hw,
     le_iSup_of_le y (le_iSup_of_le Z (le_inf Hentry Hrow))⟩
-
-/-- A known entry and a decoded coordinate necessarily use the same row
-graph whenever the stage history is functional. -/
-theorem coordinateHistory_value_of_entry {P i σ w y Z : bSet 𝔹} {Γ : 𝔹}
-    (Hfunc : Γ ≤ is_func P) (Hentry : Γ ≤ pair i (pair y Z) ∈ᴮ P)
-    (Hcoord : Γ ≤ pair (pair i σ) w ∈ᴮ coordinateHistory P) :
-    Γ ≤ pair σ w ∈ᴮ Z := by
-  obtain ⟨z, W, Hother, Hw⟩ := coordinateHistory_witness Hcoord
-  have HZW : Γ ≤ Z =ᴮ W := eq_of_eq_pair_right'
-    (eq_of_is_func_of_eq Hfunc bv_refl Hentry Hother)
-  exact mem_congr bv_refl (bv_symm HZW) Hw
 
 private theorem coordinateRel_mono {P Q q w : bSet 𝔹} {Γ : 𝔹}
     (Hsub : Γ ≤ P ⊆ᴮ Q) (Hrel : Γ ≤ coordinateRel P q w) :
@@ -272,16 +257,6 @@ theorem coordinateHistory_is_func'_prefix {δ P : bSet 𝔹} {Γ : 𝔹}
   exact mem_congr (pair_congr (bv_symm Hq) bv_refl) bv_refl
     (coordinateHistory_apply (mem_of_mem_subset (HΔ.trans Hδ) Hi) Hσ
       (Hw.trans inf_le_left) Hentry (Hw.trans inf_le_right))
-
-theorem rowFunctions_empty {Γ : 𝔹} : Γ ≤ rowFunctions (∅ : bSet 𝔹) := by
-  apply le_iInf
-  intro i
-  apply le_iInf
-  intro y
-  apply le_iInf
-  intro Z
-  rw [← deduction]
-  exact (bot_of_mem_empty inf_le_right).trans bot_le
 
 /-- This law is preserved by arbitrary internal unions, without a chain premise. -/
 theorem rowFunctions_union {C : bSet 𝔹} {Γ : 𝔹}

@@ -6,8 +6,6 @@ module
 
 public import Erdos1172.Part4InternalBoundedFallbackChoice
 public import Erdos1172.Part4InternalFusionRowCandidates
-public import Erdos1172.Part4InternalClosurePoints
-public import Erdos1172.Part4InternalPartitionOrder
 
 @[expose] public section
 

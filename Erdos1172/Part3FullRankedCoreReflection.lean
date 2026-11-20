@@ -4,7 +4,8 @@ Licensed under the Apache License, Version 2.0.
 -/
 module
 
-public import Erdos1172.Part3FullStationaryCubes
+public import Erdos1172.Part3TraceCompleteRestriction
+public import Erdos1172.Part3NamedCubeTraceBounds
 
 @[expose] public section
 
@@ -155,10 +156,5 @@ theorem exists_club_goodCoreCut (hGCH : GCH) (hI : #I ≤ ℵ_ 1)
   refine ⟨cg ∩ cb, hcg.inter alephZero_lt_cof_W2.ne' hcb, ?_⟩
   intro a ha hsa
   exact ⟨hg a ha.1 hsa, fun c hc p hp he => hb a ha.2 c hc p ⟨hp, he⟩⟩
-
-theorem cube_factory (hGCH : GCH) (G H : SimpleGraph W2) (hcompl : IsCompl G H)
-    (hred : ¬HasCliqueOfType G (ω_ 2)) (hblue : ¬HasCliqueOfType H (ω_ 1 + 2)) :
-    LocalCoreFactory hGCH Cube G :=
-  Erdos1172Part3FullStationaryCubes.stationary_source_cube hGCH G H hcompl hred hblue
 
 end Erdos1172Part3FullRankedCoreReflection

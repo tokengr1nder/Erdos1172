@@ -6,7 +6,6 @@ module
 
 public import Erdos1172.Part4InternalCohenExtension
 public import Erdos1172.Part4InternalCountableFamilyUnion
-public import Erdos1172.Part4InternalInjectionChain
 
 @[expose] public section
 

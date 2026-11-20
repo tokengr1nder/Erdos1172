@@ -111,11 +111,6 @@ theorem rowSections_witness {color : Bool} {R Rows σ y A : bSet 𝔹} {Γ : �
   exists_convert (rowSections_pair_iff.mp H).2.2.2
     (rowSectionValue_ext_row color R Rows σ y A)
 
-theorem rowSections_subset {color : Bool} {R Rows : bSet 𝔹} {Γ : 𝔹} :
-    Γ ≤ rowSections color R Rows ⊆ᴮ
-      prod (prod omegaOne omegaTwo) (bv_powerset omegaOne) :=
-  relationGraph_subset
-
 theorem rowSections_value_of_pair {color : Bool} {R Rows σ r y A : bSet 𝔹} {Γ : 𝔹}
     (Hfunc : Γ ≤ is_func Rows) (Hrow : Γ ≤ pair σ r ∈ᴮ Rows)
     (Hsection : Γ ≤ pair (pair σ y) A ∈ᴮ rowSections color R Rows) :
@@ -184,24 +179,6 @@ theorem rowSections_is_function {color : Bool} {R Rows : bSet 𝔹} {Γ : 𝔹}
     exact bv_trans (Hr.trans inf_le_right)
       (bv_trans Hsections (bv_symm (Hs.trans inf_le_right)))
 
-theorem rowSections_subset_forwardSection
-    {color : Bool} {R Rows σ r y A C : bSet 𝔹} {Γ : 𝔹}
-    (Hfunc : Γ ≤ is_func Rows) (Hrow : Γ ≤ pair σ r ∈ᴮ Rows)
-    (Hsection : Γ ≤ pair (pair σ y) A ∈ᴮ rowSections color R Rows)
-    (HC : Γ ≤ C ⊆ᴮ A) : Γ ≤ C ⊆ᴮ forwardSection (!color) R r y :=
-  bv_rw'' (ϕ := fun A => C ⊆ᴮ A)
-    (rowSections_value_of_pair Hfunc Hrow Hsection) HC B_ext_subset_right
-
-theorem rowSections_forward_edge
-    {color : Bool} {R Rows σ r y A C i x : bSet 𝔹} {Γ : 𝔹}
-    (Hfunc : Γ ≤ is_func Rows) (Hrow : Γ ≤ pair σ r ∈ᴮ Rows)
-    (Hsection : Γ ≤ pair (pair σ y) A ∈ᴮ rowSections color R Rows)
-    (HC : Γ ≤ C ⊆ᴮ A) (Hi : Γ ≤ i ∈ᴮ C)
-    (Hr : Γ ≤ is_func r) (Hix : Γ ≤ pair i x ∈ᴮ r) :
-    Γ ≤ x ∈ᴮ y ⊓ graphColor (!color) R x y :=
-  forwardSection_value_of_pair Hr
-    (mem_of_mem_subset (rowSections_subset_forwardSection Hfunc Hrow Hsection HC) Hi) Hix
-
 /-- The simultaneous future supplies exactly the small complement needed
 for the constructed value, and no assertion about vertices outside `L`. -/
 theorem rowSections_colarge_on
@@ -249,20 +226,5 @@ theorem normalRowAvailabilityOn_rowSections
   exact le_iSup_of_le J (rowNormalIdealDataOn_rowSections (σ := σ)
     (inf_le_left.trans Hproper) (inf_le_left.trans Habsorb)
     (inf_le_left.trans Hclosure) (inf_le_left.trans Hdiag) (inf_le_left.trans Hfuture))
-
-/-- The actual graph and the future-guarded normal-row data are obtained
-from the original row family and the established simultaneous future. -/
-theorem rowSections_function_and_normal_data
-    {color : Bool} {R Rows L J : bSet 𝔹} {Γ : 𝔹}
-    (HRows : Γ ≤ is_function omegaOne (bv_powerset (prod omegaOne omegaTwo)) Rows)
-    (Hproper : Γ ≤ properIdeal omegaOne J)
-    (Habsorb : Γ ≤ countableAbsorption omegaOne J)
-    (Hclosure : Γ ≤ countableClosure J)
-    (Hdiag : Γ ≤ diagonalClosure omegaOne J)
-    (Hfuture : Γ ≤ oppositeSectionsColarge color R J omegaOne Rows L) :
-    Γ ≤ is_function (prod omegaOne omegaTwo) (bv_powerset omegaOne)
-      (rowSections color R Rows) ⊓ normalRowAvailabilityOn (rowSections color R Rows) L :=
-  le_inf (rowSections_is_function HRows)
-    (normalRowAvailabilityOn_rowSections Hproper Habsorb Hclosure Hdiag Hfuture)
 
 end bSet.ErdosRowSectionFamily

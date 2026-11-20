@@ -5,7 +5,6 @@ Licensed under the Apache License, Version 2.0.
 module
 
 public import Erdos1172.Part4InternalFusionRowCandidates
-public import Erdos1172.Part4InternalPartialInjectionDomain
 
 @[expose] public section
 
@@ -120,24 +119,6 @@ theorem inclusiveActiveLaw_apply
   exact (le_inf (Hcross.trans ((iInf_le _ x).trans (iInf_le _ y)))
     (le_inf Hvx Hy)).trans bv_imp_elim
 
-/-- Active coordinate growth does not require the intermediate block to
-be successful. Its recorded coordinate remains a strict predecessor. -/
-theorem active_coordinate_strict_growth
-    {edgeColor : Bool} {R E top Blocks X ν j ξ b v w : bSet 𝔹} {Γ : 𝔹}
-    (HX : Γ ≤ is_func' (prod omegaOne omegaOne) omegaOne X)
-    (Hlaw : Γ ≤ coordinateCandidateLaw edgeColor R E top Blocks X)
-    (Hξ : Γ ≤ ξ ∈ᴮ omegaOne) (Hνj : Γ ≤ ν ∈ᴮ j) (Hjξ : Γ ≤ j ∈ᴮ ξ)
-    (Hνb : Γ ≤ pair ν b ∈ᴮ Blocks)
-    (Hjv : Γ ≤ pair (pair j ν) v ∈ᴮ X) (Hξw : Γ ≤ pair (pair ξ ν) w ∈ᴮ X) :
-    Γ ≤ v ∈ᴮ w := by
-  have Hνξ := mem_of_mem_Ord Hνj Hjξ (Ord_of_mem_Ord Hξ omegaOne_Ord)
-  have Hν := mem_of_mem_Ord Hνξ Hξ omegaOne_Ord
-  have HXξ : Γ ≤ is_func' (prod ξ omegaOne) omegaOne X :=
-    is_func'_subset_of_is_func' HX
-      (ErdosPartialInjection.prod_domain_mono (subset_of_mem_Ord Hξ omegaOne_Ord))
-  exact fusionCandidate_above_previous HXξ Hν
-    (coordinateCandidateLaw_apply Hlaw Hνξ Hξ Hνb Hξw) Hjξ Hνj Hjv
-
 /-- Every actual active-mask value sees every point of an entire later
 block. The target is not shrunk to a separately chosen mask. -/
 theorem activeMask_cross_whole_block
@@ -168,25 +149,5 @@ theorem activeMask_cross_whole_block
   apply (le_inf (le_refl Γ) (epsilon_trichotomy_of_Ord Hξ Hμ omegaOne_Ord)).trans
   rw [inf_sup_left]
   exact sup_le Hinclusive Hprior
-
-/-- The same cross-edge result for any value of the original selected
-enumeration of the later whole object. No new enumeration is chosen. -/
-theorem activeMask_cross_selected_enumeration
-    {color edgeColor : Bool} {R E top Blocks X ν μ b c r v x k y : bSet 𝔹} {Γ : 𝔹}
-    (HE : Γ ≤ is_function (blockObjects color R) blockEnumerationCodes E)
-    (HElaw : Γ ≤ blockEnumerationFamilyLaw color R E)
-    (HX : Γ ≤ is_func' (prod omegaOne omegaOne) omegaOne X)
-    (Hlaw : Γ ≤ coordinateCandidateLaw edgeColor R E top Blocks X)
-    (Hactive : Γ ≤ inclusiveActiveLaw edgeColor R E Blocks X)
-    (Hμ : Γ ≤ μ ∈ᴮ omegaOne) (Hνμ : Γ ≤ ν ∈ᴮ μ)
-    (Hνb : Γ ≤ pair ν b ∈ᴮ Blocks) (Hμc : Γ ≤ pair μ c ∈ᴮ Blocks)
-    (Hv : Γ ≤ v ∈ᴮ activeMask X ν) (Hvx : Γ ≤ pair v x ∈ᴮ canonicalRow E b)
-    (Hcr : Γ ≤ pair c r ∈ᴮ E) (Hky : Γ ≤ pair k y ∈ᴮ r) :
-    Γ ≤ graphColor edgeColor R x y := by
-  have Hr : Γ ≤ is_function omegaOne omegaTwo r :=
-    (selected_enumeration_data HE HElaw Hcr).trans (inf_le_left.trans inf_le_left)
-  have Hy : Γ ≤ y ∈ᴮ c := mem_congr bv_refl (selected_enumeration_image HE HElaw Hcr)
-    (mem_image Hky (mem_domain_of_is_function Hky Hr) (mem_codomain_of_is_function Hky Hr))
-  exact activeMask_cross_whole_block HX Hlaw Hactive Hμ Hνμ Hνb Hμc Hv Hvx Hy
 
 end bSet.ErdosFusionMaskedTail

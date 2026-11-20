@@ -142,8 +142,4 @@ theorem restrict_restrict (hGCH : GCH) {a b c : Cut} (hab : a ≤ b)
     restrict hGCH (a := a) (restrict hGCH (a := b) p) = restrict hGCH (a := a) p :=
   truncate_truncate p.val hab
 
-theorem extend_extend (hGCH : GCH) {a b c : Cut} (hab : a ≤ b) (hbc : b ≤ c)
-    (p : Stage hGCH a) :
-    extend hGCH hbc (extend hGCH hab p) = extend hGCH (hab.trans hbc) p := rfl
-
 end Erdos1172Part3TransfiniteHechlerRestrictions

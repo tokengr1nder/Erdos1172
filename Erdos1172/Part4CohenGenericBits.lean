@@ -90,19 +90,4 @@ theorem bitValue_zero_inf_one_eq_bot (K a : bSet B) :
   rw [← imp_bot, ← deduction]
   exact bot_of_zero_eq_one inf_le_right
 
-/-- The actual binary-decision dense set supplies coverage at top. This
-requires the coordinate to belong to the internal omega-one name at top;
-it does not incorrectly choose a Boolean branch at an unchanged condition. -/
-theorem bitValue_zero_sup_one_eq_top {K a : bSet B}
-    (HK : (⊤ : B) ≤ ErdosHartogs.hartogsProperty omega K)
-    (Ha : (⊤ : B) ≤ a ∈ᴮ K) :
-    bitValue K a 0 ⊔ bitValue K a 1 = ⊤ := by
-  apply eq_top_iff.mpr
-  rw [← iSup_deciding_condition_eq_top HK Ha]
-  apply iSup_le
-  intro p
-  rcases p.property with Hzero | Hone
-  · exact (condition_le_bitValue Hzero).trans le_sup_left
-  · exact (condition_le_bitValue Hone).trans le_sup_right
-
 end Erdos1172CohenIteration

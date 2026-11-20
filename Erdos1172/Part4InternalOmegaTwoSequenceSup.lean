@@ -4,7 +4,6 @@ Licensed under the Apache License, Version 2.0.
 -/
 module
 
-public import Erdos1172.Part4InternalOmegaSequence
 public import Erdos1172.Part4InternalOmegaTwoBounded
 public import Erdos1172.Part4InternalCountableImage
 
@@ -107,11 +106,6 @@ theorem sequenceSup_mem_omegaTwo {v : ℕ → bSet 𝔹} {Γ : 𝔹}
     (injects_into_trans (sequenceRange_countable Hv)
       (injects_into_of_subset (subset_of_mem_Ord omega_mem_omegaOne omegaOne_Ord)))
 
-theorem sequenceSup_Ord {v : ℕ → bSet 𝔹} {Γ : 𝔹}
-    (HCH : Γ ≤ (CH : 𝔹)) (Hv : ∀ n, Γ ≤ v n ∈ᴮ omegaTwo) :
-    Γ ≤ Ord (sequenceSup v) :=
-  Ord_of_mem_Ord (sequenceSup_mem_omegaTwo HCH Hv) omegaTwo_Ord
-
 theorem sequence_value_mem_sup {v : ℕ → bSet 𝔹} {Γ : 𝔹}
     (Hv : ∀ n, Γ ≤ v n ∈ᴮ omegaTwo)
     (Hstep : ∀ n, Γ ≤ v n ∈ᴮ v (n + 1)) (n : ℕ) :
@@ -124,16 +118,6 @@ theorem sequenceSup_nonempty {v : ℕ → bSet 𝔹} {Γ : 𝔹}
     Γ ≤ (sequenceSup v =ᴮ (∅ : bSet 𝔹))ᶜ :=
   nonempty_of_exists_mem (sequenceSup v)
     (le_iSup_of_le (v 0) (sequence_value_mem_sup Hv Hstep 0))
-
-/-- Cofinality includes arbitrary internal members of the supremum.
-The numeral disjunction remains inside the complete Boolean algebra. -/
-theorem sequenceSup_cofinal {v : ℕ → bSet 𝔹} {Γ : 𝔹}
-    (Hv : ∀ n, Γ ≤ v n ∈ᴮ omegaTwo) :
-    Γ ≤ ⨅ a, _root_.imp (a ∈ᴮ sequenceSup v) (⨆ n : ℕ, a ∈ᴮ v n) := by
-  apply le_iInf
-  intro a
-  rw [← deduction]
-  exact (mem_sequenceSup_iff (fun n => inf_le_left.trans (Hv n))).mp inf_le_right
 
 /-- Internal witnesses in every successive interval are unbounded below
 the supremum. The target is the exact unboundedness value, without importing

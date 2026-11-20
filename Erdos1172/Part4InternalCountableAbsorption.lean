@@ -44,22 +44,6 @@ theorem countableAbsorption_apply {κ J A : bSet 𝔹} {Γ : 𝔹}
     Γ ≤ A ∈ᴮ J :=
   (le_inf (Habsorb.trans (iInf_le _ A)) (le_inf Hsub Hcount)).trans bv_imp_elim
 
-/-- A countable subset of another internally countable set is absorbed
-as soon as it also lies inside the ideal's base. -/
-theorem countableAbsorption_subset {κ J A T : bSet 𝔹} {Γ : 𝔹}
-    (Habsorb : Γ ≤ countableAbsorption κ J) (Hsub : Γ ≤ A ⊆ᴮ κ)
-    (HAT : Γ ≤ A ⊆ᴮ T) (HT : Γ ≤ injects_into T bSet.omega) :
-    Γ ≤ A ∈ᴮ J :=
-  countableAbsorption_apply Habsorb Hsub
-    (injects_into_trans (injects_into_of_subset HAT) HT)
-
-/-- In particular, every subset with a finite ordinal injection is small. -/
-theorem small_of_injects_into_finite {κ J A : bSet 𝔹} {Γ : 𝔹} {n : ℕ}
-    (Habsorb : Γ ≤ countableAbsorption κ J) (Hsub : Γ ≤ A ⊆ᴮ κ)
-    (Hfinite : Γ ≤ injects_into A (bSet.of_nat n)) : Γ ≤ A ∈ᴮ J :=
-  countableAbsorption_apply Habsorb Hsub
-    (injects_into_trans Hfinite (injects_into_of_subset of_nat_subset_omega))
-
 /-- Positivity and countable absorption rule out internal countability. -/
 theorem positive_not_countable {κ J A : bSet 𝔹} {Γ : 𝔹}
     (Habsorb : Γ ≤ countableAbsorption κ J) (HA : Γ ≤ positive κ J A) :
@@ -82,14 +66,5 @@ theorem omegaOne_injects_positive {J A : bSet 𝔹} {Γ : 𝔹}
   apply sup_le
   · exact (bv_absurd _ inf_le_right (inf_le_left.trans Hnot)).trans bot_le
   · exact inf_le_right
-
-/-- Both injections are explicit consequences: one from being a subset
-of omega-one and the other from countable absorption and positivity. -/
-theorem positive_omegaOne_injections {J A : bSet 𝔹} {Γ : 𝔹}
-    (Habsorb : Γ ≤ countableAbsorption omegaOne J)
-    (HA : Γ ≤ positive omegaOne J A) :
-    Γ ≤ injects_into A omegaOne ⊓ injects_into omegaOne A :=
-  le_inf (injects_into_of_subset (HA.trans inf_le_left))
-    (omegaOne_injects_positive Habsorb HA)
 
 end bSet.ErdosIdeal

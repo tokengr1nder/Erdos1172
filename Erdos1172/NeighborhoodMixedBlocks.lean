@@ -20,8 +20,7 @@ open Cardinal Ordinal Set Order
 
 namespace Erdos1172NeighborhoodMixedBlocks
 
-open Erdos1172NeighborhoodCode Erdos1172NeighborhoodIdeal
-  Erdos1172NeighborhoodIdealCore Erdos1172NeighborhoodDerivedIdeal
+open Erdos1172NeighborhoodCode Erdos1172NeighborhoodIdeal Erdos1172NeighborhoodIdealCore Erdos1172NeighborhoodDerivedIdeal
 
 variable {r : Code ↪ W3} {G H : SimpleGraph W3} {a : W3}
 

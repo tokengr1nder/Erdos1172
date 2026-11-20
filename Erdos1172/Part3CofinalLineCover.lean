@@ -4,7 +4,7 @@ Licensed under the Apache License, Version 2.0.
 -/
 module
 
-public import Erdos1172.Part3WeakFiniteTraceLaws
+public import Erdos1172.Part3OmegaSuccessorCore
 
 @[expose] public section
 
@@ -44,20 +44,6 @@ theorem cofinal_omegaOne_prefix_countable (A : Set V) (hA : IsCofinal A)
     inj' := fun _ _ h => Subtype.ext (congrArg (fun z : Set.Iio (⟨a, ha⟩ : A) => z.val.val) h) }
   exact Cardinal.le_aleph0_iff_set_countable.mp
     ((Cardinal.mk_le_of_injective e.injective).trans (Cardinal.lt_aleph_one_iff.mp hcard))
-
-theorem typeLT_le_omegaOne_of_countable_prefixes (A : Set V)
-    (hprefix : ∀ x : V, (A ∩ Set.Iio x).Countable) : typeLT A ≤ ω_ 1 := by
-  have hlt (x : A) : Ordinal.typein ((· < ·) : A → A → Prop) x < ω_ 1 := by
-    rw [Cardinal.lt_omega_iff_card_lt, Ordinal.card_typein]
-    let e : Set.Iio x ↪ (A ∩ Set.Iio x.val : Set V) := {
-      toFun y := ⟨y.val.val, y.val.property, y.property⟩
-      inj' := fun _ _ h => Subtype.ext (Subtype.ext
-        (congrArg (fun z : (A ∩ Set.Iio x.val : Set V) => z.val) h)) }
-    exact Cardinal.lt_aleph_one_iff.mpr ((Cardinal.mk_le_of_injective e.injective).trans
-      (Cardinal.le_aleph0_iff_set_countable.mpr (hprefix x.val)))
-  by_contra h
-  obtain ⟨x, hx⟩ := Ordinal.typein_surj ((· < ·) : A → A → Prop) (lt_of_not_ge h)
-  exact (hlt x).ne hx
 
 structure LineCoverData (V : Type) [LinearOrder V] where
   cut : W1 → V
@@ -104,10 +90,6 @@ theorem LineCoverData.cover_mono (data : LineCoverData V) : Monotone data.cover 
   · exact Or.inr (hx.trans_le (hfg (data.row x)))
 
 omit [WellFoundedLT V] in
-theorem LineCoverData.cover_cofinal (data : LineCoverData V) (f : W1 → W1) :
-    IsCofinal (data.cover f) := data.seed_cofinal.mono Set.subset_union_left
-
-omit [WellFoundedLT V] in
 theorem LineCoverData.row_selection_countable (data : LineCoverData V) (f : W1 → W1) (i : W1) :
     {x : V | data.row x = i ∧ data.code x < f i}.Countable := by
   let e : {x : V | data.row x = i ∧ data.code x < f i} ↪ Set.Iio (f i) := {
@@ -131,52 +113,5 @@ theorem LineCoverData.cover_prefix_countable (data : LineCoverData V) (f : W1 �
   rcases hy.1 with hyseed | hyraw
   · exact Or.inl ⟨hyseed, hy.2⟩
   · exact Or.inr ⟨hyraw, hy.2⟩
-
-theorem LineCoverData.cover_type (data : LineCoverData V) (f : W1 → W1) :
-    typeLT (data.cover f) = ω_ 1 := by
-  apply le_antisymm (typeLT_le_omegaOne_of_countable_prefixes _ (data.cover_prefix_countable f))
-  rw [← data.seed_type]
-  exact Ordinal.type_mono (show data.seed ⊆ data.cover f from Set.subset_union_left)
-
-theorem LineCoverData.covers (data : LineCoverData V) (A : Set V) (hA : IsCofinal A)
-    (htype : typeLT A = ω_ 1) : ∃ f : W1 → W1, A ⊆ data.cover f := by
-  classical
-  have hrow (i : W1) : {x : V | x ∈ A ∧ data.row x = i}.Countable := by
-    apply (cofinal_omegaOne_prefix_countable A hA htype (data.cut i)).mono
-    intro x hx
-    exact ⟨hx.1, hx.2 ▸ data.lt_cut_row x⟩
-  have hbound (i : W1) : ∃ b : W1, ∀ x : V, x ∈ A → data.row x = i → data.code x < b := by
-    obtain ⟨b, hb⟩ := exists_bound_of_countable
-      (data.code '' {x : V | x ∈ A ∧ data.row x = i}) ((hrow i).image data.code)
-    exact ⟨b, fun x hx hi => hb (data.code x) ⟨x, ⟨hx, hi⟩, rfl⟩⟩
-  choose bounds hb using hbound
-  exact ⟨bounds, fun x hx => Or.inr (hb (data.row x) x hx rfl)⟩
-
-theorem exists_lineCoverData (hV : #V ≤ ℵ_ 1) (A : Set V) (hA : IsCofinal A)
-    (htype : typeLT A = ω_ 1) : Nonempty (LineCoverData V) := by
-  classical
-  have heq : typeLT W1 = typeLT A := by rw [htype]; exact Ordinal.type_toType _
-  obtain ⟨e⟩ := Ordinal.type_eq.mp heq
-  let cut : W1 → V := fun i => (e i).val
-  have hstrict : StrictMono cut := fun _ _ h => e.map_rel_iff.mpr h
-  have hcofinal : ∀ x : V, ∃ i : W1, x < cut i := by
-    intro x
-    obtain ⟨a, ha, hxa⟩ := hA x
-    obtain ⟨i, hi⟩ := e.surjective (⟨a, ha⟩ : A)
-    obtain ⟨j, hj⟩ := exists_bound_of_countable ({i} : Set W1) (by simp)
-    have hc : cut i = a := congrArg Subtype.val hi
-    exact ⟨j, (hxa.trans_eq hc.symm).trans_lt (hstrict (hj i (by simp)))⟩
-  obtain ⟨code⟩ : Nonempty (V ↪ W1) := (Cardinal.le_def _ _).mp (by
-    simpa only [W1, Cardinal.mk_toType, Ordinal.card_omega] using hV)
-  exact ⟨⟨cut, hstrict, hcofinal, code⟩⟩
-
-theorem exists_monotone_cofinal_line_covers (hV : #V ≤ ℵ_ 1)
-    (hseed : ∃ A : Set V, IsCofinal A ∧ typeLT A = ω_ 1) :
-    ∃ cover : (W1 → W1) → Set V, Monotone cover ∧
-      (∀ f, IsCofinal (cover f) ∧ typeLT (cover f) = ω_ 1) ∧
-      ∀ A : Set V, IsCofinal A → typeLT A = ω_ 1 → ∃ f : W1 → W1, A ⊆ cover f := by
-  obtain ⟨A, hA, htype⟩ := hseed
-  obtain ⟨data⟩ := exists_lineCoverData hV A hA htype
-  exact ⟨data.cover, data.cover_mono, fun f => ⟨data.cover_cofinal f, data.cover_type f⟩, data.covers⟩
 
 end Erdos1172Part3CofinalLineCover

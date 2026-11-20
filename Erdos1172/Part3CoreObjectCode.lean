@@ -39,10 +39,6 @@ theorem mk_Obj_le (hGCH : GCH) : #Obj ≤ ℵ_ 2 := by
   simpa only [W2, Cardinal.mk_toType, Ordinal.card_omega,
     max_eq_left (Cardinal.aleph0_le_aleph 2), hGCH.aleph_two_power_aleph_one] using h
 
-noncomputable def objectRank (hGCH : GCH) : Obj ↪ W2 :=
-  Classical.choice ((Cardinal.le_def Obj W2).mp (by
-    simpa only [W2, Cardinal.mk_toType, Ordinal.card_omega] using mk_Obj_le hGCH))
-
 theorem exists_objectBound (s : Obj) : ∃ b : W2, ∀ x ∈ s.val, x < b := by
   have hsmall : #s.val < Order.cof W2 := by
     rw [cof_W2]
@@ -110,59 +106,5 @@ structure GoodCut (r : Code ↪ W2) (σ : Obj ↪ W2)
   object_singleton_lt : ∀ x < a, σ (objSingleton x) < a
   object_bound_lt : ∀ s, σ s < a → objectBound s < a
   object_name_lt : ∀ s, σ s < a → r (objectName s) < a
-
-theorem exists_club_goodCut (hCH : CH) (r : Code ↪ W2) (σ : Obj ↪ W2)
-    (G H : SimpleGraph W2) :
-    ∃ club : Set W2, IsClub club ∧ ∀ a ∈ club,
-      ErdosRadoCHAsym.IsOmegaOneSup a → GoodCut r σ G H a := by
-  let c0 := {a | ClubClosure.ClosedUnder (fun _ => r SmallUnionCode.empty) a}
-  have hc0 : IsClub c0 := ClubClosure.isClub_closedUnder _ alephZero_lt_cof_W2
-  let c1 := {a | ∀ c, r c < a → r (SmallUnionCode.compl c) < a}
-  have hc1 : IsClub c1 := ClubClosure.isClub_rankClosed r _ alephZero_lt_cof_W2
-  obtain ⟨c2, hc2, h2⟩ := exists_club_countableClosed hCH r SmallUnionCode.union
-  let c3 := ⋂ k : Fin 3, {a | ClubClosure.ClosedUnder (fun x => r (pointName k x)) a}
-  have hc3 : IsClub c3 := IsClub.iInter_of_countable alephZero_lt_cof_W2.ne'
-    (fun k => ClubClosure.isClub_closedUnder _ alephZero_lt_cof_W2)
-  obtain ⟨c4, hc4, h4⟩ := ClubClosure.exists_club_reflects r (eval G H)
-    Set.univ alephZero_lt_cof_W2
-  let c5 := {a | ClubClosure.ClosedUnder (fun _ => σ objEmpty) a}
-  have hc5 : IsClub c5 := ClubClosure.isClub_closedUnder _ alephZero_lt_cof_W2
-  obtain ⟨c6, hc6, h6⟩ := exists_club_countableClosed hCH σ objUnion
-  let c7 := {a | ClubClosure.ClosedUnder (fun x => σ (objSingleton x)) a}
-  have hc7 : IsClub c7 := ClubClosure.isClub_closedUnder _ alephZero_lt_cof_W2
-  let c8 := {a | ∀ s, σ s < a → objectBound s < a}
-  have hc8 : IsClub c8 := ClubClosure.isClub_rankClosed σ objectBound alephZero_lt_cof_W2
-  let c9 := {a | ∀ s, σ s < a → r (objectName s) < a}
-  have hc9 : IsClub c9 := ClubClosure.isClub_rankClosed σ _ alephZero_lt_cof_W2
-  let clubs : Fin 10 → Set W2
-    | 0 => c0 | 1 => c1 | 2 => c2 | 3 => c3 | 4 => c4
-    | 5 => c5 | 6 => c6 | 7 => c7 | 8 => c8 | 9 => c9
-  have hclubs : ∀ i, IsClub (clubs i) := by
-    intro i
-    fin_cases i <;> assumption
-  refine ⟨⋂ i, clubs i, IsClub.iInter_of_countable alephZero_lt_cof_W2.ne' hclubs, ?_⟩
-  intro a ha hsup
-  have hmem (i : Fin 10) : a ∈ clubs i := Set.mem_iInter.mp ha i
-  obtain ⟨b, hba, _⟩ := ErdosRadoCHAsym.exists_strict_bound_of_countable_of_IsOmegaOneSup
-    hsup (seed := ∅) (by simp) (by simp)
-  refine ⟨hsup, hmem 0 b hba, hmem 1, h2 a (hmem 2) hsup, ?_, ?_,
-    hmem 5 b hba, h6 a (hmem 6) hsup, hmem 7, hmem 8, hmem 9⟩
-  · intro k x hx
-    exact Set.mem_iInter.mp (hmem 3) k x hx
-  · intro c hc hsub
-    exact h4 a (hmem 4) c hc (by simpa only [Set.univ_inter] using hsub)
-
-theorem isStationary_goodCut (hCH : CH) (r : Code ↪ W2) (σ : Obj ↪ W2)
-    (G H : SimpleGraph W2) : IsStationary {a | GoodCut r σ G H a} := by
-  obtain ⟨club, hc, hg⟩ := exists_club_goodCut hCH r σ G H
-  intro test htest
-  obtain ⟨a, hsup, ha, hat⟩ := ErdosRadoCHAsym.isStationary_isOmegaOneSup_omegaTwo
-    (hc.inter alephZero_lt_cof_W2.ne' htest)
-  exact ⟨a, hg a ha hsup, hat⟩
-
-theorem goodCut_object_bounded {r : Code ↪ W2} {σ : Obj ↪ W2}
-    {G H : SimpleGraph W2} {a : W2} (ha : GoodCut r σ G H a)
-    {s : Obj} (hs : σ s < a) : ∃ b < a, ∀ x ∈ s.val, x < b :=
-  ⟨objectBound s, ha.object_bound_lt s hs, objectBound_spec s⟩
 
 end Erdos1172Part3CoreObjectCode

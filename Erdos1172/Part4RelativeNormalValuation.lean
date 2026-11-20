@@ -6,7 +6,6 @@ module
 
 public import Erdos1172.Part4LevyAnonymousQuotientDistributivity
 public import Erdos1172.Part4SeedQuotientOrder
-public import Erdos1172.Part4CompleteBooleanSubalgebra
 
 @[expose] public section
 

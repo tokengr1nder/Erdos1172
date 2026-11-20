@@ -183,17 +183,4 @@ theorem eq_of_enumGraph_eq {A T U j k e : bSet 𝔹} {Γ : 𝔹}
   subset_ext (subset_of_enumGraph_subset He HT Hj (subset_of_eq Hgraph))
     (subset_of_enumGraph_subset He HU Hk (subset_of_eq (bv_symm Hgraph)))
 
-/-- Different choices of index injections do not compromise subset
-recovery: equality of their real codes still forces equality of subsets. -/
-theorem eq_of_enumGraph_code_eq {A T U j k e : bSet 𝔹} {Γ : 𝔹}
-    (He : Γ ≤ is_injective_function A Pω e)
-    (HT : Γ ≤ T ⊆ᴮ A) (HU : Γ ≤ U ⊆ᴮ A)
-    (Hj : Γ ≤ is_injective_function T bSet.omega j)
-    (Hk : Γ ≤ is_injective_function U bSet.omega k)
-    (Hcode : Γ ≤ realGraphCode (enumGraph T j e) =ᴮ realGraphCode (enumGraph U k e)) :
-    Γ ≤ T =ᴮ U :=
-  eq_of_enumGraph_eq He HT HU Hj Hk
-    ((realGraphCode_eq_iff (enumGraph_is_func_of_injections He Hj) enumGraph_subset
-      (enumGraph_is_func_of_injections He Hk) enumGraph_subset).mp Hcode)
-
 end bSet.ErdosCountableRealEnumeration

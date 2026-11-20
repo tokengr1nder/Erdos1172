@@ -4,11 +4,9 @@ Licensed under the Apache License, Version 2.0.
 -/
 module
 
-public import Erdos1172.Part4InternalCohenExtension
 public import Erdos1172.Part4InternalStoppedCoordinateTriangle
 public import Erdos1172.Part4InternalCountableSubsetCodes
 public import Erdos1172.Part4InternalMixedProductInjection
-public import Erdos1172.Part4InternalCardinalSquare
 public import Erdos1172.Part4LevyCohenIteration
 public import Erdos1172.Part4LevyContinuumHypothesis
 

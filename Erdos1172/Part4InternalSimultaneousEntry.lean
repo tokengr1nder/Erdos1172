@@ -113,27 +113,12 @@ theorem entryValid_unique
     (Hentry.trans (inf_le_right.trans inf_le_right))
     (Hother.trans (inf_le_right.trans inf_le_right))) HZW
 
-theorem entryValid_pair_unique
-    {color : Bool} {δ R S Y X top y z Z W : bSet 𝔹} {Γ : 𝔹}
-    (Hentry : Γ ≤ entryValid color δ R S Y X top y Z)
-    (Hother : Γ ≤ entryValid color δ R S Y X top z W) :
-    Γ ≤ pair y Z =ᴮ pair z W := by
-  have H := entryValid_unique Hentry Hother
-  exact pair_congr (H.trans inf_le_left) (H.trans inf_le_right)
-
 theorem entryValid_mem_entrySpace
     {color : Bool} {δ R S Y X top y Z : bSet 𝔹} {Γ : 𝔹}
     (Hy : Γ ≤ y ∈ᴮ omegaTwo) (Hentry : Γ ≤ entryValid color δ R S Y X top y Z) :
     Γ ≤ pair y Z ∈ᴮ (entrySpace : bSet 𝔹) :=
   prod_mem Hy (mem_powerset_iff.mpr
     (subset_prod_of_is_function (Hentry.trans inf_le_left)))
-
-theorem entryValid_vertex_bound
-    {color : Bool} {δ R S Y X top y Z : bSet 𝔹} {Γ : 𝔹}
-    (Htop : Γ ≤ top ∈ᴮ omegaTwo)
-    (Hentry : Γ ≤ entryValid color δ R S Y X top y Z) : Γ ≤ y ∈ᴮ omegaTwo :=
-  leastOrTop_mem_bound (futureCandidates_subset_omegaTwo Htop) Htop
-    (Hentry.trans (inf_le_right.trans inf_le_right))
 
 /-- A full next entry exists, with all row coordinates and the vertex
 bounded. The proper ideals may vary over rows by an internal existential. -/

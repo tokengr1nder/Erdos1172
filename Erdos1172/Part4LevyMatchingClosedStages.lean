@@ -5,8 +5,6 @@ Licensed under the Apache License, Version 2.0.
 module
 
 public import Erdos1172.Part4LevyMatchingJointForcing
-public import Erdos1172.Part4LevyConditionCardinality
-public import Erdos1172.Part4LevyOrdinalSegments
 
 @[expose] public section
 

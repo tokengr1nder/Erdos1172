@@ -87,22 +87,4 @@ theorem exists_stationary_named_red_block (hGCH : GCH) (hP : #P ≤ ℵ_ 2)
     have hc := (hbelow t ht0 i x).mp (hN t i x hx)
     exact hs.2 ⟨t, ht0⟩ hts i x hc
 
-theorem stationary_named_red_block_after_limit (hGCH : GCH) (n : ℕ)
-    (G H : SimpleGraph W2) (hcompl : IsCompl G H)
-    (hred : ¬HasCliqueOfType G (ω_ 2)) (hblue : ¬HasCliqueOfType H (ω_ 1 + 2))
-    (source : RegularName
-      (Erdos1172Part3HechlerStagesAfterLimit.afterLimit hGCH n).Carrier W2)
-    (hsup : ∀ p a, source.holds p a → ErdosRadoCHAsym.IsOmegaOneSup a)
-    (p0 : (Erdos1172Part3HechlerStagesAfterLimit.afterLimit hGCH n).Carrier)
-    (hstat : StationaryAt source.holds p0) :
-    let P := (Erdos1172Part3HechlerStagesAfterLimit.afterLimit hGCH n).Carrier
-    ∃ a : W2, ∃ q : P, q ≤ p0 ∧ source.holds q a ∧
-      ∃ N : NiceCliqueName P W1 W2 G,
-        (∀ p i x, N.toClique.decides p i x → x < a ∧ G.Adj x a) ∧
-        (∀ p : P, p ≤ q → ∀ i x, N.toClique.decides p i x → source.holds p x) ∧
-        StationaryAt (redFuture source N a).holds q := by
-  let order := Erdos1172Part3HechlerStagesAfterLimit.afterLimit hGCH n
-  exact exists_stationary_named_red_block hGCH order.small order.closed order.centered
-    G H hcompl hred hblue source hsup p0 hstat
-
 end Erdos1172Part3NamedStationaryRedBlock

@@ -5,8 +5,6 @@ Licensed under the Apache License, Version 2.0.
 module
 
 public import Erdos1172.Part4InternalFutureBlockWitness
-public import Erdos1172.Part4InternalSmallFiberBound
-public import Erdos1172.Part4InternalRelationGraph
 
 @[expose] public section
 
@@ -94,15 +92,6 @@ theorem blockEnumerationData_mem_object
     (H.trans (inf_le_right.trans (inf_le_right.trans inf_le_right)))
     image_subset B_ext_subset_left, le_iSup_of_le f H⟩
 
-/-- Every actual increasing homogeneous injection yields its whole image
-as a block object, without replacing the image by an arbitrary subset. -/
-theorem image_mem_blockObjects {color : Bool} {R f : bSet 𝔹} {Γ : 𝔹}
-    (Hf : Γ ≤ is_injective_function omegaOne omegaTwo f)
-    (Hinc : Γ ≤ increasingOn omegaOne f)
-    (Hhom : Γ ≤ homogeneousUnion color R omegaOne omegaOne f f) :
-    Γ ≤ image omegaOne omegaTwo f ∈ᴮ blockObjects color R :=
-  blockEnumerationData_mem_object (le_inf Hf (le_inf Hinc (le_inf Hhom bv_refl)))
-
 theorem exists_block_enumeration {color : Bool} {R A : bSet 𝔹} {Γ : 𝔹}
     (HA : Γ ≤ A ∈ᴮ blockObjects color R) :
     ∃ f : bSet 𝔹, Γ ≤ blockEnumerationData color R A f :=
@@ -140,20 +129,6 @@ theorem selected_enumeration_data
     (Hlaw : Γ ≤ blockEnumerationFamilyLaw color R E)
     (Hpair : Γ ≤ pair A f ∈ᴮ E) : Γ ≤ blockEnumerationData color R A f :=
   blockEnumerationFamilyLaw_apply Hlaw (mem_domain_of_is_function Hpair HE) Hpair
-
-theorem selected_enumeration_support
-    {color : Bool} {R E A f : bSet 𝔹} {Γ : 𝔹}
-    (HE : Γ ≤ is_function (blockObjects color R) blockEnumerationCodes E)
-    (Hpair : Γ ≤ pair A f ∈ᴮ E) : Γ ≤ f ⊆ᴮ prod omegaOne omegaTwo :=
-  mem_powerset_iff.mp (mem_codomain_of_is_function Hpair HE)
-
-theorem selected_enumeration_image
-    {color : Bool} {R E A f : bSet 𝔹} {Γ : 𝔹}
-    (HE : Γ ≤ is_function (blockObjects color R) blockEnumerationCodes E)
-    (Hlaw : Γ ≤ blockEnumerationFamilyLaw color R E)
-    (Hpair : Γ ≤ pair A f ∈ᴮ E) : Γ ≤ image omegaOne omegaTwo f =ᴮ A :=
-  (selected_enumeration_data HE Hlaw Hpair).trans
-    (inf_le_right.trans (inf_le_right.trans inf_le_right))
 
 theorem exists_selected_enumeration
     {color : Bool} {R E A : bSet 𝔹} {Γ : 𝔹}

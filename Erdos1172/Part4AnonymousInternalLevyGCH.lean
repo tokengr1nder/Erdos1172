@@ -5,14 +5,9 @@ Licensed under the Apache License, Version 2.0.
 module
 
 public import Erdos1172.Part4AnonymousInternalLevyCollapse
-public import Erdos1172.Part4ShioyaInternalCountableOrdinalBound
-public import Erdos1172.Part4LevyAnonymousCH
-public import Erdos1172.Part4CohenPowersetPreservation
+public import Erdos1172.Part4ShioyaInternalOrderTransport
 public import Erdos1172.Part4ShioyaBoundedDensePowerset
-public import Erdos1172.Part4InternalOmegaTwoBounded
 public import Erdos1172.Part4ShioyaIterationTailGCH
-public import Erdos1172.Part4InternalCohenFreshAssignment
-public import Erdos1172.Part4CohenCountableFusion
 
 @[expose] public section
 
@@ -468,6 +463,20 @@ theorem internalLevyStage_collapses_below (hκ : κ.IsInaccessible) {α γ : Ord
         (condition_le_iff.mp (hp₁.trans inf_le_left)) p₁ le_rfl
       let dom := graphDomain (prod (ordinalCarrier α) (ordinalCarrier κ.ord)) (ordinalCarrier α) (name p₂)
       let pt : bSet (anonymousAlgebra κ) := pair (ordinalCarrier γ) (ordinalLabel i)
+      have contra_p₃ (y₀ : γ.ToType) (p₃ : InternalLevyCondition κ α)
+          (hp₃_p₂ : p₃ ≤ p₂) (hp₃_mem : p₃.value ≤ pair pt (ordinalLabel y₀) ∈ᴮ name p₃) : False := by
+        have hp₃_F : condition p₃ ≤ pair (ordinalLabel i) (ordinalLabel y₀) ∈ᴮ F := by
+          rw [hpair_mem]
+          exact le_iSup (fun r : {r : InternalLevyCondition κ α //
+            r.value ≤ pair pt (ordinalLabel y₀) ∈ᴮ name r} => condition r.val) ⟨p₃, hp₃_mem⟩
+        have hp₃_x : condition p₃ ≤ x =ᴮ ordinalLabel i :=
+          (((condition_mono hp₃_p₂).trans (condition_mono hp₂_p)).trans hp).trans hi
+        have hp₃_goal : condition p₃ ≤ goal :=
+          le_iSup_of_le (ordinalLabel y₀) (le_inf (ordinalLabel_mem y₀)
+            (mem_congr (pair_congr (bv_symm hp₃_x) bv_refl) bv_refl hp₃_F))
+        have hp₃_not : condition p₃ ≤ goalᶜ :=
+          ((condition_mono hp₃_p₂).trans (condition_mono hp₂_p₁)).trans (hp₁.trans inf_le_right)
+        exact condition_ne_bot p₃ (le_bot_iff.mp ((le_inf hp₃_goal hp₃_not).trans inf_compl_eq_bot.le))
       by_cases hdom_pos : p₂.value ⊓ (pt ∈ᴮ dom) ≠ ⊥
       · have hex : p₂.value ⊓ (pt ∈ᴮ dom) ≤ ⨆ y : γ.ToType, pair pt (ordinalLabel y) ∈ᴮ name p₂ := by
           have hm : p₂.value ⊓ (pt ∈ᴮ dom) ≤ ⨆ v : bSet (anonymousAlgebra κ),
@@ -495,27 +504,14 @@ theorem internalLevyStage_collapses_below (hκ : κ.IsInaccessible) {α γ : Ord
           have hpt_eq : e ≤ pt =ᴮ pair ξ η := (pair_eq_pair_iff.mp (inf_le_right.trans inf_le_right)).1
           have hγ_ξ : e ≤ ordinalCarrier γ =ᴮ ξ := (pair_eq_pair_iff.mp hpt_eq).1
           have hv_y : e ≤ v =ᴮ y := (pair_eq_pair_iff.mp (inf_le_right.trans inf_le_right)).2
-          have hv_γ : e ≤ v ∈ᴮ ordinalCarrier γ :=
-            mem_congr (bv_symm hv_y) (bv_symm hγ_ξ) (inf_le_right.trans inf_le_left)
-          apply ordinalCarrier_cases hv_γ
+          apply ordinalCarrier_cases (mem_congr (bv_symm hv_y) (bv_symm hγ_ξ) (inf_le_right.trans inf_le_left))
           intro y₀ f hf hy₀
           exact le_iSup_of_le y₀ (mem_congr (pair_congr bv_refl hy₀) bv_refl
             (hf.trans (((inf_le_left.trans inf_le_left).trans inf_le_left))))
         obtain ⟨y₀, hy₀_ne⟩ := exists_mem_iSup_inf_ne_bot (c := p₂.value ⊓ (pt ∈ᴮ dom))
           (by erw [inf_of_le hex]; exact hdom_pos)
-        let p₃ := shrink p₂ _ hy₀_ne (inf_le_left.trans inf_le_left)
-        have hp₃_F : condition p₃ ≤ pair (ordinalLabel i) (ordinalLabel y₀) ∈ᴮ F := by
-          rw [hpair_mem]
-          exact le_iSup (fun r : {r : InternalLevyCondition κ α //
-            r.value ≤ pair pt (ordinalLabel y₀) ∈ᴮ name r} => condition r.val) ⟨p₃, inf_le_right⟩
-        have hp₃_x : condition p₃ ≤ x =ᴮ ordinalLabel i :=
-          (((condition_mono (shrink_le _ _ _ _)).trans (condition_mono hp₂_p)).trans hp).trans hi
-        have hp₃_goal : condition p₃ ≤ goal :=
-          le_iSup_of_le (ordinalLabel y₀) (le_inf (ordinalLabel_mem y₀)
-            (mem_congr (pair_congr (bv_symm hp₃_x) bv_refl) bv_refl hp₃_F))
-        have hp₃_not : condition p₃ ≤ goalᶜ :=
-          ((condition_mono (shrink_le _ _ _ _)).trans (condition_mono hp₂_p₁)).trans (hp₁.trans inf_le_right)
-        exact condition_ne_bot p₃ (le_bot_iff.mp ((le_inf hp₃_goal hp₃_not).trans inf_compl_eq_bot.le))
+        exact contra_p₃ y₀ (shrink p₂ _ hy₀_ne (inf_le_left.trans inf_le_left))
+          (shrink_le _ _ _ _) inf_le_right
       · have hfresh : p₂.value ≤ (pt ∈ᴮ dom)ᶜ :=
           le_compl_iff_disjoint_right.mpr (disjoint_iff.mpr (not_ne_iff.mp hdom_pos))
         let y₀ : γ.ToType := Ordinal.ToType.mk ⟨0, hγ_pos⟩
@@ -523,20 +519,7 @@ theorem internalLevyStage_collapses_below (hκ : κ.IsInaccessible) {α γ : Ord
           internalLevyCollapse_insert (check_Ord (PSet.Ord_mk α)) (name_mem p₂)
             (check_mem (PSet.mk_mem_mk_of_lt hγα)) (ordinalLabel_mem i) (ordinalLabel_mem y₀) hfresh
         obtain ⟨p₃, hp₃_p₂, _, hp₃eq⟩ := exists_extension_refinement p₂ p₂.nonzero le_rfl hins subset_insertPair
-        have hp₃_mem : p₃.value ≤ pair pt (ordinalLabel y₀) ∈ᴮ name p₃ :=
-          mem_congr bv_refl hp₃eq pair_mem_insertPair
-        have hp₃_F : condition p₃ ≤ pair (ordinalLabel i) (ordinalLabel y₀) ∈ᴮ F := by
-          rw [hpair_mem]
-          exact le_iSup (fun r : {r : InternalLevyCondition κ α //
-            r.value ≤ pair pt (ordinalLabel y₀) ∈ᴮ name r} => condition r.val) ⟨p₃, hp₃_mem⟩
-        have hp₃_x : condition p₃ ≤ x =ᴮ ordinalLabel i :=
-          (((condition_mono hp₃_p₂).trans (condition_mono hp₂_p)).trans hp).trans hi
-        have hp₃_goal : condition p₃ ≤ goal :=
-          le_iSup_of_le (ordinalLabel y₀) (le_inf (ordinalLabel_mem y₀)
-            (mem_congr (pair_congr (bv_symm hp₃_x) bv_refl) bv_refl hp₃_F))
-        have hp₃_not : condition p₃ ≤ goalᶜ :=
-          ((condition_mono hp₃_p₂).trans (condition_mono hp₂_p₁)).trans (hp₁.trans inf_le_right)
-        exact condition_ne_bot p₃ (le_bot_iff.mp ((le_inf hp₃_goal hp₃_not).trans inf_compl_eq_bot.le))
+        exact contra_p₃ y₀ p₃ hp₃_p₂ (mem_congr bv_refl hp₃eq pair_mem_insertPair)
     have hF_func' : (⊤ : InternalLevyStage κ α) ≤
         is_func' (ordinalCarrier κ.ord) (ordinalCarrier γ) F :=
       le_inf hF_fn hF_tot

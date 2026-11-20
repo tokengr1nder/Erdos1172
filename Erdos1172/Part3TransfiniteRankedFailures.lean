@@ -90,13 +90,4 @@ theorem club_reads_ranked_failure (hGCH : GCH) {G : SimpleGraph W2}
   exact readsAt_meet hGCH (readsAt_of_factors hGCH (hbound a ha.2.le))
     (readsAt_neg hGCH (readsAt_rankedAvailability hGCH σ source a (hbound a ha.2.le) (hn a ha.1)))
 
-theorem eventually_local_guarded_code (hGCH : GCH) (G H : SimpleGraph W2)
-    (hI : #I ≤ ℵ_ 1) (c : Erdos1172Part3RegularNeighborhoodCode.Code (Full hGCH) I G) :
-    EventuallyLocal (Earlier hGCH) (restriction hGCH)
-      (meet (ground {a : W2 | IsOmegaOneSup a})
-        (Erdos1172Part3RegularNeighborhoodCode.eval G H c)) :=
-  eventuallyLocal_meet hGCH
-    (Erdos1172Part3RegularStageLocality.eventuallyLocal_ground (Earlier hGCH) (restriction hGCH) _)
-    (eventually_local_code hGCH G H hI c)
-
 end Erdos1172Part3TransfiniteRankedFailures

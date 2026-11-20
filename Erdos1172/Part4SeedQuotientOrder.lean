@@ -4,7 +4,7 @@ Licensed under the Apache License, Version 2.0.
 -/
 module
 
-public import Erdos1172.Part4BooleanSeedKernelName
+public import Erdos1172.Part4InternalSmallPoolOperations
 public import Erdos1172.Part4BooleanQuotientDenseSets
 public import Erdos1172.Part4BooleanQuotientFactorization
 
@@ -75,38 +75,5 @@ theorem denseOver_iff {T : Type v} (d : T → C) :
     apply hi
     rw [← lowerProjection_inf_image, hz]
     exact lowerProjection_le e bot_le |>.antisymm bot_le
-
-open bSet.ErdosIdeal bSet.ErdosSeedKernel
-
-variable (j : bSet B → bSet C) (s : bSet C) (K : bSet B)
-variable (hEq : ∀ X Y, e (X =ᴮ Y) ≤ (j X =ᴮ j Y))
-variable (hDiff : ∀ X Y, (s ∈ᴮ j (difference X Y)) = (s ∈ᴮ j X) ⊓ (s ∈ᴮ j Y)ᶜ)
-
-include hEq hDiff in
-theorem loss_value (X Y : bSet B) (hx : (⊤ : B) ≤ X ⊆ᴮ K) :
-    (difference X Y ∈ᴮ seedKernelName e j s K) =
-      (lowerProjection e ((s ∈ᴮ j X) ⊓ (s ∈ᴮ j Y)ᶜ))ᶜ := by
-  rw [← hDiff]
-  change _ = nullValue e j s (difference X Y)
-  apply eq_of_forall_le_iff
-  intro b
-  rw [mem_seedKernelName_iff e j s hEq, le_nullValue_iff]
-  exact and_iff_right (subset_trans' difference_subset (le_top.trans hx))
-
-include hEq hDiff in
-theorem loss_eq_separativeLe (X Y : bSet B) (hx : (⊤ : B) ≤ X ⊆ᴮ K)
-    (p q : Positive C) (hp : (s ∈ᴮ j X) = p.val) (hq : (s ∈ᴮ j Y) = q.val) :
-    (difference X Y ∈ᴮ seedKernelName e j s K) =
-      separativeLeValue (quotientName e) (check (upperSetCode p)) (check (upperSetCode q)) := by
-  rw [loss_value e j s K hEq hDiff X Y hx, hp, hq, separativeLeValue_checked]
-
-include hEq hDiff in
-theorem seedFamily_covers {T : Type v} (X : T → bSet B)
-    (hx : ∀ i, (⊤ : B) ≤ X i ⊆ᴮ K) (hd : denseOver e (fun i => s ∈ᴮ j (X i))) (A : bSet B) :
-    positive K (seedKernelName e j s K) A ≤ ⨆ i,
-      positive K (seedKernelName e j s K) (X i) ⊓ (difference (X i) A ∈ᴮ seedKernelName e j s K) := by
-  simp only [positive_seedKernelName e j s hEq, loss_value e j s K hEq hDiff _ _ (hx _),
-    top_unique (hx _), top_inf_eq]
-  exact inf_le_right.trans ((denseOver_iff e _).mp hd (s ∈ᴮ j A))
 
 end Erdos1172SeedQuotient

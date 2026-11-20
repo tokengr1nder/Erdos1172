@@ -44,26 +44,10 @@ def pullRegular (r : CompleteRestriction P Q) (U : RegularName P X) : RegularNam
     refine ⟨s, hsp, U.persistent ((r.le_embed_iff s t).mpr ?_) ht⟩
     exact hs.le
 
-theorem pull_lift (r : CompleteRestriction P Q) (U : RegularName Q X) :
-    pullRegular r (r.liftRegular U) = U := by
-  apply RegularName.ext
-  intro q x
-  change U.holds (r.restrict (r.embed q)) x ↔ U.holds q x
-  rw [r.restrict_embed]
-
 /-- Only this direction holds for an arbitrary full-order source. -/
 theorem lift_pull_implies (r : CompleteRestriction P Q) (U : RegularName P X)
     (p : P) (x : X) (h : (r.liftRegular (pullRegular r U)).holds p x) : U.holds p x :=
   U.persistent (r.below_embed p) h
-
-theorem stationary_pull_implies (r : CompleteRestriction P Q) (U : RegularName P W2)
-    (p : P) (h : StationaryAt (pullRegular r U).holds (r.restrict p)) :
-    StationaryAt U.holds p := by
-  have hlift := (r.stationary_lift_iff (pullRegular r U).holds p).mpr h
-  intro q hqp
-  apply (hlift q hqp).mono
-  rintro a ⟨s, hsq, hs⟩
-  exact ⟨s, hsq, lift_pull_implies r U s a hs⟩
 
 def pushFunction (r : CompleteRestriction P Q) (N : NiceFunctionName Q I V) :
     NiceFunctionName P I V where
@@ -83,11 +67,6 @@ def pushFunction (r : CompleteRestriction P Q) (N : NiceFunctionName Q I V) :
     intro p i
     obtain ⟨q, v, hq, hcompat⟩ := N.predense (r.restrict p) i
     exact ⟨r.embed q, v, ⟨(q, v), hq, rfl⟩, (r.compatible_embed_iff p q).mpr hcompat⟩
-
-theorem pushFunction_supported (r : CompleteRestriction P Q) (N : NiceFunctionName Q I V) :
-    Supported r (pushFunction r N) := by
-  rintro i p v ⟨⟨q, w⟩, hq, heq⟩
-  exact ⟨q, congrArg Prod.fst heq⟩
 
 theorem pushFunction_decides_iff (r : CompleteRestriction P Q) (N : NiceFunctionName Q I V)
     (p : P) (i : I) (v : V) :
@@ -119,32 +98,5 @@ theorem pushClique_decides_iff (r : CompleteRestriction P Q) (N : NiceCliqueName
     (p : P) (i : I) (v : V) :
     (pushClique r N).toClique.decides p i v ↔ N.toClique.decides (r.restrict p) i v :=
   pushFunction_decides_iff r N.function p i v
-
-theorem pushClique_after_iff (r : CompleteRestriction P Q) (N : NiceCliqueName Q I V G)
-    (p : P) (a : V) :
-    (afterClique (pushClique r N).toClique).holds p a ↔
-      (afterClique N.toClique).holds (r.restrict p) a := by
-  constructor
-  · intro h q hqp i x hx
-    obtain ⟨s, hsp, hs⟩ := r.lift p q hqp
-    apply h s hsp i x
-    apply (pushClique_decides_iff r N s i x).mpr
-    rwa [hs]
-  · intro h q hqp i x hx
-    exact h (r.restrict q) (r.restrict.monotone hqp) i x ((pushClique_decides_iff r N q i x).mp hx)
-
-theorem pushClique_stationary_future_iff (r : CompleteRestriction P Q)
-    {G : SimpleGraph W2} (N : NiceCliqueName Q I W2 G)
-    (source : RegularName Q W2) (p : P) :
-    StationaryAt (fun q a => source.holds (r.restrict q) a ∧
-      (afterClique (pushClique r N).toClique).holds q a) p ↔
-    StationaryAt (fun q a => source.holds q a ∧ (afterClique N.toClique).holds q a) (r.restrict p) := by
-  have heq : (fun q a => source.holds (r.restrict q) a ∧
-      (afterClique (pushClique r N).toClique).holds q a) =
-      (fun q a => source.holds (r.restrict q) a ∧ (afterClique N.toClique).holds (r.restrict q) a) := by
-    funext q a
-    exact propext (and_congr_right (fun _ => pushClique_after_iff r N q a))
-  rw [heq]
-  exact r.stationary_lift_iff (fun q a => source.holds q a ∧ (afterClique N.toClique).holds q a) p
 
 end Erdos1172Part3CompleteRestrictionNames

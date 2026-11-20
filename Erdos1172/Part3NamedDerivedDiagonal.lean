@@ -96,19 +96,4 @@ theorem exists_loss_of_all_blueSmall_general (hCH : CH) (hcc : OmegaTwoCC P) (hI
   exact Set.disjoint_left.mp (hdisjoint a)
     ⟨s, (hsq.trans hqp).trans hpp0, hW⟩ (hbdiag a hab)
 
-theorem exists_loss_of_all_blueSmall (hCH : CH) (hcc : OmegaTwoCC P)
-    (r : Code P W1 G ↪ W2) (σ : NiceCliqueName P W1 W2 G ↪ W2)
-    (H : SimpleGraph W2) (source D : RegularName P W2)
-    (J : W2 → RegularName P (RegularName P W2))
-    (hmono : ∀ a, MonotoneSmallness (J a))
-    (hsup : ∀ p a, D.holds p a → ErdosRadoCHAsym.IsOmegaOneSup a)
-    (p0 : P) (hstat : StationaryAt D.holds p0)
-    (hext : ∀ a p, p ≤ p0 → D.holds p a →
-      (blueSmallName r H D J a).holds p (priorSource source a)) :
-    ∃ a : W2, ∃ p : P, p ≤ p0 ∧ D.holds p a ∧
-      StationaryAt (cutFuture H D J source a).holds p :=
-  exists_loss_of_all_blueSmall_general hCH hcc
-    (by simp only [W1, Cardinal.mk_toType, Ordinal.card_omega, le_refl])
-    r σ H source D J hmono hsup p0 hstat hext
-
 end Erdos1172Part3NamedDerivedDiagonal

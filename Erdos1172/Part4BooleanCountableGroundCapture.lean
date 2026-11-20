@@ -4,9 +4,6 @@ Licensed under the Apache License, Version 2.0.
 -/
 module
 
-public import Erdos1172.Part4BooleanCardinalPreservation
-public import Erdos1172.Part4InternalSmallFiberBound
-public import Erdos1172.Part4LevyChainCondition
 public import Erdos1172.Part4LevyCohenIteration
 
 @[expose] public section
@@ -197,18 +194,6 @@ end bSet.ErdosCountableGroundCapture
 namespace Erdos1172LevyCohen
 
 open bSet bSet.ErdosCountableGroundCapture
-
-/-- Strict support bound in the FIRST Levy algebra only. -/
-theorem firstStage_possible_members_cardinal_lt (κ : Cardinal.{u})
-    (Hκ : κ.IsRegular) (Hunc : Cardinal.aleph0 < κ)
-    (A : PSet.{u}) {D : bSet (FirstAlgebra κ)} {Γ : FirstAlgebra κ}
-    (Hsep : ∀ i j : A.Type, i ≠ j → ¬ PSet.Equiv (A.Func i) (A.Func j))
-    (Hcount : Γ ≤ injects_into D omega) :
-    Cardinal.mk (possibleMembers A D Γ) < κ :=
-  possible_members_cardinal_lt Hκ Hunc
-    (fun w Hpos Hdisj =>
-      Erdos1172LevyCollapse.below_completion_disjoint_family_cardinal_lt
-        κ Hκ Hunc w Hpos Hdisj) A Hsep Hcount
 
 /-- The first-stage strict chain condition captures every internally
 countable checked-ground subset in a ground family of cardinal below κ. -/

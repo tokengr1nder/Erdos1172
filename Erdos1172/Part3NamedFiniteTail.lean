@@ -7,7 +7,6 @@ module
 public import Erdos1172.Part3NamedShortEnumeration
 public import Erdos1172.Part3NamedFinalTail
 public import Erdos1172.Part3BoundedPrefixCovers
-public import Erdos1172.Part3RegularConeRestriction
 
 @[expose] public section
 

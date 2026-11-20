@@ -5,7 +5,6 @@ Licensed under the Apache License, Version 2.0.
 module
 
 public import Erdos1172.Part4InternalSimultaneousEntry
-public import Erdos1172.Part4InternalRelationGraph
 
 @[expose] public section
 
@@ -55,15 +54,6 @@ theorem mem_vertexHistory_iff {P i y : bSet 𝔹} {Γ : 𝔹} :
     Γ ≤ pair i y ∈ᴮ vertexHistory P ↔
       Γ ≤ i ∈ᴮ omegaOne ∧ Γ ≤ y ∈ᴮ omegaTwo ∧ Γ ≤ vertexRel P i y :=
   mem_relationGraph_iff (vertexRel_ext_index P) (vertexRel_ext_value P)
-
-theorem mem_vertexHistory (P i y : bSet 𝔹) :
-    pair i y ∈ᴮ vertexHistory P =
-      i ∈ᴮ omegaOne ⊓ (y ∈ᴮ omegaTwo ⊓ ⨆ Z, pair i (pair y Z) ∈ᴮ P) := by
-  apply le_antisymm
-  · have H := mem_vertexHistory_iff.mp (le_refl (pair i y ∈ᴮ vertexHistory P))
-    exact le_inf H.1 (le_inf H.2.1 H.2.2)
-  · exact mem_vertexHistory_iff.mpr
-      ⟨inf_le_left, inf_le_right.trans inf_le_left, inf_le_right.trans inf_le_right⟩
 
 /-- The original condition is preserved when the entry's row component
 is extracted from the internal existential. -/

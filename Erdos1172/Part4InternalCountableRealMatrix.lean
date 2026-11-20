@@ -76,12 +76,6 @@ private theorem indicator_subset_omega (χ : (bSet.omega : bSet 𝔹).type → �
   change χ n ≤ (⊤ : 𝔹)
   exact le_top
 
-theorem domainCode_subset (f : bSet 𝔹) {Γ : 𝔹} :
-    Γ ≤ domainCode f ⊆ᴮ bSet.omega := indicator_subset_omega _
-
-theorem matrixCode_subset (f : bSet 𝔹) {Γ : 𝔹} :
-    Γ ≤ matrixCode f ⊆ᴮ bSet.omega := indicator_subset_omega _
-
 theorem realGraphCode_subset (f : bSet 𝔹) {Γ : 𝔹} :
     Γ ≤ realGraphCode f ⊆ᴮ bSet.omega := indicator_subset_omega _
 

@@ -82,17 +82,6 @@ theorem increasingOn_of_subsets {U K f g : bSet 𝔹} {Γ : 𝔹}
     (mem_of_mem_subset (inf_le_left.trans Hgf)
       (inf_le_right.trans (inf_le_right.trans inf_le_right)))
 
-/-- Every value used by a restricted graph is used by the original graph.
-This is an internal guarded-range statement, not an external range claim. -/
-theorem rangeMem_of_subsets {U K f g x : bSet 𝔹} {Γ : 𝔹}
-    (HU : Γ ≤ U ⊆ᴮ K) (Hgf : Γ ≤ g ⊆ᴮ f)
-    (Hx : Γ ≤ rangeMem U g x) : Γ ≤ rangeMem K f x := by
-  obtain ⟨i, Hi⟩ := exists_convert Hx
-    (B_ext_inf B_ext_mem_left B_ext_pair_mem_left)
-  exact le_iSup_of_le i (le_inf
-    (mem_of_mem_subset HU (Hi.trans inf_le_left))
-    (mem_of_mem_subset Hgf (Hi.trans inf_le_right)))
-
 theorem exists_restricted_function {U K S f : bSet 𝔹} {Γ : 𝔹}
     (HU : Γ ≤ U ⊆ᴮ K) (Hf : Γ ≤ is_function K S f) :
     ∃ g : bSet 𝔹, Γ ≤ is_function U S g ⊓ g ⊆ᴮ f := by

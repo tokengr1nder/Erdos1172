@@ -86,15 +86,6 @@ theorem mem_conditions_iff {K p : bSet 𝔹} {Γ : 𝔹} :
   · intro H
     exact ⟨mem_powerset_iff.mpr (H.trans inf_le_left), H.trans inf_le_right⟩
 
-theorem mem_conditions (K p : bSet 𝔹) :
-    p ∈ᴮ conditions K = condition K p :=
-  le_antisymm (mem_conditions_iff.mp le_rfl) (mem_conditions_iff.mpr le_rfl)
-
-theorem conditions_subset_powerset {K : bSet 𝔹} {Γ : 𝔹} :
-    Γ ≤ conditions K ⊆ᴮ bv_powerset (prod K two) :=
-  comprehend_subset (ϕ := fun p => is_func p ⊓ smallDomain K p)
-    (bv_powerset (prod K two))
-
 /-- A condition is an actual supported function on its computed domain,
 without asserting that this domain is an initial segment. -/
 theorem condition_function {K p : bSet 𝔹} {Γ : 𝔹}
@@ -124,11 +115,6 @@ theorem empty_condition {K : bSet 𝔹} {Γ : 𝔹}
 theorem empty_mem_conditions {K : bSet 𝔹} {Γ : 𝔹}
     (Hzero : Γ ≤ (0 : bSet 𝔹) ∈ᴮ K) : Γ ≤ (∅ : bSet 𝔹) ∈ᴮ conditions K :=
   mem_conditions_iff.mpr (empty_condition Hzero)
-
-/-- The labels are the entire Boolean coefficient-function type, not just
-externally selected valid graph names. -/
-theorem conditions_type (K : bSet 𝔹) :
-    (conditions K).type = ((prod K two).type → 𝔹) := rfl
 
 theorem conditions_bval_eq_condition (K : bSet 𝔹) (i : (conditions K).type) :
     (conditions K).bval i = condition K ((conditions K).func i) := by

@@ -75,40 +75,6 @@ theorem blockHistory_pair_coherent {j ξ i A : bSet 𝔹}
     exact blockHistory_pair Hξ (fusion_prefix_is_function HRun Hlaw Hξ)
       ((taggedPrefix_pair_coherent HRun Hlaw Hjξ Hi).mpr Hentry)
 
-theorem activeFamily_pair_coherent {j ξ i U : bSet 𝔹}
-    (HRun : Γ ≤ is_function omegaOne runSpace Run)
-    (Hlaw : Γ ≤ runLaw color R E F top Run)
-    (Hjξ : Γ ≤ j ⊆ᴮ ξ) (Hξ : Γ ≤ ξ ⊆ᴮ omegaOne) (Hi : Γ ≤ i ∈ᴮ j) :
-    (Γ ≤ pair i U ∈ᴮ activeFamily (taggedPrefix ξ omegaOne entrySpace Run)) ↔
-      Γ ≤ pair i U ∈ᴮ activeFamily (taggedPrefix j omegaOne entrySpace Run) := by
-  have Hj : Γ ≤ j ⊆ᴮ omegaOne := subset_trans' Hjξ Hξ
-  constructor
-  · intro Hpair
-    obtain ⟨A, Z, Hentry⟩ := activeFamily_witness Hpair
-    exact activeFamily_pair Hj (fusion_prefix_is_function HRun Hlaw Hj)
-      ((taggedPrefix_pair_coherent HRun Hlaw Hjξ Hi).mp Hentry)
-  · intro Hpair
-    obtain ⟨A, Z, Hentry⟩ := activeFamily_witness Hpair
-    exact activeFamily_pair Hξ (fusion_prefix_is_function HRun Hlaw Hξ)
-      ((taggedPrefix_pair_coherent HRun Hlaw Hjξ Hi).mpr Hentry)
-
-theorem indexFamily_pair_coherent {j ξ i Z : bSet 𝔹}
-    (HRun : Γ ≤ is_function omegaOne runSpace Run)
-    (Hlaw : Γ ≤ runLaw color R E F top Run)
-    (Hjξ : Γ ≤ j ⊆ᴮ ξ) (Hξ : Γ ≤ ξ ⊆ᴮ omegaOne) (Hi : Γ ≤ i ∈ᴮ j) :
-    (Γ ≤ pair i Z ∈ᴮ indexFamily (taggedPrefix ξ omegaOne entrySpace Run)) ↔
-      Γ ≤ pair i Z ∈ᴮ indexFamily (taggedPrefix j omegaOne entrySpace Run) := by
-  have Hj : Γ ≤ j ⊆ᴮ omegaOne := subset_trans' Hjξ Hξ
-  constructor
-  · intro Hpair
-    obtain ⟨A, U, Hentry⟩ := indexFamily_witness Hpair
-    exact indexFamily_pair Hj (fusion_prefix_is_function HRun Hlaw Hj)
-      ((taggedPrefix_pair_coherent HRun Hlaw Hjξ Hi).mp Hentry)
-  · intro Hpair
-    obtain ⟨A, U, Hentry⟩ := indexFamily_witness Hpair
-    exact indexFamily_pair Hξ (fusion_prefix_is_function HRun Hlaw Hξ)
-      ((taggedPrefix_pair_coherent HRun Hlaw Hjξ Hi).mpr Hentry)
-
 theorem coordinateHistory_pair_coherent {j ξ i ν v : bSet 𝔹}
     (HRun : Γ ≤ is_function omegaOne runSpace Run)
     (Hlaw : Γ ≤ runLaw color R E F top Run)
@@ -152,14 +118,6 @@ private theorem image_eq_of_guarded_pair_iff {D C f g : bSet 𝔹}
     exact mem_image ((Hpair i x Δ inf_le_left (Hi.trans inf_le_left)).mpr
       (Hi.trans inf_le_right)) (Hi.trans inf_le_left) Hx.1
 
-theorem taggedPrefix_image_coherent {j ξ : bSet 𝔹}
-    (HRun : Γ ≤ is_function omegaOne runSpace Run)
-    (Hlaw : Γ ≤ runLaw color R E F top Run) (Hjξ : Γ ≤ j ⊆ᴮ ξ) :
-    Γ ≤ image j entrySpace (taggedPrefix ξ omegaOne entrySpace Run) =ᴮ
-      image j entrySpace (taggedPrefix j omegaOne entrySpace Run) :=
-  image_eq_of_guarded_pair_iff (fun _ _ _ HΔ Hi =>
-    taggedPrefix_pair_coherent (HΔ.trans HRun) (HΔ.trans Hlaw) (HΔ.trans Hjξ) Hi)
-
 theorem blockHistory_image_coherent {j ξ : bSet 𝔹}
     (HRun : Γ ≤ is_function omegaOne runSpace Run)
     (Hlaw : Γ ≤ runLaw color R E F top Run)
@@ -169,37 +127,6 @@ theorem blockHistory_image_coherent {j ξ : bSet 𝔹}
   image_eq_of_guarded_pair_iff (fun _ _ _ HΔ Hi =>
     blockHistory_pair_coherent (HΔ.trans HRun) (HΔ.trans Hlaw)
       (HΔ.trans Hjξ) (HΔ.trans Hξ) Hi)
-
-theorem activeFamily_image_coherent {j ξ : bSet 𝔹}
-    (HRun : Γ ≤ is_function omegaOne runSpace Run)
-    (Hlaw : Γ ≤ runLaw color R E F top Run)
-    (Hjξ : Γ ≤ j ⊆ᴮ ξ) (Hξ : Γ ≤ ξ ⊆ᴮ omegaOne) :
-    Γ ≤ image j (bv_powerset omegaTwo) (activeFamily (taggedPrefix ξ omegaOne entrySpace Run))
-      =ᴮ image j (bv_powerset omegaTwo) (activeFamily (taggedPrefix j omegaOne entrySpace Run)) :=
-  image_eq_of_guarded_pair_iff (fun _ _ _ HΔ Hi =>
-    activeFamily_pair_coherent (HΔ.trans HRun) (HΔ.trans Hlaw)
-      (HΔ.trans Hjξ) (HΔ.trans Hξ) Hi)
-
-theorem coordinateHistory_image_coherent {j ξ : bSet 𝔹}
-    (HRun : Γ ≤ is_function omegaOne runSpace Run)
-    (Hlaw : Γ ≤ runLaw color R E F top Run)
-    (Hjξ : Γ ≤ j ⊆ᴮ ξ) (Hξ : Γ ≤ ξ ⊆ᴮ omegaOne) :
-    Γ ≤ image (prod j omegaOne) omegaOne
-        (coordinateHistory (taggedPrefix ξ omegaOne entrySpace Run)) =ᴮ
-      image (prod j omegaOne) omegaOne
-        (coordinateHistory (taggedPrefix j omegaOne entrySpace Run)) := by
-  apply image_eq_of_guarded_pair_iff
-  intro q v Δ HΔ Hq
-  obtain ⟨i, Hi, ν, _, Heq⟩ := mem_prod_iff₂.mp Hq
-  have Hiff := coordinateHistory_pair_coherent (ν := ν) (v := v)
-    (HΔ.trans HRun) (HΔ.trans Hlaw) (HΔ.trans Hjξ) (HΔ.trans Hξ) Hi
-  constructor
-  · intro Hpair
-    exact mem_congr (pair_congr (bv_symm Heq) bv_refl) bv_refl
-      (Hiff.mp (mem_congr (pair_congr Heq bv_refl) bv_refl Hpair))
-  · intro Hpair
-    exact mem_congr (pair_congr (bv_symm Heq) bv_refl) bv_refl
-      (Hiff.mpr (mem_congr (pair_congr Heq bv_refl) bv_refl Hpair))
 
 /-- The exact whole-object history computed from a longer decoded graph
 agrees with the history originally used at the smaller stage. -/
@@ -211,14 +138,6 @@ theorem earlierHistory_prefix_coherent {j ξ : bSet 𝔹}
       earlierHistory color R j (blockHistory (taggedPrefix j omegaOne entrySpace Run)) :=
   B_congr_comprehend (ϕ := fun A => A ∈ᴮ blockObjects color R) (H_congr := B_ext_mem_left)
     (blockHistory_image_coherent HRun Hlaw Hjξ Hξ)
-
-theorem previousActive_prefix_coherent {j ξ : bSet 𝔹}
-    (HRun : Γ ≤ is_function omegaOne runSpace Run)
-    (Hlaw : Γ ≤ runLaw color R E F top Run)
-    (Hjξ : Γ ≤ j ⊆ᴮ ξ) (Hξ : Γ ≤ ξ ⊆ᴮ omegaOne) :
-    Γ ≤ previousActive j (activeFamily (taggedPrefix ξ omegaOne entrySpace Run)) =ᴮ
-      previousActive j (activeFamily (taggedPrefix j omegaOne entrySpace Run)) :=
-  B_congr_bv_union (activeFamily_image_coherent HRun Hlaw Hjξ Hξ)
 
 /-- At real run stages, transitivity of the ordinal xi supplies the
 smaller-prefix inclusion. Membership alone in a general set would not. -/

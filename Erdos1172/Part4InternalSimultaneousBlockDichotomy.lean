@@ -90,28 +90,4 @@ theorem successful_block_or_ordered_opposite
   exact successful_block_or_ordered_opposite_of_family HCH (countablyBounded_of_rowIdeals Hbasic)
     (HF.trans inf_le_left) (HF.trans inf_le_right) HS Hrows
 
-/-- The stopped alternative supplies the exact opposite-color two-block
-target, not merely a cardinal homogeneous set. The successful alternative
-is still one block and must be fed into the separate full fusion argument. -/
-theorem successful_block_or_opposite_twoBlock
-    {color : Bool} {R S : bSet 𝔹} {Γ : 𝔹}
-    (HCH : Γ ≤ (CH : 𝔹))
-    (HS : Γ ≤ is_func' (prod omegaOne omegaTwo) (bv_powerset omegaOne) S)
-    (Hrows : Γ ≤ normalRowAvailability S) :
-    Γ ≤ hasSuccessfulBlock color R S ⊔
-      ErdosPartition.hasTwoBlock (!color) R omegaOne bSet.omega omegaTwo := by
-  have Hbasic := rowIdealAvailability_of_normal Hrows
-  have HB := countablyBounded_of_rowIdeals Hbasic
-  obtain ⟨F, HF⟩ := exists_endpoint_run_family (color := color) (R := R) HS Hbasic
-  have Hfunction := HF.trans inf_le_left
-  have Hlaw := HF.trans inf_le_right
-  apply (le_inf le_rfl (successfulBlock_or_endpoint_stops Hlaw HS Hrows)).trans
-  rw [inf_sup_left]
-  exact sup_le (inf_le_right.trans le_sup_left)
-    ((opposite_twoBlock_of_all_runs_stop
-      (inf_le_left.trans HCH) (inf_le_left.trans HB)
-      (inf_le_left.trans Hfunction) (inf_le_left.trans Hlaw)
-      (show Γ ⊓ endpointRunFamilyStops F ≤ endpointRunFamilyStops F from inf_le_right)).trans
-      le_sup_right)
-
 end bSet.ErdosInternalSimultaneousBlockDichotomy

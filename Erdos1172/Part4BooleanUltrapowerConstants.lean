@@ -4,10 +4,8 @@ Licensed under the Apache License, Version 2.0.
 -/
 module
 
-public import Mathlib.Order.Filter.CardinalInter
 public import Erdos1172.Part4BooleanUltrapowerValues
 public import Erdos1172.Part4LevyCohenIteration
-public import Erdos1172.Part4LevyChainCondition
 
 @[expose] public section
 
@@ -38,10 +36,6 @@ def constant [BooleanAlgebra B] (U : Ultrafilter I) (b : B) : Algebra U B :=
 theorem constant_le_iff [BooleanAlgebra B] (U : Ultrafilter I) {b c : B} :
     constant U b ≤ constant U c ↔ b ≤ c :=
   (value_le_value_iff U).trans eventually_const
-
-theorem constant_injective [BooleanAlgebra B] (U : Ultrafilter I) :
-    Function.Injective (constant (B := B) U) := fun _ _ h =>
-  le_antisymm ((constant_le_iff U).mp h.le) ((constant_le_iff U).mp h.ge)
 
 variable [CompleteBooleanAlgebra B]
 
@@ -149,14 +143,6 @@ def constantCompleteHom (U : Ultrafilter I) (κ : Cardinal.{u})
   map_sSup' S := by rw [sSup_eq_iSup', sSup_image']; exact constant_iSup U κ hcc _
   map_sInf' S := by rw [sInf_eq_iInf', sInf_image']; exact constant_iInf U κ hcc _
 
-theorem constantCompleteHom_apply (U : Ultrafilter I) (κ : Cardinal.{u})
-    [CardinalInterFilter (U : Filter I) κ] (hcc : StrictCC B κ) (b : B) :
-    constantCompleteHom U κ hcc b = value U (fun _ => b) := rfl
-
-theorem constantCompleteHom_injective (U : Ultrafilter I) (κ : Cardinal.{u})
-    [CardinalInterFilter (U : Filter I) κ] (hcc : StrictCC B κ) :
-    Function.Injective (constantCompleteHom U κ hcc) := constant_injective U
-
 open Erdos1172LevyCohen (FirstAlgebra)
 
 /-- The actual Lévy collapse has strict κ-cc when κ is regular uncountable. -/
@@ -169,9 +155,5 @@ def firstCollapseConstantHom (U : Ultrafilter I) (κ : Cardinal.{u})
 theorem firstCollapseConstantHom_apply (U : Ultrafilter I) (κ : Cardinal.{u})
     [CardinalInterFilter (U : Filter I) κ] (hκ : κ.IsRegular) (hunc : Cardinal.aleph0 < κ)
     (b : FirstAlgebra κ) : firstCollapseConstantHom U κ hκ hunc b = value U (fun _ => b) := rfl
-
-theorem firstCollapseConstantHom_injective (U : Ultrafilter I) (κ : Cardinal.{u})
-    [CardinalInterFilter (U : Filter I) κ] (hκ : κ.IsRegular) (hunc : Cardinal.aleph0 < κ) :
-    Function.Injective (firstCollapseConstantHom U κ hκ hunc) := constant_injective U
 
 end Erdos1172BooleanUltrapower

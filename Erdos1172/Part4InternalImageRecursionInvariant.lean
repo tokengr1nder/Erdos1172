@@ -5,7 +5,6 @@ Licensed under the Apache License, Version 2.0.
 module
 
 public import Erdos1172.Part4InternalBoundedImageRecursion
-public import Erdos1172.Part4InternalOrdinalLeast
 
 @[expose] public section
 
@@ -43,9 +42,6 @@ def allGood (Good : bSet 𝔹 → 𝔹) (T : bSet 𝔹) : 𝔹 :=
 def imageRecInvariantStep (θ V : bSet 𝔹) (Φ : bSet 𝔹 → bSet 𝔹 → bSet 𝔹)
     (Run : bSet 𝔹) (Good : bSet 𝔹 → 𝔹) : 𝔹 :=
   ⨅ i, _root_.imp (i ∈ᴮ θ ⊓ allGood Good (image i V Run)) (Good (Φ i (image i V Run)))
-
-theorem allGood_ext_set (Good : bSet 𝔹 → 𝔹) : B_ext (allGood Good) :=
-  B_ext_iInf (h := fun _ => B_ext_imp (h₁ := B_ext_mem_right) (h₂ := B_ext_const))
 
 theorem allGood_apply {Good : bSet 𝔹 → 𝔹} {T y : bSet 𝔹} {Γ : 𝔹}
     (H : Γ ≤ allGood Good T) (Hy : Γ ≤ y ∈ᴮ T) : Γ ≤ Good y :=

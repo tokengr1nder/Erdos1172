@@ -124,22 +124,6 @@ theorem blockProjection_is_function {Γ : 𝔹} :
     obtain ⟨W, V, Ht⟩ := blockRel_witness Ht
     exact eq_of_eq_pair_left' (bv_trans (bv_symm Hq) (bv_trans Heq Ht))
 
-theorem indexProjection_is_function {Γ : 𝔹} :
-    Γ ≤ is_function entrySpace indexCodes (indexProjection : bSet 𝔹) := by
-  apply relationGraph_is_function indexRel_ext_input indexRel_ext_output
-  · apply le_iInf
-    intro q
-    rw [← deduction]
-    obtain ⟨A, Z, U, _, HZ, _, Hq⟩ := entrySpace_witness
-      (show Γ ⊓ q ∈ᴮ entrySpace ≤ q ∈ᴮ entrySpace from inf_le_right)
-    exact le_iSup_of_le Z (le_inf (mem_powerset_iff.mpr HZ)
-      (le_iSup_of_le A (le_iSup_of_le U Hq)))
-  · intro q t Z W Δ _ _ _ _ _ Hq Ht Heq
-    obtain ⟨A, U, Hq⟩ := indexRel_witness Hq
-    obtain ⟨B, V, Ht⟩ := indexRel_witness Ht
-    exact eq_of_eq_pair_left' (eq_of_eq_pair_right'
-      (bv_trans (bv_symm Hq) (bv_trans Heq Ht)))
-
 theorem activeProjection_is_function {Γ : 𝔹} :
     Γ ≤ is_function entrySpace (bv_powerset omegaTwo) (activeProjection : bSet 𝔹) := by
   apply relationGraph_is_function activeRel_ext_input activeRel_ext_output
@@ -288,27 +272,12 @@ def activeFamily (T : bSet 𝔹) : bSet 𝔹 :=
   decodeHistory (bv_powerset omegaTwo) activeProjection T
 
 theorem blockHistory_congr : B_congr (blockHistory : bSet 𝔹 → bSet 𝔹) := decode_congr _ _
-theorem indexFamily_congr : B_congr (indexFamily : bSet 𝔹 → bSet 𝔹) := decode_congr _ _
 theorem activeFamily_congr : B_congr (activeFamily : bSet 𝔹 → bSet 𝔹) := decode_congr _ _
-
-theorem blockHistory_subset {T : bSet 𝔹} {Γ : 𝔹} :
-    Γ ≤ blockHistory T ⊆ᴮ prod omegaOne (bv_powerset omegaTwo) := relationGraph_subset
-
-theorem indexFamily_subset {T : bSet 𝔹} {Γ : 𝔹} :
-    Γ ≤ indexFamily T ⊆ᴮ prod omegaOne indexCodes := relationGraph_subset
-
-theorem activeFamily_subset {T : bSet 𝔹} {Γ : 𝔹} :
-    Γ ≤ activeFamily T ⊆ᴮ prod omegaOne (bv_powerset omegaTwo) := relationGraph_subset
 
 theorem blockHistory_is_function {ξ T : bSet 𝔹} {Γ : 𝔹}
     (Hξ : Γ ≤ ξ ⊆ᴮ omegaOne) (HT : Γ ≤ is_function ξ entrySpace T) :
     Γ ≤ is_function ξ (bv_powerset omegaTwo) (blockHistory T) :=
   decode_function Hξ HT blockProjection_is_function
-
-theorem indexFamily_is_function {ξ T : bSet 𝔹} {Γ : 𝔹}
-    (Hξ : Γ ≤ ξ ⊆ᴮ omegaOne) (HT : Γ ≤ is_function ξ entrySpace T) :
-    Γ ≤ is_function ξ indexCodes (indexFamily T) :=
-  decode_function Hξ HT indexProjection_is_function
 
 theorem activeFamily_is_function {ξ T : bSet 𝔹} {Γ : 𝔹}
     (Hξ : Γ ≤ ξ ⊆ᴮ omegaOne) (HT : Γ ≤ is_function ξ entrySpace T) :
@@ -369,11 +338,6 @@ theorem rowFunctions_apply {T i A Z U : bSet 𝔹} {Γ : 𝔹}
     Γ ≤ is_function omegaOne omegaOne Z :=
   (le_inf (H.trans ((iInf_le _ i).trans ((iInf_le _ A).trans
     ((iInf_le _ Z).trans (iInf_le _ U))))) Hp).trans bv_imp_elim
-
-theorem rowFunctions_ext : B_ext (rowFunctions : bSet 𝔹 → 𝔹) :=
-  B_ext_iInf (h := fun _ => B_ext_iInf (h := fun _ => B_ext_iInf
-    (h := fun _ => B_ext_iInf
-      (h := fun _ => B_ext_imp (h₁ := B_ext_mem_right) (h₂ := B_ext_const)))))
 
 def coordinateRel (T q v : bSet 𝔹) : 𝔹 :=
   ⨆ i, ⨆ ν, ⨆ Z, q =ᴮ pair i ν ⊓

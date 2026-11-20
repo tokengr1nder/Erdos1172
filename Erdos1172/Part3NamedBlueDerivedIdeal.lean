@@ -71,21 +71,6 @@ theorem blueSection_fiber_comm (H : SimpleGraph W2) (a b c : W2) (U : RegularNam
     ((U.holds p x ∧ H.Adj x a ∧ x < b) ∧ H.Adj x c)
   tauto
 
-theorem blueSection_join (H : SimpleGraph W2) (a b : W2) (U : ℕ → RegularName P W2) :
-    blueSection H a b (join U) = join (fun n => blueSection H a b (U n)) := by
-  apply RegularName.ext
-  intro p x
-  constructor
-  · rintro ⟨hU, hgeom⟩ q hqp
-    obtain ⟨s, hsq, n, hn⟩ := hU q hqp
-    exact ⟨s, hsq, n, hn, hgeom⟩
-  · intro h
-    obtain ⟨q, hqp, n, hn⟩ := h p le_rfl
-    refine ⟨?_, hn.2⟩
-    intro t htp
-    obtain ⟨s, hst, n, hs⟩ := h t htp
-    exact ⟨s, hst, n, hs.1⟩
-
 theorem blueSmall_fiber (r : Code P I G ↪ W2) (H : SimpleGraph W2)
     (D : RegularName P W2) (J : W2 → RegularName P (RegularName P W2))
     (a : W2) (U : RegularName P W2) (p : P) :
@@ -114,26 +99,6 @@ theorem blueSmall_mono (D : RegularName P W2)
   apply hmono b s (blueSection H a b U) (blueSection H a b V) ?_ hs
   intro x t hts ht
   exact ⟨hsub x t ((hts.trans hsq).trans hqp) ht.1, ht.2⟩
-
-theorem blueSmall_countable_join (hclosed : CountablyClosed P)
-    (ha : GoodCut r σ H source a) (D : RegularName P W2)
-    (J : W2 → RegularName P (RegularName P W2))
-    (hjoin : ∀ b p (U : ℕ → RegularName P W2), (∀ n, (J b).holds p (U n)) →
-      (J b).holds p (join U)) (p : P) (U : ℕ → RegularName P W2)
-    (hU : ∀ n, (blueSmallName r H D J a).holds p (U n)) :
-    (blueSmallName r H D J a).holds p (join U) := by
-  classical
-  have hsmall := smallName_countable_join hclosed ha p (fun n => support H D J a (U n)) hU
-  apply smallName_mono_set (V := join (fun n => support H D J a (U n))) ?_ hsmall
-  intro b hba q hqp hq t htq
-  have hex : ∃ n, ¬(J b).holds t (blueSection H a b (U n)) := by
-    by_contra! hn
-    have h := hjoin b t (fun n => blueSection H a b (U n)) hn
-    rw [← blueSection_join] at h
-    exact hq.2.2 t htq h
-  obtain ⟨n, hn⟩ := hex
-  obtain ⟨s, hst, hs⟩ := (not_holds_iff_exists_neg (J b) t (blueSection H a b (U n))).mp hn
-  exact ⟨s, hst, n, hq.1, D.persistent (hst.trans htq) hq.2.1, hs⟩
 
 /-- A local cover at the later cut covers the support except for a
 bounded initial interval. Negation of the cover at an earlier cut would
@@ -171,13 +136,6 @@ theorem base_le_blue (hclosed : CountablyClosed P) (ha : GoodCut r σ H source a
     intro x hxb w hwv hw
     exact hcover x (hxb.trans hba) w ((hwv.trans hvt).trans hts) hw.1
   exact join_of_holds covers 0 hct
-
-theorem blueSmall_empty (hclosed : CountablyClosed P) (ha : GoodCut r σ H source a)
-    (D : RegularName P W2) (J : W2 → RegularName P (RegularName P W2))
-    (hbase : ∀ b p, D.holds p b → ∀ U : RegularName P W2,
-      (smallName r H b).holds p U → (J b).holds p U) (p : P) :
-    (blueSmallName r H D J a).holds p (ground ∅) :=
-  base_le_blue hclosed ha D J hbase p (ground ∅) (smallName_empty ha p)
 
 /-- The extracted clique is genuinely blue and has exact type omegaOne.
 Its named membership has one deciding condition per point. -/

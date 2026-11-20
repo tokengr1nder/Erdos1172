@@ -63,12 +63,6 @@ def liftConeDecisions (r : CompleteRestriction P Q) (p0 : P) (q0 : Q)
   persistent := fun hqp hx => F.persistent (r.restrict.monotone hqp) hx
   unique := fun hx hy => F.unique hx hy
 
-theorem certificate_liftCone_iff (r : CompleteRestriction P Q) (p0 : P) (q0 : Q)
-    (h0 : r.restrict p0 ≤ q0) (F : FunctionDecisions (Set.Iic q0) W1 W1)
-    (C : (W1 → W1) → Set X) (p : Set.Iic p0) (x : X) :
-    Certificate (liftConeDecisions r p0 q0 h0 F) C p x ↔
-      Certificate F C (coneMap r p0 q0 h0 p) x := Iff.rfl
-
 /-- Exact cone lifting preserves actual dense cover membership, not only
 the possibility of a finite certificate. -/
 theorem coverName_liftCone_iff (r : CompleteRestriction P Q) (p0 : P) (q0 : Q)

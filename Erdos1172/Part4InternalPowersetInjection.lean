@@ -82,10 +82,6 @@ theorem mem_powersetImageGraph_iff {X Y f A B : bSet 𝔹} {Γ : 𝔹} :
   ErdosRelationGraph.mem_relationGraph_iff
     (fun B => image_eq_ext_left Y f B) (fun _ => B_ext_bv_eq_right)
 
-theorem powersetImageGraph_subset {X Y f : bSet 𝔹} {Γ : 𝔹} :
-    Γ ≤ powersetImageGraph X Y f ⊆ᴮ prod (bv_powerset X) (bv_powerset Y) :=
-  ErdosRelationGraph.relationGraph_subset
-
 /-- Bounded image is a supported function on powersets even for an arbitrary
 relation; no globally valid input-function hypothesis is used. -/
 theorem powersetImageGraph_is_function {X Y f : bSet 𝔹} {Γ : 𝔹} :

@@ -255,50 +255,17 @@ theorem exists_guarded_source_product (hclosed : CountablyClosed P) (hcc : Omega
       source.holds b.val a :=
     (hAD b.property).resolve_right (fun hn => hn p hpb hp)
   obtain ⟨N, hN⟩ := exists_nice_clique_name hcc core
-  refine ⟨⟨N, ?_, ?_, ?_⟩⟩
-  · intro p z x hx
-    obtain ⟨b, _, hb⟩ := hN p z x hx
+  refine ⟨⟨N, fun p z x hx => ?_, fun p hp z x hx => ?_, fun c hc p hp hca q hqp => ?_⟩⟩
+  · obtain ⟨b, _, hb⟩ := hN p z x hx
     exact (hnames b).1 p z x hb
-  · intro p hp z x hx
-    obtain ⟨b, hpb, hb⟩ := hN p z x hx
+  · obtain ⟨b, hpb, hb⟩ := hN p z x hx
     exact ((hnames b).2 (hpositive b p hpb hp)).1 p hpb z x hb
-  · intro c hc p hp hca q hqp
-    obtain ⟨b, hbA, s, hsq, hsb⟩ := hpredense q
+  · obtain ⟨b, hbA, s, hsq, hsb⟩ := hpredense q
     let branch : A := ⟨b, hbA⟩
-    have hb : source.holds b a := hpositive branch s hsb
-      (source.persistent (hsq.trans hqp) hp)
-    obtain ⟨bound, hbound⟩ := ((hnames branch).2 hb).2 c hc
-    refine ⟨s, hsq, bound, ?_⟩
-    intro t hts z hz x hx
-    exact hbound t (hts.trans hsb)
+    obtain ⟨bound, hbound⟩ := ((hnames branch).2
+      (hpositive branch s hsb (source.persistent (hsq.trans hqp) hp))).2 c hc
+    exact ⟨s, hsq, bound, fun t hts z hz x hx => hbound t (hts.trans hsb)
       ((eval G H c).persistent ((hts.trans hsq).trans hqp) hca) z hz x
-      (decides_on_branch hA blocks branch t (hts.trans hsb) z x (hN t z x hx))
-
-open Erdos1172Part3TransfiniteStageLocality (Full Earlier restriction)
-open Erdos1172Part3TransfiniteHechlerOrder (mk_stage_le)
-open Erdos1172Part3RegularStageLocality (EventuallyLocal)
-open Erdos1172Part3CliqueNameCoding (mk_square_le)
-open OrdinalRamsey (HasCliqueOfType)
-
-/-- The actual full order supplies the closure, chain condition, and
-locally ranked square blocks. Only the source's stated locality remains
-an input; ground sources and every finite Boolean local code have it. -/
-theorem exists_club_guarded_source_cubes (hGCH : GCH)
-    (G H : SimpleGraph W2) (hcompl : IsCompl G H)
-    (hred : ¬HasCliqueOfType G (ω_ 2)) (hblue : ¬HasCliqueOfType H (ω_ 1 + 2))
-    (source : RegularName (Full hGCH) W2)
-    (hsup : ∀ p a, source.holds p a → ErdosRadoCHAsym.IsOmegaOneSup a)
-    (hlocal : EventuallyLocal (Earlier hGCH) (restriction hGCH) source) :
-    ∃ club : Set W2, IsClub club ∧ ∀ a ∈ club,
-      ErdosRadoCHAsym.IsOmegaOneSup a →
-        GoodCoreCut (rank hGCH (mk_stage_le hGCH ⊤) mk_square_le G)
-          (blockRank hGCH (mk_stage_le hGCH ⊤) mk_square_le G) H source a ∧
-        ((∃ p : Full hGCH, source.holds p a) →
-          Nonempty (ProductData (rank hGCH (mk_stage_le hGCH ⊤) mk_square_le G) H source a)) := by
-  obtain ⟨club, hclub, hc⟩ := Erdos1172Part3FullSourceCubes.exists_club_goodSquareCut
-    hGCH G H hcompl hred hblue source hsup hlocal
-  exact ⟨club, hclub, fun a ha hsa => ⟨hc a ha hsa,
-    exists_guarded_source_product (Erdos1172Part3TransfiniteHechlerClosure.full_countablyClosed hGCH)
-      (Erdos1172Part3TransfiniteHechlerCentering.omegaTwoCC hGCH ⊤) mk_square_le (hc a ha hsa)⟩⟩
+      (decides_on_branch hA blocks branch t (hts.trans hsb) z x (hN t z x hx))⟩
 
 end Erdos1172Part3ControlledCoreProducts

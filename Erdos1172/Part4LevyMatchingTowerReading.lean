@@ -62,16 +62,4 @@ theorem source_array_from_stage (hθ : θ.IsInaccessible) (cc : StrictCC R θ)
   rw [map_iSup]
   exact (iSup_congr (fun s : T a => gg (before a s) s.val.val.2)).trans ((sums a).trans (exact_cover g hd (v a)))
 
-include gg in
-/-- A ground source name for any internal real is captured by a single
-bounded stage on its entire subset-of-omega guard. -/
-theorem source_real_from_stage (hθ : θ.IsInaccessible) (cc : StrictCC R θ)
-    (hd : DenseStageUnion g) (x : bSet R) :
-    ∃ (i : θ.ord.ToType) (f : ℕ → B i), x ⊆ᴮ omega ≤ x =ᴮ mapNames (g i) (realName f) := by
-  let values (n : ULift.{u} ℕ) := (of_nat n.down : bSet R) ∈ᴮ x
-  obtain ⟨i,v,hv⟩ := source_array_from_stage b g gg hθ cc hd (by simpa using hθ.aleph0_lt) values
-  refine ⟨i,fun n => v ⟨n⟩,eq_map_realName_of_binary_agreement _ le_rfl (fun n => ?_)⟩
-  rw [hv ⟨n⟩]
-  simp [values]
-
 end Erdos1172LevyCollapse.Matching

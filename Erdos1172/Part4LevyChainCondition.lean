@@ -168,27 +168,6 @@ theorem product_compatible_pair
     (fun j : size ⁻¹' {n} => f j.val) hn hbound
   exact ⟨j.val, k.val, (fun he => hjk (Subtype.ext he)), hcomp⟩
 
-/-- Every actual antichain of product conditions has cardinality below κ. -/
-theorem product_antichain_cardinal_lt
-    (hκ : κ.IsRegular) (hunc : Cardinal.aleph0 < κ)
-    (hfactor : ∀ i, Cardinal.mk (Erdos1172Collapse.Condition (A i)) < κ)
-    (s : Set (ProductCondition A))
-    (hs : s.Pairwise (fun p q => ¬ Compatible p q)) :
-    Cardinal.mk s < κ := by
-  by_contra h
-  obtain ⟨p, q, hpq, hcomp⟩ := product_compatible_pair hκ hunc hfactor
-    (fun p : s => p.val) (le_of_not_gt h)
-  exact hs p.property q.property
-    (fun he => hpq (Subtype.ext he)) hcomp
-
-/-- The finite-support below-κ collapse has the κ-chain condition. -/
-theorem below_antichain_cardinal_lt (κ : Cardinal.{u})
-    (hκ : κ.IsRegular) (hunc : Cardinal.aleph0 < κ)
-    (s : Set (BelowCondition κ))
-    (hs : s.Pairwise (fun p q => ¬ Compatible p q)) :
-    Cardinal.mk s < κ :=
-  product_antichain_cardinal_lt hκ hunc (belowFactor_cardinal_lt κ hunc) s hs
-
 /-- The bound holds for arbitrary indexed disjoint positive Boolean values,
 by selecting an actual condition below each value. -/
 theorem completion_disjoint_family_cardinal_lt

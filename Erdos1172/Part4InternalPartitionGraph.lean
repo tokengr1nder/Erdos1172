@@ -99,20 +99,4 @@ theorem le_graphColor_iff_oriented (color : Bool) (R : bSet 𝔹)
       Γ ≤ (if color then pair x y ∈ᴮ R else (pair x y ∈ᴮ R)ᶜ) := by
   rw [← inf_eq_left, graphColor_eq_oriented color R Hxy, inf_eq_left]
 
-/-- Boolean inequality, rather than inequality of host representations, is
-the correct hypothesis for two distinct internal vertices. -/
-theorem graphColor_sup_of_ordinal {R κ x y : bSet 𝔹} {Γ : 𝔹}
-    (Hκ : Γ ≤ Ord κ) (Hx : Γ ≤ x ∈ᴮ κ) (Hy : Γ ≤ y ∈ᴮ κ)
-    (Hne : Γ ≤ (x =ᴮ y)ᶜ) :
-    Γ ≤ graphColor false R x y ⊔ graphColor true R x y := by
-  rw [graphColor_sup]
-  have Htri : Γ ≤ (x =ᴮ y) ⊔ ((x ∈ᴮ y) ⊔ (y ∈ᴮ x)) := by
-    simpa only [sup_assoc] using epsilon_trichotomy_of_Ord Hx Hy Hκ
-  calc
-    Γ ≤ ((x =ᴮ y) ⊔ ((x ∈ᴮ y) ⊔ (y ∈ᴮ x))) ⊓ (x =ᴮ y)ᶜ :=
-      le_inf Htri Hne
-    _ = ((x ∈ᴮ y) ⊔ (y ∈ᴮ x)) ⊓ (x =ᴮ y)ᶜ := by
-      rw [inf_sup_right, inf_compl_eq_bot, bot_sup_eq]
-    _ ≤ (x ∈ᴮ y) ⊔ (y ∈ᴮ x) := inf_le_left
-
 end bSet.ErdosPartition

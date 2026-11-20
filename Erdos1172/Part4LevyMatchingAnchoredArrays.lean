@@ -4,7 +4,7 @@ Licensed under the Apache License, Version 2.0.
 -/
 module
 
-public import Erdos1172.Part4LevyMatchingPowerset
+public import Erdos1172.Part4LevyMatchingTowerReading
 
 @[expose] public section
 

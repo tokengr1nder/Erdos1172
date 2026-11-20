@@ -132,20 +132,6 @@ theorem subset_of_coordinates (s : StringName B γ) (T : bSet B) (Γ : B)
     (bv_rw'' hy (inf_le_left.trans inf_le_right) B_ext_mem_left)).trans
     (h i n (Erdos1172CohenIteration.two_child_eq_zero_or_one j))
 
-theorem eq_of_bits (s t : StringName B γ) (h : s.bits = t.bits) :
-    (⊤ : B) ≤ s.name =ᴮ t.name := by
-  have hsub (s t : StringName B γ) (hst : s.bits = t.bits) : (⊤ : B) ≤ s.name ⊆ᴮ t.name := by
-    apply subset_of_coordinates
-    intro i n hn
-    rcases hn with rfl | rfl
-    · rw [top_inf_eq, zero_value, zero_value, hst]
-    · exact inf_le_right.trans_eq (congrFun hst i)
-  exact subset_ext (hsub s t h) (hsub t s h.symm)
-
-theorem ofBits_bits (s : StringName B γ) :
-    (⊤ : B) ≤ (ofBits γ s.bits).name =ᴮ s.name :=
-  eq_of_bits _ _ (_root_.funext (bits_ofBits s.bits))
-
 theorem bits_map (e : CompleteLatticeHom B C) (s : StringName B γ) (i : γ.ToType) :
     (s.map e).bits i = e (s.bits i) := by
   change _ = e (pair (check (PSet.ordinalMk i.toOrd.val)) (check (PSet.ofNat 1)) ∈ᴮ s.name)
@@ -158,17 +144,6 @@ def includeIndex (h : γ ≤ δ) (i : γ.ToType) : δ.ToType :=
 theorem includeIndex_toOrd (h : γ ≤ δ) (i : γ.ToType) :
     (includeIndex h i).toOrd.val = i.toOrd.val :=
   congrArg Subtype.val ((Ordinal.ToType.mk (o := δ)).symm_apply_apply _)
-
-def padBits (_h : γ ≤ δ) (b : γ.ToType → B) (j : δ.ToType) : B :=
-  if hj : j.toOrd.val < γ then b (Ordinal.ToType.mk ⟨j.toOrd.val, hj⟩) else ⊥
-
-theorem padBits_includeIndex (h : γ ≤ δ) (b : γ.ToType → B) (i : γ.ToType) :
-    padBits h b (includeIndex h i) = b i := by
-  have hi : (includeIndex h i).toOrd.val < γ := (includeIndex_toOrd h i).symm ▸ i.toOrd.property
-  rw [padBits, dif_pos hi]
-  apply congrArg b
-  apply Ordinal.ToType.mk.symm.injective
-  exact (Ordinal.ToType.mk.symm_apply_apply _).trans (Subtype.ext (includeIndex_toOrd h i))
 
 def empty (B : Type u) [NontrivialCompleteBooleanAlgebra B] : StringName B 0 :=
   ofBits 0 (fun _ => ⊥)
@@ -260,17 +235,5 @@ theorem extensionValue_iff_bits (e : CompleteLatticeHom B C) (s : StringName B �
       exact hzero
   · rintro ⟨h, hb⟩
     exact extensionValue_of_bits e s t h Γ hb
-
-theorem extensionValue_padBits (e : CompleteLatticeHom B C) (s : StringName B γ) (h : γ ≤ δ) :
-    (⊤ : C) ≤ extensionValue e s (ofBits δ (padBits h (fun i => e (s.bits i)))) := by
-  apply extensionValue_of_bits e _ _ h
-  intro i
-  rw [bits_ofBits, padBits_includeIndex]
-
-theorem empty_extensionValue (e : CompleteLatticeHom B C) (t : StringName C δ) :
-    (⊤ : C) ≤ extensionValue e (StringName.empty B) t := by
-  apply extensionValue_of_bits e _ _ (bot_le : (0 : Ordinal.{u}) ≤ δ)
-  intro i
-  exact (not_lt_of_ge (bot_le : (0 : Ordinal.{u}) ≤ i.toOrd.val) i.toOrd.property).elim
 
 end Erdos1172Shioya

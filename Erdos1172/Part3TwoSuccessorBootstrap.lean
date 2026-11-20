@@ -13,9 +13,7 @@ open Cardinal Ordinal Set Order
 
 namespace Erdos1172Part3TwoSuccessorBootstrap
 
-open Erdos1172Part3NeighborhoodCode Erdos1172Part3NeighborhoodIdeal
-  Erdos1172Part3FiniteIdealEndpoint Erdos1172Part3RedCoreIdeal
-  Erdos1172Part3RedCoreDerivedIdeal
+open Erdos1172Part3NeighborhoodCode Erdos1172Part3NeighborhoodIdeal Erdos1172Part3FiniteIdealEndpoint Erdos1172Part3RedCoreIdeal Erdos1172Part3RedCoreDerivedIdeal
 
 theorem stationary_inter_club {s club : Set W2} (hs : IsStationary s)
     (hc : IsClub club) : IsStationary (s ∩ club) := by
@@ -181,25 +179,6 @@ theorem ordinalRamsey_add_two_iff_core (hGCH : GCH) (e : Ordinal.{0})
       OrdinalRamsey (ω_ 2) (ω ^ e) (ω_ 1 + 2) :=
   ⟨fun h => h.mono_targets le_self_add le_rfl, ordinalRamsey_add_two_of_core hGCH e hδ⟩
 
-/-- An unconditional instance of the bootstrap: the balanced two-successor
-relation follows from GCH alone. The input core relation here is supplied
-by the already proved asymmetric CH theorem. -/
-theorem balanced_omegaOne_add_two (hGCH : GCH) :
-    OrdinalRamsey (ω_ 2 : Ordinal.{0}) (ω_ 1 + 2) (ω_ 1 + 2) := by
-  have hprincipal := Ordinal.isPrincipal_add_omega (1 : Ordinal.{0})
-  obtain hzero | ⟨e, he⟩ := Ordinal.isPrincipal_add_iff_zero_or_omega0_opow.mp hprincipal
-  · exact ((Ordinal.omega0_pos.trans_le (Ordinal.omega0_le_omega 1)).ne' hzero).elim
-  · change (ω : Ordinal.{0}) ^ e = ω_ 1 at he
-    have hcore : OrdinalRamsey (ω_ 2 : Ordinal.{0}) (ω_ 1) (ω_ 1 + 2) :=
-      (ErdosRadoCHAsym.ordinalRamsey_omegaTwo_omegaTwo_omegaOne_add_one
-        hGCH.toCH).swap.mono_targets le_self_add blue_target_le_omegaTwo
-    have hbound : ω ^ e + 2 ≤ ω_ 2 := by
-      rw [he]
-      exact blue_target_le_omegaTwo
-    have hcore' : OrdinalRamsey (ω_ 2 : Ordinal.{0}) (ω ^ e) (ω_ 1 + 2) := by
-      rwa [he]
-    simpa only [he] using ordinalRamsey_add_two_of_core hGCH e hbound hcore'
-
 /-- Exact Part 3 is equivalent to its red-core version under GCH. The
 right-hand statement, not a second-maximum extension premise, is the
 remaining obligation of this route. -/
@@ -212,20 +191,5 @@ theorem part3_iff_core (hGCH : GCH) :
     exact Erdos1172Part3Failure.part3_red_target_lt_omegaTwo.le
   simpa only [← he, Erdos1172Part3OneSuccessorBarrier.RedCoreTarget] using
     ordinalRamsey_add_two_iff_core hGCH e hbound
-
-/-- The previously separate second-maximum obligation follows from the
-BHT near relation. This is conditional on that relation, not a proof of it. -/
-theorem part3_of_gch_of_bhtNear (hGCH : GCH)
-    (hBHT : Erdos1172Part3OneSuccessorBarrier.BHTNearPart3Relation) :
-    OrdinalRamsey (ω_ 2 : Ordinal.{0}) ((ω_ 1) ^ (ω + 2) + 2) (ω_ 1 + 2) := by
-  obtain ⟨e, he⟩ := Erdos1172Part3BHTExactBlueColumns.exists_redCoreTarget_eq_omega_opow
-  have hbound : ω ^ e + 2 ≤ ω_ 2 := by
-    rw [← he]
-    exact Erdos1172Part3Failure.part3_red_target_lt_omegaTwo.le
-  have hcore : OrdinalRamsey (ω_ 2) (ω ^ e) (ω_ 1 + 2) := by
-    rw [← he]
-    exact hBHT.mono_targets le_self_add le_rfl
-  simpa only [← he, Erdos1172Part3OneSuccessorBarrier.RedCoreTarget] using
-    ordinalRamsey_add_two_of_core hGCH e hbound hcore
 
 end Erdos1172Part3TwoSuccessorBootstrap

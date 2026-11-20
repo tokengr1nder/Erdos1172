@@ -204,17 +204,6 @@ lemma induced_rel_empty_of_eq_zero {η f : bSet 𝔹} {Γ : 𝔹}
   exact le_trans (le_trans H_notz (iInf_le _ z)) (compl_le_compl inf_le_left)
 
 -- src/aleph_one.lean:679
-lemma nonempty_of_induced_rel_nonempty {η f : bSet 𝔹} {Γ : 𝔹}
-    (H_func : Γ ≤ is_function η κ f)
-    (H : Γ ≤ (induced_epsilon_rel η κ f =ᴮ ∅)ᶜ) : Γ ≤ (η =ᴮ ∅)ᶜ := by
-  rw [← imp_bot, ← deduction]
-  -- goal: Γ ⊓ (η =ᴮ ∅) ≤ ⊥
-  have H_eq_zero : Γ ⊓ (η =ᴮ ∅) ≤ induced_epsilon_rel η κ f =ᴮ ∅ :=
-    induced_rel_empty_of_eq_zero (le_trans inf_le_left H_func)
-      (eq_zero_iff_eq_empty.mpr inf_le_right)
-  exact bv_absurd _ H_eq_zero (le_trans inf_le_left H)
-
--- src/aleph_one.lean:690
 lemma not_zero_of_induced_rel_nonempty {η f : bSet 𝔹} {Γ : 𝔹}
     (H_func : Γ ≤ is_function η κ f)
     (H' : Γ ≤ (induced_epsilon_rel η κ f =ᴮ ∅)ᶜ) : Γ ≤ (η =ᴮ 0)ᶜ := by

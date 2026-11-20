@@ -100,10 +100,4 @@ theorem exists_least_of_nonempty {κ C : bSet 𝔹} {Γ : 𝔹}
   exact sup_le inf_le_right
     ((bv_absurd _ inf_le_right (inf_le_left.trans Hnotzx)).trans bot_le)
 
-theorem least_value_of_nonempty {κ C : bSet 𝔹} {Γ : 𝔹}
-    (Hκ : Γ ≤ Ord κ) (HC : Γ ≤ C ⊆ᴮ κ) (Hnonempty : Γ ≤ (C =ᴮ ∅)ᶜ) :
-    Γ ≤ ⨆ x : bSet 𝔹, leastIn C x := by
-  obtain ⟨x, Hx⟩ := exists_least_of_nonempty Hκ HC Hnonempty
-  exact le_iSup_of_le x Hx
-
 end bSet.ErdosOrdinalLeast

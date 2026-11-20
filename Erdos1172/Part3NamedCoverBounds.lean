@@ -4,7 +4,6 @@ Licensed under the Apache License, Version 2.0.
 -/
 module
 
-public import Erdos1172.Part3DecisionSelection
 public import Erdos1172.Part3SupportedCoverRealization
 
 @[expose] public section
@@ -62,18 +61,5 @@ theorem exists_pointwise_upper
   refine ⟨H, ?_⟩
   intro j p q _ i v bound hv hbound
   exact (hH q i bound hbound j q le_rfl v hv).le
-
-/-- One upper name transfers actual membership for every cover in the
-countable family. The statement concerns dense finite certificates,
-not the union of merely possible members. -/
-theorem exists_pointwise_upper_and_cover_transfer
-    (hclosed : CountablyClosed P) (F : J → FunctionDecisions P W1 W1)
-    (hJ : #J ≤ ℵ₀) (C : J → (W1 → W1) → Set X) :
-    ∃ H : FunctionDecisions P W1 W1,
-      (∀ j p, PointwiseBelow (F j) H p) ∧
-      ∀ j p x, (coverName (F j) (C j)).holds p x →
-        (coverName H (C j)).holds p x := by
-  obtain ⟨H, hH⟩ := exists_pointwise_upper hclosed F hJ
-  exact ⟨H, hH, fun j p _ hx => coverName_mono_of_pointwiseBelow (hH j p) hx⟩
 
 end Erdos1172Part3NamedCoverBounds

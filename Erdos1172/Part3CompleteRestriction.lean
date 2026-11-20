@@ -187,22 +187,4 @@ theorem restrictClique_after_iff (r : CompleteRestriction P Q)
       hsbase.symm ▸ hx
     exact h s hsp i x ((restrictClique_decides_iff r N hs s i x).mp hx')
 
-theorem restrictClique_stationary_future_iff
-    (r : CompleteRestriction P Q)
-    {G : SimpleGraph ErdosRadoCHAsym.W2}
-    (N : NiceCliqueName P I ErdosRadoCHAsym.W2 G) (hs : Supported r N.function)
-    (source : RegularName Q ErdosRadoCHAsym.W2) (p : P) :
-    StationaryAt (fun q a => source.holds (r.restrict q) a ∧
-      (afterClique N.toClique).holds q a) p ↔
-    StationaryAt (fun q a => source.holds q a ∧
-      (afterClique (restrictClique r N hs).toClique).holds q a) (r.restrict p) := by
-  have heq : (fun q a => source.holds (r.restrict q) a ∧ (afterClique N.toClique).holds q a) =
-      (fun q a => source.holds (r.restrict q) a ∧
-        (afterClique (restrictClique r N hs).toClique).holds (r.restrict q) a) := by
-    funext q a
-    exact propext (and_congr_right (fun _ => (restrictClique_after_iff r N hs q a).symm))
-  rw [heq]
-  exact r.stationary_lift_iff
-    (fun q a => source.holds q a ∧ (afterClique (restrictClique r N hs).toClique).holds q a) p
-
 end Erdos1172Part3CompleteRestriction

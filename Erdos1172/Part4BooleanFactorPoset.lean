@@ -4,7 +4,9 @@ Licensed under the Apache License, Version 2.0.
 -/
 module
 
-public import Erdos1172.Part4CompleteBooleanReduction
+public import Mathlib.Data.Set.BooleanAlgebra
+public import Mathlib.Order.Hom.BoundedLattice
+public import Mathlib.Order.CompleteBooleanAlgebra
 public import Erdos1172.Part4PositiveBooleanCompletion
 
 @[expose] public section
@@ -96,28 +98,15 @@ instance factorConditionPartialOrder (e : CompleteLatticeHom B C) :
   le_antisymm _ _ hpq hqp :=
     FactorCondition.ext (le_antisymm hpq.1 hqp.1) (le_antisymm hpq.2 hqp.2)
 
-theorem factorCondition_le_iff {e : CompleteLatticeHom B C}
-    (p q : FactorCondition e) :
-    p ≤ q ↔ p.source ≤ q.source ∧ p.target ≤ q.target := Iff.rfl
-
 def evaluation (e : CompleteLatticeHom B C) : FactorCondition e →o Positive C where
   toFun p := ⟨e p.source ⊓ p.target,
     inf_image_lowerProjection_ne_bot e p.source_ne_bot p.compatible⟩
   monotone' := fun _ _ h => inf_le_inf (OrderHomClass.mono e h.1) h.2
 
-theorem evaluation_val (e : CompleteLatticeHom B C) (p : FactorCondition e) :
-    (evaluation e p).val = e p.source ⊓ p.target := rfl
-
 def canonicalSection (e : CompleteLatticeHom B C) : Positive C →o FactorCondition e where
   toFun c := ⟨lowerProjection e c.val, c.val,
     lowerProjection_ne_bot e c.property, c.property, le_rfl⟩
   monotone' := fun _ _ h => ⟨lowerProjection_mono e h, h⟩
-
-theorem section_source (e : CompleteLatticeHom B C) (c : Positive C) :
-    (canonicalSection e c).source = lowerProjection e c.val := rfl
-
-theorem section_target (e : CompleteLatticeHom B C) (c : Positive C) :
-    (canonicalSection e c).target = c.val := rfl
 
 theorem evaluation_section (e : CompleteLatticeHom B C) (c : Positive C) :
     evaluation e (canonicalSection e c) = c := by
@@ -125,20 +114,8 @@ theorem evaluation_section (e : CompleteLatticeHom B C) (c : Positive C) :
   change e (lowerProjection e c.val) ⊓ c.val = c.val
   exact inf_eq_right.mpr (le_image_lowerProjection e c.val)
 
-theorem evaluation_surjective (e : CompleteLatticeHom B C) :
-    Function.Surjective (evaluation e) :=
-  fun c => ⟨canonicalSection e c, evaluation_section e c⟩
-
 theorem section_evaluation_le (e : CompleteLatticeHom B C) (p : FactorCondition e) :
     canonicalSection e (evaluation e p) ≤ p := by
   exact ⟨lowerProjection_le e inf_le_left, inf_le_right⟩
-
-theorem evaluation_exactLifts (e : CompleteLatticeHom B C) :
-    ExactLifts (evaluation e) := by
-  intro p d hd
-  have hd' : d.val ≤ e p.source ⊓ p.target := hd
-  exact ⟨canonicalSection e d,
-    ⟨lowerProjection_le e (hd'.trans inf_le_left), hd'.trans inf_le_right⟩,
-    evaluation_section e d⟩
 
 end Erdos1172BooleanFactor

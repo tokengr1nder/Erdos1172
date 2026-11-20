@@ -5,8 +5,8 @@ Licensed under the Apache License, Version 2.0.
 module
 
 public import Erdos1172.Part4BooleanQuotientSmallPresentation
-public import Erdos1172.Part4LevyAnonymousQuotientIteration
-public import Erdos1172.Part4LevyAnonymousOmegaOne
+public import Mathlib.SetTheory.Ordinal.Family
+public import Erdos1172.Part4InternalGCHCardinalTransport
 public import Erdos1172.Part4LevyMatchingJointForcing
 
 @[expose] public section
@@ -57,14 +57,6 @@ theorem conditions_dense (κ : Cardinal.{u}) {D : Set (LevyCohenConditions κ)}
   obtain ⟨q,h,hq⟩ := hD p
   exact ⟨⟨q,h⟩,(condition_mono hq).trans hp⟩
 
-/-- The residual of the actual collapse–Cohen iteration over the anonymous
-algebra has a forcing presentation enumerated by checked κ in that algebra. -/
-def anonymousSmallAuxiliary (κ : Cardinal.{u}) (hκ : κ.IsInaccessible) :
-    SmallAuxiliary κ (inclusion (anonymousAlgebra κ)) :=
-  let dense := exists_dense_presentation κ hκ
-  fromDense κ _ (inclusion_injective _) (fun k : dense.choose => positiveCondition k.val)
-    dense.choose_spec.1 (conditions_dense κ dense.choose_spec.2)
-
 /-- Adjoin an independent Col(ω,κ) to the actual prepared extension. -/
 abbrev AuxiliaryAmbient (κ : Cardinal.{u}) := JointForcing (Algebra κ) κ.ord.ToType
 
@@ -96,19 +88,5 @@ def anonymousSmallAuxiliaryWithCollapse (κ : Cardinal.{u}) (hκ : κ.IsInaccess
   obtain ⟨p,hp⟩ := exists_condition_le c.property
   obtain ⟨k,hk⟩ := conditions_dense κ data.2 p.1
   exact ⟨(k,p.2),(condition_mono (show (positiveCondition k.val,p.2) ≤ p from ⟨hk,le_rfl⟩)).trans hp⟩
-
-/-- The same enumerating function has domain the actual internal omega one
-of the anonymous extension. This applies to either auxiliary forcing. -/
-theorem SmallAuxiliary.enumerates_omegaOne {κ : Cardinal.{u}} (hκ : κ.IsInaccessible)
-    {C : Type u} [NontrivialCompleteBooleanAlgebra C] {e : CompleteLatticeHom (anonymousAlgebra κ) C}
-    (P : SmallAuxiliary κ e) :
-    (⊤ : anonymousAlgebra κ) ≤ is_function ErdosOmegaTwo.omegaOne P.forcing P.enumeration ⊓
-      is_surj ErdosOmegaTwo.omegaOne P.forcing P.enumeration := by
-  apply bv_rw'' (ϕ := fun x => is_function x P.forcing P.enumeration ⊓ is_surj x P.forcing P.enumeration)
-    (anonymous_checked_upper_eq_omegaOne κ hκ) P.enumerates
-  apply B_ext_inf B_ext_is_function_left
-  unfold is_surj
-  exact B_ext_iInf (h := fun _ => B_ext_imp (h₁ := B_ext_const)
-    (h₂ := B_ext_iSup (h := fun _ => B_ext_inf B_ext_mem_right B_ext_const)))
 
 end Erdos1172LevyCohen

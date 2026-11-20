@@ -76,12 +76,6 @@ theorem rowCross_ext_common (color : Bool) (R r A : bSet 𝔹) :
   B_ext_iInf (h := fun _ => B_ext_iInf (h := fun _ => B_ext_iInf (h := fun _ =>
     B_ext_imp (h₁ := B_ext_inf B_ext_mem_right B_ext_const) (h₂ := B_ext_const))))
 
-theorem rowCross_ext_row (color : Bool) (R C A : bSet 𝔹) :
-    B_ext (fun r => rowCross color R r C A) :=
-  B_ext_iInf (h := fun _ => B_ext_iInf (h := fun _ => B_ext_iInf (h := fun _ =>
-    B_ext_imp (h₁ := B_ext_inf B_ext_const (B_ext_inf B_ext_mem_right B_ext_const))
-      (h₂ := B_ext_const))))
-
 theorem colarge_ext_common (κ J : bSet 𝔹) : B_ext (colarge κ J) :=
   B_ext_inf B_ext_subset_left
     (B_ext_term (ϕ := fun D => D ∈ᴮ J) (t := difference κ)
@@ -166,10 +160,6 @@ theorem activeCompatible_apply {color : Bool} {R Active A x y : bSet 𝔹} {Γ :
 theorem blockCandidate_object {color : Bool} {R J E S Earlier Active A : bSet 𝔹} {Γ : 𝔹}
     (H : Γ ≤ blockCandidate color R J E S Earlier Active A) :
     Γ ≤ A ∈ᴮ blockObjects color R := H.trans inf_le_left
-
-theorem blockCandidate_subset {color : Bool} {R J E S Earlier Active A : bSet 𝔹} {Γ : 𝔹}
-    (H : Γ ≤ blockCandidate color R J E S Earlier Active A) : Γ ≤ A ⊆ᴮ S :=
-  H.trans (inf_le_right.trans inf_le_left)
 
 theorem blockCandidate_before {color : Bool} {R J E S Earlier Active A : bSet 𝔹} {Γ : 𝔹}
     (H : Γ ≤ blockCandidate color R J E S Earlier Active A) : Γ ≤ objectsBefore Earlier A :=

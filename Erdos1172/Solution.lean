@@ -4,11 +4,9 @@ Licensed under the Apache License, Version 2.0.
 -/
 module
 
-public import Erdos1172.Statement
 public import Erdos1172.CountableNeighborhoodStep
 public import Erdos1172.Part3Solution
 public import Erdos1172.Part2NeighborhoodClosure
-public import Erdos1172.Variants
 public import Erdos1172.Part4AnonymousInternalLevyValuation
 
 @[expose] public section
@@ -141,6 +139,13 @@ theorem typeLT_preimage_orderIso {α : Type u} {β : Type 0} [LinearOrder α] [W
   rw [Ordinal.lift_id'.{0, u}, Ordinal.lift_umax.{0, u}] at h
   exact h
 
+private theorem typeLT_image_eq_of_lift {α : Type u} {β : Type 0} [LinearOrder α] [WellFoundedLT α]
+    [LinearOrder β] [WellFoundedLT β] (e : α ≃o β) {s : Set α} {γ : Ordinal.{0}}
+    (hst : typeLT s = Ordinal.lift.{u, 0} γ) : typeLT (e '' s) = γ := by
+  have hlift := typeLT_preimage_orderIso e (e '' s)
+  rw [Set.preimage_image_eq s e.injective, hst] at hlift
+  exact Ordinal.lift_inj.mp hlift.symm
+
 theorem ordinalRamsey_lift_iff (α β γ : Ordinal.{0}) :
     OrdinalRamsey.{u} (Ordinal.lift.{u, 0} α) (Ordinal.lift.{u, 0} β) (Ordinal.lift.{u, 0} γ) ↔
     OrdinalRamsey.{0} α β γ := by
@@ -149,38 +154,22 @@ theorem ordinalRamsey_lift_iff (α β γ : Ordinal.{0}) :
   · intro h red blue hcompl
     obtain ⟨s, hs, hst⟩ | ⟨s, hs, hst⟩ :=
       h (red.comap e) ((red.comap e)ᶜ) isCompl_compl
-    · refine Or.inl ⟨e '' s, ?_, ?_⟩
-      · rintro _ ⟨x, hx, rfl⟩ _ ⟨y, hy, rfl⟩ hxy
-        exact hs hx hy (fun h' => hxy (congrArg e h'))
-      · have pre_eq : e ⁻¹' (e '' s) = s := Set.preimage_image_eq s e.injective
-        have hlift := typeLT_preimage_orderIso e (e '' s)
-        rw [pre_eq, hst] at hlift
-        exact Ordinal.lift_inj.mp hlift.symm
-    · refine Or.inr ⟨e '' s, ?_, ?_⟩
-      · rintro _ ⟨x, hx, rfl⟩ _ ⟨y, hy, rfl⟩ hxy
-        have hedge := hs hx hy (fun h' => hxy (congrArg e h'))
-        rw [SimpleGraph.compl_adj] at hedge
-        rw [← hcompl.compl_eq, SimpleGraph.compl_adj]
-        exact ⟨hxy, hedge.2⟩
-      · have pre_eq : e ⁻¹' (e '' s) = s := Set.preimage_image_eq s e.injective
-        have hlift := typeLT_preimage_orderIso e (e '' s)
-        rw [pre_eq, hst] at hlift
-        exact Ordinal.lift_inj.mp hlift.symm
+    · refine Or.inl ⟨e '' s, ?_, typeLT_image_eq_of_lift e hst⟩
+      rintro _ ⟨x, hx, rfl⟩ _ ⟨y, hy, rfl⟩ hxy
+      exact hs hx hy (fun h' => hxy (congrArg e h'))
+    · refine Or.inr ⟨e '' s, ?_, typeLT_image_eq_of_lift e hst⟩
+      rintro _ ⟨x, hx, rfl⟩ _ ⟨y, hy, rfl⟩ hxy
+      rw [← hcompl.compl_eq, SimpleGraph.compl_adj]
+      exact ⟨hxy, (SimpleGraph.compl_adj _ _ _ |>.mp (hs hx hy (fun h' => hxy (congrArg e h')))).2⟩
   · intro h red blue hcompl
     obtain ⟨s, hs, hst⟩ | ⟨s, hs, hst⟩ :=
       h (red.comap e.symm) ((red.comap e.symm)ᶜ) isCompl_compl
-    · refine Or.inl ⟨e ⁻¹' s, ?_, ?_⟩
-      · intro x hx y hy hxy
-        have := hs hx hy (fun h' => hxy (e.injective h'))
-        simpa using this
-      · rw [typeLT_preimage_orderIso e s, hst]
-    · refine Or.inr ⟨e ⁻¹' s, ?_, ?_⟩
-      · intro x hx y hy hxy
-        have hedge := hs hx hy (fun h' => hxy (e.injective h'))
-        rw [SimpleGraph.compl_adj] at hedge
-        rw [← hcompl.compl_eq, SimpleGraph.compl_adj]
-        exact ⟨hxy, fun hr => hedge.2 (by simpa using hr)⟩
-      · rw [typeLT_preimage_orderIso e s, hst]
+    · refine Or.inl ⟨e ⁻¹' s, fun x hx y hy hxy => ?_, by rw [typeLT_preimage_orderIso e s, hst]⟩
+      simpa using hs hx hy (fun h' => hxy (e.injective h'))
+    · refine Or.inr ⟨e ⁻¹' s, fun x hx y hy hxy => ?_, by rw [typeLT_preimage_orderIso e s, hst]⟩
+      have hedge := SimpleGraph.compl_adj _ _ _ |>.mp (hs hx hy (fun h' => hxy (e.injective h')))
+      rw [← hcompl.compl_eq, SimpleGraph.compl_adj]
+      exact ⟨hxy, fun hr => hedge.2 (by simpa using hr)⟩
 
 theorem ordinalCountableRamsey_lift_iff (α β : Ordinal.{0}) :
     OrdinalCountableRamsey.{u} (Ordinal.lift.{u, 0} α) (Ordinal.lift.{u, 0} β) ↔
@@ -189,21 +178,15 @@ theorem ordinalCountableRamsey_lift_iff (α β : Ordinal.{0}) :
   constructor
   · intro h col
     obtain ⟨n, s, hs, hst⟩ := h (fun p => col (p.map e))
-    refine ⟨n, e '' s, ?_, ?_⟩
-    · rintro _ ⟨x, hx, rfl⟩ _ ⟨y, hy, rfl⟩ hxy
-      exact hs x hx y hy (fun h' => hxy (congrArg e h'))
-    · have pre_eq : e ⁻¹' (e '' s) = s := Set.preimage_image_eq s e.injective
-      have hlift := typeLT_preimage_orderIso e (e '' s)
-      rw [pre_eq, hst] at hlift
-      exact Ordinal.lift_inj.mp hlift.symm
+    refine ⟨n, e '' s, ?_, typeLT_image_eq_of_lift e hst⟩
+    rintro _ ⟨x, hx, rfl⟩ _ ⟨y, hy, rfl⟩ hxy
+    exact hs x hx y hy (fun h' => hxy (congrArg e h'))
   · intro h col
     obtain ⟨n, s, hs, hst⟩ := h (fun p => col (p.map e.symm))
-    refine ⟨n, e ⁻¹' s, ?_, ?_⟩
-    · intro x hx y hy hxy
-      have hcol : col s(e.symm (e x), e.symm (e y)) = n :=
-        hs (e x) hx (e y) hy (fun h' => hxy (e.injective h'))
-      rwa [e.symm_apply_apply, e.symm_apply_apply] at hcol
-    · rw [typeLT_preimage_orderIso e s, hst]
+    refine ⟨n, e ⁻¹' s, fun x hx y hy hxy => ?_, by rw [typeLT_preimage_orderIso e s, hst]⟩
+    have hcol : col s(e.symm (e x), e.symm (e y)) = n :=
+      hs (e x) hx (e y) hy (fun h' => hxy (e.injective h'))
+    rwa [e.symm_apply_apply, e.symm_apply_apply] at hcol
 
 theorem lift_pow_nat (a : Ordinal.{0}) : ∀ n : ℕ,
     Ordinal.lift.{u, 0} (a ^ (n : Ordinal.{0})) = (Ordinal.lift.{u, 0} a) ^ (n : Ordinal.{u})
@@ -216,18 +199,16 @@ theorem lift_omega_opow_omega :
   have hω1 : Ordinal.lift.{u, 0} (ω_ 1 : Ordinal.{0}) = (ω_ 1 : Ordinal.{u}) := by
     rw [Ordinal.lift_omega, Ordinal.lift_one]
   apply le_antisymm
-  · rw [← not_lt]
-    intro hlt
+  · rw [← not_lt]; intro hlt
     obtain ⟨y, hy⟩ := (Ordinal.liftInitialSeg.{u, 0}).mem_range_of_le hlt.le
     have hy' : Ordinal.lift.{u, 0} y = (ω_ 1 : Ordinal.{u}) ^ ω := hy
     rw [← hy', Ordinal.lift_lt,
         Ordinal.lt_opow_of_isSuccLimit (Ordinal.omega_pos 1).ne' Ordinal.isSuccLimit_omega0] at hlt
     obtain ⟨c, hc, hcy⟩ := hlt
     obtain ⟨n, rfl⟩ := Ordinal.lt_omega0.mp hc
-    have hle : Ordinal.lift.{u, 0} ((ω_ 1 : Ordinal.{0}) ^ (n : Ordinal.{0})) ≤ Ordinal.lift.{u, 0} y := by
-      rw [hy', lift_pow_nat, hω1]
-      exact Ordinal.opow_le_opow_right (Ordinal.omega_pos 1) (Ordinal.natCast_lt_omega0 n).le
-    exact not_lt_of_ge (Ordinal.lift_le.mp hle) hcy
+    refine not_lt_of_ge (Ordinal.lift_le.mp ?_) hcy
+    rw [hy', lift_pow_nat, hω1]
+    exact Ordinal.opow_le_opow_right (Ordinal.omega_pos 1) (Ordinal.natCast_lt_omega0 n).le
   · rw [Ordinal.opow_le_of_isSuccLimit (Ordinal.omega_pos 1).ne' Ordinal.isSuccLimit_omega0]
     intro b hb
     obtain ⟨n, rfl⟩ := Ordinal.lt_omega0.mp hb
@@ -236,11 +217,10 @@ theorem lift_omega_opow_omega :
 
 theorem lift_omega_opow_omega_add_two :
     Ordinal.lift.{u, 0} ((ω_ 1 : Ordinal.{0}) ^ (ω + 2)) = (ω_ 1 : Ordinal.{u}) ^ (ω + 2) := by
-  have h20 : (2 : Ordinal.{0}) = 1 + 1 := by norm_num
-  have h2u : (2 : Ordinal.{u}) = 1 + 1 := by norm_num
   have hω1 : Ordinal.lift.{u, 0} (ω_ 1 : Ordinal.{0}) = (ω_ 1 : Ordinal.{u}) := by
     rw [Ordinal.lift_omega, Ordinal.lift_one]
-  rw [h20, h2u, ← add_assoc, ← add_assoc, Ordinal.opow_add_one, Ordinal.opow_add_one,
+  rw [show (2 : Ordinal.{0}) = 1 + 1 by norm_num, show (2 : Ordinal.{u}) = 1 + 1 by norm_num,
+      ← add_assoc, ← add_assoc, Ordinal.opow_add_one, Ordinal.opow_add_one,
       Ordinal.opow_add_one, Ordinal.opow_add_one, Ordinal.lift_mul, Ordinal.lift_mul,
       lift_omega_opow_omega, hω1]
 

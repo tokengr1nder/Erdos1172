@@ -13,9 +13,7 @@ open Cardinal Ordinal Set Order
 
 namespace Erdos1172NeighborhoodFutureTransfer
 
-open Erdos1172NeighborhoodCode Erdos1172NeighborhoodIdeal
-  Erdos1172NeighborhoodIdealCore Erdos1172NeighborhoodDerivedIdeal
-  Erdos1172NeighborhoodStableSpectrum
+open Erdos1172NeighborhoodCode Erdos1172NeighborhoodIdeal Erdos1172NeighborhoodIdealCore Erdos1172NeighborhoodDerivedIdeal Erdos1172NeighborhoodStableSpectrum
 
 theorem stationary_inter_club {s club : Set W3} (hs : IsStationary s)
     (hc : IsClub club) : IsStationary (s ∩ club) := by

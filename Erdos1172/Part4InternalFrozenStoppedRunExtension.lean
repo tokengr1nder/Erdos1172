@@ -5,7 +5,6 @@ Licensed under the Apache License, Version 2.0.
 module
 
 public import Erdos1172.Part4InternalStoppedHistoryFreezing
-public import Erdos1172.Part4InternalSimultaneousRunStopping
 public import Erdos1172.Part4InternalOrderedDushnikMiller
 public import Erdos1172.Part4InternalLargeTwoBlock
 
@@ -250,16 +249,5 @@ theorem ordered_opposite_clique_of_all_runs_stop
   obtain ⟨f, Hf⟩ := ErdosOrderedDushnikMiller.exists_ordered_homogeneous_injection
     omegaTwo_Ord HTsub HTsub omegaTwo_initial HTlarge HTind
   exact le_iSup_of_le f Hf
-
-theorem opposite_twoBlock_of_all_runs_stop
-    {color : Bool} {R S F : bSet 𝔹} {Γ : 𝔹}
-    (HCH : Γ ≤ (CH : 𝔹)) (HB : Γ ≤ countablyBounded omegaOne)
-    (HF : Γ ≤ is_function omegaTwo runCodes F)
-    (Hfamily : Γ ≤ endpointRunFamilyLaw color R S F)
-    (Hstop : Γ ≤ endpointRunFamilyStops F) :
-    Γ ≤ hasTwoBlock (!color) R omegaOne bSet.omega omegaTwo := by
-  obtain ⟨T, _, HTlarge, HTsub, HTind⟩ :=
-    exists_stationary_independent_of_all_runs_stop HCH HB HF Hfamily Hstop
-  exact ErdosLargeTwoBlock.hasTwoBlock_of_large_independent HCH HTsub HTsub HTlarge HTind
 
 end bSet.ErdosFrozenStoppedRunExtension

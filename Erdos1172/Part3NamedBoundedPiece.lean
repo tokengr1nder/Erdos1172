@@ -75,9 +75,6 @@ theorem domainIso_actual (E : FunctionDecisions P I V) (e : J ≃o I)
 def belowName (U : RegularName P V) (y : V) : RegularName P (Set.Iio y) :=
   Erdos1172Part3RegularMembership.reindex U Subtype.val
 
-theorem belowName_holds_iff (U : RegularName P V) (y : V)
-    (p : P) (x : Set.Iio y) : (belowName U y).holds p x ↔ U.holds p x.val := Iff.rfl
-
 /-- Restrict the target of every decision using its actual strict bound. -/
 def belowE (E : FunctionDecisions P I V) (y : V)
     (hbound : ∀ p i x, E.decides p i x → x < y) :

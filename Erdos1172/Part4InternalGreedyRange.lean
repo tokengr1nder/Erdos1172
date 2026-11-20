@@ -4,7 +4,6 @@ Licensed under the Apache License, Version 2.0.
 -/
 module
 
-public import Erdos1172.Part4InternalGreedyTotal
 public import Erdos1172.Part4InternalGreedyIncreasing
 public import Erdos1172.Part4InternalIncreasingSelfMap
 public import Erdos1172.Part4InternalClosurePoints
@@ -141,28 +140,5 @@ theorem greedy_range_colarge {J seed F f : bSet 𝔹} {Γ : 𝔹}
     (mem_of_not_mem_complement Hxω (Hx.trans (inf_le_right.trans inf_le_left)))
     (mem_of_not_mem_complement Hxω (Hx.trans (inf_le_right.trans inf_le_right)))
   exact mem_image Hfixed Hxω Hxω
-
-/-- Construct a full increasing least-choice function and prove its actual
-range co-large. The only ideal existence is the explicit proper normal
-ideal premise; CH and a preassigned successful sequence are not assumed. -/
-theorem exists_colarge_greedy_function {J seed F : bSet 𝔹} {Γ : 𝔹}
-    (HJ : Γ ≤ properIdeal omegaOne J)
-    (Habsorb : Γ ≤ countableAbsorption omegaOne J)
-    (Hclosure : Γ ≤ countableClosure J)
-    (Hnormal : Γ ≤ diagonalClosure omegaOne J)
-    (Hseed : Γ ≤ colarge omegaOne J seed)
-    (HF : Γ ≤ is_func' omegaOne (bv_powerset omegaOne) F)
-    (Hvalues : Γ ≤ ⨅ i, ⨅ A, _root_.imp (i ∈ᴮ omegaOne ⊓ pair i A ∈ᴮ F)
-      (difference omegaOne A ∈ᴮ J)) :
-    ∃ f : bSet 𝔹, Γ ≤ is_injective_function omegaOne omegaOne f ⊓
-      (increasingOn omegaOne f ⊓ (greedyLaw seed F f ⊓
-        colarge omegaOne J (image omegaOne omegaOne f))) := by
-  obtain ⟨f, Hf⟩ := exists_greedy_function HJ Habsorb Hclosure Hseed HF Hvalues
-  have Hweak : Γ ≤ is_func' omegaOne omegaOne f :=
-    Hf.trans (inf_le_left.trans (inf_le_left.trans inf_le_left))
-  have Hlaw : Γ ≤ greedyLaw seed F f := Hf.trans inf_le_right
-  exact ⟨f, le_inf (Hf.trans inf_le_left) (le_inf (increasingOn_of_greedyLaw Hweak Hlaw)
-    (le_inf Hlaw (greedy_range_colarge (HJ.trans inf_le_left) Habsorb Hclosure Hnormal
-      Hseed HF Hvalues Hweak Hlaw)))⟩
 
 end bSet.ErdosGreedyPartial

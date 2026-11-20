@@ -4,7 +4,8 @@ Licensed under the Apache License, Version 2.0.
 -/
 module
 
-public import Erdos1172.Part3GlobalCubeTraceLoss
+public import Erdos1172.Part3ProductStationaryTraceLoss
+public import Erdos1172.Part3CubeTraceSubsequence
 
 @[expose] public section
 
@@ -30,7 +31,6 @@ open Erdos1172Part3NamedTraceIdeal (TailAvoid)
 open Erdos1172Part3ProductTraceIdeal
 open Erdos1172Part3FullSourceCubes (Cube)
 open Erdos1172Part3StationarySquareDecisions (Square)
-open Erdos1172Part3GlobalCubeTraceLoss (traceFuture)
 
 variable {P Q I X : Type} [Preorder P] [Preorder Q] [LinearOrder I] {G : SimpleGraph W2}
 
@@ -94,28 +94,5 @@ theorem product_tracesCommute (r : CompleteRestriction P Q) {TP : CoreTrace P I 
   apply forall_congr'
   intro hi
   exact h (rowCore full i) (rowCore earlier i) (fun p j x => hdec p (toLex (i, j)) x) p U
-
-theorem square_tracesCommute (r : CompleteRestriction P Q) :
-    TracesCommute r (squareTrace (P := P) (G := G)) (squareTrace (P := Q) (G := G)) :=
-  product_tracesCommute r (line_tracesCommute r)
-
-theorem cube_tracesCommute (r : CompleteRestriction P Q) :
-    TracesCommute r (cubeTrace (P := P) (G := G)) (cubeTrace (P := Q) (G := G)) :=
-  product_tracesCommute r (square_tracesCommute r)
-
-theorem cube_traceFuture_restrict_iff (r : CompleteRestriction P Q)
-    (full : CliqueDecisions P Cube W2 G) (earlier : CliqueDecisions Q Cube W2 G)
-    (hdec : SameDecisions r full earlier) (source : RegularName Q W2)
-    (H : SimpleGraph W2) (a : W2) (p : P) (b : W2) :
-    (traceFuture (r.liftRegular source) full H a).holds p b ↔
-      (traceFuture source earlier H a).holds (r.restrict p) b :=
-  and_congr Iff.rfl (and_congr Iff.rfl (cube_tracesCommute r full earlier hdec p (ground {x | H.Adj x b})))
-
-theorem cube_traceFuture_lift (r : CompleteRestriction P Q)
-    (full : CliqueDecisions P Cube W2 G) (earlier : CliqueDecisions Q Cube W2 G)
-    (hdec : SameDecisions r full earlier) (source : RegularName Q W2)
-    (H : SimpleGraph W2) (a : W2) :
-    r.liftRegular (traceFuture source earlier H a) = traceFuture (r.liftRegular source) full H a :=
-  RegularName.ext (fun p b => (cube_traceFuture_restrict_iff r full earlier hdec source H a p b).symm)
 
 end Erdos1172Part3TraceCompleteRestriction

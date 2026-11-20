@@ -114,12 +114,6 @@ theorem rowCandidates_eq_of_image_eq {δ seed F h k : bSet 𝔹} {Γ : 𝔹}
   difference_congr_both bv_refl
     (binary_union_congr_both bv_refl (past_congr Himage))
 
-theorem rowCandidates_eq_of_extension {δ seed F h k : bSet 𝔹} {Γ : 𝔹}
-    (Hsub : Γ ≤ h ⊆ᴮ k) (Hfunc : Γ ≤ is_func k)
-    (Htotal : Γ ≤ is_func' δ omegaOne h) :
-    Γ ≤ rowCandidates δ seed F h =ᴮ rowCandidates δ seed F k :=
-  rowCandidates_eq_of_image_eq (prefix_image_eq_of_extension Hsub Hfunc Htotal)
-
 /-- Congruence under equality of arbitrary history names, without any
 functionality or totality premise. -/
 theorem rowCandidates_congr_graph (δ seed F : bSet 𝔹) :

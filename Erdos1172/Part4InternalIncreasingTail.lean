@@ -71,12 +71,6 @@ theorem mem_tailRange_iff {f v x : bSet 𝔹} {Γ : 𝔹} :
       Γ ≤ x ∈ᴮ image omegaOne omegaOne f ∧ Γ ≤ (x ∈ᴮ past ({v} : bSet 𝔹))ᶜ := by
   simp only [tailRange, mem_difference, le_inf_iff]
 
-theorem tailRange_subset_image {f v : bSet 𝔹} {Γ : 𝔹} :
-    Γ ≤ tailRange f v ⊆ᴮ image omegaOne omegaOne f := difference_subset
-
-theorem tailRange_subset {f v : bSet 𝔹} {Γ : 𝔹} :
-    Γ ≤ tailRange f v ⊆ᴮ omegaOne := subset_trans' tailRange_subset_image image_subset
-
 theorem tailRange_colarge {J f v : bSet 𝔹} {Γ : 𝔹}
     (HJ : Γ ≤ isIdeal omegaOne J)
     (Habsorb : Γ ≤ countableAbsorption omegaOne J)

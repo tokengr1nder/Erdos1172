@@ -5,7 +5,6 @@ Licensed under the Apache License, Version 2.0.
 module
 
 public import Erdos1172.Part4InternalBlockSelectorPool
-public import Erdos1172.Part4InternalCountableChoicePoolStep
 
 @[expose] public section
 
@@ -66,12 +65,5 @@ theorem successfulObjects_congr
     Γ ≤ successfulObjects color R B₁ P₁ F =ᴮ successfulObjects color R B₂ P₂ F :=
   B_congr_comprehend (ϕ := fun A => A ∈ᴮ blockObjects color R)
     (H_congr := B_ext_mem_left) (selectedObjects_congr HB HP)
-
-/-- These supports follow from the bounded image and the successful
-filter alone. The selector need not satisfy any function or success law. -/
-theorem pool_outputs_supported {color : Bool} {R B P F : bSet 𝔹} {Γ : 𝔹} :
-    Γ ≤ (successfulObjects color R B P F ⊆ᴮ blockObjects color R) ⊓
-      (selectedPoints omegaTwo B P F ⊆ᴮ omegaTwo) :=
-  le_inf successfulObjects_subset_blocks selectedPoints_subset
 
 end bSet.ErdosBlockPoolCongruence

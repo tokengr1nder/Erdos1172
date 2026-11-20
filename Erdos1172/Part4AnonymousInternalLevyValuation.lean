@@ -955,36 +955,43 @@ private theorem exists_valuationGoodStep
     code_small_ground_func_into_stage U a hk hκ hθ hf hn ht hm₀ hp_in hsub_m₀_in
       j₀ hj₀_sub α_β G_in
   let hsub_m₀_mid : (⊤ : R) ≤ m₀ ⊆ᴮ p_mid := subset_trans' hsub_m₀_in hsub_in_mid
-  cases ht_eq : taskAt β with
-  | inl X =>
-    have h_le_X : rowStage X ≤ α_β := by simpa only [tStage, ht_eq] using htask_le
-    let X_β (k : K) : InternalLevyStage κ α_β := stageStepHom (κ := κ) h_le_X (rowRep X k)
-    let D_X (i : I) : bSet A := levyDecisionOpen α_β (X_β (seed_idx i))
+  have extendCompress (D_fn : K → bSet A)
+      (hsub_D : ∀ i, (⊤ : A) ≤ D_fn (seed_idx i) ⊆ᴮ internalLevyPoset κ α_β)
+      (hdense_D : ∀ i, (⊤ : A) ≤
+        allIn (internalLevyPoset κ α_β) (fun g => someIn (D_fn (seed_idx i)) (fun r => g ⊆ᴮ r))) :
+      ∃ (p_raw : bSet R) (hp_raw : (⊤ : R) ≤ ErdosCohen.condition omegaOne p_raw)
+        (hsub_mid_raw : (⊤ : R) ≤ p_mid ⊆ᴮ p_raw) (G_β : SmallGroundLevyGraph U a θ α_β R),
+        let c_raw := coneInMaster hm₀ hp_raw (subset_trans' hsub_m₀_mid hsub_mid_raw)
+        ((⊤ : R) ≤ G_in.toBSet ⊆ᴮ G_β.toBSet) ∧
+        (c_raw ≤ mapNames j_R G_β.toBSet ∈ᴮ P_W α_β) ∧
+        (c_raw ≤ mapNames j_R G_β.toBSet ∈ᴮ
+          mapNames j₀ (Preparation.boundedAnonName (κ := κ) U a (fun i => D_fn (seed_idx i)))) := by
     obtain ⟨z, hz_P, hz_D, hq_sub_z⟩ :=
-      exists_supported_dense_test_extension U a hk.le hf hn ht hκ j₀ α_β D_X
-        (hseed_supp.map fun k => levyDecisionOpen α_β (X_β k))
-        (fun _ => levyDecisionOpen_subset α_β _)
-        (fun _ => levyDecisionOpen_dense α_β _) hq_mid_P
+      exists_supported_dense_test_extension U a hk.le hf hn ht hκ j₀ α_β (fun i => D_fn (seed_idx i))
+        (hseed_supp.map D_fn) hsub_D hdense_D hq_mid_P
     obtain ⟨p_raw, hp_raw, hsub_mid_raw, G_β, hz_eq_G⟩ :=
-      compress_lifted_witness_to_R U a hk hκ hθ hf hn ht hm₀ hp_mid hsub_m₀_mid
-        j₀ α_β z hz_P
+      compress_lifted_witness_to_R U a hk hκ hθ hf hn ht hm₀ hp_mid hsub_m₀_mid j₀ α_β z hz_P
     let hsub_m₀_raw : (⊤ : R) ≤ m₀ ⊆ᴮ p_raw := subset_trans' hsub_m₀_mid hsub_mid_raw
-    let c_raw := coneInMaster hm₀ hp_raw hsub_m₀_raw
-    have hc_raw_mid : c_raw ≤ coneInMaster hm₀ hp_mid hsub_m₀_mid :=
-      coneInMaster_mono hm₀ hp_mid hsub_m₀_mid hp_raw hsub_m₀_raw hsub_mid_raw
-    have hG_in_sub_Gβ : (⊤ : R) ≤ G_in.toBSet ⊆ᴮ G_β.toBSet := by
-      have hc_sub : c_raw ≤ mapNames j_R G_in.toBSet ⊆ᴮ mapNames j_R G_β.toBSet :=
+    have hc_raw_mid := coneInMaster_mono hm₀ hp_mid hsub_m₀_mid hp_raw hsub_m₀_raw hsub_mid_raw
+    have hG_sub : (⊤ : R) ≤ G_in.toBSet ⊆ᴮ G_β.toBSet := by
+      have hc_sub : coneInMaster hm₀ hp_raw hsub_m₀_raw ≤ mapNames j_R G_in.toBSet ⊆ᴮ mapNames j_R G_β.toBSet :=
         subset_trans' (bSet.subset_of_eq (bv_symm (hc_raw_mid.trans hq_mid_eq)))
           (subset_trans' (hc_raw_mid.trans hq_sub_z) (bSet.subset_of_eq hz_eq_G))
       rw [← map_subset j_R] at hc_sub
       exact ((coneInMaster_le_firstStageHom_iff hm₀ hp_raw hsub_m₀_raw _).mp hc_sub).ge
-    have hGβ_P : c_raw ≤ mapNames j_R G_β.toBSet ∈ᴮ P_W α_β :=
-      mem_congr hz_eq_G bv_refl (hc_raw_mid.trans hz_P)
-    have hGβ_or : c_raw ≤
-        (mapNames j_R G_β.toBSet ∈ᴮ O_lift α_β X_β) ⊔
-        (mapNames j_R G_β.toBSet ∈ᴮ O_lift α_β (fun k => (X_β k)ᶜ)) :=
-      liftedDecisionOpen_or U a hk.le hκ hf hn ht j₀ seed_idx hseed_supp α_β X_β
-        (mem_congr hz_eq_G bv_refl (hc_raw_mid.trans hz_D))
+    exact ⟨p_raw, hp_raw, hsub_mid_raw, G_β, hG_sub,
+      mem_congr hz_eq_G bv_refl (hc_raw_mid.trans hz_P),
+      mem_congr hz_eq_G bv_refl (hc_raw_mid.trans hz_D)⟩
+  cases ht_eq : taskAt β with
+  | inl X =>
+    have h_le_X : rowStage X ≤ α_β := by simpa only [tStage, ht_eq] using htask_le
+    let X_β (k : K) : InternalLevyStage κ α_β := stageStepHom (κ := κ) h_le_X (rowRep X k)
+    obtain ⟨p_raw, hp_raw, hsub_mid_raw, G_β, hG_in_sub_Gβ, hGβ_P, hGβ_D⟩ :=
+      extendCompress (fun k => levyDecisionOpen α_β (X_β k))
+        (fun _ => levyDecisionOpen_subset α_β _) (fun _ => levyDecisionOpen_dense α_β _)
+    let hsub_m₀_raw : (⊤ : R) ≤ m₀ ⊆ᴮ p_raw := subset_trans' hsub_m₀_mid hsub_mid_raw
+    let c_raw := coneInMaster hm₀ hp_raw hsub_m₀_raw
+    have hGβ_or := liftedDecisionOpen_or U a hk.le hκ hf hn ht j₀ seed_idx hseed_supp α_β X_β hGβ_D
     let w_pos : W₁ := mapNames j_R G_β.toBSet ∈ᴮ O_lift α_β X_β
     obtain ⟨p_β, hp_β, hsub_raw_β, hdec_β⟩ :=
       Erdos1172CohenIteration.exists_deciding_condition_extension hp_raw w_pos.val
@@ -997,10 +1004,8 @@ private theorem exists_valuationGoodStep
       coneInMaster_inf_firstStageHom_reads_le hm₀ hp_β hsub_m₀_β w_pos
     have hr_neg_le : c_β ⊓ (j_R r_β)ᶜ ≤ mapNames j_R G_β.toBSet ∈ᴮ O_lift α_β (fun k => (X_β k)ᶜ) := by
       let r_neg : R := Erdos1172CohenIteration.reads (w_pos.val)ᶜ p_β
-      have hsup_top : r_β ⊔ r_neg = ⊤ := top_unique hdec_β
       have hc_le_rneg : (r_β)ᶜ ≤ r_neg := by
-        calc
-          (r_β)ᶜ = (r_β)ᶜ ⊓ (r_β ⊔ r_neg) := by rw [hsup_top, inf_top_eq]
+        calc (r_β)ᶜ = (r_β)ᶜ ⊓ (r_β ⊔ r_neg) := by rw [top_unique hdec_β, inf_top_eq]
           _ = ((r_β)ᶜ ⊓ r_β) ⊔ ((r_β)ᶜ ⊓ r_neg) := inf_sup_left _ _ _
           _ ≤ r_neg := by rw [compl_inf_eq_bot, bot_sup_eq]; exact inf_le_right
       have h1 : c_β ⊓ (j_R r_β)ᶜ ≤ c_β ⊓ j_R r_neg := by
@@ -1013,57 +1018,22 @@ private theorem exists_valuationGoodStep
           ((inf_le_inf_left (nameCone (ErdosCohen.conditions (omegaOne : bSet R)) p_β) inf_le_left).trans
             (nameCone_inf_firstStageHom_reads_le _))
       exact cone_neg_from_or (h1.trans h2) (hc_β_raw.trans hGβ_or)
-    let s_out : ValuationStepState U a R := ⟨p_β, hp_β, α_β, hα_β, G_β, r_β⟩
-    refine ⟨s_out, ?_, hprev_α_le, hsub_m₀_β, ?_, ?_, ?_, hc_β_raw.trans hGβ_P, ?_⟩
-    · exact h_le_X
-    · intro γ
-      exact subset_trans' (hp_in_ext γ)
-        (subset_trans' hsub_in_mid (subset_trans' hsub_mid_raw hsub_raw_β))
-    · exact subset_trans' hG_in_master hG_in_sub_Gβ
-    · intro γ
-      exact subset_trans' (hG_in_chain γ) hG_in_sub_Gβ
-    · intro _
-      exact ⟨hr_pos_le, hr_neg_le⟩
+    exact ⟨⟨p_β, hp_β, α_β, hα_β, G_β, r_β⟩, h_le_X, hprev_α_le, hsub_m₀_β,
+      fun γ => subset_trans' (hp_in_ext γ) (subset_trans' hsub_in_mid (subset_trans' hsub_mid_raw hsub_raw_β)),
+      subset_trans' hG_in_master hG_in_sub_Gβ,
+      fun γ => subset_trans' (hG_in_chain γ) hG_in_sub_Gβ,
+      hc_β_raw.trans hGβ_P, fun _ => ⟨hr_pos_le, hr_neg_le⟩⟩
   | inr H =>
     have h_le_H : matStage H ≤ α_β := by simpa only [tStage, ht_eq] using htask_le
     let H_β (l k : K) : InternalLevyStage κ α_β := stageStepHom (κ := κ) h_le_H (matRep H l k)
-    let D_H (i : I) : bSet A :=
-      levyJoinTest α_β (fun l : Set.Iio (seed_idx i) => H_β l.val (seed_idx i))
-    obtain ⟨z, hz_P, hz_D, hq_sub_z⟩ :=
-      exists_supported_dense_test_extension U a hk.le hf hn ht hκ j₀ α_β D_H
-        (hseed_supp.map fun k => levyJoinTest α_β (fun l : Set.Iio k => H_β l.val k))
-        (fun _ => levyJoinTest_subset α_β _)
-        (fun _ => levyJoinTest_dense α_β _) hq_mid_P
-    obtain ⟨p_β, hp_β, hsub_mid_β, G_β, hz_eq_G⟩ :=
-      compress_lifted_witness_to_R U a hk hκ hθ hf hn ht hm₀ hp_mid hsub_m₀_mid
-        j₀ α_β z hz_P
-    let hsub_m₀_β : (⊤ : R) ≤ m₀ ⊆ᴮ p_β := subset_trans' hsub_m₀_mid hsub_mid_β
-    let c_β := coneInMaster hm₀ hp_β hsub_m₀_β
-    have hc_β_mid : c_β ≤ coneInMaster hm₀ hp_mid hsub_m₀_mid :=
-      coneInMaster_mono hm₀ hp_mid hsub_m₀_mid hp_β hsub_m₀_β hsub_mid_β
-    have hG_in_sub_Gβ : (⊤ : R) ≤ G_in.toBSet ⊆ᴮ G_β.toBSet := by
-      have hc_sub : c_β ≤ mapNames j_R G_in.toBSet ⊆ᴮ mapNames j_R G_β.toBSet :=
-        subset_trans' (bSet.subset_of_eq (bv_symm (hc_β_mid.trans hq_mid_eq)))
-          (subset_trans' (hc_β_mid.trans hq_sub_z) (bSet.subset_of_eq hz_eq_G))
-      rw [← map_subset j_R] at hc_sub
-      exact ((coneInMaster_le_firstStageHom_iff hm₀ hp_β hsub_m₀_β _).mp hc_sub).ge
-    have hGβ_P : c_β ≤ mapNames j_R G_β.toBSet ∈ᴮ P_W α_β :=
-      mem_congr hz_eq_G bv_refl (hc_β_mid.trans hz_P)
-    have hGβ_reg : c_β ≤
-        (⨆ l : K, mapNames j_R G_β.toBSet ∈ᴮ O_lift α_β (H_β l)) ⊔
-        (mapNames j_R G_β.toBSet ∈ᴮ O_lift α_β (fun k => (diagonal κ H_β k)ᶜ)) :=
-      liftedRegressiveTest_or U a hk hκ hf hn ht j₀ α_β H_β hGβ_P
-        (mem_congr hz_eq_G bv_refl (hc_β_mid.trans hz_D))
-    let s_out : ValuationStepState U a R := ⟨p_β, hp_β, α_β, hα_β, G_β, ⊥⟩
-    refine ⟨s_out, ?_, hprev_α_le, hsub_m₀_β, ?_, ?_, ?_, hGβ_P, ?_⟩
-    · exact h_le_H
-    · intro γ
-      exact subset_trans' (hp_in_ext γ) (subset_trans' hsub_in_mid hsub_mid_β)
-    · exact subset_trans' hG_in_master hG_in_sub_Gβ
-    · intro γ
-      exact subset_trans' (hG_in_chain γ) hG_in_sub_Gβ
-    · intro _
-      exact hGβ_reg
+    obtain ⟨p_β, hp_β, hsub_mid_β, G_β, hG_in_sub_Gβ, hGβ_P, hGβ_D⟩ :=
+      extendCompress (fun k => levyJoinTest α_β (fun l : Set.Iio k => H_β l.val k))
+        (fun _ => levyJoinTest_subset α_β _) (fun _ => levyJoinTest_dense α_β _)
+    exact ⟨⟨p_β, hp_β, α_β, hα_β, G_β, ⊥⟩, h_le_H, hprev_α_le, subset_trans' hsub_m₀_mid hsub_mid_β,
+      fun γ => subset_trans' (hp_in_ext γ) (subset_trans' hsub_in_mid hsub_mid_β),
+      subset_trans' hG_in_master hG_in_sub_Gβ,
+      fun γ => subset_trans' (hG_in_chain γ) hG_in_sub_Gβ,
+      hGβ_P, fun _ => liftedRegressiveTest_or U a hk hκ hf hn ht j₀ α_β H_β hGβ_P hGβ_D⟩
 
 /-- Existence of a scalar-faithful, initial-segment-vanishing, normal valuation
 `μ : BoundedLatticeHom (κ.ord.ToType → InternalLevyAlgebra κ θ) (AmbientInternalLevy κ θ)`. -/
@@ -1240,56 +1210,40 @@ theorem exists_normal_valuation_into_ambientLevy
     rw [h0] at hdec
     exact coneInMaster_eq_unique hm₀ (run γ).hp (hrun_sub_m₀ γ)
       (hdec.symm.trans (by rw [BotHomClass.map_bot, inf_bot_eq]))
+  have liftRow (X : K → F) {γ : θ.ord.ToType} (hle : emb_task (Sum.inl X) ≤ γ) :
+      ∃ Y : K → InternalLevyStage κ (run γ).α,
+        ∀ k, stageStepHom (κ := κ) (run γ).hα.le (Y k) = X k := by
+    have hX_le : rowStage X ≤ (run γ).α := by
+      have hg := (hrun_good (emb_task (Sum.inl X))).1
+      rw [htaskAt_emb] at hg
+      exact hg.trans (hrun_mono_α hle)
+    refine ⟨fun k => stageStepHom (κ := κ) hX_le (rowRep X k), fun k => ?_⟩
+    rw [stageStepHom_comp (κ := κ), hrowRep X k]
   have hμ_compl (X : K → F) : μ_fn Xᶜ = (μ_fn X)ᶜ := by
     let γ := max (emb_task (Sum.inl X)) (emb_task (Sum.inl Xᶜ))
-    have hX_le : rowStage X ≤ (run γ).α := by
-      have h1 : rowStage X ≤ (run (emb_task (Sum.inl X))).α := by
-        have hg := (hrun_good (emb_task (Sum.inl X))).1
-        rwa [htaskAt_emb] at hg
-      exact h1.trans (hrun_mono_α (le_max_left _ _))
-    let Y (k : K) : InternalLevyStage κ (run γ).α := stageStepHom (κ := κ) hX_le (rowRep X k)
-    have hY (k : K) : stageStepHom (κ := κ) (run γ).hα.le (Y k) = X k := by
-      dsimp only [Y]
-      rw [stageStepHom_comp (κ := κ), hrowRep X k]
+    obtain ⟨Y, hY⟩ := liftRow X (le_max_left _ _)
     have hYc (k : K) : stageStepHom (κ := κ) (run γ).hα.le (Y k)ᶜ = (Xᶜ) k := by
-      rw [completeHom_compl, hY k]
-      rfl
+      rw [completeHom_compl, hY k]; rfl
     have hd1 := (hrow_decides_at X (le_max_left _ _) Y hY).2
     have hd2 := (hrow_decides_at Xᶜ (le_max_right _ _) (fun k => (Y k)ᶜ) hYc).1
-    have heq : coneAt γ ⊓ j_R (μ_fn Xᶜ) = coneAt γ ⊓ j_R (μ_fn X)ᶜ := by
-      rw [← hd2, hd1, completeHom_compl]
-    exact coneInMaster_eq_unique hm₀ (run γ).hp (hrun_sub_m₀ γ) heq
+    exact coneInMaster_eq_unique hm₀ (run γ).hp (hrun_sub_m₀ γ)
+      (by rw [← hd2, hd1, completeHom_compl])
   have hμ_inf (X₁ X₂ : K → F) : μ_fn (X₁ ⊓ X₂) = μ_fn X₁ ⊓ μ_fn X₂ := by
     let γ := max (max (emb_task (Sum.inl X₁)) (emb_task (Sum.inl X₂))) (emb_task (Sum.inl (X₁ ⊓ X₂)))
-    have h1_le : rowStage X₁ ≤ (run γ).α := by
-      have hg := (hrun_good (emb_task (Sum.inl X₁))).1
-      rw [htaskAt_emb] at hg
-      exact hg.trans (hrun_mono_α ((le_max_left _ _).trans (le_max_left _ _)))
-    have h2_le : rowStage X₂ ≤ (run γ).α := by
-      have hg := (hrun_good (emb_task (Sum.inl X₂))).1
-      rw [htaskAt_emb] at hg
-      exact hg.trans (hrun_mono_α ((le_max_right _ _).trans (le_max_left _ _)))
-    let Y₁ (k : K) := stageStepHom (κ := κ) h1_le (rowRep X₁ k)
-    let Y₂ (k : K) := stageStepHom (κ := κ) h2_le (rowRep X₂ k)
-    have hY₁ (k : K) : stageStepHom (κ := κ) (run γ).hα.le (Y₁ k) = X₁ k := by
-      dsimp only [Y₁]; rw [stageStepHom_comp (κ := κ), hrowRep X₁ k]
-    have hY₂ (k : K) : stageStepHom (κ := κ) (run γ).hα.le (Y₂ k) = X₂ k := by
-      dsimp only [Y₂]; rw [stageStepHom_comp (κ := κ), hrowRep X₂ k]
+    have hle₁ : emb_task (Sum.inl X₁) ≤ γ := (le_max_left _ _).trans (le_max_left _ _)
+    have hle₂ : emb_task (Sum.inl X₂) ≤ γ := (le_max_right _ _).trans (le_max_left _ _)
+    obtain ⟨Y₁, hY₁⟩ := liftRow X₁ hle₁
+    obtain ⟨Y₂, hY₂⟩ := liftRow X₂ hle₂
     have hY₁₂ (k : K) : stageStepHom (κ := κ) (run γ).hα.le (Y₁ k ⊓ Y₂ k) = (X₁ ⊓ X₂) k :=
       (completeHom_inf (stageStepHom (κ := κ) (run γ).hα.le) (Y₁ k) (Y₂ k)).trans
         (by rw [hY₁ k, hY₂ k]; rfl)
-    have hd1 := (hrow_decides_at X₁ ((le_max_left _ _).trans (le_max_left _ _)) Y₁ hY₁).1
-    have hd2 := (hrow_decides_at X₂ ((le_max_right _ _).trans (le_max_left _ _)) Y₂ hY₂).1
+    have hd1 := (hrow_decides_at X₁ hle₁ Y₁ hY₁).1
+    have hd2 := (hrow_decides_at X₂ hle₂ Y₂ hY₂).1
     have hd12 := (hrow_decides_at (X₁ ⊓ X₂) (le_max_right _ _) (fun k => Y₁ k ⊓ Y₂ k) hY₁₂).1
-    have hjR_inf : j_R (μ_fn X₁ ⊓ μ_fn X₂) = j_R (μ_fn X₁) ⊓ j_R (μ_fn X₂) :=
-      completeHom_inf j_R (μ_fn X₁) (μ_fn X₂)
-    have heq : coneAt γ ⊓ j_R (μ_fn (X₁ ⊓ X₂)) = coneAt γ ⊓ j_R (μ_fn X₁ ⊓ μ_fn X₂) := by
-      rw [← hd12,
-        liftedTruthOpen_inf U a hk.le hκ hf hn ht j₀ seed_idx hseed_supp (run γ).α Y₁ Y₂
-          (hrun_good γ).2.2.choose_spec.2.2.2.1,
-        hd1, hd2, hjR_inf]
-      exact inf_cone_distrib (coneAt γ) (j_R (μ_fn X₁)) (j_R (μ_fn X₂))
-    exact coneInMaster_eq_unique hm₀ (run γ).hp (hrun_sub_m₀ γ) heq
+    refine coneInMaster_eq_unique hm₀ (run γ).hp (hrun_sub_m₀ γ) ?_
+    rw [← hd12, liftedTruthOpen_inf U a hk.le hκ hf hn ht j₀ seed_idx hseed_supp (run γ).α Y₁ Y₂
+      (hrun_good γ).2.2.choose_spec.2.2.2.1, hd1, hd2, completeHom_inf j_R]
+    exact inf_cone_distrib (coneAt γ) (j_R (μ_fn X₁)) (j_R (μ_fn X₂))
   let μ : BoundedLatticeHom (K → F) R :=
     { toFun := μ_fn
       map_inf' := hμ_inf
@@ -1475,49 +1429,6 @@ theorem exists_internalLevy_fullGCH_and_normal_dense_ideal
       (ambientLevyStageHom_injective le_rfl) μ hscalar hinit hnormal d hdense
       hκ.aleph0_lt (internalLevyStage_checked_eq_omegaOne hκ θ.ord)⟩
 
-/-- Strengthened form of `exists_internalLevy_fullGCH_and_normal_dense_ideal` deriving
-`κ.IsInaccessible` and `θ.IsInaccessible` automatically from the `(κ, θ)`-fine normal measure. -/
-theorem exists_internalLevy_fullGCH_and_normal_dense_ideal_minimal
-    {I : Type u} {κ θ : Cardinal.{u}}
-    (U : Ultrafilter I) (a : I → Set θ.ord.ToType)
-    [CountableInterFilter (U : Filter I)] [CardinalInterFilter (U : Filter I) κ]
-    (hk : κ < θ) (hf : FineOn U a) (hn : NormalOn U a) (ht : FiberOrderType U κ θ a)
-    (tail : ∀ μ : Cardinal.{u}, θ ≤ μ → (2 : Cardinal.{u}) ^ μ = Order.succ μ) :
-    let F := InternalLevyAlgebra κ θ
-    (fullGCHValue : F) = ⊤ ∧
-    ∃ J I_idx D : bSet F,
-      (⊤ : F) ≤ ErdosIdeal.properIdeal omegaOne J ∧
-      (⊤ : F) ≤ ErdosIdeal.countableAbsorption omegaOne J ∧
-      (⊤ : F) ≤ ErdosIdeal.countableClosure J ∧
-      (⊤ : F) ≤ ErdosIdeal.diagonalClosure omegaOne J ∧
-      (⊤ : F) ≤ is_function I_idx (bv_powerset omegaOne) D ∧
-      (⊤ : F) ≤ ErdosDenseBasis.positiveValues omegaOne J I_idx D ∧
-      (⊤ : F) ≤ ErdosDenseBasis.denseValues omegaOne J I_idx D ∧
-      (⊤ : F) ≤ injects_into I_idx omegaOne := by
-  obtain ⟨hκ, hθ⟩ := inaccessible_pair_of_fine_order_type U hk hf hn ht
-  exact exists_internalLevy_fullGCH_and_normal_dense_ideal U a hk hκ hθ hf hn ht tail
-
-/-- Canonical Kanamori huge-cardinal form of `exists_internalLevy_fullGCH_and_normal_dense_ideal`. -/
-theorem exists_internalLevy_fullGCH_and_normal_dense_ideal_of_hugeWithTarget
-    {κ θ : Cardinal.{u}} (hHuge : IsHugeWithTarget κ θ)
-    (tail : ∀ μ : Cardinal.{u}, θ ≤ μ → (2 : Cardinal.{u}) ^ μ = Order.succ μ) :
-    let F := InternalLevyAlgebra κ θ
-    (fullGCHValue : F) = ⊤ ∧
-    ∃ J I_idx D : bSet F,
-      (⊤ : F) ≤ ErdosIdeal.properIdeal omegaOne J ∧
-      (⊤ : F) ≤ ErdosIdeal.countableAbsorption omegaOne J ∧
-      (⊤ : F) ≤ ErdosIdeal.countableClosure J ∧
-      (⊤ : F) ≤ ErdosIdeal.diagonalClosure omegaOne J ∧
-      (⊤ : F) ≤ is_function I_idx (bv_powerset omegaOne) D ∧
-      (⊤ : F) ≤ ErdosDenseBasis.positiveValues omegaOne J I_idx D ∧
-      (⊤ : F) ≤ ErdosDenseBasis.denseValues omegaOne J I_idx D ∧
-      (⊤ : F) ≤ injects_into I_idx omegaOne := by
-  obtain ⟨I, U, a, hcnt, hcard, hk, hf, hn, ht⟩ :=
-    isHugeWithTarget_iff_exists_fine_measure.mp hHuge
-  have : CountableInterFilter (U : Filter I) := hcnt
-  have : CardinalInterFilter (U : Filter I) κ := hcard
-  exact exists_internalLevy_fullGCH_and_normal_dense_ideal_minimal U a hk hf hn ht tail
-
 /-- Relative consistency of `ZFC + GCH + Part 4 (balanced ordinal Ramsey theorem on ω₂)`
 from two inaccessible cardinals `κ < θ`, ground tail GCH at `≥ θ`, and a `(κ, θ)`-fine normal
 `κ`-complete ultrafilter `(U, a)`. -/
@@ -1546,20 +1457,6 @@ theorem gchPart4Theory_is_consistent_minimal
     Erdos1172Part4InternalGCHTheory.gchPart4Theory.is_consistent := by
   obtain ⟨hκ, hθ⟩ := inaccessible_pair_of_fine_order_type U hk hf hn ht
   exact gchPart4Theory_is_consistent U a hk hκ hθ hf hn ht tail
-
-/-- Variant of `gchPart4Theory_is_consistent_minimal` assuming `ℵ₀ < κ` instead of
-`[CountableInterFilter (U : Filter I)]`. -/
-theorem gchPart4Theory_is_consistent_of_aleph0_lt
-    {I : Type 0} {κ θ : Cardinal.{0}}
-    (U : Ultrafilter I) (a : I → Set θ.ord.ToType)
-    [CardinalInterFilter (U : Filter I) κ]
-    (hω : ℵ₀ < κ) (hk : κ < θ)
-    (hf : FineOn U a) (hn : NormalOn U a) (ht : FiberOrderType U κ θ a)
-    (tail : ∀ μ : Cardinal.{0}, θ ≤ μ → (2 : Cardinal.{0}) ^ μ = Order.succ μ) :
-    Erdos1172Part4InternalGCHTheory.gchPart4Theory.is_consistent := by
-  have : CountableInterFilter (U : Filter I) :=
-    CardinalInterFilter.toCountableInterFilter (U : Filter I) hω
-  exact gchPart4Theory_is_consistent_minimal U a hk hf hn ht tail
 
 /-- Relative consistency of `gchPart4Theory` (`ZFC + GCH + ω₂ → (ω₁ + ω, ω₁ + ω)²`) from
 Kanamori's canonical hugeness predicate `IsHugeWithTarget κ θ` and ground tail GCH above `θ`. -/

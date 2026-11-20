@@ -125,9 +125,6 @@ def completionHom : CompleteLatticeHom B (Completion (Positive B)) where
 theorem completionHom_injective : Function.Injective (completionHom (B := B)) :=
   element_injective
 
-theorem completionHom_compl (b : B) :
-    completionHom bᶜ = (completionHom b)ᶜ := element_compl b
-
 /-- A positive Boolean element represents exactly its principal forcing
 condition, not merely a weaker regular lower set. -/
 theorem element_condition (p : Positive B) : element p.val = condition p := by
@@ -138,9 +135,6 @@ theorem element_condition (p : Positive B) : element p.val = condition p := by
     rfl
   change elementLowerSet p.val = (LowerSet.Iic p)ᶜᶜ
   rw [hcone, (elementLowerSet_regular p.val).eq]
-
-theorem completionHom_condition (p : Positive B) :
-    completionHom p.val = condition p := element_condition p
 
 /-- The proposed inverse takes the actual supremum of all positive members. -/
 def joinMembers (a : Completion (Positive B)) : B :=
@@ -161,9 +155,6 @@ theorem element_joinMembers (a : Completion (Positive B)) :
 
 theorem joinMembers_element (b : B) : joinMembers (element b) = b :=
   element_injective (element_joinMembers (element b))
-
-theorem element_surjective : Function.Surjective (element (B := B)) :=
-  fun a => ⟨joinMembers a, element_joinMembers a⟩
 
 /-- Every complete Boolean algebra is explicitly order-isomorphic to the
 regular completion of its positive poset, including the trivial case. -/

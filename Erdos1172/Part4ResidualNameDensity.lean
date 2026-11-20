@@ -5,7 +5,6 @@ Licensed under the Apache License, Version 2.0.
 module
 
 public import Erdos1172.Part4RelativeValuationPartition
-public import Erdos1172.Part4BooleanIterationDensePresentation
 public import Erdos1172.Part4ShioyaDenseCoverIso
 public import Erdos1172.Part4PosetGenericFilter
 
@@ -88,12 +87,6 @@ theorem denseOver_nameCone [Nonempty (Condition Q)] {I : Type u} (q : I → bSet
   · exact fun hz => condition_ne_bot r ((nameCone_local Q r rep).symm.trans hz)
   · exact (nameCone_local Q r rep).le.trans ((condition_mono hr).trans hp)
 
-theorem canonicalLabels_denseOver [Nonempty (Condition Q)] :
-    denseOver (sourceHom Q) (fun i : Q.type => nameCone Q (Q.func i)) := by
-  apply denseOver_nameCone
-  intro p
-  exact le_iSup_of_le p.index (le_inf (name_mem p) subset_self)
-
 /-- A checked enumeration of the residual forcing gives relative density
 bounded by the number of indices, even over an arbitrarily large base. -/
 theorem exists_denseOver_of_surjection [Nonempty (Condition Q)] {T : PSet.{u}} {f : bSet B}
@@ -110,11 +103,5 @@ theorem exists_denseOver_of_surjection [Nonempty (Condition Q)] {T : PSet.{u}} {
   have pairmem : (⊤ : B) ≤ pair (check (a i)) (q i) ∈ᴮ f := function_eval_pair_mem
   exact le_inf (le_top.trans member) (subset_of_eq (eq_of_is_func_of_eq
     (le_top.trans (func.trans (inf_le_left.trans inf_le_left))) bv_refl le_rfl (le_top.trans pairmem)))
-
-theorem exists_mem_of_checked_function {T : PSet.{u}} (inhabited : Nonempty T.Type) {f : bSet B}
-    (func : (⊤ : B) ≤ is_function (check T) Q f) : ∃ q : bSet B, (⊤ : B) ≤ q ∈ᴮ Q := by
-  let i := Classical.choice inhabited
-  have hi : (⊤ : B) ≤ check (T.Func i) ∈ᴮ check T := check_mem (PSet.func_mem T i)
-  exact ⟨function_eval func _ hi,function_eval_mem_codomain⟩
 
 end Erdos1172BooleanNameIteration

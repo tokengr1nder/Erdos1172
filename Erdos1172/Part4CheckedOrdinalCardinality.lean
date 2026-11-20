@@ -51,29 +51,4 @@ theorem checked_cardinal_injects_ordinal (η : Ordinal.{u}) :
   exact ErdosGroundIndexNameBound.injects_checked_ordinal_of_index_embedding
     η (check (PSet.ordinalMk η.card.ord)) e
 
-theorem checked_ordinal_cardinal_mutual_injections (η : Ordinal.{u}) :
-    (⊤ : 𝔹) ≤
-      injects_into (check (PSet.ordinalMk η)) (check (PSet.ordinalMk η.card.ord)) ⊓
-      injects_into (check (PSet.ordinalMk η.card.ord)) (check (PSet.ordinalMk η)) :=
-  le_inf (checked_ordinal_injects_cardinal η) (checked_cardinal_injects_ordinal η)
-
 end bSet.ErdosCheckedOrdinalCardinality
-
-namespace Erdos1172LevyCollapse
-
-open bSet Erdos1172PosetCompletion
-
-/-- This countability direction needs no regularity of κ and includes
-ordinals with empty indexing type. -/
-theorem below_checked_ordinal_countable_of_cardinal_lt (κ : Cardinal.{u})
-    (η : Ordinal.{u}) (Hcard : η.card < κ) :
-    (⊤ : Completion (BelowCondition κ)) ≤
-      injects_into (check (PSet.ordinalMk η)) omega := by
-  have Hmember : (⊤ : Completion (BelowCondition κ)) ≤
-      check (PSet.ordinalMk η.card.ord) ∈ᴮ check (PSet.ordinalMk κ.ord) :=
-    check_mem (PSet.mk_mem_mk_of_lt (Cardinal.ord_lt_ord.mpr Hcard))
-  exact injects_into_trans
-    (ErdosCheckedOrdinalCardinality.checked_ordinal_injects_cardinal η)
-    (below_checked_member_countable κ Hmember)
-
-end Erdos1172LevyCollapse

@@ -7,7 +7,6 @@ module
 public import Erdos1172.Part4DenseCompletionCardinality
 public import Erdos1172.Part4BooleanCheckedIndicatorAgreement
 public import Erdos1172.Part4GroundIndexNameBound
-public import Mathlib.SetTheory.Cardinal.Regular
 
 @[expose] public section
 

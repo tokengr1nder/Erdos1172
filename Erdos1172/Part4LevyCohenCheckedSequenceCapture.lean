@@ -6,7 +6,6 @@ module
 
 public import Erdos1172.Part4BooleanCountableGroundCapture
 public import Erdos1172.Part4CohenCheckedSequenceReading
-public import Erdos1172.Part4InternalCountableImage
 public import Erdos1172.Part4InternalIndependentHomogeneous
 
 @[expose] public section

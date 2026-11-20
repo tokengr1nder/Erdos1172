@@ -6,7 +6,6 @@ module
 
 public import Erdos1172.Part4LevyCompatibility
 public import Mathlib.Data.Finset.Image
-public import Mathlib.SetTheory.Cardinal.Arithmetic
 
 @[expose] public section
 
@@ -75,10 +74,6 @@ theorem supportGraph_injective : Function.Injective (supportGraph (A := A)) := b
       (mem_supportGraph_iff p i (p i)).mpr ⟨hp, rfl⟩
     rw [hpq] at hmem
     exact ((mem_supportGraph_iff q i (p i)).mp hmem).2.symm
-
-def supportGraphEmbedding : ProductCondition A ↪
-    Finset (Σ i : I, Erdos1172Collapse.Condition (A i)) :=
-  ⟨supportGraph, supportGraph_injective⟩
 
 theorem productCondition_cardinal_le_finite_graphs :
     Cardinal.mk (ProductCondition A) ≤

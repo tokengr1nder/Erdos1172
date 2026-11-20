@@ -34,38 +34,6 @@ variable {𝔹 : Type u} [NontrivialCompleteBooleanAlgebra 𝔹]
 open ErdosPartition ErdosOrdinalLeast ErdosOrdinalFallback
 open ErdosSimultaneousHistory ErdosSimultaneousEntry ErdosSimultaneousVertex
 
-/-- A candidate would have to lie both above the earlier sentinel and
-strictly below that same sentinel, giving an internal membership two-cycle. -/
-theorem futureCandidates_empty_after_stop
-    {color : Bool} {R S top P i j Z : bSet 𝔹} {Γ : 𝔹}
-    (Hstop : Γ ≤ pair j top ∈ᴮ vertexHistory P) (Hji : Γ ≤ j ∈ᴮ i) :
-    Γ ≤ futureCandidates color i R S (vertexHistory P) (coordinateHistory P) Z top =ᴮ
-      (∅ : bSet 𝔹) := by
-  apply empty_iff_forall_not_mem.mpr
-  apply le_iInf
-  intro v
-  rw [← imp_bot, ← deduction]
-  have Hv : Γ ⊓ v ∈ᴮ futureCandidates color i R S (vertexHistory P)
-      (coordinateHistory P) Z top ≤
-      v ∈ᴮ futureCandidates color i R S (vertexHistory P) (coordinateHistory P) Z top :=
-    inf_le_right
-  have Habove := futureCandidate_above_previous Hv
-    (inf_le_left.trans Hji) (inf_le_left.trans Hstop)
-  exact bot_of_mem_mem' top v (Habove.trans inf_le_left)
-    (mem_futureCandidates_iff.mp Hv).1
-
-/-- Once a decoded vertex is the endpoint, every existing later decoded
-vertex is the endpoint too. Totality of the run is unnecessary. -/
-theorem stopped_vertex_persists
-    {color : Bool} {R S top P i j y : bSet 𝔹} {Γ : 𝔹}
-    (Hlaw : Γ ≤ runLaw color R S top P)
-    (Hstop : Γ ≤ pair j top ∈ᴮ vertexHistory P) (Hji : Γ ≤ j ∈ᴮ i)
-    (Hcurrent : Γ ≤ pair i y ∈ᴮ vertexHistory P) : Γ ≤ y =ᴮ top := by
-  obtain ⟨Z, Hentry⟩ := vertexHistory_witness Hcurrent
-  exact eq_top_of_leastOrTop_empty
-    ((runLaw_apply Hlaw Hentry).trans (inf_le_right.trans inf_le_right))
-    (futureCandidates_empty_after_stop Hstop Hji)
-
 /-- At a locally non-sentinel entry, the chosen vertex lies in the exact
 future-candidate set computed from that entry's whole current row graph. -/
 theorem nonstop_entry_mem_future

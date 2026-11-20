@@ -135,31 +135,6 @@ theorem commonBlockRows_section_apply {S f C σ A y B : bSet 𝔹} {Γ : 𝔹}
     ((iInf_le _ σ).trans ((iInf_le _ A).trans ((iInf_le _ y).trans (iInf_le _ B)))))
     (le_inf (le_inf HC Hy) HB)).trans bv_imp_elim
 
-/-- Each actual common-row value has a proper normal ideal witnessing
-positivity. The internal existential is retained without choosing an
-external family of ideal names. -/
-theorem commonBlockRows_positive_value {S f C σ A : bSet 𝔹} {Γ : 𝔹}
-    (Hcommon : Γ ≤ commonBlockRows S f C) (HC : Γ ≤ pair σ A ∈ᴮ C) :
-    Γ ≤ ⨆ J, rowNormalIdealData S σ J ⊓ positive omegaOne J A := by
-  have Hσ : Γ ≤ σ ∈ᴮ omegaOne :=
-    mem_domain_of_is_function HC (Hcommon.trans inf_le_left)
-  have Hrows := Hcommon.trans (inf_le_right.trans inf_le_left)
-  have Hex : Γ ≤ ⨆ J, rowNormalIdealData S σ J :=
-    (le_inf (Hrows.trans (iInf_le _ σ)) Hσ).trans bv_imp_elim
-  apply (le_inf le_rfl Hex).trans
-  rw [inf_iSup_eq]
-  apply iSup_le
-  intro J
-  let Δ := Γ ⊓ rowNormalIdealData S σ J
-  have Hcolarge : Δ ≤ colarge omegaOne J A :=
-    (le_inf (inf_le_left.trans
-      ((Hcommon.trans (inf_le_right.trans (inf_le_right.trans inf_le_left))).trans
-        ((iInf_le _ σ).trans ((iInf_le _ J).trans (iInf_le _ A)))))
-      (le_inf inf_le_right (inf_le_left.trans HC))).trans bv_imp_elim
-  exact le_iSup_of_le J (le_inf inf_le_right
-    (colarge_positive (show Δ ≤ properIdeal omegaOne J from
-      inf_le_right.trans (inf_le_left.trans inf_le_left)) Hcolarge))
-
 /-- Absence of the successful-block value forces each encoded endpoint
 run to stop, locally at the same Boolean condition. -/
 theorem endpointRunFamilyStops_of_no_successfulBlock

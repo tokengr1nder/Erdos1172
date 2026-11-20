@@ -28,15 +28,6 @@ variable {𝔹 : Type u} [NontrivialCompleteBooleanAlgebra 𝔹]
 
 open ErdosOmegaTwo ErdosPartition ErdosIdeal ErdosForwardSections
 
-private theorem colors_disjoint (color : Bool) (R x y : bSet 𝔹) :
-    graphColor color R x y ⊓ graphColor (!color) R x y = ⊥ := by
-  cases color with
-  | false => exact graphColor_inf R x y
-  | true =>
-      change graphColor true R x y ⊓ graphColor false R x y = ⊥
-      rw [inf_comm]
-      exact graphColor_inf R x y
-
 private theorem color_of_not_opposite {color : Bool} {R x y : bSet 𝔹} {Γ : 𝔹}
     (Hxy : Γ ≤ x ∈ᴮ y) (Hnot : Γ ≤ (graphColor (!color) R x y)ᶜ) :
     Γ ≤ graphColor color R x y := by
@@ -54,34 +45,6 @@ private theorem color_of_not_opposite {color : Bool} {R x y : bSet 𝔹} {Γ : �
   rw [inf_sup_left]
   exact sup_le inf_le_right
     ((bv_absurd _ inf_le_right (inf_le_left.trans Hnot)).trans bot_le)
-
-/-- A single-valued row cannot put one coordinate in both color sections.
-No totality or global row-before-endpoint premise is needed for disjointness. -/
-theorem forwardSection_subset_complement
-    {color : Bool} {R r y : bSet 𝔹} {Γ : 𝔹}
-    (Hfunc : Γ ≤ is_func r) :
-    Γ ≤ forwardSection color R r y ⊆ᴮ
-      difference omegaOne (forwardSection (!color) R r y) := by
-  rw [subset_unfold']
-  apply le_iInf
-  intro i
-  rw [← deduction]
-  let Δ := Γ ⊓ i ∈ᴮ forwardSection color R r y
-  have Hi : Δ ≤ i ∈ᴮ forwardSection color R r y := inf_le_right
-  have HiOne : Δ ≤ i ∈ᴮ omegaOne := (mem_forwardSection_iff.mp Hi).1
-  obtain ⟨x, Hix, _, Hcolor⟩ := exists_forwardSection_value Hi
-  have Hnot : Δ ≤ (i ∈ᴮ forwardSection (!color) R r y)ᶜ := by
-    rw [← imp_bot, ← deduction]
-    have Hopp : Δ ⊓ i ∈ᴮ forwardSection (!color) R r y ≤
-        x ∈ᴮ y ⊓ graphColor (!color) R x y :=
-      forwardSection_value_of_pair
-        (inf_le_left.trans (inf_le_left.trans Hfunc)) inf_le_right
-        (inf_le_left.trans Hix)
-    exact (le_inf (inf_le_left.trans Hcolor) (Hopp.trans inf_le_right)).trans
-      (colors_disjoint color R x y).le
-  change Δ ≤ i ∈ᴮ difference omegaOne (forwardSection (!color) R r y)
-  rw [mem_difference]
-  exact le_inf HiOne Hnot
 
 /-- Totality gives a real value at every coordinate; above that value,
 failure of the opposite forward section forces the chosen-color section. -/
@@ -117,18 +80,6 @@ theorem forwardSection_complement_subset
     exact bv_absurd _ Hsection (inf_le_left.trans (Hi.trans inf_le_right))
   exact mem_forwardSection_of_pair (Hi.trans inf_le_left) (Hx.trans inf_le_right)
     Hxy (color_of_not_opposite Hxy Hnot)
-
-/-- The complement identity holds as Boolean-valued set equality at the
-original context, not merely for selected external representatives. -/
-theorem forwardSection_complement_eq
-    {color : Bool} {R r y : bSet 𝔹} {Γ : 𝔹}
-    (Hr : Γ ≤ is_function omegaOne omegaTwo r)
-    (Hbefore : Γ ≤ ⨅ x, _root_.imp (rangeMem omegaOne r x) (x ∈ᴮ y)) :
-    Γ ≤ difference omegaOne (forwardSection (!color) R r y) =ᴮ
-      forwardSection color R r y := by
-  rw [eq_iff_subset_subset]
-  exact le_inf (forwardSection_complement_subset Hr Hbefore)
-    (forwardSection_subset_complement (Hr.trans (inf_le_left.trans inf_le_left)))
 
 /-- A small chosen-color section makes the opposite forward section
 co-large in the supplied ideal. No normality or target exclusion is used. -/

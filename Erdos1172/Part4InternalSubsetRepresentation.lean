@@ -74,13 +74,4 @@ lemma eq_membership_indicator_of_subset {x v : bSet 𝔹} {Γ : 𝔹}
         le_inf (inf_le_right.trans (le_of_eq bv_eq_symm)) inf_le_left
       _ ≤ z ∈ᴮ x := subst_congr_mem_left
 
-/-- Every internal relation on an arbitrary name has its canonical
-Boolean-valued adjacency representation. No checked-ground-name assumption
-is imposed on the relation or its underlying set. -/
-lemma relation_eq_membership_indicator {R κ : bSet 𝔹} {Γ : 𝔹}
-    (H : Γ ≤ R ⊆ᴮ prod κ κ) :
-    Γ ≤ R =ᴮ set_of_indicator (u := prod κ κ)
-      (fun ij => pair (κ.func ij.1) (κ.func ij.2) ∈ᴮ R) := by
-  simpa only [prod_func] using eq_membership_indicator_of_subset H
-
 end bSet

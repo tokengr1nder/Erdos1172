@@ -5,8 +5,6 @@ Licensed under the Apache License, Version 2.0.
 module
 
 public import Erdos1172.Part4LevyPreparationCohenConditions
-public import Erdos1172.Part4CohenIndexedBinaryAssignment
-public import Erdos1172.Part4CohenBitAssignmentBridge
 
 @[expose] public section
 
@@ -147,13 +145,5 @@ theorem indexed_cohen_master_extends : ∀ p : Low,
       (((le_inf (inf_le_left.trans inf_le_right) (inf_le_right.trans_eq heq)).trans bit0).trans
         ((OrderHomClass.mono l zero).trans_eq (map_compl' l _)))).trans
       (between.le.trans (inf_le_right.trans mapped))
-
-include hκ hu hθ comm bits in
-/-- Under a two-sided reading of the lower generic bits, one actual upper
-condition extends every prepared ground condition on its own generic cone. -/
-theorem exists_joint_cohen_master :
-    ∃ m : bSet B, (⊤ : B) ≤ ErdosCohen.condition omegaOne m ∧ ∀ p : Low,
-      Γ ⊓ l (Erdos1172PosetCompletion.condition p) ≤ mapNames k (j (nm p)) ⊆ᴮ mapNames k m :=
-  ⟨_,master_binary_condition hk hu hθ b,indexed_cohen_master_extends U a hk hf hn ht hκ hu l k comm Γ b bits⟩
 
 end Erdos1172LevyCollapse.Preparation

@@ -56,10 +56,6 @@ theorem empty_small_of_isIdeal {κ I : bSet 𝔹} {Γ : 𝔹}
     (HI : Γ ≤ isIdeal κ I) : Γ ≤ (∅ : bSet 𝔹) ∈ᴮ I :=
   HI.trans (inf_le_right.trans inf_le_left)
 
-theorem small_subset_base {κ I X : bSet 𝔹} {Γ : 𝔹}
-    (HI : Γ ≤ isIdeal κ I) (HX : Γ ≤ X ∈ᴮ I) : Γ ≤ X ⊆ᴮ κ :=
-  mem_powerset_iff.mp (mem_of_mem_subset (HI.trans inf_le_left) HX)
-
 theorem small_of_subset {I X Y : bSet 𝔹} {Γ : 𝔹}
     (Hdown : Γ ≤ downwardClosed I) (HY : Γ ≤ Y ∈ᴮ I)
     (Hsub : Γ ≤ X ⊆ᴮ Y) : Γ ≤ X ∈ᴮ I :=
@@ -81,20 +77,6 @@ theorem small_of_subset_union {κ I X Y Z : bSet 𝔹} {Γ : 𝔹}
     (Hcover : Γ ≤ X ⊆ᴮ binary_union Y Z) : Γ ≤ X ∈ᴮ I :=
   small_of_subset (downwardClosed_of_isIdeal HI)
     (small_union (unionClosed_of_isIdeal HI) HY HZ) Hcover
-
-/-- A positive set cannot be covered by two small sets, even locally below
-an arbitrary Boolean condition. -/
-theorem positive_not_subset_union {κ I X Y Z : bSet 𝔹} {Γ : 𝔹}
-    (HI : Γ ≤ isIdeal κ I) (HX : Γ ≤ positive κ I X)
-    (HY : Γ ≤ Y ∈ᴮ I) (HZ : Γ ≤ Z ∈ᴮ I) :
-    Γ ≤ (X ⊆ᴮ binary_union Y Z)ᶜ := by
-  apply le_neg_of_inf_eq_bot
-  apply bot_unique
-  have Hsmall : (X ⊆ᴮ binary_union Y Z) ⊓ Γ ≤ X ∈ᴮ I :=
-    small_of_subset_union (inf_le_right.trans HI) (inf_le_right.trans HY)
-      (inf_le_right.trans HZ) inf_le_left
-  exact (le_inf Hsmall (inf_le_right.trans (HX.trans inf_le_right))).trans
-    inf_compl_eq_bot.le
 
 /-- A subset of `X` representing internal set difference. -/
 def difference (X Y : bSet 𝔹) : bSet 𝔹 :=
@@ -174,12 +156,5 @@ theorem positive_difference_of_small {κ I X Y : bSet 𝔹} {Γ : 𝔹}
       (inf_le_right.trans HY) subset_difference_union
   exact (le_inf Hsmall (inf_le_right.trans (HX.trans inf_le_right))).trans
     inf_compl_eq_bot.le
-
-/-- Two independent small obstructions may be removed simultaneously. -/
-theorem positive_difference_union_of_small {κ I X Y Z : bSet 𝔹} {Γ : 𝔹}
-    (HI : Γ ≤ isIdeal κ I) (HX : Γ ≤ positive κ I X)
-    (HY : Γ ≤ Y ∈ᴮ I) (HZ : Γ ≤ Z ∈ᴮ I) :
-    Γ ≤ positive κ I (difference X (binary_union Y Z)) :=
-  positive_difference_of_small HI HX (small_union (unionClosed_of_isIdeal HI) HY HZ)
 
 end bSet.ErdosIdeal

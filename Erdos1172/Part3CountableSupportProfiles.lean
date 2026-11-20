@@ -96,52 +96,8 @@ noncomputable def rank (hCH : CH) (hI : #I ≤ ℵ_ 1) (hV : #V ≤ ℵ_ 1) :
   Classical.choice ((Cardinal.le_def _ _).mp (by
     simpa only [W1, Cardinal.mk_toType, Ordinal.card_omega] using mk_Profile_le hCH hI hV))
 
-theorem same_rank_iff (hCH : CH) (hI : #I ≤ ℵ_ 1) (hV : #V ≤ ℵ_ 1)
-    (p q : Profile I V) : rank hCH hI hV p = rank hCH hI hV q ↔ ∀ i, p.val i = q.val i := by
-  constructor
-  · intro h i
-    exact congrArg (fun p : Profile I V => p.val i) ((rank hCH hI hV).injective h)
-  · intro h
-    exact congrArg (rank hCH hI hV) (Subtype.ext (funext h))
-
-theorem support_eq_of_same_rank (hCH : CH) (hI : #I ≤ ℵ_ 1) (hV : #V ≤ ℵ_ 1)
-    (p q : Profile I V) (h : rank hCH hI hV p = rank hCH hI hV q) :
-    support p = support q :=
-  congrArg support ((rank hCH hI hV).injective h)
-
 /-- The extra option is intentional: an absent coordinate and a present
 coordinate with an empty Hechler stem are different profiles. -/
 abbrev StemProfile (I : Type) := Profile I Stem
-
-theorem mk_StemProfile_le (hCH : CH) (hI : #I ≤ ℵ_ 1) :
-    #(StemProfile I) ≤ ℵ_ 1 := mk_Profile_le hCH hI (mk_Stem_le hCH)
-
-noncomputable def stemProfileRank (hCH : CH) (hI : #I ≤ ℵ_ 1) :
-    StemProfile I ↪ W1 := rank hCH hI (mk_Stem_le hCH)
-
-theorem active_inactive_codes_ne (hCH : CH) (hI : #I ≤ ℵ_ 1)
-    (p q : StemProfile I) (i : I) (s : Stem)
-    (hp : p.val i = some s) (hq : q.val i = none) :
-    stemProfileRank hCH hI p ≠ stemProfileRank hCH hI q := by
-  intro h
-  have heq := congrArg (fun p : StemProfile I => p.val i)
-    ((stemProfileRank hCH hI).injective h)
-  rw [hp, hq] at heq
-  cases heq
-
-/-- Every prospective iteration length below omegaTwo has at most
-omegaOne countable-support stem profiles under CH. This discharges the
-coordinate-cardinality premise; it does not construct that iteration. -/
-theorem mk_ordinal_StemProfile_le (hCH : CH) {α : Ordinal.{0}} (hα : α < ω_ 2) :
-    #(StemProfile α.ToType) ≤ ℵ_ 1 := by
-  apply mk_StemProfile_le hCH
-  rw [Cardinal.mk_toType, Cardinal.card_le_iff]
-  simpa only [Cardinal.succ_aleph, Cardinal.ord_aleph,
-    show (1 : Ordinal) + 1 = 2 by norm_num] using hα
-
-noncomputable def ordinalStemProfileRank (hCH : CH) {α : Ordinal.{0}} (hα : α < ω_ 2) :
-    StemProfile α.ToType ↪ W1 :=
-  Classical.choice ((Cardinal.le_def _ _).mp (by
-    simpa only [W1, Cardinal.mk_toType, Ordinal.card_omega] using mk_ordinal_StemProfile_le hCH hα))
 
 end Erdos1172Part3CountableSupportProfiles

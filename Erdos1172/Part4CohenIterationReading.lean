@@ -48,24 +48,10 @@ theorem reads_ext {K : bSet B} (c : Algebra K) : B_ext (reads c) := by
   unfold reads
   exact B_ext_iSup (h := fun _ => B_ext_inf B_ext_const B_ext_bv_eq_left)
 
-theorem reads_mono {K q : bSet B} {c d : Algebra K} (Hcd : c ≤ d) :
-    reads c q ≤ reads d q := by
-  apply iSup_le
-  intro p
-  exact le_iSup_of_le ⟨p.val, p.property.trans Hcd⟩ le_rfl
-
 theorem value_le_reads {K : bSet B} {c : Algebra K} {p : Conditions K}
     (Hp : condition p ≤ c) :
     p.value ≤ reads c (Erdos1172BooleanNameIteration.name p) :=
   le_iSup_of_le ⟨p, Hp⟩ (le_inf le_rfl bv_refl)
-
-theorem reads_le_mem_conditions {K q : bSet B} {c : Algebra K} :
-    reads c q ≤ q ∈ᴮ ErdosCohen.conditions K := by
-  apply iSup_le
-  intro p
-  exact bv_rw' (ϕ := fun r => r ∈ᴮ ErdosCohen.conditions K) inf_le_right
-    (h_congr := B_ext_mem_left)
-    (H_new := inf_le_left.trans (Erdos1172BooleanNameIteration.name_mem p.val))
 
 /-- Two disjoint completed cones cannot read the same name on overlapping
 positive first-stage pieces: shrinking one representative gives an actual

@@ -197,19 +197,6 @@ theorem fusion_prefix_poolValues
       (A =ᴮ (∅ : bSet 𝔹) ⊔ A ∈ᴮ B) :=
   blockHistory_poolValues_of_allGood (fusion_prefix_allPool HE HElaw HF Hhull HRun Hlaw)
 
-theorem fusion_prefix_active_poolValues
-    {color : Bool} {R E F top Run B P ξ : bSet 𝔹} {Γ : 𝔹}
-    (HE : Γ ≤ is_function (blockObjects color R) blockEnumerationCodes E)
-    (HElaw : Γ ≤ blockEnumerationFamilyLaw color R E)
-    (HF : Γ ≤ is_function (choicePoolDomain (blockObjects color R) omegaTwo)
-      (bv_powerset omegaTwo) F)
-    (Hhull : Γ ≤ closedHullData color R F B P)
-    (HRun : Γ ≤ is_function omegaOne runSpace Run)
-    (Hlaw : Γ ≤ runLaw color R E F top Run) :
-    Γ ≤ ⨅ i, ⨅ U, _root_.imp
-      (i ∈ᴮ ξ ⊓ pair i U ∈ᴮ activeFamily (taggedPrefix ξ omegaOne entrySpace Run)) (U ⊆ᴮ P) :=
-  activeFamily_poolValues_of_allGood (fusion_prefix_allPool HE HElaw HF Hhull HRun Hlaw)
-
 theorem fusion_prefix_earlierHistory_subset_pool
     {color : Bool} {R E F top Run B P ξ : bSet 𝔹} {Γ : 𝔹}
     (HE : Γ ≤ is_function (blockObjects color R) blockEnumerationCodes E)
@@ -221,23 +208,5 @@ theorem fusion_prefix_earlierHistory_subset_pool
     (Hlaw : Γ ≤ runLaw color R E F top Run) :
     Γ ≤ earlierHistory color R ξ (blockHistory (taggedPrefix ξ omegaOne entrySpace Run)) ⊆ᴮ B :=
   earlierHistory_subset_pool_of_values (fusion_prefix_poolValues HE HElaw HF Hhull HRun Hlaw)
-
-theorem fusion_prefix_successful_block_mem_pool
-    {color : Bool} {R E F top Run B P ξ ν : bSet 𝔹} {Γ : 𝔹}
-    (HE : Γ ≤ is_function (blockObjects color R) blockEnumerationCodes E)
-    (HElaw : Γ ≤ blockEnumerationFamilyLaw color R E)
-    (HF : Γ ≤ is_function (choicePoolDomain (blockObjects color R) omegaTwo)
-      (bv_powerset omegaTwo) F)
-    (Hhull : Γ ≤ closedHullData color R F B P)
-    (HRun : Γ ≤ is_function omegaOne runSpace Run)
-    (Hlaw : Γ ≤ runLaw color R E F top Run) (Hξ : Γ ≤ ξ ∈ᴮ omegaOne)
-    (Hactive : Γ ≤ ν ∈ᴮ successfulRows color R ξ
-      (blockHistory (taggedPrefix ξ omegaOne entrySpace Run))) :
-    Γ ≤ blockValue (blockHistory (taggedPrefix ξ omegaOne entrySpace Run)) ν ∈ᴮ B := by
-  have Hparts := mem_successfulRows_iff.mp Hactive
-  have HBlocks := blockHistory_is_function (subset_of_mem_Ord Hξ omegaOne_Ord)
-    (fusion_prefix_is_function HRun Hlaw (subset_of_mem_Ord Hξ omegaOne_Ord))
-  exact mem_of_mem_subset (fusion_prefix_earlierHistory_subset_pool HE HElaw HF Hhull HRun Hlaw)
-    (earlierHistory_mem_of_pair HBlocks (graphValue_pair_mem HBlocks Hparts.1) Hparts.2)
 
 end bSet.ErdosFusionRunPoolInvariant

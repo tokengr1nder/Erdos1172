@@ -5,7 +5,6 @@ Licensed under the Apache License, Version 2.0.
 module
 
 public import Mathlib.Order.Filter.Germ.Basic
-public import Mathlib.Order.Filter.Ultrafilter.Basic
 public import Flypitch4.ToMathlib
 public import Erdos1172.Part4PositiveBooleanCompletion
 
@@ -108,9 +107,6 @@ variable [BooleanAlgebra B]
 
 /-- Canonical inclusion of Boolean germs into their regular completion. -/
 def germValue (U : Ultrafilter I) (b : Germ (U : Filter I) B) : Algebra U B := embed b
-
-theorem germValue_le_iff (U : Ultrafilter I) (b c : Germ (U : Filter I) B) :
-    germValue U b ≤ germValue U c ↔ b ≤ c := embed_le_iff
 
 def value (U : Ultrafilter I) (f : I → B) : Algebra U B := germValue U (Germ.ofFun f)
 

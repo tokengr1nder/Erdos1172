@@ -5,7 +5,6 @@ Licensed under the Apache License, Version 2.0.
 module
 
 public import Erdos1172.Part4InternalClubTails
-public import Erdos1172.Part4InternalIdealLossFamily
 public import Erdos1172.Part4InternalCountableAbsorption
 
 @[expose] public section
@@ -57,10 +56,6 @@ theorem mem_nonstationaryIdeal_iff {A : bSet 𝔹} {Γ : 𝔹} :
   · rintro ⟨Hsub, Hmiss⟩
     exact (mem_comprehend_and missesClub_ext).mpr ⟨mem_powerset_iff.mpr Hsub, Hmiss⟩
 
-theorem nonstationaryIdeal_subset {Γ : 𝔹} :
-    Γ ≤ nonstationaryIdeal ⊆ᴮ bv_powerset omegaTwo :=
-  comprehend_subset (ϕ := missesClub) (bv_powerset omegaTwo)
-
 theorem mem_nonstationaryIdeal_of_club {A C : bSet 𝔹} {Γ : 𝔹}
     (HC : Γ ≤ club omegaTwo C) (Havoid : Γ ≤ A ⊆ᴮ difference omegaTwo C) :
     Γ ≤ A ∈ᴮ nonstationaryIdeal :=
@@ -85,36 +80,10 @@ theorem nonstationaryIdeal_downward {Γ : 𝔹} :
   exact mem_nonstationaryIdeal_of_club (HC.trans inf_le_left)
     (subset_trans' (inf_le_right.trans inf_le_left) (HC.trans inf_le_right))
 
-theorem empty_mem_nonstationaryIdeal {Γ : 𝔹} (HCH : Γ ≤ (CH : 𝔹)) :
-    Γ ≤ (∅ : bSet 𝔹) ∈ᴮ nonstationaryIdeal :=
-  mem_nonstationaryIdeal_of_club (club_omegaTwo HCH) empty_subset
-
-theorem omegaTwo_not_mem_nonstationaryIdeal {Γ : 𝔹} :
-    Γ ≤ (omegaTwo ∈ᴮ (nonstationaryIdeal : bSet 𝔹))ᶜ := by
-  rw [← imp_bot, ← deduction]
-  obtain ⟨C, HC⟩ := exists_avoiding_club
-    (show Γ ⊓ omegaTwo ∈ᴮ nonstationaryIdeal ≤ omegaTwo ∈ᴮ nonstationaryIdeal from
-      inf_le_right)
-  obtain ⟨x, Hx⟩ := exists_mem_club (HC.trans inf_le_left)
-  have Hxω := mem_of_mem_subset (club_subset (HC.trans inf_le_left)) Hx
-  have Hbad := mem_of_mem_subset (HC.trans inf_le_right) Hxω
-  rw [mem_difference] at Hbad
-  exact bv_absurd _ Hx (Hbad.trans inf_le_right)
-
 theorem omegaOne_small_mem_nonstationaryIdeal {A : bSet 𝔹} {Γ : 𝔹}
     (HCH : Γ ≤ (CH : 𝔹)) (HA : Γ ≤ A ⊆ᴮ omegaTwo)
     (Hsmall : Γ ≤ injects_into A omegaOne) : Γ ≤ A ∈ᴮ nonstationaryIdeal := by
   obtain ⟨C, HC⟩ := exists_club_avoiding_small HCH HA Hsmall
   exact mem_nonstationaryIdeal_of_club (HC.trans inf_le_left) (HC.trans inf_le_right)
-
-theorem nonstationaryIdeal_countableAbsorption {Γ : 𝔹} (HCH : Γ ≤ (CH : 𝔹)) :
-    Γ ≤ countableAbsorption omegaTwo nonstationaryIdeal := by
-  apply le_iInf
-  intro A
-  rw [← deduction]
-  exact omegaOne_small_mem_nonstationaryIdeal (inf_le_left.trans HCH)
-    (inf_le_right.trans inf_le_left)
-    (injects_into_trans (inf_le_right.trans inf_le_right)
-      (injects_into_of_subset (subset_of_mem_Ord omega_mem_omegaOne omegaOne_Ord)))
 
 end bSet.ErdosNonstationary

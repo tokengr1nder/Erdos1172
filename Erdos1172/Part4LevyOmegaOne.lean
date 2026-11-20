@@ -52,10 +52,4 @@ theorem below_checked_upper_eq_omegaOne (κ : Cardinal.{u})
   ErdosOmegaTwo.omegaOne_property_unique
     (below_checked_upper_hartogsProperty κ Hκ Hunc)
 
-theorem below_omegaOne_eq_checked_upper (κ : Cardinal.{u})
-    (Hκ : κ.IsRegular) (Hunc : Cardinal.aleph0 < κ) :
-    (⊤ : Completion (BelowCondition κ)) ≤
-      ErdosOmegaTwo.omegaOne =ᴮ check (PSet.ordinalMk κ.ord) :=
-  bv_symm (below_checked_upper_eq_omegaOne κ Hκ Hunc)
-
 end Erdos1172LevyCollapse

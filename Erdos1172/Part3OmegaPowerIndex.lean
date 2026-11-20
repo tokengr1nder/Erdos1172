@@ -4,7 +4,7 @@ Licensed under the Apache License, Version 2.0.
 -/
 module
 
-public import Erdos1172.Part3FinitePowerRelations
+public import Erdos1172.Part3FullStationaryFiniteCores
 public import Mathlib.Data.Sigma.Order
 
 @[expose] public section

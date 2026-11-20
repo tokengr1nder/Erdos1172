@@ -27,26 +27,7 @@ def RegularCollapsingStages : Prop := ∀ ξ : Cardinal.{u}, ξ < θ →
     (∃ d : μ.ord.ToType → Positive (B (cardinalStage hm)), ∀ a, ∃ k, d k ≤ a) ∧
     (⊤ : B (cardinalStage hm)) ≤ injects_into (check (PSet.ordinalMk μ.ord)) omega
 
-private theorem from_singleton (V : Type u) [NontrivialCompleteBooleanAlgebra V] :
-    ∃ h : CompleteLatticeHom (Completion (ULift.{u} Unit)) V, Function.Injective h := by
-  let f : Positive V →o ULift.{u} Unit := OrderHom.const _ ⟨()⟩
-  have lifts : ExactLifts f := fun p q _ => ⟨p,le_rfl,Subsingleton.elim _ q⟩
-  have onto : Function.Surjective f := fun q => ⟨⟨⊤,top_ne_bot⟩,Subsingleton.elim _ q⟩
-  let e := CompleteLatticeHom.OrderIso.toCompleteLatticeHom (completionOrderIso (B := V)).symm
-  exact ⟨e.comp (Erdos1172PosetProjection.completionHom f lifts),
-    (completionOrderIso (B := V)).symm.injective.comp (Erdos1172PosetProjection.completionHom_injective _ _ onto)⟩
-
 variable {B}
-
-theorem exists_start_match (hθ : ℵ₀ < θ) (good : RegularCollapsingStages B) : Nonempty (StageMatch B (ClosedStage (θ := θ))) := by
-  obtain ⟨μ,hm,_,hu,reg,⟨d,hd⟩,hb⟩ := good ℵ₀ hθ
-  obtain ⟨⟨v,hv⟩,hc⟩ := closedStage_matching_data _ hu.le (cardinalStage_rank hm)
-  obtain ⟨e,he⟩ := from_singleton (B (cardinalStage hm))
-  obtain ⟨g,hg⟩ := from_singleton (ClosedStage (cardinalStage hm))
-  let a (x : ULift.{u} Unit) : Positive (Completion (ULift.{u} Unit)) := ⟨condition x,condition_ne_bot x⟩
-  have hdense (x : Positive (Completion (ULift.{u} Unit))) : ∃ t, a t ≤ x := exists_condition_le x.property
-  obtain ⟨ψ,_⟩ := exists_stage_amalgamation e he g hg μ hu reg a (Cardinal.mk_lt_aleph0.trans hu) hdense d hd v hv hb hc
-  exact ⟨⟨_,ψ⟩⟩
 
 /-- All source stages have small density, by projecting a dense family of
 the next good stage. A subsequent good stage supplies both collapsing factors. -/

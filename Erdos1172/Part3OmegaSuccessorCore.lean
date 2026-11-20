@@ -36,14 +36,6 @@ abbrev OmegaSuccessor := W1 ×ₗ OmegaIndex
 
 theorem mk_omegaSuccessor_le : #OmegaSuccessor ≤ ℵ_ 1 := mk_product_le mk_omegaIndex_le
 
-theorem omega_successor_power_le_type : (ω_ 1 : Ordinal.{0}) ^ (ω + 1) ≤ typeLT OmegaSuccessor := by
-  change (ω_ 1 : Ordinal.{0}) ^ (ω + 1) ≤ Ordinal.type
-    (Prod.Lex ((· < ·) : W1 → W1 → Prop) ((· < ·) : OmegaIndex → OmegaIndex → Prop))
-  rw [Ordinal.type_prod_lex, Ordinal.opow_add_one]
-  change (ω_ 1 : Ordinal.{0}) ^ ω * (ω_ 1) ≤ (typeLT OmegaIndex) * (typeLT (ω_ 1).ToType)
-  rw [Ordinal.type_toType]
-  exact mul_le_mul' omega_power_le_type le_rfl
-
 theorem exists_club_guarded_omega_successor (hGCH : GCH) (G H : SimpleGraph W2)
     (hcompl : IsCompl G H) (hred : ¬HasCliqueOfType G (ω_ 2))
     (hblue : ¬HasCliqueOfType H (ω_ 1 + 2)) (source : RegularName (Full hGCH) W2)
@@ -58,20 +50,5 @@ theorem exists_club_guarded_omega_successor (hGCH : GCH) (G H : SimpleGraph W2)
   exact ⟨club, hclub, fun a ha hsa => ⟨hc a ha hsa,
     exists_guarded_source_product (Erdos1172Part3TransfiniteHechlerClosure.full_countablyClosed hGCH)
       (Erdos1172Part3TransfiniteHechlerCentering.omegaTwoCC hGCH ⊤) mk_omegaIndex_le (hc a ha hsa)⟩⟩
-
-theorem exists_ground_omega_successor (hGCH : GCH) (G H : SimpleGraph W2)
-    (hcompl : IsCompl G H) (hred : ¬HasCliqueOfType G (ω_ 2))
-    (hblue : ¬HasCliqueOfType H (ω_ 1 + 2)) :
-    HasCliqueOfType G ((ω_ 1 : Ordinal.{0}) ^ (ω + 1)) := by
-  let source : RegularName (Full hGCH) W2 := ground {a : W2 | IsOmegaOneSup a}
-  obtain ⟨club, hclub, hc⟩ := exists_club_guarded_omega_successor hGCH G H hcompl hred hblue source
-    (fun _ _ hp => hp) (eventuallyLocal_ground (Earlier hGCH) (restriction hGCH) _)
-  obtain ⟨a, ha, hac⟩ := ErdosRadoCHAsym.isStationary_isOmegaOneSup_omegaTwo hclub
-  let p0 : Full hGCH := default
-  obtain ⟨data⟩ := (hc a hac ha).2 ⟨p0, ha⟩
-  obtain ⟨C, hC, ht⟩ := data.name.toClique.exists_clique_type
-    (Erdos1172Part3TransfiniteHechlerClosure.full_countablyClosed hGCH) p0 mk_omegaSuccessor_le
-  obtain ⟨D, hDC, hDt⟩ := Ordinal.exists_subset_typeLT_eq C (omega_successor_power_le_type.trans_eq ht.symm)
-  exact ⟨D, hC.subset hDC, hDt⟩
 
 end Erdos1172Part3OmegaSuccessorCore

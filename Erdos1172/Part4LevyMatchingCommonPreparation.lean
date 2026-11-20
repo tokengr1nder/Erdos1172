@@ -6,7 +6,6 @@ module
 
 public import Erdos1172.Part4LevyMatchingAnchoredArrays
 public import Erdos1172.Part4LevyPreparationCohenMaster
-public import Erdos1172.Part4LevyContinuumHypothesis
 
 @[expose] public section
 
@@ -82,34 +81,4 @@ theorem exists_levy_matching_over_preparation (hk : κ < θ) (hκ : κ.IsInacces
   exact (congrArg K ((othereq x).symm.trans (congrArg (fullClosedHom s) (commutes x).symm))).trans
     ((anchor (old x)).trans (congrArg (src) (oldeq x)))
 
-/-- For a source containing the lower collapse--Cohen iteration, the full
-collapse embedding fixes the common collapse. Densely in the joint forcing
-one actual upper Cohen condition extends every prepared lower condition
-on the Boolean cone selecting it. -/
-theorem exists_matching_cohen_master {I : Type u} (U : Ultrafilter I) (a : I → Set θ.ord.ToType)
-    [CountableInterFilter (U : Filter I)] [Nonempty θ.ord.ToType] [CardinalInterFilter (U : Filter I) κ]
-    (hk : κ < θ) (hκ : κ.IsInaccessible) (hθ : θ.IsInaccessible)
-    (hf : FineOn U a) (hn : NormalOn U a) (ht : FiberOrderType U κ θ a)
-    (cc : StrictCC R θ) (dense : DenseStageUnion g) (good : RegularCollapsingStages B)
-    (ginj : ∀ i, Function.Injective (g i)) (gg : ∀ {i j} (h : i ≤ j) x, g j (b h x) = g i x)
-    (u : CompleteLatticeHom (Erdos1172LevyCohen.Algebra κ) R) (uinj : Function.Injective u) :
-    ∃ K : CompleteLatticeHom Z E, Function.Injective K ∧
-      (∀ x, K (initialCollapseHom hk.le x) = src (u (Erdos1172LevyCohen.firstStageHom κ x))) ∧
-      (⊤ : E) ≤ ⨆ z : {z : E × bSet Z //
-        (⊤ : Z) ≤ ErdosCohen.condition omegaOne z.2 ∧ ∀ p : Erdos1172CohenIteration.Conditions (omegaOne : bSet A),
-        z.1 ⊓ src (u (condition p)) ≤ mapNames K (Preparation.preparedName U a hk.le hf hn ht
-          (Erdos1172BooleanNameIteration.name p)) ⊆ᴮ mapNames K z.2}, z.val.1 := by
-  let lower := Erdos1172LevyCohen.firstStageHom κ
-  let l := (src).comp u
-  obtain ⟨K,kin,square,forward,_⟩ := exists_levy_matching_over_preparation b g hk hκ hθ cc dense good ginj gg
-    (u.comp lower) (uinj.comp (Erdos1172LevyCohen.firstStageHom_injective κ))
-  refine ⟨K,kin,square,?_⟩
-  let T := (PSet.ordinalMk κ.ord).Type
-  let bit (i : T) := Erdos1172CohenIteration.bitValue (omegaOne : bSet A)
-    (check ((PSet.ordinalMk κ.ord).Func i)) 1
-  have size : #T < θ := by simpa only [T,PSet.ordinalMk_type,Cardinal.mk_ord_toType] using hk
-  apply (forward T size (fun i => u (bit i))).trans (iSup_le fun z => ?_)
-  obtain ⟨m,hm,onCones⟩ := Preparation.exists_joint_cohen_master U a hk hf hn ht hκ.isRegular hκ.aleph0_lt hθ.isRegular
-    l K (fun x => (square x).symm) z.val.1 z.val.2 z.property
-  exact le_iSup_of_le ⟨(z.val.1,m),hm,onCones⟩ le_rfl
 end Erdos1172LevyCollapse.Matching

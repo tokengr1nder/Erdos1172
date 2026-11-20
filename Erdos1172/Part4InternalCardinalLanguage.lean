@@ -7,7 +7,6 @@ Lean 4 port: Ian Klatzco, Claude
 -/
 module
 
-public import Erdos1172.Statement
 public import Flypitch4.ZfcCore
 
 @[expose] public section

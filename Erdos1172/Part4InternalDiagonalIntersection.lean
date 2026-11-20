@@ -6,7 +6,6 @@ module
 
 public import Erdos1172.Part4InternalColargeIntersection
 public import Erdos1172.Part4InternalIdealNormality
-public import Erdos1172.Part4InternalRelationGraph
 
 @[expose] public section
 

@@ -217,24 +217,4 @@ theorem coordinateCandidateLaw_of_fullLeastLaw
     ((iInf_le _ ν).trans ((iInf_le _ ξ).trans ((iInf_le _ b).trans (iInf_le _ v))))))
     inf_le_right).trans bv_imp_elim)
 
-theorem fusion_full_coordinateCandidateLaw
-    {color : Bool} {R J E S F B P Y top Run : bSet 𝔹} {Γ : 𝔹}
-    (HJ : Γ ≤ properIdeal omegaOne J)
-    (Habsorb : Γ ≤ countableAbsorption omegaOne J)
-    (Hclosure : Γ ≤ countableClosure J)
-    (HE : Γ ≤ is_function (blockObjects color R) blockEnumerationCodes E)
-    (HElaw : Γ ≤ blockEnumerationFamilyLaw color R E)
-    (HF : Γ ≤ is_function (choicePoolDomain (blockObjects color R) omegaTwo)
-      (bv_powerset omegaTwo) F)
-    (HFlaw : Γ ≤ blockSelectorLaw color R J E S F)
-    (Hhull : Γ ≤ closedHullData color R F B P)
-    (Hseeds : Γ ≤ poolSeedLaw color R J E B Y) (Htop : Γ ≤ top ∈ᴮ Y)
-    (HRun : Γ ≤ is_function omegaOne runSpace Run)
-    (Hlaw : Γ ≤ runLaw color R E F top Run)
-    (Hsuccess : Γ ≤ successfulRun Run) :
-    Γ ≤ coordinateCandidateLaw (!color) R E top (fullBlocks Run) (fullCoordinates Run) :=
-  coordinateCandidateLaw_of_fullLeastLaw
-    (fusion_full_coordinateLeastLaw HJ Habsorb Hclosure HE HElaw HF HFlaw Hhull
-      Hseeds Htop HRun Hlaw Hsuccess)
-
 end bSet.ErdosFusionGlobalRowLaw

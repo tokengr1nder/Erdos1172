@@ -6,7 +6,7 @@ module
 
 public import Erdos1172.Part3GuardedCoreNames
 public import Erdos1172.Part3NamedRedReflection
-public import Erdos1172.Part3HechlerStagesAfterLimit
+public import Erdos1172.Part3IteratedHechlerPreservation
 
 @[expose] public section
 
@@ -90,20 +90,5 @@ theorem exists_club_guarded_red_cores_of_gch (hGCH : GCH) (hP : #P ≤ ℵ_ 2)
   exact ⟨rank hGCH hP hI G, blockRank hGCH hP hI G,
     exists_club_guarded_red_cores hGCH.toCH hclosed center G H
       (rank hGCH hP hI G) (blockRank hGCH hP hI G) hcompl hblue source⟩
-
-theorem guarded_red_cores_after_limit (hGCH : GCH) (n : ℕ)
-    (G H : SimpleGraph W2) (hcompl : IsCompl G H)
-    (hblue : ¬HasCliqueOfType H (ω_ 1 + 2))
-    (source : RegularName
-      (Erdos1172Part3HechlerStagesAfterLimit.afterLimit hGCH n).Carrier W2) :
-    let P := (Erdos1172Part3HechlerStagesAfterLimit.afterLimit hGCH n).Carrier
-    ∃ r : Code P W1 G ↪ W2, ∃ σ : NiceCliqueName P W1 W2 G ↪ W2,
-      ∃ club : Set W2, IsClub club ∧ ∀ a ∈ club,
-        ErdosRadoCHAsym.IsOmegaOneSup a →
-          GoodCut r σ H source a ∧
-          ((∃ p : P, source.holds p a) → Nonempty (CoreData r H source a)) := by
-  let order := Erdos1172Part3HechlerStagesAfterLimit.afterLimit hGCH n
-  exact exists_club_guarded_red_cores_of_gch hGCH order.small order.closed order.centered
-    G H hcompl hblue source
 
 end Erdos1172Part3GuardedRedCore

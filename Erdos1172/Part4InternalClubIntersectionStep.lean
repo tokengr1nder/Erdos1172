@@ -6,7 +6,6 @@ module
 
 public import Erdos1172.Part4InternalClubs
 public import Erdos1172.Part4InternalOmegaTwoBounded
-public import Erdos1172.Part4InternalCountableImage
 
 @[expose] public section
 
@@ -62,12 +61,6 @@ theorem exists_above_two {x d : bSet 𝔹} {Γ : 𝔹}
 def intervalHits (Q F x y : bSet 𝔹) : 𝔹 :=
   ⨅ q, ⨅ C, _root_.imp (q ∈ᴮ Q ⊓ pair q C ∈ᴮ F)
     (⨆ z, z ∈ᴮ C ⊓ (x ∈ᴮ z ⊓ z ∈ᴮ y))
-
-theorem intervalHits_apply {Q F x y q C : bSet 𝔹} {Γ : 𝔹}
-    (H : Γ ≤ intervalHits Q F x y) (Hq : Γ ≤ q ∈ᴮ Q)
-    (HC : Γ ≤ pair q C ∈ᴮ F) :
-    Γ ≤ ⨆ z, z ∈ᴮ C ⊓ (x ∈ᴮ z ⊓ z ∈ᴮ y) :=
-  (le_inf (H.trans ((iInf_le _ q).trans (iInf_le _ C))) (le_inf Hq HC)).trans bv_imp_elim
 
 /-- The selector is an actual supported function; its selected values
 belong to every graph value at that index and lie above the old endpoint. -/

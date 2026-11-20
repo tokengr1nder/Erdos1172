@@ -6,7 +6,6 @@ module
 
 public import Erdos1172.Part4LevyAnonymousSmallSubsetReading
 public import Erdos1172.Part4LevyCohenCheckedSequenceCapture
-public import Erdos1172.Part4BooleanFunctionTransport
 
 @[expose] public section
 

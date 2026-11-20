@@ -166,14 +166,4 @@ theorem exists_maximal_independent {color : Bool} {R X : bSet 𝔹} {Γ : 𝔹} 
   simpa only [mem_independentFamily] using
     (exists_maximal_independent_member (color := color) (R := R) (X := X) (Γ := Γ))
 
-/-- The maximal-witness predicate itself is extensional in its candidate,
-so fullness may select a name without shrinking the Boolean condition. -/
-theorem maximal_independent_ext (color : Bool) (R X : bSet 𝔹) :
-    B_ext (fun A : bSet 𝔹 => (A ⊆ᴮ X ⊓ independent color R A) ⊓
-      ⨅ B : bSet 𝔹, _root_.imp (B ⊆ᴮ X ⊓ independent color R B)
-        (_root_.imp (A ⊆ᴮ B) (A =ᴮ B))) :=
-  B_ext_inf (B_ext_inf B_ext_subset_left (independent_ext color R))
-    (B_ext_iInf (h := fun _ => B_ext_imp (h₁ := B_ext_const)
-      (h₂ := B_ext_imp (h₁ := B_ext_subset_left) (h₂ := B_ext_bv_eq_left))))
-
 end bSet.ErdosIndependentMaximal

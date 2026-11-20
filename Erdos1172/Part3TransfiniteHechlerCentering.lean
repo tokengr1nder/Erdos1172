@@ -6,7 +6,6 @@ module
 
 public import Erdos1172.Part3TransfiniteHechlerClosure
 public import Erdos1172.Part3CountableProfileAmalgamation
-public import Erdos1172.Part3FiniteHechlerStages
 
 @[expose] public section
 
@@ -33,7 +32,6 @@ open Erdos1172Part3TransfiniteHechlerOrder
 open Erdos1172Part3CountableProfileAmalgamation
 open Erdos1172Part3IteratedHechlerCentering (CountablyCenteredCode)
 open Erdos1172Part3StationaryDecisions (OmegaTwoCC)
-open Erdos1172Part3FiniteHechlerStages (SmallClosedCenteredOrder)
 
 def SameActiveStems {a : Cut} (C : Set (Carrier a)) : Prop :=
   ∀ p ∈ C, ∀ q ∈ C, ∀ i d e, value p i = some d → value q i = some e → d.val.1 = e.val.1
@@ -135,14 +133,5 @@ noncomputable def centered (hGCH : GCH) (a : Cut) : CountablyCenteredCode (Stage
 
 theorem omegaTwoCC (hGCH : GCH) (a : Cut) : OmegaTwoCC (Stage hGCH a) :=
   (centered hGCH a).omegaTwoCC
-
-noncomputable def orderBundle (hGCH : GCH) (a : Cut) : SmallClosedCenteredOrder where
-  Carrier := Stage hGCH a
-  order := inferInstance
-  closed := Erdos1172Part3TransfiniteHechlerClosure.countablyClosed hGCH a
-  centered := centered hGCH a
-  small := mk_stage_le hGCH a
-
-noncomputable def fullOrder (hGCH : GCH) : SmallClosedCenteredOrder := orderBundle hGCH ⊤
 
 end Erdos1172Part3TransfiniteHechlerCentering

@@ -64,16 +64,6 @@ theorem exists_function_decisions_of_dense (R : P → I → V → Prop)
   rw [← hv]
   exact hpersistent hpa (witnesses i a).choose_spec
 
-/-- Under the chain condition the selected decisions also have a small
-predense representation suitable for the next Hechler stage. -/
-theorem exists_nice_name_of_dense (hcc : OmegaTwoCC P) (R : P → I → V → Prop)
-    (hpersistent : ∀ {p q i v}, q ≤ p → R p i v → R q i v)
-    (hdense : ∀ p i, ∃ q : P, q ≤ p ∧ ∃ v : V, R q i v) :
-    ∃ N : NiceFunctionName P I V, ∀ p i v, N.toDecisions.decides p i v → R p i v := by
-  obtain ⟨F, hF⟩ := exists_function_decisions_of_dense R hpersistent hdense
-  obtain ⟨N, hN⟩ := Erdos1172Part3NiceFunctionNames.exists_nice_name hcc F
-  exact ⟨N, fun p i v hv => hF p i v (hN p i v hv)⟩
-
 def reindex {J : Type} (F : FunctionDecisions P I V) (f : J → I) :
     FunctionDecisions P J V where
   decides p j v := F.decides p (f j) v

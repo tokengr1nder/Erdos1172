@@ -4,9 +4,8 @@ Licensed under the Apache License, Version 2.0.
 -/
 module
 
-public import Erdos1172.Part4LevyCohenFreshCoordinates
+public import Erdos1172.Part4LevyCohenIteration
 public import Erdos1172.Part4GroundIndexNameBound
-public import Erdos1172.Part4LevyOrdinalSegments
 
 @[expose] public section
 
@@ -80,14 +79,6 @@ def freshCoordinateSet {κ : Cardinal.{u}} {I : Type u}
     (j : I → (PSet.ordinalMk κ.ord).Type) : PSet.{u} :=
   PSet.mk I (fun x => (PSet.ordinalMk κ.ord).Func (j x))
 
-theorem freshCoordinateSet_type {κ : Cardinal.{u}} {I : Type u}
-    (j : I → (PSet.ordinalMk κ.ord).Type) :
-    (freshCoordinateSet j).Type = I := rfl
-
-theorem freshCoordinateSet_func {κ : Cardinal.{u}} {I : Type u}
-    (j : I → (PSet.ordinalMk κ.ord).Type) (x : I) :
-    (freshCoordinateSet j).Func x = (PSet.ordinalMk κ.ord).Func (j x) := rfl
-
 theorem freshCoordinateSet_subset {κ : Cardinal.{u}} {I : Type u}
     (j : I → (PSet.ordinalMk κ.ord).Type) :
     freshCoordinateSet j ⊆ PSet.ordinalMk κ.ord := by
@@ -100,19 +91,6 @@ theorem freshCoordinateSet_separated {κ : Cardinal.{u}} {I : Type u}
       ¬ PSet.Equiv ((freshCoordinateSet j).Func x) ((freshCoordinateSet j).Func y) := by
   intro x y Hxy
   exact PSet.ordinalMk_inj κ.ord (j x) (j y) (fun h => Hxy (Hj h))
-
-/-- Separation remains valid at top for arbitrary checked-coordinate
-arguments in the first-stage Boolean algebra. -/
-theorem freshCoordinateSet_checked_separated {κ : Cardinal.{u}} {I : Type u}
-    {j : I → (PSet.ordinalMk κ.ord).Type} (Hj : Function.Injective j) :
-    ∀ x y : I, x ≠ y → (⊤ : FirstAlgebra κ) ≤
-      (check ((freshCoordinateSet j).Func x) =ᴮ
-        check ((freshCoordinateSet j).Func y))ᶜ := by
-  intro x y Hxy
-  have Hneq : (check ((freshCoordinateSet j).Func x) : bSet (FirstAlgebra κ)) =ᴮ
-      check ((freshCoordinateSet j).Func y) = ⊥ :=
-    check_bv_eq_bot_of_not_equiv (freshCoordinateSet_separated Hj x y Hxy)
-  rw [Hneq, compl_bot]
 
 /-- Every checked ground pre-set with a small index type is internally
 countable in the first-stage collapse. Separation, regularity, and external

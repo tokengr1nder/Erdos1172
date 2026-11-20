@@ -7,7 +7,6 @@ module
 public import Erdos1172.Part4InternalCountablePast
 public import Erdos1172.Part4InternalColargeIntersection
 public import Erdos1172.Part4InternalOrdinalLeast
-public import Erdos1172.Part4InternalPartitionGraph
 
 @[expose] public section
 
@@ -105,15 +104,6 @@ theorem mem_rowCandidates_iff {δ seed F h x : bSet 𝔹} {Γ : 𝔹}
     exact le_inf (mem_indexedIntersection_iff.mpr ⟨Hxω, Hsections⟩)
       (le_inf HnotSeedLoss (not_mem_past_of_above Habove))
 
-theorem rowAdmissible_ext_value (δ seed F h : bSet 𝔹) :
-    B_ext (rowAdmissible δ seed F h) :=
-  B_ext_inf B_ext_mem_left (B_ext_inf B_ext_mem_left
-    (B_ext_inf
-      (B_ext_iInf (h := fun _ => B_ext_iInf (h := fun _ =>
-        B_ext_imp (h₁ := B_ext_const) (h₂ := B_ext_mem_left))))
-      (B_ext_iInf (h := fun _ => B_ext_iInf (h := fun _ =>
-        B_ext_imp (h₁ := B_ext_const) (h₂ := B_ext_mem_right))))))
-
 /-- The whole set of admissible next coordinates is co-large. The actual
 past image is internally countable; it need not have a countable external
 presentation, and the original graph may contain later coordinates. -/
@@ -133,26 +123,5 @@ theorem rowCandidates_colarge {J δ seed F h : bSet 𝔹} {Γ : 𝔹}
     image_past_small HJ Habsorb Hclosure Hh Hδ
   exact colarge_difference_of_small HJ Hinter
     (small_union (unionClosed_of_isIdeal HJ) (Hseed.trans inf_le_right) Hpast)
-
-/-- Actual least choice at the same Boolean condition, derived from the
-proper ideal and the countable-stage constraints, with no selection axiom
-or separately assumed nonempty candidate set. -/
-theorem exists_least_row_candidate {J δ seed F h : bSet 𝔹} {Γ : 𝔹}
-    (HJ : Γ ≤ properIdeal omegaOne J)
-    (Habsorb : Γ ≤ countableAbsorption omegaOne J)
-    (Hclosure : Γ ≤ countableClosure J) (Hδ : Γ ≤ δ ∈ᴮ omegaOne)
-    (Hseed : Γ ≤ colarge omegaOne J seed)
-    (HF : Γ ≤ is_func' δ (bv_powerset omegaOne) F)
-    (Hvalues : Γ ≤ ⨅ j, ⨅ A, _root_.imp (j ∈ᴮ δ ⊓ pair j A ∈ᴮ F)
-      (difference omegaOne A ∈ᴮ J))
-    (Hh : Γ ≤ is_func' δ omegaOne h) :
-    ∃ x : bSet 𝔹, Γ ≤ colarge omegaOne J (rowCandidates δ seed F h) ⊓
-      leastIn (rowCandidates δ seed F h) x := by
-  have Hcolarge := rowCandidates_colarge (HJ.trans inf_le_left)
-    Habsorb Hclosure Hδ Hseed HF Hvalues Hh
-  have Hnonempty : Γ ≤ (rowCandidates δ seed F h =ᴮ ∅)ᶜ :=
-    positive_not_empty (HJ.trans inf_le_left) (colarge_positive HJ Hcolarge)
-  obtain ⟨x, Hx⟩ := exists_least_of_nonempty omegaOne_Ord rowCandidates_subset Hnonempty
-  exact ⟨x, le_inf Hcolarge Hx⟩
 
 end bSet.ErdosRowCandidates

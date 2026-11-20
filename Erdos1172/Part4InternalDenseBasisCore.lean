@@ -36,12 +36,6 @@ theorem positiveValues_apply {κ J D F x A : bSet 𝔹} {Γ : 𝔹}
   (le_inf (H.trans ((iInf_le _ x).trans (iInf_le _ A))) (le_inf Hx HA)).trans
     bv_imp_elim
 
-theorem commonLoss_apply {J F U A0 x A : bSet 𝔹} {Γ : 𝔹}
-    (H : Γ ≤ commonLoss J F U A0)
-    (Hx : Γ ≤ x ∈ᴮ U) (HA : Γ ≤ pair x A ∈ᴮ F) : Γ ≤ difference A0 A ∈ᴮ J :=
-  (le_inf (H.trans ((iInf_le _ x).trans (iInf_le _ A))) (le_inf Hx HA)).trans
-    bv_imp_elim
-
 theorem difference_congr_left {A B C : bSet 𝔹} {Γ : 𝔹}
     (H : Γ ≤ A =ᴮ B) : Γ ≤ difference A C =ᴮ difference B C :=
   B_congr_comprehend (ϕ := fun z => (z ∈ᴮ C)ᶜ)

@@ -5,7 +5,6 @@ Licensed under the Apache License, Version 2.0.
 module
 
 public import Erdos1172.Part4InternalSuccessfulRunBlock
-public import Erdos1172.Part4InternalRelationGraph
 
 @[expose] public section
 
@@ -101,10 +100,6 @@ theorem sectionPullback_witness {e S σ t A : bSet 𝔹} {Γ : 𝔹}
   exists_convert (sectionPullback_pair_iff.mp H).2.2.2
     (B_ext_inf B_ext_pair_mem_right (B_ext_pair_right B_ext_pair_mem_left))
 
-theorem sectionPullback_subset {e S : bSet 𝔹} {Γ : 𝔹} :
-    Γ ≤ sectionPullback e S ⊆ᴮ prod (prod omegaOne omegaTwo) (bv_powerset omegaOne) :=
-  relationGraph_subset
-
 private theorem codomain_of_weak_pair {D C f i A : bSet 𝔹} {Γ : 𝔹}
     (Hf : Γ ≤ is_func' D C f) (Hi : Γ ≤ i ∈ᴮ D) (Hpair : Γ ≤ pair i A ∈ᴮ f) :
     Γ ≤ A ∈ᴮ C := by
@@ -191,12 +186,6 @@ def rowNormalIdealDataOn (S L σ J : bSet 𝔹) : 𝔹 :=
 
 def normalRowAvailabilityOn (S L : bSet 𝔹) : 𝔹 :=
   ⨅ σ, _root_.imp (σ ∈ᴮ omegaOne) (⨆ J, rowNormalIdealDataOn S L σ J)
-
-theorem rowIdealDataOn_omegaTwo (S σ J : bSet 𝔹) :
-    rowIdealDataOn S omegaTwo σ J = rowIdealData S σ J := rfl
-
-theorem rowNormalIdealDataOn_omegaTwo (S σ J : bSet 𝔹) :
-    rowNormalIdealDataOn S omegaTwo σ J = rowNormalIdealData S σ J := rfl
 
 theorem rowIdealDataOn_value {S L σ J y A : bSet 𝔹} {Γ : 𝔹}
     (Hdata : Γ ≤ rowIdealDataOn S L σ J) (Hy : Γ ≤ y ∈ᴮ L)

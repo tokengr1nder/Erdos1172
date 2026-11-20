@@ -83,15 +83,6 @@ theorem mem_futureCandidates_iff
       (Γ ≤ y ∈ᴮ top) ∧ Γ ≤ futureRequirements color δ R S Y X Z top y :=
   mem_comprehend_and (futureRequirements_ext_value color δ R S Y X Z top)
 
-theorem mem_futureCandidates (color : Bool) (δ R S Y X Z top y : bSet 𝔹) :
-    y ∈ᴮ futureCandidates color δ R S Y X Z top =
-      y ∈ᴮ top ⊓ futureRequirements color δ R S Y X Z top y := by
-  apply le_antisymm
-  · have H := mem_futureCandidates_iff.mp
-      (le_refl (y ∈ᴮ futureCandidates color δ R S Y X Z top))
-    exact le_inf H.1 H.2
-  · exact mem_futureCandidates_iff.mpr ⟨inf_le_left, inf_le_right⟩
-
 theorem futureCandidates_subset_top
     {color : Bool} {δ R S Y X Z top : bSet 𝔹} {Γ : 𝔹} :
     Γ ≤ futureCandidates color δ R S Y X Z top ⊆ᴮ top :=

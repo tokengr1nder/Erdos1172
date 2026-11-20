@@ -5,7 +5,6 @@ Licensed under the Apache License, Version 2.0.
 module
 
 public import Erdos1172.Part4SideForcingBaseChange
-public import Erdos1172.Part4ShioyaDenseCoverIso
 
 @[expose] public section
 
@@ -154,18 +153,6 @@ theorem commutation_left (c : Algebra U) :
   apply SetLike.ext
   intro t
   change stack U V (swap V U t) ∈ (sourceHom (m V) c).val ↔ stack V U t ∈ (BaseChange.hom (sourceHom V) U c).val
-  rw [← condition_le_iff,← condition_le_iff,condition_le_source,BaseChange.cone_le_hom,stack_lower,stack_value]
-  rfl
-
-theorem commutation_right (c : Algebra V) :
-    commutation U V (BaseChange.hom (j) V c) = sourceHom (mapNames (sourceHom V) U) c := by
-  apply (stackIso V U).injective
-  change stackIso V U ((stackIso V U).symm _) = _
-  rw [OrderIso.apply_symm_apply]
-  apply Heyting.Regular.coe_injective
-  apply SetLike.ext
-  intro t
-  change stack U V (swap V U t) ∈ (BaseChange.hom (j) V c).val ↔ stack V U t ∈ (sourceHom _ c).val
   rw [← condition_le_iff,← condition_le_iff,condition_le_source,BaseChange.cone_le_hom,stack_lower,stack_value]
   rfl
 

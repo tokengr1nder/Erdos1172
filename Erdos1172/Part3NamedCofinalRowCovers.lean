@@ -6,7 +6,6 @@ module
 
 public import Erdos1172.Part3NamedLocalRowCover
 public import Erdos1172.Part3NamedRowInterval
-public import Erdos1172.Part3ClosedDenseRequirements
 
 @[expose] public section
 
@@ -61,12 +60,6 @@ def flattenDecisions {q : P} (r : Set.Iic q)
     exact ⟨flattenCone r s, hsp, x, hx⟩
   persistent hsp h := F.persistent hsp h
   unique hx hy := F.unique hx hy
-
-/-- A finite certificate is unchanged by removing the redundant cone. -/
-theorem certificate_flatten_iff {q : P} (r : Set.Iic q)
-    (F : FunctionDecisions (Set.Iic r) W1 W1) (C : (W1 → W1) → Set X)
-    (p : Set.Iic r.val) (x : X) :
-    Certificate (flattenDecisions r F) C p x ↔ Certificate F C (nestCone r p) x := Iff.rfl
 
 /-- The exact cone identification compares every refinement in both
 directions, hence preserves actual regularized cover membership. -/

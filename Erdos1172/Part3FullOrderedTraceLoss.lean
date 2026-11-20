@@ -7,7 +7,6 @@ module
 public import Erdos1172.Part3StationaryOrderedLoss
 public import Erdos1172.Part3OrderedCoreExtraction
 public import Erdos1172.Part3OrderedTraceRestriction
-public import Erdos1172.Part3CliqueConeExtension
 
 @[expose] public section
 

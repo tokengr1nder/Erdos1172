@@ -5,7 +5,7 @@ Licensed under the Apache License, Version 2.0.
 module
 
 public import Erdos1172.Part3CompleteRestrictionNames
-public import Erdos1172.Part3RegularLocalBlock
+public import Erdos1172.Part3NamedStationaryRedBlock
 public import Erdos1172.Part3RegularStageLocality
 
 @[expose] public section
@@ -44,10 +44,6 @@ def RankedWitness (rank : NiceCliqueName P I W2 G ↪ W2)
 
 def rankedAvailability (rank : NiceCliqueName P I W2 G ↪ W2) (source : RegularName P W2) :
     RegularName P W2 := regularize (RankedWitness rank source)
-
-theorem rankedAvailability_eq_localBlockName
-    (rank : NiceCliqueName P W1 W2 G ↪ W2) (source : RegularName P W2) :
-    rankedAvailability rank source = Erdos1172Part3RegularLocalBlock.localBlockName rank source := rfl
 
 theorem restrictClique_containedIn_iff (r : CompleteRestriction P Q)
     (N : NiceCliqueName P I W2 G) (hs : Supported r N.function)
@@ -116,59 +112,5 @@ theorem rankedAvailability_restrict_iff (r : CompleteRestriction P Q)
     obtain ⟨t, htq, htbase⟩ := r.lift q s hsq
     refine ⟨t, htq, (rankedWitness_restrict_iff r rank a hs source t).mpr ?_⟩
     rwa [htbase]
-
-theorem neg_rankedAvailability_restrict_iff (r : CompleteRestriction P Q)
-    (rank : NiceCliqueName P I W2 G ↪ W2) (a : W2)
-    (hs : ∀ N, rank N < a → Supported r N.function)
-    (source : RegularName Q W2) (p : P) :
-    (neg (rankedAvailability rank (r.liftRegular source))).holds p a ↔
-      (neg (restrictedAvailability r rank a hs source)).holds (r.restrict p) () := by
-  constructor
-  · intro h q hqp hq
-    obtain ⟨s, hsp, hsbase⟩ := r.lift p q hqp
-    apply h s hsp
-    apply (rankedAvailability_restrict_iff r rank a hs source s).mpr
-    rwa [hsbase]
-  · intro h q hqp hq
-    exact h (r.restrict q) (r.restrict.monotone hqp)
-      ((rankedAvailability_restrict_iff r rank a hs source q).mp hq)
-
-/-- The name-support and source-factorization premises above are
-simultaneously supplied on a club by the stated countable-support stage
-system. The original full-order rank cutoff is retained on both sides. -/
-theorem exists_club_ranked_tests_local
-    (Stage : W2 → Type) [∀ a, Preorder (Stage a)]
-    (restriction : ∀ a, CompleteRestriction P (Stage a))
-    (conditionSupport : P → Set W2) (hsmall : ∀ p, (conditionSupport p).Countable)
-    (hlocal : ∀ a p, (∀ b ∈ conditionSupport p, b < a) →
-      p ∈ Set.range (restriction a).embed)
-    (G H : SimpleGraph W2) (hI : #I ≤ ℵ_ 1)
-    (codeRank : Erdos1172Part3RegularNeighborhoodCode.Code P I G ↪ W2)
-    (nameRank : NiceCliqueName P I W2 G ↪ W2) :
-    ∃ club : Set W2, IsClub club ∧ ∀ a ∈ club,
-      ∀ c : Erdos1172Part3RegularNeighborhoodCode.Code P I G, codeRank c < a →
-        ∃ U : RegularName (Stage a) Unit,
-          (∀ p : P,
-            (rankedAvailability nameRank (Erdos1172Part3RegularNeighborhoodCode.eval G H c)).holds p a ↔
-              U.holds ((restriction a).restrict p) ()) ∧
-          ∀ p : P,
-            (neg (rankedAvailability nameRank (Erdos1172Part3RegularNeighborhoodCode.eval G H c))).holds p a ↔
-              (neg U).holds ((restriction a).restrict p) () := by
-  obtain ⟨names, hnames, hn⟩ := Erdos1172Part3NiceNameSupport.exists_club_supported_names
-    conditionSupport hsmall Stage restriction hlocal hI nameRank
-  obtain ⟨sources, hsources, hc⟩ := Erdos1172Part3RegularStageLocality.exists_club_local_code_sources
-    Stage restriction conditionSupport hsmall hlocal G H hI codeRank
-  refine ⟨names ∩ sources,
-    hnames.inter Erdos1172Part3NeighborhoodCode.alephZero_lt_cof_W2.ne' hsources, ?_⟩
-  intro a ha c hca
-  obtain ⟨source, hsource⟩ := hc a ha.2 c hca
-  let hs := hn a ha.1
-  refine ⟨restrictedAvailability (restriction a) nameRank a hs source, ?_, ?_⟩
-  · intro p
-    rw [← hsource]
-    exact rankedAvailability_restrict_iff (restriction a) nameRank a hs source p
-  · intro p
-    rw [← hsource]
-    exact neg_rankedAvailability_restrict_iff (restriction a) nameRank a hs source p
 
 end Erdos1172Part3RankedWitnessRestriction

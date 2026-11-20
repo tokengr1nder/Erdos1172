@@ -48,32 +48,6 @@ theorem tailObject_of_pair
     (Hpair : Γ ≤ pair i A ∈ᴮ Tail) : Γ ≤ A ∈ᴮ blockObjects color R :=
   blockCandidate_object (tailCandidate_of_pair Htail Hpair)
 
-theorem tailNonempty_of_pair
-    {color : Bool} {R J E S B Tail i A : bSet 𝔹} {Γ : 𝔹}
-    (Htail : Γ ≤ tailCandidatesLaw color R J E S B Tail)
-    (Hpair : Γ ≤ pair i A ∈ᴮ Tail) : Γ ≤ (A =ᴮ ∅)ᶜ :=
-  blockCandidate_nonempty (tailCandidate_of_pair Htail Hpair)
-
-theorem tailSubset_of_pair
-    {color : Bool} {R J E S B Tail i A : bSet 𝔹} {Γ : 𝔹}
-    (Htail : Γ ≤ tailCandidatesLaw color R J E S B Tail)
-    (Hpair : Γ ≤ pair i A ∈ᴮ Tail) : Γ ≤ A ⊆ᴮ S :=
-  blockCandidate_subset (tailCandidate_of_pair Htail Hpair)
-
-theorem tailImage_subset_objects
-    {color : Bool} {R J E S B Tail K : bSet 𝔹} {Γ : 𝔹}
-    (Htail : Γ ≤ tailCandidatesLaw color R J E S B Tail) :
-    Γ ≤ image K (bv_powerset omegaTwo) Tail ⊆ᴮ blockObjects color R := by
-  rw [subset_unfold']
-  apply le_iInf
-  intro A
-  rw [← deduction]
-  obtain ⟨i, Hi⟩ := exists_convert ((mem_image_iff.mp
-    (show Γ ⊓ A ∈ᴮ image K (bv_powerset omegaTwo) Tail ≤
-      A ∈ᴮ image K (bv_powerset omegaTwo) Tail from inf_le_right)).2)
-    (B_ext_inf B_ext_mem_left B_ext_pair_mem_left)
-  exact tailObject_of_pair (inf_le_left.trans Htail) (Hi.trans inf_le_right)
-
 theorem tail_initial_before
     {color : Bool} {R J E S B Tail i A b x y : bSet 𝔹} {Γ : 𝔹}
     (Htail : Γ ≤ tailCandidatesLaw color R J E S B Tail)

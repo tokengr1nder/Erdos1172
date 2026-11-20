@@ -5,9 +5,6 @@ Licensed under the Apache License, Version 2.0.
 module
 
 public import Erdos1172.Part4LevyCohenDensePresentation
-public import Erdos1172.Part4BooleanCardinalPreservation
-public import Erdos1172.Part4GroundIndexNameBound
-public import Erdos1172.Part4InternalHartogsUniqueness
 
 @[expose] public section
 
@@ -87,46 +84,5 @@ theorem checked_successor_injects_base_eq_bot (κ : Cardinal.{u})
     surjects_onto_of_injects_into' le_rfl (le_top.trans Hnonempty)
   rw [checked_successor_surjects_eq_bot κ Hκ μ Hκμ] at Hsurj
   exact bot_unique Hsurj
-
-/-- A displayed predecessor has an actual indexing set of size at most mu.
-This direction does not require inaccessibility or a relation to kappa. -/
-theorem checked_successor_predecessor_injects (κ μ : Cardinal.{u})
-    (i : (Order.succ μ).ord.ToType) :
-    (⊤ : Algebra κ) ≤
-      injects_into (check (PSet.ordinalMk i.toOrd.val))
-        (check (PSet.ordinalMk μ.ord)) := by
-  apply ErdosGroundIndexNameBound.injects_checked_cardinal_of_index_cardinal_le
-  simpa only [check_type', PSet.ordinalMk_card] using
-    (Cardinal.card_le_iff.mpr i.toOrd.property)
-
-/-- The universal predecessor statement covers all second-stage names;
-canonical indices occur only in the extensional bounded-forall calculation. -/
-theorem checked_successor_members_injects (κ μ : Cardinal.{u}) :
-    (⊤ : Algebra κ) ≤
-      ⨅ x, _root_.imp
-        (x ∈ᴮ check (PSet.ordinalMk (Order.succ μ).ord))
-        (injects_into x (check (PSet.ordinalMk μ.ord))) := by
-  rw [PSet.ordinalMk_eq_def, check_unfold]
-  rw [← bounded_forall (h_congr := B_ext_injects_into_left)]
-  change (⊤ : Algebra κ) ≤
-    ⨅ i : (Order.succ μ).ord.ToType, _root_.imp ⊤
-      (injects_into (check (PSet.ordinalMk i.toOrd.val))
-        (check (PSet.ordinalMk μ.ord)))
-  apply le_iInf
-  intro i
-  rw [top_imp]
-  exact checked_successor_predecessor_injects κ μ i
-
-/-- The full internal Hartogs property in the concrete two-stage algebra.
-No regularity of mu or ground-GCH hypothesis is required. -/
-theorem checked_successor_hartogsProperty (κ : Cardinal.{u})
-    (Hκ : κ.IsInaccessible) (μ : Cardinal.{u}) (Hκμ : κ ≤ μ) :
-    (⊤ : Algebra κ) ≤
-      ErdosHartogs.hartogsProperty (check (PSet.ordinalMk μ.ord))
-        (check (PSet.ordinalMk (Order.succ μ).ord)) := by
-  refine le_inf (check_Ord (PSet.Ord_mk (Order.succ μ).ord))
-    (le_inf ?_ (checked_successor_members_injects κ μ))
-  simpa only [checked_successor_injects_base_eq_bot κ Hκ μ Hκμ, compl_bot] using
-    (le_rfl : (⊤ : Algebra κ) ≤ ⊤)
 
 end Erdos1172LevyCohen

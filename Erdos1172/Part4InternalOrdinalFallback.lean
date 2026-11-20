@@ -94,11 +94,6 @@ theorem leastOrTop_unique_of_eq {C D top x y : bSet 𝔹} {Γ : 𝔹}
   leastOrTop_unique
     (bv_rw'' (ϕ := fun A => leastOrTop A top x) HCD Hx (leastOrTop_ext_set top x)) Hy
 
-/-- An empty candidate set necessarily selects the sentinel. -/
-theorem eq_top_of_leastOrTop_empty {C top y : bSet 𝔹} {Γ : 𝔹}
-    (Hchoice : Γ ≤ leastOrTop C top y) (Hempty : Γ ≤ C =ᴮ (∅ : bSet 𝔹)) :
-    Γ ≤ y =ᴮ top := leastOrTop_unique Hchoice (leastOrTop_of_empty Hempty)
-
 /-- If all candidates are strictly below the sentinel, selecting it forces
 the candidate set to be empty. The subset premise is exactly this bound. -/
 theorem empty_of_leastOrTop_eq {C top y : bSet 𝔹} {Γ : 𝔹}

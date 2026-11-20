@@ -6,9 +6,7 @@ module
 
 public import Erdos1172.Part3NamedLowerCovers
 public import Erdos1172.Part3NamedDomainPieces
-public import Erdos1172.Part3NamedEndpointSelection
 public import Erdos1172.Part3NamedCoverBounds
-public import Erdos1172.Part3ClosedDenseRequirements
 
 @[expose] public section
 
@@ -135,25 +133,17 @@ theorem exists_piece_cover_at_endpoint (data : LineCoverData V)
     exact fun p x hx => Or.inl (hsingle p.val p.property x hx)
   · let source : RegularName (Set.Iic q) V := onCone q (pieceU E B)
     let decisions : FunctionDecisions (Set.Iic q) B V := onConeDecisions (pieceE E B) q
-    have hord : OrderedDecisions decisions := by
-      intro p j k x z hjk hx hz
-      exact pieceE_ordered E hordered B hjk hx hz
-    have hdense : DenseCoverage decisions source := by
-      intro p x hx
-      obtain ⟨r, hrp, j, hj⟩ := pieceU_denseCoverage E B p.val x hx
-      exact ⟨⟨r, hrp.trans p.property⟩, hrp, j, hj⟩
-    have hmem : ∀ p j x, decisions.decides p j x → source.holds p x := by
-      intro p j x hx
-      exact pieceU_holds_of_decision E B hx
-    have hbound : ∀ p x, source.holds p x → x < y :=
-      fun p x hx => hupper p.val p.property x hx
-    have hcof : ∀ p, CofinalBelow source p y := by
-      intro p r _ z hzy
-      obtain ⟨s, hsr, x, hx, hzx, hxy⟩ := hcofinal r.val r.property z hzy
-      exact ⟨⟨s, hsr.trans r.property⟩, hsr, x, hx, hzx, hxy⟩
+    have hdense : DenseCoverage decisions source := fun p x hx =>
+      let ⟨r, hrp, j, hj⟩ := pieceU_denseCoverage E B p.val x hx
+      ⟨⟨r, hrp.trans p.property⟩, hrp, j, hj⟩
+    have hcof (p : Set.Iic q) : CofinalBelow source p y := fun r _ z hzy =>
+      let ⟨s, hsr, x, hx, hzx, hxy⟩ := hcofinal r.val r.property z hzy
+      ⟨⟨s, hsr.trans r.property⟩, hsr, x, hx, hzx, hxy⟩
     obtain ⟨F, hF⟩ := L.named_covers y k (Set.Iic q) B
       (Erdos1172Part3ClosedDenseRequirements.countablyClosed_Iic hclosed q)
-      source decisions htype hord hdense hmem hbound hcof
+      source decisions htype (fun hjk hx hz => pieceE_ordered E hordered B hjk hx hz)
+      hdense (fun _ _ _ hx => pieceU_holds_of_decision E B hx)
+      (fun p x hx => hupper p.val p.property x hx) hcof
     exact ⟨F, fun p x hx => Or.inr ⟨k, hF p x hx⟩⟩
 
 /-- A short exact row enumeration yields, after strengthening, a
@@ -171,52 +161,33 @@ theorem exists_localRowCover (data : LineCoverData V) (L : NamedLowerCovers n V)
   obtain ⟨D, hDcount, hDcover, hpieces, -, -⟩ :=
     exists_named_domain_pieces n E U hordered hcoverage hmem htype
   have hDcard : #D ≤ ℵ₀ := Cardinal.le_aleph0_iff_set_countable.mpr hDcount
-  let endpointRelation (p : P) (B : D) (y : V) : Prop :=
-    RowPieceEndpoint data n E B.val i p y
-  have hpersistent : ∀ {p q B y}, q ≤ p → endpointRelation p B y →
-      endpointRelation q B y :=
-    fun {_ _ _ _} hqp h => rowPieceEndpoint_persistent hqp h
-  have hdense : ∀ p : P, ∀ B : D,
-      ∃ q : P, q ≤ p ∧ ∃ y : V, endpointRelation q B y := by
-    intro p B
-    exact exists_rowPieceEndpoint data E U B.val i
-      (hpieces B.val B.property).2.1 (hpieces B.val B.property).1 hmem hrow p
   obtain ⟨Dname, hDname⟩ :=
     Erdos1172Part3DecisionSelection.exists_function_decisions_of_dense
-      endpointRelation hpersistent hdense
+      (fun p (B : D) y => RowPieceEndpoint data n E B.val i p y)
+      (fun hqp h => rowPieceEndpoint_persistent hqp h)
+      (fun p B => exists_rowPieceEndpoint data E U B.val i
+        (hpieces B.val B.property).2.1 (hpieces B.val B.property).1 hmem hrow p)
   obtain ⟨q, hqp0, hvalues⟩ := Dname.exists_simultaneous hclosed p0 hDcard
   let endpoint (B : D) : V := (hvalues B).choose
   have hendpoint (B : D) : RowPieceEndpoint data n E B.val i q (endpoint B) :=
     hDname q B (endpoint B) (hvalues B).choose_spec
-  have hlocal (B : D) : ∃ F : FunctionDecisions (Set.Iic q) W1 W1,
-      ∀ p : Set.Iic q, ∀ x : V, (pieceU E B.val).holds p.val x →
-        x = endpoint B ∨ ∃ k : Fin n,
-          (coverName F (L.into (endpoint B) k)).holds p x :=
-    exists_piece_cover_at_endpoint data L E B.val i q (endpoint B)
-      hclosed hordered (hendpoint B)
-  choose F hF using hlocal
+  choose F hF using fun B : D =>
+    exists_piece_cover_at_endpoint data L E B.val i q (endpoint B) hclosed hordered (hendpoint B)
   obtain ⟨R, hR⟩ := Erdos1172Part3NamedCoverBounds.exists_pointwise_upper
     (Erdos1172Part3ClosedDenseRequirements.countablyClosed_Iic hclosed q) F hDcard
   refine ⟨q, hqp0, ⟨{
     endpoints := Set.range endpoint
-    countable := Cardinal.le_aleph0_iff_set_countable.mp
-      (Cardinal.mk_range_le.trans hDcard)
-    endpoint_le := ?_
-    row_witness := ?_
+    countable := Cardinal.le_aleph0_iff_set_countable.mp (Cardinal.mk_range_le.trans hDcard)
+    endpoint_le := by rintro _ ⟨B, rfl⟩; exact (hendpoint B).1
+    row_witness := by rintro _ ⟨B, rfl⟩; exact (hendpoint B).2.1
     functionName := R
-    covered := ?_ }⟩⟩
-  · rintro y ⟨B, rfl⟩
-    exact (hendpoint B).1
-  · rintro y ⟨B, rfl⟩
-    exact (hendpoint B).2.1
-  · intro p x hx _hxrow
-    obtain ⟨r, hrp, B, hBD, j, hj⟩ :=
-      exists_decision_in_piece E U hcoverage D hDcover p.val x hx
-    let s : Set.Iic q := ⟨r, hrp.trans p.property⟩
-    have hxpiece : (pieceU E B).holds s.val x := pieceU_holds_of_decision E B hj
-    rcases hF ⟨B, hBD⟩ s x hxpiece with hsingle | ⟨k, hcover⟩
-    · exact ⟨s, hrp, Or.inl ⟨⟨B, hBD⟩, hsingle.symm⟩⟩
-    · exact ⟨s, hrp, Or.inr ⟨endpoint ⟨B, hBD⟩, Set.mem_range_self (⟨B, hBD⟩ : D), k,
-        coverName_mono_of_pointwiseBelow (hR ⟨B, hBD⟩ s) hcover⟩⟩
+    covered := fun p x hx _ => ?_ }⟩⟩
+  obtain ⟨r, hrp, B, hBD, j, hj⟩ :=
+    exists_decision_in_piece E U hcoverage D hDcover p.val x hx
+  let s : Set.Iic q := ⟨r, hrp.trans p.property⟩
+  rcases hF ⟨B, hBD⟩ s x (pieceU_holds_of_decision E B hj) with hsingle | ⟨k, hcover⟩
+  · exact ⟨s, hrp, Or.inl ⟨⟨B, hBD⟩, hsingle.symm⟩⟩
+  · exact ⟨s, hrp, Or.inr ⟨endpoint ⟨B, hBD⟩, Set.mem_range_self (⟨B, hBD⟩ : D), k,
+      coverName_mono_of_pointwiseBelow (hR ⟨B, hBD⟩ s) hcover⟩⟩
 
 end Erdos1172Part3NamedLocalRowCover

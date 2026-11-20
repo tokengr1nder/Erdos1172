@@ -89,12 +89,4 @@ theorem graph_is_surj (M : ℕ → α → β) (Y : α → bSet β)
   exact le_iSup_of_le (of_nat n)
     (le_inf of_nat_mem_omega (graph_pair_of_weight M Y Hdisj n a))
 
-theorem graph_is_surjective_function (M : ℕ → α → β) (Y : α → bSet β)
-    (Hdisj : ∀ n a b, a ≠ b → M n a ⊓ M n b = ⊥)
-    (Hrow : ∀ n, (⨆ a, M n a) = ⊤)
-    (Hcol : ∀ a, (⨆ n, M n a) = ⊤) :
-    (⊤ : β) ≤ is_function omega (check'' Y) (graph M Y) ⊓
-      is_surj omega (check'' Y) (graph M Y) :=
-  le_inf (graph_is_function M Y Hdisj Hrow) (graph_is_surj M Y Hdisj Hcol)
-
 end bSet.ErdosCountableMatrix

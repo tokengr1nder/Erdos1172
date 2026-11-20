@@ -4,7 +4,6 @@ Licensed under the Apache License, Version 2.0.
 -/
 module
 
-public import Erdos1172.Part4InternalRelationGraph
 public import Erdos1172.Part4InternalColargeIntersection
 
 @[expose] public section
@@ -98,11 +97,6 @@ private theorem sectionTraceRel_ext_middle (S Y σ j A : bSet 𝔹) :
   B_ext_inf B_ext_pair_mem_right
     (B_ext_pair_right (ϕ := fun p => pair p A ∈ᴮ S) B_ext_pair_mem_left)
 
-private theorem sectionTraceRel_ext_row (S Y j A : bSet 𝔹) :
-    B_ext (fun σ => sectionTraceRel S Y σ j A) :=
-  B_ext_iSup (h := fun _ => B_ext_inf B_ext_const
-    (B_ext_pair_left (ϕ := fun p => pair p A ∈ᴮ S) B_ext_pair_mem_left))
-
 theorem mem_sectionTrace_iff {δ S Y σ j A : bSet 𝔹} {Γ : 𝔹} :
     Γ ≤ pair j A ∈ᴮ sectionTrace δ S Y σ ↔
       Γ ≤ j ∈ᴮ δ ∧ Γ ≤ A ∈ᴮ bv_powerset omegaOne ∧
@@ -174,46 +168,6 @@ theorem sectionTrace_is_function {δ S Y σ : bSet 𝔹} {Γ : 𝔹}
     exact eq_of_is_func_of_eq (HΔ.trans (HS.trans inf_le_left)) (pair_congr bv_refl Hyy)
       (Hy₁.trans inf_le_right) (Hy₂.trans inf_le_right)
 
-/-- Any property of the global section values is inherited by the actual
-trace values. No extensionality of P, or new choice of those values, is needed. -/
-theorem sectionTrace_values {δ S Y σ : bSet 𝔹} {P : bSet 𝔹 → 𝔹} {Γ : 𝔹}
-    (HY : Γ ≤ is_func' δ omegaTwo Y) (Hσ : Γ ≤ σ ∈ᴮ omegaOne)
-    (Hvalues : Γ ≤ ⨅ s, ⨅ y, ⨅ A, _root_.imp
-      ((s ∈ᴮ omegaOne ⊓ y ∈ᴮ omegaTwo) ⊓ pair (pair s y) A ∈ᴮ S) (P A)) :
-    Γ ≤ ⨅ j, ⨅ A, _root_.imp
-      (j ∈ᴮ δ ⊓ pair j A ∈ᴮ sectionTrace δ S Y σ) (P A) := by
-  apply le_iInf
-  intro j
-  apply le_iInf
-  intro A
-  rw [← deduction]
-  let Δ := Γ ⊓ (j ∈ᴮ δ ⊓ pair j A ∈ᴮ sectionTrace δ S Y σ)
-  obtain ⟨y, Hjy, HyA⟩ := sectionTrace_witness
-    (show Δ ≤ pair j A ∈ᴮ sectionTrace δ S Y σ from inf_le_right.trans inf_le_right)
-  have Hy : Δ ≤ y ∈ᴮ omegaTwo := value_mem_codomain
-    (inf_le_left.trans HY) (inf_le_right.trans inf_le_left) Hjy
-  exact (le_inf (inf_le_left.trans
-    (Hvalues.trans ((iInf_le _ σ).trans ((iInf_le _ y).trans (iInf_le _ A)))))
-    (le_inf (le_inf (inf_le_left.trans Hσ) Hy) HyA)).trans bv_imp_elim
-
-theorem sectionTrace_colarge_values {δ S Y σ J : bSet 𝔹} {Γ : 𝔹}
-    (HY : Γ ≤ is_func' δ omegaTwo Y) (Hσ : Γ ≤ σ ∈ᴮ omegaOne)
-    (Hvalues : Γ ≤ ⨅ s, ⨅ y, ⨅ A, _root_.imp
-      ((s ∈ᴮ omegaOne ⊓ y ∈ᴮ omegaTwo) ⊓ pair (pair s y) A ∈ᴮ S)
-      (colarge omegaOne J A)) :
-    Γ ≤ ⨅ j, ⨅ A, _root_.imp
-      (j ∈ᴮ δ ⊓ pair j A ∈ᴮ sectionTrace δ S Y σ) (colarge omegaOne J A) :=
-  sectionTrace_values HY Hσ Hvalues
-
-theorem sectionTrace_small_complement_values {δ S Y σ J : bSet 𝔹} {Γ : 𝔹}
-    (HY : Γ ≤ is_func' δ omegaTwo Y) (Hσ : Γ ≤ σ ∈ᴮ omegaOne)
-    (Hvalues : Γ ≤ ⨅ s, ⨅ y, ⨅ A, _root_.imp
-      ((s ∈ᴮ omegaOne ⊓ y ∈ᴮ omegaTwo) ⊓ pair (pair s y) A ∈ᴮ S)
-      (difference omegaOne A ∈ᴮ J)) :
-    Γ ≤ ⨅ j, ⨅ A, _root_.imp
-      (j ∈ᴮ δ ⊓ pair j A ∈ᴮ sectionTrace δ S Y σ) (difference omegaOne A ∈ᴮ J) :=
-  sectionTrace_values HY Hσ Hvalues
-
 private theorem relationGraph_param_congr {A B : bSet 𝔹}
     (P : bSet 𝔹 → bSet 𝔹 → bSet 𝔹 → 𝔹)
     (hP : ∀ a b, B_ext (fun σ => P σ a b)) :
@@ -250,9 +204,5 @@ private theorem relationGraph_param_congr {A B : bSet 𝔹}
 theorem rowHistory_congr_row (δ X : bSet 𝔹) : B_congr (rowHistory δ X) :=
   relationGraph_param_congr (fun σ j v => pair (pair j σ) v ∈ᴮ X)
     (rowHistory_ext_row X)
-
-theorem sectionTrace_congr_row (δ S Y : bSet 𝔹) : B_congr (sectionTrace δ S Y) :=
-  relationGraph_param_congr (fun σ j A => sectionTraceRel S Y σ j A)
-    (sectionTraceRel_ext_row S Y)
 
 end bSet.ErdosSimultaneousTraces

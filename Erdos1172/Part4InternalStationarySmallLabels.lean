@@ -5,8 +5,6 @@ Licensed under the Apache License, Version 2.0.
 module
 
 public import Erdos1172.Part4InternalNonstationaryPressingDown
-public import Erdos1172.Part4InternalCountableImage
-public import Erdos1172.Part4InternalRelationGraph
 
 @[expose] public section
 
@@ -178,14 +176,6 @@ theorem exists_stationary_subfiber_of_small_labels {S K f : bSet 𝔹} {Γ : �
     (B_ext_inf B_ext_mem_left (label_fiber_positive_ext f))
   exact ⟨k, le_inf (Hk.trans inf_le_left)
     (le_inf (Hk.trans inf_le_right) (label_fiber_subset_source Hf))⟩
-
-theorem stationary_subfiber_of_small_labels {S K f : bSet 𝔹} {Γ : 𝔹}
-    (HCH : Γ ≤ (CH : 𝔹)) (HS : Γ ≤ positive omegaTwo nonstationaryIdeal S)
-    (Hf : Γ ≤ is_function S K f) (HK : Γ ≤ injects_into K omegaOne) :
-    Γ ≤ ⨆ k, k ∈ᴮ K ⊓
-      (positive omegaTwo nonstationaryIdeal (fiber omegaTwo f k) ⊓ fiber omegaTwo f k ⊆ᴮ S) := by
-  obtain ⟨k, Hk⟩ := exists_stationary_subfiber_of_small_labels HCH HS Hf HK
-  exact le_iSup_of_le k Hk
 
 theorem exists_stationary_large_subfiber_of_small_labels {S K f : bSet 𝔹} {Γ : 𝔹}
     (HCH : Γ ≤ (CH : 𝔹)) (HS : Γ ≤ positive omegaTwo nonstationaryIdeal S)

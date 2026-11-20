@@ -4,8 +4,6 @@ Licensed under the Apache License, Version 2.0.
 -/
 module
 
-public import Erdos1172.Part4InternalColargeIntersection
-public import Erdos1172.Part4InternalCountablePast
 public import Erdos1172.Part4InternalLargeDifference
 public import Erdos1172.Part4InternalSimultaneousRowChoice
 
@@ -49,15 +47,6 @@ theorem exists_bound_of_countable
   refine ⟨b, le_inf (Hparts.trans inf_le_left) ?_⟩
   rw [subset_unfold']
   exact above_past HA (Hparts.trans inf_le_left) (Hparts.trans inf_le_right)
-
-theorem exists_bound_of_countable_image
-    {J X f : bSet 𝔹} {Γ : 𝔹}
-    (HJ : Γ ≤ properIdeal omegaOne J)
-    (Habsorb : Γ ≤ countableAbsorption omegaOne J)
-    (Hclosure : Γ ≤ countableClosure J)
-    (Hf : Γ ≤ is_func' X omegaOne f) (Hcount : Γ ≤ injects_into X bSet.omega) :
-    ∃ b : bSet 𝔹, Γ ≤ b ∈ᴮ omegaOne ⊓ image X omegaOne f ⊆ᴮ b :=
-  exists_bound_of_countable HJ Habsorb Hclosure image_subset (image_countable Hf Hcount)
 
 def countablyBounded (κ : bSet 𝔹) : 𝔹 :=
   ⨅ A, _root_.imp (A ⊆ᴮ κ ⊓ injects_into A bSet.omega)

@@ -5,11 +5,6 @@ Licensed under the Apache License, Version 2.0.
 module
 
 public import Erdos1172.Part4AnonymousInternalLevyConeTruth
-public import Erdos1172.Part4CohenCountableFusion
-public import Erdos1172.Part4CohenBitAssignmentBridge
-public import Erdos1172.Part4CohenIndexedBinaryAssignment
-public import Erdos1172.Part4BooleanCountableGroundCapture
-public import Erdos1172.Part4CohenSubsetName
 
 @[expose] public section
 
@@ -1810,28 +1805,27 @@ theorem code_small_ground_func_into_stage_gen
     let hsub_m₀_mid : (⊤ : R) ≤ m₀ ⊆ᴮ p_mid := subset_trans' hsub hsub_mid
     let c_mid := coneInMaster hm₀ hp_mid hsub_m₀_mid
     -- Step 3: Common support bound `ν_all` for `ζ` and all triple coordinates of `G.triple`.
-    let t_ξ (k : G.Idx) : (ordinalImage U a α).ToType :=
-      Ordinal.ToType.mk ⟨ordOfPSetIdx (G.triple k).val.1.1, ordOfPSetIdx_lt _⟩
-    let t_y (k : G.Idx) : (ordinalImage U a α).ToType :=
-      Ordinal.ToType.mk ⟨ordOfPSetIdx (G.triple k).val.2, ordOfPSetIdx_lt _⟩
+    let toImg (idx : (PSet.ordinalMk (ordinalImage U a α)).Type) : (ordinalImage U a α).ToType :=
+      Ordinal.ToType.mk ⟨ordOfPSetIdx idx, ordOfPSetIdx_lt _⟩
+    let ptOf (idx : (PSet.ordinalMk (ordinalImage U a α)).Type) := (indexEquiv U a α).symm (toImg idx)
+    have hexPt (idx : (PSet.ordinalMk (ordinalImage U a α)).Type) :
+        ∃ p : θ.ord.ToType × (Set θ.ord.ToType → α.ToType),
+          Germ.ofFun (fun i => p.2 (boundedFiber θ a p.1 i)) = (ptOf idx).val :=
+      let ⟨ν, g, hg⟩ := (ptOf idx).property; ⟨(ν, g), hg⟩
+    let fgPt (idx : (PSet.ordinalMk (ordinalImage U a α)).Type) := Classical.choose (hexPt idx)
+    have hgPt (idx : (PSet.ordinalMk (ordinalImage U a α)).Type) := Classical.choose_spec (hexPt idx)
+    let t_ξ (k : G.Idx) := toImg (G.triple k).val.1.1
+    let t_y (k : G.Idx) := toImg (G.triple k).val.2
+    let pt_ξ (k : G.Idx) := ptOf (G.triple k).val.1.1
+    let pt_y (k : G.Idx) := ptOf (G.triple k).val.2
     let η_t (k : G.Idx) : θ.ord.ToType :=
       Ordinal.ToType.mk ⟨ordOfPSetIdx (G.triple k).val.1.2, ordOfPSetIdx_lt _⟩
-    let pt_ξ (k : G.Idx) := (indexEquiv U a α).symm (t_ξ k)
-    let pt_y (k : G.Idx) := (indexEquiv U a α).symm (t_y k)
-    have hex_ξ (k : G.Idx) : ∃ p : θ.ord.ToType × (Set θ.ord.ToType → α.ToType),
-        Germ.ofFun (fun i => p.2 (boundedFiber θ a p.1 i)) = (pt_ξ k).val := by
-      obtain ⟨ν, g, hg⟩ := (pt_ξ k).property
-      exact ⟨(ν, g), hg⟩
-    have hex_y (k : G.Idx) : ∃ p : θ.ord.ToType × (Set θ.ord.ToType → α.ToType),
-        Germ.ofFun (fun i => p.2 (boundedFiber θ a p.1 i)) = (pt_y k).val := by
-      obtain ⟨ν, g, hg⟩ := (pt_y k).property
-      exact ⟨(ν, g), hg⟩
-    obtain ⟨fg_ξ, hg_ξ⟩ := Classical.axiomOfChoice hex_ξ
-    obtain ⟨fg_y, hg_y⟩ := Classical.axiomOfChoice hex_y
-    let ν_ξ (k : G.Idx) : θ.ord.ToType := (fg_ξ k).1
-    let g_ξ (k : G.Idx) : Set θ.ord.ToType → α.ToType := (fg_ξ k).2
-    let ν_y (k : G.Idx) : θ.ord.ToType := (fg_y k).1
-    let g_y (k : G.Idx) : Set θ.ord.ToType → α.ToType := (fg_y k).2
+    let ν_ξ (k : G.Idx) : θ.ord.ToType := (fgPt (G.triple k).val.1.1).1
+    let g_ξ (k : G.Idx) : Set θ.ord.ToType → α.ToType := (fgPt (G.triple k).val.1.1).2
+    let ν_y (k : G.Idx) : θ.ord.ToType := (fgPt (G.triple k).val.2).1
+    let g_y (k : G.Idx) : Set θ.ord.ToType → α.ToType := (fgPt (G.triple k).val.2).2
+    have hg_ξ (k : G.Idx) := hgPt (G.triple k).val.1.1
+    have hg_y (k : G.Idx) := hgPt (G.triple k).val.2
     let bound_k (k : G.Idx) : θ.ord.ToType := max (max ν_ζ (η_t k)) (max (ν_ξ k) (ν_y k))
     obtain ⟨ν_all, hν_all_raw⟩ := strict_upper_bound_theta' hθ.isRegular G.card_lt bound_k
     let k₀_def := Classical.choice hne_Idx
@@ -1958,22 +1952,17 @@ theorem code_small_ground_func_into_stage_gen
       have hs_y : Preparation.Supported U a
           (fun i => (check (PSet.ordinalMk (y_S (boundedFiber θ a ν_all i) k)) : bSet A)) :=
         ⟨ν_all, fun S => check (PSet.ordinalMk (y_S S k)), EventuallyEq.rfl⟩
-      have hξ_lift : (⊤ : VA) ≤ Preparation.boundedAnonName U a
-          (fun i => check (PSet.ordinalMk (ξ_S (boundedFiber θ a ν_all i) k))) =ᴮ
-          check ((PSet.ordinalMk (ordinalImage U a α)).Func (G.triple k).val.1.1) := by
-        refine boundedAnon_restricted_point_ordinal U a hk.le hf hn ht hκ (pt_ξ k) (hν_ξ_le_all k)
-          (g_ξ k) (hg_ξ k) (G.triple k).val.1.1 ?_
-        dsimp only [pt_ξ, t_ξ]
-        rw [Equiv.apply_symm_apply]
+      have hpt_lift (idx : (PSet.ordinalMk (ordinalImage U a α)).Type)
+          (hν_le : (fgPt idx).1 ≤ ν_all) :
+          (⊤ : VA) ≤ Preparation.boundedAnonName U a
+            (fun i => check (PSet.ordinalMk (((fgPt idx).2 (boundedFiber θ a ν_all i ∩ Set.Iio (fgPt idx).1)).toOrd.val))) =ᴮ
+            check ((PSet.ordinalMk (ordinalImage U a α)).Func idx) := by
+        refine boundedAnon_restricted_point_ordinal U a hk.le hf hn ht hκ (ptOf idx) hν_le
+          (fgPt idx).2 (hgPt idx) idx ?_
+        dsimp only [ptOf, toImg]; rw [Equiv.apply_symm_apply]
         exact congrArg Subtype.val (Ordinal.ToType.mk.symm_apply_apply _)
-      have hy_lift : (⊤ : VA) ≤ Preparation.boundedAnonName U a
-          (fun i => check (PSet.ordinalMk (y_S (boundedFiber θ a ν_all i) k))) =ᴮ
-          check ((PSet.ordinalMk (ordinalImage U a α)).Func (G.triple k).val.2) := by
-        refine boundedAnon_restricted_point_ordinal U a hk.le hf hn ht hκ (pt_y k) (hν_y_le_all k)
-          (g_y k) (hg_y k) (G.triple k).val.2 ?_
-        dsimp only [pt_y, t_y]
-        rw [Equiv.apply_symm_apply]
-        exact congrArg Subtype.val (Ordinal.ToType.mk.symm_apply_apply _)
+      have hξ_lift := hpt_lift (G.triple k).val.1.1 (hν_ξ_le_all k)
+      have hy_lift := hpt_lift (G.triple k).val.2 (hν_y_le_all k)
       have hη_lift : (⊤ : VA) ≤ Preparation.boundedAnonName U a
           (fun i => check (PSet.ordinalMk (η_S (boundedFiber θ a ν_all i) k))) =ᴮ
           check ((PSet.ordinalMk θ.ord).Func (G.triple k).val.1.2) := by
@@ -2067,29 +2056,15 @@ theorem code_small_ground_func_into_stage_gen
     have hQVA_G : c_mid ≤ mapNames j₀ Q_VA =ᴮ mapNames j_R G.toBSet := by
       dsimp only [Q_VA, SmallGroundLevyGraph.toBSet]
       rw [mapNames_mk, mapNames_mk]
-      apply subset_ext
-      · rw [subset_unfold]
-        refine le_iInf fun k => deduction.mp ?_
-        rw [mem_unfold]
-        refine le_iSup_of_le k ?_
-        change c_mid ⊓ j₀ ((check (PSet.ordinalMk (ζ k).toOrd.val) : bSet VA) ∈ᴮ
-            Preparation.boundedAnonName (κ := κ) U a (fun _ => anonymousSubset κ)) ≤
-          j_R (G.weight k) ⊓
-            (mapNames j₀ (check ((liftedTriplePSet U a θ α).Func (G.triple k).val)) =ᴮ
-              mapNames j_R (check ((liftedTriplePSet U a θ α).Func (G.triple k).val)))
-        exact le_inf ((hbit_agree k).le.trans inf_le_right)
-          (le_top.trans (by rw [map_check, map_check]; exact bv_refl))
-      · rw [subset_unfold]
-        refine le_iInf fun k => deduction.mp ?_
-        rw [mem_unfold]
-        refine le_iSup_of_le k ?_
-        change c_mid ⊓ j_R (G.weight k) ≤
-          j₀ ((check (PSet.ordinalMk (ζ k).toOrd.val) : bSet VA) ∈ᴮ
-              Preparation.boundedAnonName (κ := κ) U a (fun _ => anonymousSubset κ)) ⊓
-            (mapNames j_R (check ((liftedTriplePSet U a θ α).Func (G.triple k).val)) =ᴮ
-              mapNames j₀ (check ((liftedTriplePSet U a θ α).Func (G.triple k).val)))
-        exact le_inf ((hbit_agree k).ge.trans inf_le_right)
-          (le_top.trans (by rw [map_check, map_check]; exact bv_refl))
+      have hdir {f₁ f₂ : G.Idx → bSet (LocalizedSourceCohen R m₀ hm₀)}
+          {w₁ w₂ : G.Idx → LocalizedSourceCohen R m₀ hm₀}
+          (hw : ∀ k, c_mid ⊓ w₁ k ≤ w₂ k) (hf : ∀ k, (⊤ : _) ≤ f₁ k =ᴮ f₂ k) :
+          c_mid ≤ (.mk G.Idx f₁ w₁ : bSet _) ⊆ᴮ .mk G.Idx f₂ w₂ := by
+        rw [subset_unfold]; refine le_iInf fun k => deduction.mp ?_
+        rw [mem_unfold]; exact le_iSup_of_le k (le_inf (hw k) (le_top.trans (hf k)))
+      exact subset_ext
+        (hdir (fun k => (hbit_agree k).le.trans inf_le_right) (fun _ => by rw [map_check, map_check]; exact bv_refl))
+        (hdir (fun k => (hbit_agree k).ge.trans inf_le_right) (fun _ => by rw [map_check, map_check]; exact bv_refl))
     obtain ⟨hq_mid_poset, hq_mid_eq⟩ := code_stage_step6 U a hk.le hκ hf hn ht j₀ j_R
       c_mid α G ν_all q_raw q_pos hq_raw_sub hq_pos_mem hq_pos_eq Q_VA hq_raw_QVA hQVA_G
     exact ⟨p_mid, hp_mid, hsub_mid, _, hq_mid_poset, hq_mid_eq⟩

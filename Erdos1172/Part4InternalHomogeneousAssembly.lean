@@ -173,15 +173,4 @@ theorem twoBlockWitness_of_forwardCross
       (le_inf (separatedRanges_of_forwardCross Hcross)
         (homogeneousUnion_of_forwardCross Hhomf Hhomg Hcross)))
 
-theorem hasTwoBlock_of_forwardCross
-    {color : Bool} {R A B κ f g : bSet 𝔹} {Γ : 𝔹}
-    (Hf : Γ ≤ is_function A κ f) (Hg : Γ ≤ is_function B κ g)
-    (Hincf : Γ ≤ increasingOn A f) (Hincg : Γ ≤ increasingOn B g)
-    (Hhomf : Γ ≤ homogeneousUnion color R A A f f)
-    (Hhomg : Γ ≤ homogeneousUnion color R B B g g)
-    (Hcross : Γ ≤ forwardCross color R A B f g) :
-    Γ ≤ hasTwoBlock color R A B κ :=
-  le_iSup_of_le f (le_iSup_of_le g
-    (twoBlockWitness_of_forwardCross Hf Hg Hincf Hincg Hhomf Hhomg Hcross))
-
 end bSet.ErdosHomogeneousAssembly

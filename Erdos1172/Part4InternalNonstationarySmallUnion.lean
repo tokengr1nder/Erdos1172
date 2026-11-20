@@ -105,16 +105,4 @@ theorem nonstationaryIdeal_small_union {T : bSet 𝔹} {Γ : 𝔹}
   exact bv_absurd _ (mem_of_mem_subset Hsub inf_le_right)
     (inf_le_left.trans (Hx.trans inf_le_right))
 
-/-- The countable-closure field concerns arbitrary internally countable
-families, not merely sequences indexed by external natural numbers. -/
-theorem nonstationaryIdeal_countableClosure {Γ : 𝔹} (HCH : Γ ≤ (CH : 𝔹)) :
-    Γ ≤ countableClosure (nonstationaryIdeal : bSet 𝔹) := by
-  apply le_iInf
-  intro T
-  rw [← deduction]
-  exact nonstationaryIdeal_small_union (inf_le_left.trans HCH)
-    (inf_le_right.trans inf_le_right)
-    (injects_into_trans (inf_le_right.trans inf_le_left)
-      (injects_into_of_subset (subset_of_mem_Ord omega_mem_omegaOne omegaOne_Ord)))
-
 end bSet.ErdosNonstationary

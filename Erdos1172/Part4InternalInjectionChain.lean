@@ -28,12 +28,6 @@ def inclusionChain (C : bSet 𝔹) : 𝔹 :=
   ⨅ f : bSet 𝔹, ⨅ g : bSet 𝔹,
     (f ∈ᴮ C ⊓ g ∈ᴮ C) ⟹ (f ⊆ᴮ g ⊔ g ⊆ᴮ f)
 
-theorem inclusionChain_ext : B_ext (inclusionChain (𝔹 := 𝔹)) := by
-  unfold inclusionChain
-  exact B_ext_iInf (h := fun _ => B_ext_iInf (h := fun _ =>
-    B_ext_imp (h₁ := B_ext_inf B_ext_mem_right B_ext_mem_right)
-      (h₂ := B_ext_const)))
-
 theorem inclusionChain_apply {C f g : bSet 𝔹} {Γ : 𝔹}
     (Hchain : Γ ≤ inclusionChain C) (Hf : Γ ≤ f ∈ᴮ C) (Hg : Γ ≤ g ∈ᴮ C) :
     Γ ≤ f ⊆ᴮ g ⊔ g ⊆ᴮ f :=

@@ -30,14 +30,6 @@ theorem holds_of_family_subset {F : FunctionDecisions P W1 W1}
   obtain ⟨r, hrq, f, s, hd, hc⟩ := hx q hqp
   exact ⟨r, hrq, f, s, hd, fun g hg => hCD g (hc g hg)⟩
 
-theorem holds_image {F : FunctionDecisions P W1 W1}
-    {C : (W1 → W1) → Set X} (map : X → Y)
-    {p : P} {x : X} (hx : (coverName F C).holds p x) :
-    (coverName F (fun f => map '' C f)).holds p (map x) := by
-  intro q hqp
-  obtain ⟨r, hrq, f, s, hd, hc⟩ := hx q hqp
-  exact ⟨r, hrq, f, s, hd, fun g hg => ⟨x, hc g hg, rfl⟩⟩
-
 /-- Two certificates for one name have compatible values on overlapping
 supports. Decide their finite union and use the actual common values. -/
 theorem certificate_combine {F : FunctionDecisions P W1 W1}

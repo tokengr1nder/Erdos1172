@@ -39,10 +39,6 @@ def taggingLaw (V Run : bSet 𝔹) : 𝔹 :=
 def taggedPrefix (i θ V Run : bSet 𝔹) : bSet 𝔹 :=
   image i (prod θ V) Run
 
-theorem taggingLaw_ext_graph (V : bSet 𝔹) : B_ext (taggingLaw V) :=
-  B_ext_iInf (h := fun _ => B_ext_iInf (h := fun _ =>
-    B_ext_imp (h₁ := B_ext_mem_right) (h₂ := B_ext_const)))
-
 theorem taggingLaw_witness {V Run j z : bSet 𝔹} {Γ : 𝔹}
     (Htag : Γ ≤ taggingLaw V Run) (Hpair : Γ ≤ pair j z ∈ᴮ Run) :
     ∃ x : bSet 𝔹, Γ ≤ x ∈ᴮ V ⊓ z =ᴮ pair j x :=
@@ -141,12 +137,5 @@ theorem taggingLaw_of_imageRecLaw {θ V Run : bSet 𝔹}
     mem_congr Hz bv_refl (mem_codomain_of_is_function inf_le_right (inf_le_left.trans HF))
   exact le_iSup_of_le (nextEntry j (image j (prod θ V) Run))
     (le_inf (mem_prod_iff.mp Hvalue).2 Hz)
-
-theorem taggedPrefix_is_function_of_imageRecLaw {i θ V Run : bSet 𝔹}
-    {nextEntry : bSet 𝔹 → bSet 𝔹 → bSet 𝔹} {Γ : 𝔹}
-    (HF : Γ ≤ is_function θ (prod θ V) Run)
-    (Hlaw : Γ ≤ imageRecLaw (prod θ V) (fun j T => pair j (nextEntry j T)) Run)
-    (Hicut : Γ ≤ i ⊆ᴮ θ) : Γ ≤ is_function i V (taggedPrefix i θ V Run) :=
-  taggedPrefix_is_function HF (taggingLaw_of_imageRecLaw HF Hlaw) Hicut
 
 end bSet.ErdosTaggedPrefix

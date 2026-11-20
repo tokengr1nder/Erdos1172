@@ -4,7 +4,7 @@ Licensed under the Apache License, Version 2.0.
 -/
 module
 
-public import Erdos1172.Part3NamedSquareThinning
+public import Erdos1172.Part3NamedCliqueThinning
 
 @[expose] public section
 
@@ -53,37 +53,5 @@ theorem exists_stationary_small_decision_fiber {I : Type} (hI : #I < ℵ_ 2)
     rwa [← heq]
   obtain ⟨p, hpp0, hp⟩ := exists_stationary_refinement hcc V hV p0 hstat
   exact ⟨value, p, hpp0, hp⟩
-
-/-- The cutoff, as well as the column-bound functions and the square,
-may depend on earlier conditions. No fixed ground cutoff is required. -/
-theorem exists_stationary_square_from_named_cutoffs
-    (c : CountablyCenteredCode P) (hclosed : CountablyClosed P) (hCH : CH)
-    (p0 : Condition P) (G H : SimpleGraph W2) (hcompl : IsCompl G H)
-    (core : CliqueDecisions P Square W2 G) (U : P → W2 → Prop) (hU : Persistent U)
-    (hs : IsStationary (possible U p0.base))
-    (hafter : ∀ p a, U p a → ∀ z x, core.decides p z x → x < a)
-    (K : FunctionDecisions P W2 W1) (F : W2 → FunctionDecisions P W1 W1)
-    (hloss : ∀ p a, U p a → ∀ cutoff : W1, K.decides p a cutoff →
-      ∀ i : W1, cutoff < i → ∀ j : W1, ∀ x : W2,
-        core.decides p (toLex (i, j)) x → H.Adj x a →
-          ∀ v : W1, (F a).decides p i v → j < v) :
-    ∃ sys : StationaryCliqueDecisions (Condition P) Square G,
-      sys.start ≤ p0 ∧ (∀ q a, sys.future q a → U q.base a) ∧
-        ∀ q i x, sys.clique.decides q i x → ∃ z : Square, core.decides q.base z x := by
-  have hsmall : #W1 < ℵ_ 2 := by
-    simp only [W1, Cardinal.mk_toType, Ordinal.card_omega]
-    exact Cardinal.aleph_lt_aleph.mpr (by norm_num)
-  obtain ⟨cutoff, base, hbase, hb⟩ :=
-    exists_stationary_small_decision_fiber hsmall c.omegaTwoCC p0.base U hU hs K
-  let V : P → W2 → Prop := fun p a => U p a ∧ K.decides p a cutoff
-  have hV : Persistent V := by
-    intro p q a hqp ha
-    exact ⟨hU hqp ha.1, K.persistent hqp ha.2⟩
-  obtain ⟨sys, hsys, hfuture, hinside⟩ :=
-    Erdos1172Part3NamedSquareThinning.exists_stationary_square_from_named_row_bounds
-      c hclosed hCH (liftBase p0 base) G H hcompl core V hV (hb base le_rfl)
-      (fun p a ha => hafter p a ha.1) cutoff F
-      (fun p a ha => hloss p a ha.1 cutoff ha.2)
-  exact ⟨sys, hsys.trans (liftBase_le p0 hbase), fun q a ha => (hfuture q a ha).1, hinside⟩
 
 end Erdos1172Part3NamedCutoffRefinement

@@ -6,7 +6,6 @@ module
 
 public import Erdos1172.Part3NamedLineCover
 public import Erdos1172.Part3CoverProfileTools
-public import Erdos1172.Part3DecisionSelection
 
 @[expose] public section
 
@@ -45,29 +44,6 @@ open Erdos1172Part3HechlerOrder (exists_bound_of_countable)
 
 variable {P J V : Type} [Preorder P]
 
-def rowPrefix (rowOf : J → W1) (i : W1) : Set J := {a | rowOf a ≤ i}
-
-/-- A countable family at every row has countable bounded row prefixes. -/
-theorem sigma_prefix_countable (Fiber : W1 → Type) (hFiber : ∀ i, #(Fiber i) ≤ ℵ₀)
-    (j : W1) :
-    #(rowPrefix (fun a : (Σ i : W1, Fiber i) => a.1) j) ≤ ℵ₀ := by
-  have hrows : (Set.Iic j).Countable := Cardinal.le_aleph0_iff_set_countable.mp
-    (Cardinal.lt_aleph_one_iff.mp (Erdos1172Part3ConvergentCore.mk_Iic_W1_lt j))
-  have hfiber (i : W1) :
-      (Set.range (fun a : Fiber i => (⟨i, a⟩ : Σ k : W1, Fiber k))).Countable :=
-    Cardinal.le_aleph0_iff_set_countable.mp (Cardinal.mk_range_le.trans (hFiber i))
-  apply Cardinal.le_aleph0_iff_set_countable.mpr
-  apply (hrows.biUnion (fun i _ => hfiber i)).mono
-  intro a ha
-  exact Set.mem_iUnion.mpr ⟨a.1, Set.mem_iUnion.mpr ⟨ha, ⟨a.2, rfl⟩⟩⟩
-
-def endpointName (D : FunctionDecisions P J V) : RegularName P V :=
-  regularize (fun p y => ∃ a : J, D.decides p a y)
-
-theorem endpoint_holds_of_decision (D : FunctionDecisions P J V)
-    {p : P} {a : J} {y : V} (hy : D.decides p a y) : (endpointName D).holds p y :=
-  fun q hqp => ⟨q, le_rfl, a, D.persistent hqp hy⟩
-
 /-- Endpoint rows are themselves decided countable sets; their contents
 need not share a fixed index family across different conditions. -/
 def setEndpointName (B : FunctionDecisions P W1 (Set V)) : RegularName P V :=
@@ -79,81 +55,6 @@ theorem setEndpoint_holds_of_decision (B : FunctionDecisions P W1 (Set V))
   fun q hqp => ⟨q, le_rfl, i, S, B.persistent hqp hS, hy⟩
 
 variable [LinearOrder V] [WellFoundedLT V]
-
-omit [WellFoundedLT V] in
-theorem row_support_of_witness (data : LineCoverData V) (D : FunctionDecisions P J V)
-    (rowOf : J → W1)
-    (hwitness : ∀ p : P, ∀ a : J, ∀ y : V, D.decides p a y →
-      ∃ x : V, data.row x = rowOf a ∧ x ≤ y) :
-    ∀ p : P, ∀ a : J, ∀ y : V, D.decides p a y → rowOf a ≤ data.row y := by
-  intro p a y hy
-  obtain ⟨x, hxrow, hxy⟩ := hwitness p a y hy
-  exact hxrow ▸ data.row_mono hxy
-
-/-- The entire relevant index prefix is countable, so one strengthening
-fixes its values and bounds every later actual endpoint in the chosen row. -/
-theorem exists_endpoint_row_bound (data : LineCoverData V) (D : FunctionDecisions P J V)
-    (rowOf : J → W1) (hprefix : ∀ i : W1, #(rowPrefix rowOf i) ≤ ℵ₀)
-    (hsupport : ∀ p : P, ∀ a : J, ∀ y : V, D.decides p a y → rowOf a ≤ data.row y)
-    (hclosed : CountablyClosed P) (p : P) (i : W1) :
-    ∃ q : P, q ≤ p ∧ ∃ bound : W1, RowBound data (endpointName D) q i bound := by
-  classical
-  let restricted : FunctionDecisions P (rowPrefix rowOf i) V :=
-    Erdos1172Part3DecisionSelection.reindex D Subtype.val
-  obtain ⟨q, hqp, hvalues⟩ := restricted.exists_simultaneous hclosed p (hprefix i)
-  let chosen (a : rowPrefix rowOf i) : V := (hvalues a).choose
-  have hchosen (a : rowPrefix rowOf i) : D.decides q a.val (chosen a) :=
-    (hvalues a).choose_spec
-  have hcodes : (Set.range (fun a : rowPrefix rowOf i => data.code (chosen a))).Countable :=
-    Cardinal.le_aleph0_iff_set_countable.mp (Cardinal.mk_range_le.trans (hprefix i))
-  obtain ⟨bound, hbound⟩ := exists_bound_of_countable
-    (Set.range (fun a : rowPrefix rowOf i => data.code (chosen a))) hcodes
-  refine ⟨q, hqp, bound, ?_⟩
-  intro r hrq y hy hyrow
-  obtain ⟨s, hsr, a, ha⟩ := hy r le_rfl
-  have hain : a ∈ rowPrefix rowOf i := by
-    change rowOf a ≤ i
-    simpa only [hyrow] using hsupport s a y ha
-  let index : rowPrefix rowOf i := ⟨a, hain⟩
-  have heq : y = chosen index :=
-    D.unique ha (D.persistent (hsr.trans hrq) (hchosen index))
-  rw [heq]
-  exact hbound _ ⟨index, rfl⟩
-
-/-- Dense bounds on the actual endpoint name give a genuine head name
-for the canonical line cover, without a ground endpoint-map assumption. -/
-theorem exists_named_endpoint_head_of_row_support
-    (data : LineCoverData V) (D : FunctionDecisions P J V) (rowOf : J → W1)
-    (hprefix : ∀ i : W1, #(rowPrefix rowOf i) ≤ ℵ₀)
-    (hsupport : ∀ p : P, ∀ a : J, ∀ y : V, D.decides p a y → rowOf a ≤ data.row y)
-    (hclosed : CountablyClosed P) :
-    ∃ F : FunctionDecisions P W1 W1,
-      ∀ p : P, ∀ y : V, (endpointName D).holds p y → (coverName F data.cover).holds p y :=
-  exists_named_line_cover_of_dense_row_bounds data (endpointName D)
-    (exists_endpoint_row_bound data D rowOf hprefix hsupport hclosed)
-
-theorem exists_named_endpoint_head
-    (data : LineCoverData V) (D : FunctionDecisions P J V) (rowOf : J → W1)
-    (hprefix : ∀ i : W1, #(rowPrefix rowOf i) ≤ ℵ₀)
-    (hwitness : ∀ p : P, ∀ a : J, ∀ y : V, D.decides p a y →
-      ∃ x : V, data.row x = rowOf a ∧ x ≤ y)
-    (hclosed : CountablyClosed P) :
-    ∃ F : FunctionDecisions P W1 W1,
-      ∀ p : P, ∀ y : V, (endpointName D).holds p y → (coverName F data.cover).holds p y :=
-  exists_named_endpoint_head_of_row_support data D rowOf hprefix
-    (row_support_of_witness data D rowOf hwitness) hclosed
-
-/-- Specialization to countably many endpoint indices at every source row. -/
-theorem exists_named_sigma_endpoint_head
-    (data : LineCoverData V) (Fiber : W1 → Type) (hFiber : ∀ i, #(Fiber i) ≤ ℵ₀)
-    (D : FunctionDecisions P (Σ i : W1, Fiber i) V)
-    (hwitness : ∀ p : P, ∀ a : (Σ i : W1, Fiber i), ∀ y : V, D.decides p a y →
-      ∃ x : V, data.row x = a.1 ∧ x ≤ y)
-    (hclosed : CountablyClosed P) :
-    ∃ F : FunctionDecisions P W1 W1,
-      ∀ p : P, ∀ y : V, (endpointName D).holds p y → (coverName F data.cover).holds p y :=
-  exists_named_endpoint_head data D (fun a => a.1) (sigma_prefix_countable Fiber hFiber)
-    hwitness hclosed
 
 /-- Freeze the countably many set-valued row decisions below a fixed row.
 The chosen sets may vary between incompatible conditions; only the sets

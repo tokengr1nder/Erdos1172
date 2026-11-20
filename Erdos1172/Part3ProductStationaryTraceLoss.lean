@@ -5,7 +5,6 @@ Licensed under the Apache License, Version 2.0.
 module
 
 public import Erdos1172.Part3ProductTraceIdeal
-public import Erdos1172.Part3NamedDerivedStationaryLoss
 
 @[expose] public section
 
@@ -28,7 +27,7 @@ open Erdos1172Part3RegularMembership
 open Erdos1172Part3RegularNeighborhoodCode
 open Erdos1172Part3RegularNamedIdeal (smallName)
 open Erdos1172Part3RankedCoreBlockAssembly (GoodCoreCut)
-open Erdos1172Part3ControlledCoreProducts (ProductData exists_club_guarded_source_cubes)
+open Erdos1172Part3ControlledCoreProducts (ProductData)
 open Erdos1172Part3ProductTraceIdeal
 open Erdos1172Part3GuardedTraceFamily (priorSource)
 open Erdos1172Part3NiceCliqueNames (NiceCliqueName)
@@ -116,34 +115,5 @@ theorem exists_positive_stationary_product_trace_loss (hCH : CH) (hI : #I ≤ �
   · intro p b hp
     have h := hloss p b hp
     exact ⟨h.1.1, h.2.1, by rw [← hJ]; exact h.2.2⟩
-
-open Erdos1172Part3TransfiniteStageLocality (Full Earlier restriction)
-open Erdos1172Part3TransfiniteHechlerOrder (mk_stage_le)
-open Erdos1172Part3RegularStageLocality (EventuallyLocal)
-open Erdos1172Part3CliqueNameCoding (mk_square_le)
-
-/-- The cubic instance uses the constructed full order and the proved
-club of guarded source cubes, not a postulated trace family. -/
-theorem exists_positive_stationary_cube_trace_loss (hGCH : GCH)
-    (G H : SimpleGraph W2) (hcompl : IsCompl G H)
-    (hred : ¬HasCliqueOfType G (ω_ 2)) (hblue : ¬HasCliqueOfType H (ω_ 1 + 2))
-    (source : RegularName (Full hGCH) W2)
-    (hsup : ∀ p a, source.holds p a → IsOmegaOneSup a)
-    (hlocal : EventuallyLocal (Earlier hGCH) (restriction hGCH) source)
-    (p0 : Full hGCH) (hstat : StationaryAt source.holds p0) :
-    let r := rank hGCH (mk_stage_le hGCH ⊤) mk_square_le G
-    ∃ a : W2, ∃ q : Full hGCH, q ≤ p0 ∧ source.holds q a ∧
-      ∃ data : ProductData r H source a, ∃ X out : RegularName (Full hGCH) W2,
-        (∀ p x, X.holds p x → source.holds p x ∧ x < a) ∧
-        (neg (cubeTrace.trace data.name.toClique)).holds q X ∧ StationaryAt out.holds q ∧
-        ∀ p b, out.holds p b → source.holds p b ∧ a < b ∧
-          (cubeTrace.trace data.name.toClique).holds p (fiber H b X) := by
-  obtain ⟨club, hclub, hc⟩ := exists_club_guarded_source_cubes hGCH G H hcompl hred hblue
-    source hsup hlocal
-  exact exists_positive_stationary_product_trace_loss hGCH.toCH mk_square_le
-    (Erdos1172Part3TransfiniteHechlerCentering.centered hGCH ⊤)
-    (Erdos1172Part3TransfiniteHechlerClosure.full_countablyClosed hGCH)
-    G H hcompl hred hblue (rank hGCH (mk_stage_le hGCH ⊤) mk_square_le G)
-    (blockRank hGCH (mk_stage_le hGCH ⊤) mk_square_le G) source hsup squareTrace club hclub hc p0 hstat
 
 end Erdos1172Part3ProductStationaryTraceLoss

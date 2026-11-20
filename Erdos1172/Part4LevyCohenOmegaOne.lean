@@ -8,7 +8,6 @@ public import Erdos1172.Part4CohenPowersetPreservation
 public import Erdos1172.Part4BooleanSurjectionTransport
 public import Erdos1172.Part4LevyCohenIteration
 public import Erdos1172.Part4LevyContinuumHypothesis
-public import Erdos1172.Part4InternalCantor
 
 @[expose] public section
 
@@ -86,44 +85,5 @@ theorem checked_predecessor_countable (κ : Cardinal.{u}) (i : κ.ord.ToType) :
   have Hmapped := map_injects_into_of_ordinal (firstStageHom κ)
     (Erdos1172LevyCollapse.checked_predecessor_countable κ i) HOrd
   simpa only [omega, map_check, map_top] using Hmapped
-
-/-- The predecessor quantifier ranges over all second-stage names. The
-canonical checked indices are used only inside extensional bounded forall. -/
-theorem checked_members_countable (κ : Cardinal.{u}) :
-    (⊤ : Algebra κ) ≤
-      ⨅ x, _root_.imp (x ∈ᴮ check (PSet.ordinalMk κ.ord))
-        (injects_into x (omega : bSet (Algebra κ))) := by
-  rw [PSet.ordinalMk_eq_def, check_unfold]
-  rw [← bounded_forall (h_congr := B_ext_injects_into_left)]
-  change (⊤ : Algebra κ) ≤
-    ⨅ i : κ.ord.ToType, _root_.imp ⊤
-      (injects_into (check (PSet.ordinalMk i.toOrd.val)) omega)
-  apply le_iInf
-  intro i
-  rw [top_imp]
-  exact checked_predecessor_countable κ i
-
-/-- Checked kappa satisfies the full second-stage Hartogs specification. -/
-theorem checked_upper_hartogsProperty (κ : Cardinal.{u})
-    (Hκ : κ.IsInaccessible) :
-    (⊤ : Algebra κ) ≤
-      ErdosHartogs.hartogsProperty omega (check (PSet.ordinalMk κ.ord)) :=
-  le_inf (check_Ord (PSet.Ord_mk κ.ord))
-    (le_inf (checked_upper_not_countable κ Hκ) (checked_members_countable κ))
-
-/-- This equality is in the completed two-stage algebra, not merely the
-first-stage collapse algebra. -/
-theorem checked_upper_eq_omegaOne (κ : Cardinal.{u})
-    (Hκ : κ.IsInaccessible) :
-    (⊤ : Algebra κ) ≤
-      check (PSet.ordinalMk κ.ord) =ᴮ ErdosOmegaTwo.omegaOne :=
-  ErdosOmegaTwo.omegaOne_property_unique (checked_upper_hartogsProperty κ Hκ)
-
-/-- CH in the actual two-stage algebra follows without ground full GCH. -/
-theorem forces_CH (κ : Cardinal.{u}) (Hκ : κ.IsInaccessible) :
-    (⊤ : Algebra κ) ≤ CH := by
-  apply ErdosCHHartogs.CH_iff_powerset_omega_injects_omegaOne.mpr
-  exact bv_rw'' (checked_upper_eq_omegaOne κ Hκ)
-    (powerset_omega_injects_checked_upper κ Hκ) B_ext_injects_into_right
 
 end Erdos1172LevyCohen

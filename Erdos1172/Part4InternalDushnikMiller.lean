@@ -36,10 +36,6 @@ def omegaClique (color : Bool) (R S : bSet 𝔹) : 𝔹 :=
 noncomputable def largeIndependent (color : Bool) (R S : bSet 𝔹) : 𝔹 :=
   ⨆ A, (A ⊆ᴮ S ⊓ independent color R A) ⊓ injects_into omegaTwo A
 
-noncomputable def largeClique (color : Bool) (R S : bSet 𝔹) : 𝔹 :=
-  ⨆ f, is_injective_function omegaTwo S f ⊓
-    homogeneousUnion color R omegaTwo omegaTwo f f
-
 theorem omega_clique_or_large_independent {color : Bool} {R S : bSet 𝔹} {Γ : 𝔹}
     (HCH : Γ ≤ (CH : 𝔹)) (HS : Γ ≤ S ⊆ᴮ omegaTwo)
     (Hlarge : Γ ≤ injects_into omegaTwo S) :
@@ -72,29 +68,5 @@ theorem omega_clique_or_large_independent {color : Bool} {R S : bSet 𝔹} {Γ :
       (inf_le_right.trans inf_le_right)
     exact subset_trans' (inf_le_right.trans (inf_le_left.trans inf_le_left))
       (inf_le_left.trans HXS)
-
-/-- Independence in one symmetric color produces a supported internal
-injection whose entire range is homogeneous in the complementary color. -/
-theorem largeIndependent_le_largeClique (color : Bool) (R S : bSet 𝔹) :
-    largeIndependent color R S ≤ largeClique (!color) R S := by
-  apply iSup_le
-  intro A
-  obtain ⟨f, Hf⟩ := ErdosIndependentHomogeneous.exists_homogeneous_injection
-    (show (A ⊆ᴮ S ⊓ independent color R A) ⊓ injects_into omegaTwo A ≤ A ⊆ᴮ S from
-      inf_le_left.trans inf_le_left)
-    (show (A ⊆ᴮ S ⊓ independent color R A) ⊓ injects_into omegaTwo A ≤
-      injects_into omegaTwo A from inf_le_right)
-    (show (A ⊆ᴮ S ⊓ independent color R A) ⊓ injects_into omegaTwo A ≤
-      independent color R A from inf_le_left.trans inf_le_right)
-  exact le_iSup_of_le f Hf
-
-/-- Full cardinal dichotomy: either an increasing omega-clique in the
-specified color or an omega-two-sized clique in its complementary color. -/
-theorem omega_two_cardinal_dushnik_miller {color : Bool} {R S : bSet 𝔹} {Γ : 𝔹}
-    (HCH : Γ ≤ (CH : 𝔹)) (HS : Γ ≤ S ⊆ᴮ omegaTwo)
-    (Hlarge : Γ ≤ injects_into omegaTwo S) :
-    Γ ≤ omegaClique color R S ⊔ largeClique (!color) R S :=
-  (omega_clique_or_large_independent HCH HS Hlarge).trans
-    (sup_le_sup le_rfl (largeIndependent_le_largeClique color R S))
 
 end bSet.ErdosInternalDushnikMiller

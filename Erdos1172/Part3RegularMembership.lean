@@ -39,10 +39,6 @@ theorem RegularName.ext {U V : RegularName P X}
   cases hh
   rfl
 
-theorem RegularName.dense_iff (U : RegularName P X) (p : P) (x : X) :
-    DenseTruth U.holds p x ↔ U.holds p x :=
-  ⟨U.of_dense p x, fun h q hqp => ⟨q, le_rfl, U.persistent hqp h⟩⟩
-
 def ground (s : Set X) : RegularName P X where
   holds _ x := x ∈ s
   persistent _ h := h
@@ -148,11 +144,6 @@ theorem neg_join {I : Type} (U : I → RegularName P X) :
   · intro h q hqp hq
     obtain ⟨r, hrq, i, hr⟩ := hq q le_rfl
     exact h i r (hrq.trans hqp) hr
-
-theorem ground_neg (s : Set X) : neg (ground (P := P) s) = ground sᶜ := by
-  apply RegularName.ext
-  intro p x
-  exact ⟨fun h => h p le_rfl, fun h _ _ => h⟩
 
 theorem ground_join {I : Type} (s : I → Set X) :
     join (fun i => ground (P := P) (s i)) = ground (⋃ i, s i) := by

@@ -107,23 +107,4 @@ theorem is_injective_function_codomain_mono {K A S f : bSet 𝔹} {Γ : 𝔹}
   le_inf (is_function_codomain_mono Hsub (Hf.trans inf_le_left))
     (Hf.trans inf_le_right)
 
-/-- An actual injection with homogeneous opposite-color range, at the same
-Boolean context and for an arbitrary source name K. No increasing law is claimed. -/
-theorem exists_homogeneous_injection {color : Bool} {R A S K : bSet 𝔹} {Γ : 𝔹}
-    (Hsub : Γ ≤ A ⊆ᴮ S) (Hlarge : Γ ≤ injects_into K A)
-    (Hind : Γ ≤ independent color R A) :
-    ∃ f : bSet 𝔹, Γ ≤ is_injective_function K S f ⊓
-      homogeneousUnion (!color) R K K f f := by
-  obtain ⟨f, Hf⟩ := exists_convert (injection_into_of_injects_into Hlarge)
-    ErdosSmallFiberBound.B_ext_injective_code
-  exact ⟨f, le_inf (is_injective_function_codomain_mono Hsub Hf)
-    (homogeneousUnion_of_independent Hind (Hf.trans inf_le_left))⟩
-
-theorem homogeneous_injection_value {color : Bool} {R A S K : bSet 𝔹} {Γ : 𝔹}
-    (Hsub : Γ ≤ A ⊆ᴮ S) (Hlarge : Γ ≤ injects_into K A)
-    (Hind : Γ ≤ independent color R A) :
-    Γ ≤ ⨆ f, is_injective_function K S f ⊓ homogeneousUnion (!color) R K K f f := by
-  obtain ⟨f, Hf⟩ := exists_homogeneous_injection Hsub Hlarge Hind
-  exact le_iSup_of_le f Hf
-
 end bSet.ErdosIndependentHomogeneous

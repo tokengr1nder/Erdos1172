@@ -6,8 +6,6 @@ module
 
 public import Erdos1172.Part4InternalActiveInverse
 public import Erdos1172.Part4InternalFusionMaskedTailCross
-public import Erdos1172.Part4InternalGreedyRange
-public import Erdos1172.Part4InternalIncreasingTail
 
 @[expose] public section
 

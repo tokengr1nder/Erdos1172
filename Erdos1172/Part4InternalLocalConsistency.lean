@@ -51,18 +51,4 @@ theorem consistent_of_nonzero_forces_theory
   change Γ ≤ (⊥ : β) at Hfalse
   exact Hnonzero (le_antisymm Hfalse bot_le)
 
-/-- Pointwise local forcing is sufficient, with the same condition for
-all axioms. In particular no coherent choice of models per sentence is
-used or permitted by this hypothesis. -/
-theorem consistent_of_nonzero_forces_each
-    (Hnonzero : Γ ≠ (⊥ : β))
-    (Hsentences : ∀ f ∈ T, Γ ⊩[S] f) : T.is_consistent := by
-  apply consistent_of_nonzero_forces_theory (S := S) Hnonzero
-  show Γ ≤ ⨅ f ∈ T, ⟦f⟧[S]
-  apply le_iInf
-  intro f
-  apply le_iInf
-  intro hf
-  exact Hsentences f hf
-
 end Fol.ErdosLocalConsistency

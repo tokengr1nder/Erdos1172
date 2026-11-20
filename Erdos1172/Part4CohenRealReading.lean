@@ -6,7 +6,6 @@ module
 
 public import Erdos1172.Part4CohenRelativeBinaryReading
 public import Erdos1172.Part4GeneratedSubsetName
-public import Erdos1172.Part4InternalPowersetPairCoding
 
 @[expose] public section
 

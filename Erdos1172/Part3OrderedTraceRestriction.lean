@@ -6,7 +6,6 @@ module
 
 public import Erdos1172.Part3OrderedCoreTrace
 public import Erdos1172.Part3OrderedEmbeddingRestriction
-public import Erdos1172.Part3TraceCompleteRestriction
 
 @[expose] public section
 
@@ -142,15 +141,6 @@ end ConeSmallness
 section Traces
 
 variable [LinearOrder I] [LinearOrder X] {G : SimpleGraph X}
-
-theorem trace_eq_of_refines (core refined : CliqueDecisions P I X G)
-    (href : ∀ p i x, refined.decides p i x → core.decides p i x) :
-    trace refined = trace core := by
-  apply RegularName.ext
-  intro p U
-  change (smallName (I := I)).holds p (pullback (cliqueFunction refined) U) ↔
-    (smallName (I := I)).holds p (pullback (cliqueFunction core) U)
-  rw [pullback_eq_of_refines (cliqueFunction core) (cliqueFunction refined) href U]
 
 theorem pullback_onCone_eq_of_refines (q : P)
     (sub : CliqueDecisions (Set.Iic q) I X G) (global : CliqueDecisions P I X G)

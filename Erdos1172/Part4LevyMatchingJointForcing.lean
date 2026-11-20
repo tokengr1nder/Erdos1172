@@ -4,7 +4,7 @@ Licensed under the Apache License, Version 2.0.
 -/
 module
 
-public import Erdos1172.Part4LevyMatchingStageRealNames
+public import Erdos1172.Part4LevyMatchingTargetMaps
 
 @[expose] public section
 
@@ -94,24 +94,4 @@ theorem exists_joint_stage_embeddings_from
   have e := (loc n s.val s.property x).symm.trans ((congrArg (V.weight n s.val ⊓ ·) eq).trans (loc n s.val s.property y))
   exact hc s.property (s.val.2.symm.injective (hg _ (joint_source_reflects hn e)))
 
-theorem exists_joint_stage_embeddings
-    (hb : ∀ {i j} (h : i ≤ j), Function.Injective (b h))
-    (hc : ∀ {i j} (h : i ≤ j), Function.Injective (c h))
-    (bid : ∀ i (x : B i), b (le_refl i) x = x)
-    (cid : ∀ i (x : C i), c (le_refl i) x = x)
-    (bcomp : ∀ {i j k} (h : i ≤ j) (h' : j ≤ k) x, b (h.trans h') x = b h' (b h x))
-    (ccomp : ∀ {i j k} (h : i ≤ j) (h' : j ≤ k) x, c (h.trans h') x = c h' (c h x))
-    (pairing : ∀ i t, CollapsingPair B C i t) (start : StageMatch B C)
-    (g : ∀ i, CompleteLatticeHom (B i) R) (hg : ∀ i, Function.Injective (g i))
-    (gg : ∀ {i j} (h : i ≤ j) x, g j (b h x) = g i x) :
-    ∃ k : ∀ i, CompleteLatticeHom (C i) (JointForcing R J),
-      (∀ i, Function.Injective (k i)) ∧ (∀ {i j} (h : i ≤ j) x, k j (c h x) = k i x) ∧
-      (∀ i (x : bSet (B i)), jointSourceHom J (g i (x ⊆ᴮ omega)) ≤ ⨆ j, ⨆ v : ℕ → C j,
-        mapNames ((jointSourceHom J).comp (g i)) x =ᴮ mapNames (k j) (realName v)) ∧
-      (∀ i (x : bSet (C i)), k i (x ⊆ᴮ omega) ≤ ⨆ j, ⨆ v : ℕ → B j,
-        mapNames (k i) x =ᴮ mapNames ((jointSourceHom J).comp (g j)) (realName v)) := by
-  obtain ⟨V,k,_,ki,coh,loc⟩ := exists_joint_stage_embeddings_from b c hb hc bid cid bcomp ccomp pairing start g hg gg
-  let src (i : J) := (jointSourceHom J).comp (g i)
-  have hs {i j : J} (h : i ≤ j) (x : B i) : src j (b h x) = src i x := congrArg (jointSourceHom J) (gg h x)
-  exact ⟨k,ki,coh,bounded_real_names_match V src k hs cid loc⟩
 end Erdos1172LevyCollapse.Matching

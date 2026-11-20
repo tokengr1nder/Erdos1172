@@ -6,7 +6,6 @@ module
 
 public import Erdos1172.Part4RelativeValuationIdeal
 public import Erdos1172.Part4BooleanUltrapowerCountableCover
-public import Erdos1172.Part4InternalInitialSegments
 
 @[expose] public section
 

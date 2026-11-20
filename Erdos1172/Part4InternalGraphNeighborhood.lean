@@ -78,19 +78,6 @@ theorem neighborhood_subset {color : Bool} {R X x : bSet 𝔹} {Γ : 𝔹} :
     Γ ≤ neighborhood color R X x ⊆ᴮ X :=
   comprehend_subset (ϕ := graphColor color R x) X
 
-theorem neighborhood_mono {color : Bool} {R X Y x : bSet 𝔹} {Γ : 𝔹}
-    (HXY : Γ ≤ X ⊆ᴮ Y) :
-    Γ ≤ neighborhood color R X x ⊆ᴮ neighborhood color R Y x := by
-  rw [subset_unfold']
-  apply le_iInf
-  intro y
-  rw [← deduction]
-  have Hy := mem_neighborhood_iff.mp
-    (show Γ ⊓ y ∈ᴮ neighborhood color R X x ≤
-      y ∈ᴮ neighborhood color R X x from inf_le_right)
-  exact mem_neighborhood_iff.mpr
-    ⟨mem_of_mem_subset (inf_le_left.trans HXY) Hy.1, Hy.2⟩
-
 theorem neighborhood_congr (color : Bool) (R X : bSet 𝔹) :
     B_congr (neighborhood color R X) := by
   intro x₁ x₂ Γ Hx
@@ -138,14 +125,5 @@ theorem exists_large_neighborhood {color : Bool} {R X : bSet 𝔹} {Γ : 𝔹}
   obtain ⟨x, Hx⟩ := exists_convert H
     (B_ext_inf B_ext_mem_left (B_ext_large_neighborhood color R X))
   exact ⟨x, Hx.trans inf_le_left, Hx.trans inf_le_right⟩
-
-theorem hasLargeNeighborhood_iff {color : Bool} {R X : bSet 𝔹} {Γ : 𝔹} :
-    Γ ≤ hasLargeNeighborhood color R X ↔
-      ∃ x : bSet 𝔹, Γ ≤ x ∈ᴮ X ∧
-        Γ ≤ injects_into omegaTwo (neighborhood color R X x) := by
-  constructor
-  · exact exists_large_neighborhood
-  · rintro ⟨x, Hx, Hlarge⟩
-    exact le_iSup_of_le x (le_inf Hx Hlarge)
 
 end bSet.ErdosGraphNeighborhood

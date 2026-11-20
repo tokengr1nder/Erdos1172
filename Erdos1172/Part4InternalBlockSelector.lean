@@ -7,7 +7,6 @@ module
 public import Erdos1172.Part4InternalBlockCandidate
 public import Erdos1172.Part4InternalBoundedFallbackChoice
 public import Erdos1172.Part4InternalCountableChoicePoolStep
-public import Erdos1172.Part4InternalCanonicalBlockNonempty
 
 @[expose] public section
 

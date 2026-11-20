@@ -4,7 +4,7 @@ Licensed under the Apache License, Version 2.0.
 -/
 module
 
-public import Erdos1172.Part4GroundNormalSeed
+public import Erdos1172.Part4GroundUltrapower
 public import Flypitch4.BvmExtras
 
 @[expose] public section
@@ -63,54 +63,4 @@ theorem mem_groundPSet_rep (A : I → PSet.{u}) (x : PSet.{u}) :
     rw [← PSet.equiv_iff_eq.mp he]
     exact PSet.mem_iff.mp ((groundPSet_mem_iff U F A).mpr hF)
 
-variable {B : Type u} [NontrivialCompleteBooleanAlgebra B]
-
-theorem checked_groundPSet_eq_iff (A D : I → PSet.{u}) :
-    ((check (groundPSet U A) : bSet B) =ᴮ check (groundPSet U D)) = ⊤ ↔
-      ∀ᶠ i in U, PSet.Equiv (A i) (D i) :=
-  check_bv_eq_iff.symm.trans (groundPSet_equiv_iff U A D)
-
-theorem checked_groundPSet_mem_iff (A D : I → PSet.{u}) :
-    ((check (groundPSet U A) : bSet B) ∈ᴮ check (groundPSet U D)) = ⊤ ↔
-      ∀ᶠ i in U, A i ∈ D i :=
-  check_mem_iff.symm.trans (groundPSet_mem_iff U A D)
-
-section Critical
-
-variable (κ : Cardinal.{u}) (V : Ultrafilter κ.ord.ToType)
-variable [CountableInterFilter (V : Filter κ.ord.ToType)]
-variable (hN : NormalRegressive κ V) (hT : ContainsStrictTails κ V)
-
-include hN hT in
-theorem groundPSet_ordinal_fixed (α : Ordinal.{u}) (hα : α < κ.ord) :
-    PSet.Equiv (groundPSet V (fun _ => PSet.ordinalMk α)) (PSet.ordinalMk α) := by
-  apply PSet.equiv_iff_eq.mpr
-  rw [mk_groundPSet]
-  exact diagonal_fix_ordinal κ V hN hT α hα
-
-include hN hT in
-theorem groundPSet_seed_equiv : PSet.Equiv
-    (groundPSet V (fun i : κ.ord.ToType => PSet.ordinalMk i.toOrd.val))
-    (PSet.ordinalMk κ.ord) := by
-  apply PSet.equiv_iff_eq.mpr
-  rw [mk_groundPSet]
-  exact normalSeed_eq_critical κ V hN hT
-
-include hN hT in
-theorem checked_critical_mem_groundPSet_iff (A : κ.ord.ToType → PSet.{u}) :
-    ((check (PSet.ordinalMk κ.ord) : bSet B) ∈ᴮ check (groundPSet V A)) = ⊤ ↔
-      ∀ᶠ (i : κ.ord.ToType) in V, PSet.ordinalMk i.toOrd.val ∈ A i := by
-  rw [← check_mem_iff, PSet.mem_iff, ← PSet.equiv_iff_eq.mp (groundPSet_seed_equiv κ V hN hT),
-    ← PSet.mem_iff]
-  exact groundPSet_mem_iff V _ A
-
-include hN hT in
-theorem checked_critical_mem_image : (⊤ : B) ≤
-    check (PSet.ordinalMk κ.ord) ∈ᴮ check (groundPSet V (fun _ => PSet.ordinalMk κ.ord)) := by
-  apply check_mem
-  apply PSet.mem_iff.mpr
-  rw [mk_groundPSet]
-  exact critical_mem_diagonal κ V hN hT
-
-end Critical
 end Erdos1172GroundUltrapower

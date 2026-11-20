@@ -7,7 +7,6 @@ module
 public import Erdos1172.Part4InternalStoppedCoordinateTriangle
 public import Erdos1172.Part4InternalCountableSubsetCodes
 public import Erdos1172.Part4InternalLeastStoppedHistory
-public import Erdos1172.Part4InternalCardinalSquare
 public import Erdos1172.Part4InternalIndependentHomogeneous
 
 @[expose] public section
@@ -98,11 +97,6 @@ theorem priorVertexGraph_congr {ρ τ P Q : bSet 𝔹} {Γ : 𝔹}
   subset_ext (priorVertexGraph_subset_of_eq Hρ HP)
     (priorVertexGraph_subset_of_eq (bv_symm Hρ) (bv_symm HP))
 
-theorem priorVertexGraph_congr_stage (P : bSet 𝔹) :
-    B_congr (fun ρ => priorVertexGraph ρ P) := by
-  intro ρ τ Γ H
-  exact priorVertexGraph_congr H bv_refl
-
 theorem priorVertexGraph_congr_graph (ρ : bSet 𝔹) : B_congr (priorVertexGraph ρ) := by
   intro P Q Γ H
   exact priorVertexGraph_congr bv_refl H
@@ -146,55 +140,6 @@ theorem priorVertexGraph_subset_fixed_bound {ρ P b : bSet 𝔹} {Γ : 𝔹}
     Γ ≤ priorVertexGraph ρ P ⊆ᴮ prod omegaOne b :=
   subset_trans' (priorVertexGraph_subset_bound Hbound)
     (ErdosPartialInjection.prod_domain_mono (subset_of_mem_Ord Hρ omegaOne_Ord))
-
-/-- The same canonical graph is a supported function into the common
-cutoff, even if its strict prefix domain is empty. -/
-theorem priorVertexGraph_is_function {ρ P b : bSet 𝔹} {Γ : 𝔹}
-    (HP : Γ ≤ is_function omegaOne entrySpace P) (Hρ : Γ ≤ ρ ∈ᴮ omegaOne)
-    (Hbound : Γ ≤ priorVertices ρ P ⊆ᴮ b) :
-    Γ ≤ is_function ρ b (priorVertexGraph ρ P) := by
-  refine le_inf (le_inf
-    (priorVertexGraph_is_func (HP.trans (inf_le_left.trans inf_le_left))) ?_)
-    (priorVertexGraph_subset_bound Hbound)
-  apply le_iInf
-  intro i
-  rw [← deduction]
-  let Δ := Γ ⊓ i ∈ᴮ ρ
-  have Hi : Δ ≤ i ∈ᴮ omegaOne :=
-    mem_of_mem_Ord inf_le_right (inf_le_left.trans Hρ) omegaOne_Ord
-  have Htotal : Δ ≤ ⨆ y, y ∈ᴮ omegaTwo ⊓ pair i y ∈ᴮ vertexHistory P :=
-    (le_inf (inf_le_left.trans
-      ((is_total_of_is_function (vertexHistory_is_function_of_run HP)).trans (iInf_le _ i)))
-      Hi).trans bv_imp_elim
-  obtain ⟨y, Hy⟩ := exists_convert Htotal (B_ext_inf B_ext_mem_left B_ext_pair_mem_right)
-  have Hpair : Δ ≤ pair i y ∈ᴮ priorVertexGraph ρ P :=
-    mem_priorVertexGraph_iff.mpr ⟨inf_le_right, Hy.trans inf_le_right⟩
-  exact le_iSup_of_le y
-    (le_inf (mem_of_mem_subset (inf_le_left.trans Hbound)
-      (priorVertexGraph_value_in_priorVertices Hpair)) Hpair)
-
-/-- The bounded image of the canonical graph is exactly the original
-strict prior vertex image; no ordering information is discarded in the code. -/
-theorem priorVertexGraph_image_eq {ρ P : bSet 𝔹} {Γ : 𝔹} :
-    Γ ≤ image ρ omegaTwo (priorVertexGraph ρ P) =ᴮ priorVertices ρ P := by
-  apply mem_ext
-  · apply le_iInf
-    intro y
-    rw [← deduction]
-    have Hy := mem_image_iff.mp
-      (show Γ ⊓ y ∈ᴮ image ρ omegaTwo (priorVertexGraph ρ P) ≤
-        y ∈ᴮ image ρ omegaTwo (priorVertexGraph ρ P) from inf_le_right)
-    obtain ⟨i, Hi⟩ := exists_convert Hy.2 (B_ext_inf B_ext_mem_left B_ext_pair_mem_left)
-    exact priorVertexGraph_value_in_priorVertices (Hi.trans inf_le_right)
-  · apply le_iInf
-    intro y
-    rw [← deduction]
-    have Hy := mem_image_iff.mp
-      (show Γ ⊓ y ∈ᴮ priorVertices ρ P ≤ y ∈ᴮ priorVertices ρ P from inf_le_right)
-    obtain ⟨i, Hi⟩ := exists_convert Hy.2 (B_ext_inf B_ext_mem_left B_ext_pair_mem_left)
-    exact mem_image_iff.mpr ⟨Hy.1, le_iSup_of_le i
-      (le_inf (Hi.trans inf_le_left)
-        (mem_priorVertexGraph_iff.mpr ⟨Hi.trans inf_le_left, Hi.trans inf_le_right⟩))⟩
 
 /-- Mixed products of these ordinal bounds reduce locally to a square:
 either `b` is contained in omega-one or omega-one is contained in `b`. -/
@@ -240,19 +185,5 @@ theorem vertexHistoryCodes_small {b : bSet 𝔹} {Γ : 𝔹}
     (HCH : Γ ≤ (CH : 𝔹)) (Hb : Γ ≤ b ∈ᴮ omegaTwo) :
     Γ ≤ injects_into (vertexHistoryCodes b) omegaOne :=
   countableSubsets_injects_omegaOne HCH (vertexGraph_support_injects_omegaOne HCH Hb)
-
-/-- A least-stopped run and its common prior-range cutoff supply an
-actual ordered graph in one omega-one-small family of whole graph codes. -/
-theorem stoppedVertexGraph_package {P top ρ b : bSet 𝔹} {Γ : 𝔹}
-    (HCH : Γ ≤ (CH : 𝔹)) (Hb : Γ ≤ b ∈ᴮ omegaTwo)
-    (HP : Γ ≤ is_function omegaOne entrySpace P)
-    (Hleast : Γ ≤ leastIn (stoppingIndices P top) ρ)
-    (Hbound : Γ ≤ priorVertices ρ P ⊆ᴮ b) :
-    Γ ≤ is_function ρ b (priorVertexGraph ρ P) ⊓
-      (priorVertexGraph ρ P ∈ᴮ vertexHistoryCodes b ⊓
-        injects_into (vertexHistoryCodes b) omegaOne) :=
-  le_inf (priorVertexGraph_is_function HP (least_stop_mem_omegaOne Hleast) Hbound)
-    (le_inf (priorVertexGraph_mem_codes (HP.trans (inf_le_left.trans inf_le_left))
-      (least_stop_mem_omegaOne Hleast) Hbound) (vertexHistoryCodes_small HCH Hb))
 
 end bSet.ErdosStoppedVertexGraph

@@ -6,7 +6,9 @@ module
 
 public import Erdos1172.Part4BooleanUltrapowerOperations
 public import Erdos1172.Part4BooleanUltrapowerConstants
-public import Erdos1172.Part4BooleanSeedKernelClosure
+public import Erdos1172.Part4BooleanFactorPoset
+public import Erdos1172.Part4InternalOmegaOneCountablyBounded
+public import Erdos1172.Part4InternalIdealNormality
 
 @[expose] public section
 
@@ -70,65 +72,5 @@ theorem exists_countable_member_cover (F : bSet B) (Γ : B) (hcnt : Γ ≤ injec
   exact le_inf (hpx.trans inf_le_left)
     (eq_of_is_inj_of_eq ((show p ≤ Γ from inf_le_left.trans inf_le_left).trans
       (is_inj_of_is_injective_function hg)) bv_refl inf_le_right (hpx.trans inf_le_right))
-
-variable {I : Type u} (U : Ultrafilter I) [CountableInterFilter (U : Filter I)]
-
-private theorem represented_countable_cover (Γ : B) (F : bSet B)
-    (hcnt : Γ ≤ injects_into F omega) (Z : I → bSet B) :
-    value U (fun i => Γ ⊓ (Z i ∈ᴮ F)) ≤ ⨆ v : bSet B,
-      constant U (v ∈ᴮ F) ⊓ (hereditary U Z =ᴮ hereditary U (fun _ => v)) := by
-  obtain ⟨x, hx⟩ := exists_countable_member_cover F Γ hcnt
-  have hcard : Cardinal.mk (ULift.{u} ℕ) < Cardinal.aleph 1 := by simp
-  apply (show value U (fun i => Γ ⊓ (Z i ∈ᴮ F)) ≤
-    value U (fun i => ⨆ n, (x n ∈ᴮ F) ⊓ (Z i =ᴮ x n)) from
-      (value_le_value_iff U).mpr (Eventually.of_forall fun i => hx (Z i))).trans
-  rw [value_small_iSup U (Cardinal.aleph 1) hcard (fun i n => (x n ∈ᴮ F) ⊓ (Z i =ᴮ x n))]
-  apply iSup_le
-  intro n
-  apply le_iSup_of_le (x n)
-  rw [value_inf, value_name_eq U Z (fun _ => x n)]
-  exact le_rfl
-
-/-- All members of the lifted countable family, including arbitrary mixed
-target names, are locally represented by diagonal images of actual members. -/
-theorem hereditary_countable_cover (Γ : B) (F : bSet B) (y : bSet (Algebra U B)) :
-    constant U (Γ ⊓ injects_into F omega) ⊓ (y ∈ᴮ hereditary U (fun _ => F)) ≤
-      ⨆ v : bSet B, constant U (v ∈ᴮ F) ⊓ (y =ᴮ hereditary U (fun _ => v)) := by
-  let X := fun _ : I => F
-  let δ := Γ ⊓ injects_into F omega
-  rw [show hereditary U X = _ from liftName_eq U _ X, mem_unfold]
-  change constant U δ ⊓ (⨆ a : Children U X, value U (weight U X a) ⊓
-    (y =ᴮ hereditary U (child U X a))) ≤ _
-  erw [inf_iSup_eq]
-  apply iSup_le
-  intro a
-  let d := constant U δ ⊓ (value U (weight U X a) ⊓ (y =ᴮ hereditary U (child U X a)))
-  have hweight : value U (weight U X a) ≤ value U (fun i => child U X a i ∈ᴮ F) := by
-    apply (value_le_value_iff U).mpr
-    filter_upwards [a.large] with i hi
-    simpa only [child, weight, selected, dif_pos hi, X] using (mem_mk' F (a.pick ⟨i, hi⟩))
-  have hd : d ≤ value U (fun i => δ ⊓ (child U X a i ∈ᴮ F)) := by
-    rw [value_inf]
-    exact le_inf inf_le_left ((inf_le_right.trans inf_le_left).trans hweight)
-  have hc := hd.trans (represented_countable_cover U δ F inf_le_right (child U X a))
-  apply (le_inf (le_refl d) hc).trans
-  erw [inf_iSup_eq]
-  apply iSup_le
-  intro v
-  apply le_iSup_of_le v
-  exact le_inf (inf_le_right.trans inf_le_left)
-    (bv_trans (inf_le_left.trans (show d ≤ y =ᴮ hereditary U (child U X a) from
-      inf_le_right.trans inf_le_right)) (inf_le_right.trans inf_le_right))
-
-theorem hereditary_seed_countableClosure (κ : Cardinal.{u})
-    [CardinalInterFilter (U : Filter I) κ] (hcc : StrictCC B κ)
-    (K : bSet B) (s : bSet (Algebra U B)) :
-    (⊤ : B) ≤ ErdosIdeal.countableClosure (ErdosSeedKernel.seedKernelName
-      (constantCompleteHom U κ hcc) (fun x => hereditary U (fun _ => x)) s K) := by
-  apply ErdosSeedKernel.seedKernelName_countableClosure
-    (constantCompleteHom U κ hcc) (fun x => hereditary U (fun _ => x)) s
-    (fun x y => (value_name_eq U (fun _ => x) (fun _ => y)).le) K
-  · exact fun F => le_top.trans (hereditary_union_subset U (fun _ => F))
-  · exact hereditary_countable_cover U ⊤
 
 end Erdos1172BooleanUltrapower

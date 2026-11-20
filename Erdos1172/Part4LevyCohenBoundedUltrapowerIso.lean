@@ -5,8 +5,6 @@ Licensed under the Apache License, Version 2.0.
 module
 
 public import Erdos1172.Part4BooleanUltrapowerSubalgebra
-public import Erdos1172.Part4ShioyaCohenCover
-public import Erdos1172.Part4ShioyaDenseCoverIso
 public import Erdos1172.Part4LevyPreparationCohenMaster
 public import Erdos1172.Part4LevyPreparationBoundedCohenConditions
 
@@ -201,80 +199,71 @@ theorem realizeCondition_le_iff {θ : Cardinal.{u}} {W : Type u} [CompleteBoolea
       exact Subtype.ext ((StringName.includeIndex_toOrd _ _).trans
         (hk₀_ord.trans (hj₀_ord.symm.trans (StringName.includeIndex_toOrd _ _).symm)))
     let ξ₀ := StringName.includeIndex q₂.length.toOrd.property.le j₀
+    have hk₀_not : ¬ k₀.toOrd.val < q₁.length.toOrd.val := hk₀_ord ▸ lt_irrefl _
     have hd1 : q₁.value ⊓ q₂.bits j₀ = ⊥ := by
       by_contra hd1_ne
       let r := mkExt (q₁.value ⊓ q₂.bits j₀) hd1_ne ⊥
-      have hr_q2 : realizeCondition F B_bit r ≤ realizeCondition F B_bit q₂ :=
-        (realizeCondition_mono F B_bit (mkExt_le _ hd1_ne inf_le_left ⊥)).trans hle
-      have hr_pos_bit : realizeCondition F B_bit r ≤ B_bit ξ₀ :=
+      have hr_q2 := (realizeCondition_mono F B_bit (mkExt_le _ hd1_ne inf_le_left ⊥)).trans hle
+      have hr_pos : realizeCondition F B_bit r ≤ B_bit ξ₀ :=
         bitiff_le_right_of_le (inf_le_left.trans (OrderHomClass.mono F inf_le_right))
           (hr_q2.trans (inf_le_right.trans (iInf_le _ j₀)))
-      have hk₀_not : ¬ k₀.toOrd.val < q₁.length.toOrd.val := by rw [hk₀_ord]; exact lt_irrefl _
-      have hr_neg_bit : realizeCondition F B_bit r ≤ (B_bit ξ₀)ᶜ := by
+      have hr_neg : realizeCondition F B_bit r ≤ (B_bit ξ₀)ᶜ := by
         have h1 : realizeCondition F B_bit r ≤
             bitiff (F (extBits ⊥ k₀)) (B_bit (StringName.includeIndex l1.toOrd.property.le k₀)) :=
           inf_le_right.trans (iInf_le _ k₀)
         simpa only [extBits, dif_neg hk₀_not, BotHomClass.map_bot, bitiff_bot_left, hξ_eq] using h1
-      exact hpos r (le_bot_iff.mp ((le_inf hr_pos_bit hr_neg_bit).trans inf_compl_eq_bot.le))
+      exact hpos r (le_bot_iff.mp ((le_inf hr_pos hr_neg).trans inf_compl_eq_bot.le))
     have hd0 : q₁.value ⊓ (q₂.bits j₀)ᶜ = ⊥ := by
       by_contra hd0_ne
       let r := mkExt (q₁.value ⊓ (q₂.bits j₀)ᶜ) hd0_ne ⊤
-      have hr_q2 : realizeCondition F B_bit r ≤ realizeCondition F B_bit q₂ :=
-        (realizeCondition_mono F B_bit (mkExt_le _ hd0_ne inf_le_left ⊤)).trans hle
-      have hr_neg_bit : realizeCondition F B_bit r ≤ (B_bit ξ₀)ᶜ :=
+      have hr_q2 := (realizeCondition_mono F B_bit (mkExt_le _ hd0_ne inf_le_left ⊤)).trans hle
+      have hr_neg : realizeCondition F B_bit r ≤ (B_bit ξ₀)ᶜ :=
         bitiff_le_compl_right_of_le_compl
           ((inf_le_left.trans (OrderHomClass.mono F inf_le_right)).trans_eq (map_compl' F _))
           (hr_q2.trans (inf_le_right.trans (iInf_le _ j₀)))
-      have hk₀_not : ¬ k₀.toOrd.val < q₁.length.toOrd.val := by rw [hk₀_ord]; exact lt_irrefl _
-      have hr_pos_bit : realizeCondition F B_bit r ≤ B_bit ξ₀ := by
+      have hr_pos : realizeCondition F B_bit r ≤ B_bit ξ₀ := by
         have h1 : realizeCondition F B_bit r ≤
             bitiff (F (extBits ⊤ k₀)) (B_bit (StringName.includeIndex l1.toOrd.property.le k₀)) :=
           inf_le_right.trans (iInf_le _ k₀)
         simpa only [extBits, dif_neg hk₀_not, TopHomClass.map_top, bitiff_top_left, hξ_eq] using h1
-      exact hpos r (le_bot_iff.mp ((le_inf hr_pos_bit hr_neg_bit).trans inf_compl_eq_bot.le))
+      exact hpos r (le_bot_iff.mp ((le_inf hr_pos hr_neg).trans inf_compl_eq_bot.le))
     exact q₁.positive (eq_bot_of_inf_and_inf_compl hd1 hd0)
   refine ⟨hval, hlen, fun j => ?_⟩
   let j' := StringName.includeIndex hlen j
   have hξ : StringName.includeIndex q₁.length.toOrd.property.le j' =
-      StringName.includeIndex q₂.length.toOrd.property.le j := by
-    apply Ordinal.ToType.mk.symm.injective
-    exact Subtype.ext ((StringName.includeIndex_toOrd _ _).trans
-      ((StringName.includeIndex_toOrd hlen j).trans (StringName.includeIndex_toOrd _ _).symm))
+      StringName.includeIndex q₂.length.toOrd.property.le j :=
+    Ordinal.ToType.mk.symm.injective (Subtype.ext ((StringName.includeIndex_toOrd _ _).trans
+      ((StringName.includeIndex_toOrd hlen j).trans (StringName.includeIndex_toOrd _ _).symm)))
   let ξ := StringName.includeIndex q₂.length.toOrd.property.le j
-  have h_diff1 : (q₁.value ⊓ q₂.bits j) ⊓ (q₁.bits j')ᶜ = ⊥ := by
+  have h_diff {b₁ b₂ : FirstAlgebra θ}
+      (hb₁ : ∀ r : CohenCover.Condition θ (FirstAlgebra θ),
+        realizeCondition F B_bit r ≤ realizeCondition F B_bit q₁ →
+        r.value ≤ b₁ → realizeCondition F B_bit r ≤ B_bit ξ)
+      (hb₂ : ∀ r : CohenCover.Condition θ (FirstAlgebra θ),
+        realizeCondition F B_bit r ≤ realizeCondition F B_bit q₁ →
+        r.value ≤ b₂ᶜ → realizeCondition F B_bit r ≤ (B_bit ξ)ᶜ) :
+      (q₁.value ⊓ b₁) ⊓ b₂ᶜ = ⊥ := by
     by_contra hd
-    let r := q₁.withValue ((q₁.value ⊓ q₂.bits j) ⊓ (q₁.bits j')ᶜ) hd
-    have hr_q1 : realizeCondition F B_bit r ≤ realizeCondition F B_bit q₁ :=
-      realizeCondition_mono F B_bit (q₁.withValue_le _ hd (inf_le_left.trans inf_le_left))
-    have hr_q2 := hr_q1.trans hle
-    have hb1 : realizeCondition F B_bit r ≤ B_bit ξ :=
-      bitiff_le_right_of_le
-        (inf_le_left.trans (OrderHomClass.mono F (inf_le_left.trans inf_le_right)))
-        (hr_q2.trans (inf_le_right.trans (iInf_le _ j)))
-    have hb0 : realizeCondition F B_bit r ≤ (B_bit ξ)ᶜ := by
-      dsimp only [ξ]
-      rw [← hξ]
+    let r := q₁.withValue ((q₁.value ⊓ b₁) ⊓ b₂ᶜ) hd
+    have hr_q1 := realizeCondition_mono F B_bit (q₁.withValue_le _ hd (inf_le_left.trans inf_le_left))
+    exact hpos r (le_bot_iff.mp ((le_inf (hb₁ r hr_q1 (inf_le_left.trans inf_le_right))
+      (hb₂ r hr_q1 inf_le_right)).trans inf_compl_eq_bot.le))
+  have h_diff1 := h_diff (b₁ := q₂.bits j) (b₂ := q₁.bits j')
+    (fun r hr_q1 hv => bitiff_le_right_of_le (inf_le_left.trans (OrderHomClass.mono F hv))
+      ((hr_q1.trans hle).trans (inf_le_right.trans (iInf_le _ j))))
+    (fun r hr_q1 hv => by
+      dsimp only [ξ]; rw [← hξ]
       exact bitiff_le_compl_right_of_le_compl
-        ((inf_le_left.trans (OrderHomClass.mono F inf_le_right)).trans_eq (map_compl' F _))
-        (hr_q1.trans (inf_le_right.trans (iInf_le _ j')))
-    exact hpos r (le_bot_iff.mp ((le_inf hb1 hb0).trans inf_compl_eq_bot.le))
-  have h_diff2 : (q₁.value ⊓ q₁.bits j') ⊓ (q₂.bits j)ᶜ = ⊥ := by
-    by_contra hd
-    let r := q₁.withValue ((q₁.value ⊓ q₁.bits j') ⊓ (q₂.bits j)ᶜ) hd
-    have hr_q1 : realizeCondition F B_bit r ≤ realizeCondition F B_bit q₁ :=
-      realizeCondition_mono F B_bit (q₁.withValue_le _ hd (inf_le_left.trans inf_le_left))
-    have hr_q2 := hr_q1.trans hle
-    have hb1 : realizeCondition F B_bit r ≤ B_bit ξ := by
-      dsimp only [ξ]
-      rw [← hξ]
-      exact bitiff_le_right_of_le
-        (inf_le_left.trans (OrderHomClass.mono F (inf_le_left.trans inf_le_right)))
-        (hr_q1.trans (inf_le_right.trans (iInf_le _ j')))
-    have hb0 : realizeCondition F B_bit r ≤ (B_bit ξ)ᶜ :=
-      bitiff_le_compl_right_of_le_compl
-        ((inf_le_left.trans (OrderHomClass.mono F inf_le_right)).trans_eq (map_compl' F _))
-        (hr_q2.trans (inf_le_right.trans (iInf_le _ j)))
-    exact hpos r (le_bot_iff.mp ((le_inf hb1 hb0).trans inf_compl_eq_bot.le))
+        ((inf_le_left.trans (OrderHomClass.mono F hv)).trans_eq (map_compl' F _))
+        (hr_q1.trans (inf_le_right.trans (iInf_le _ j'))))
+  have h_diff2 := h_diff (b₁ := q₁.bits j') (b₂ := q₂.bits j)
+    (fun r hr_q1 hv => by
+      dsimp only [ξ]; rw [← hξ]
+      exact bitiff_le_right_of_le (inf_le_left.trans (OrderHomClass.mono F hv))
+        (hr_q1.trans (inf_le_right.trans (iInf_le _ j'))))
+    (fun r hr_q1 hv => bitiff_le_compl_right_of_le_compl
+      ((inf_le_left.trans (OrderHomClass.mono F hv)).trans_eq (map_compl' F _))
+      ((hr_q1.trans hle).trans (inf_le_right.trans (iInf_le _ j))))
   exact le_antisymm
     (le_inf inf_le_left (disjoint_compl_right_iff.mp (disjoint_iff.mpr h_diff1)))
     (le_inf inf_le_left (disjoint_compl_right_iff.mp (disjoint_iff.mpr h_diff2)))
@@ -286,18 +275,14 @@ def realizeIso {θ : Cardinal.{u}} {W : Type u} [CompleteBooleanAlgebra W]
     (F : CompleteLatticeHom (FirstAlgebra θ) W) (B_bit : θ.ord.ToType → W)
     (hpos : ∀ q : CohenCover.Condition θ (FirstAlgebra θ), realizeCondition F B_bit q ≠ ⊥)
     (hdense : ∀ w : W, w ≠ ⊥ → ∃ q, realizeCondition F B_bit q ≤ w) :
-    Completion (CohenCover.Condition θ (FirstAlgebra θ)) ≃o W := by
+    Completion (CohenCover.Condition θ (FirstAlgebra θ)) ≃o W :=
   let f : CohenCover.Condition θ (FirstAlgebra θ) →o Positive W :=
     ⟨fun q => ⟨realizeCondition F B_bit q, hpos q⟩, fun _ _ h => realizeCondition_mono F B_bit h⟩
-  have hle_iff (a b : CohenCover.Condition θ (FirstAlgebra θ)) : f a ≤ f b ↔ a ≤ b :=
-    realizeCondition_le_iff hlim F B_bit hpos a b
-  have hl : Lifts f := fun t s hs => by
-    obtain ⟨r, hr⟩ := hdense s.val s.property
-    exact ⟨r, (hle_iff r t).mp ((show f r ≤ s from hr).trans hs), hr⟩
-  have hc (a b : CohenCover.Condition θ (FirstAlgebra θ)) (h : f a ≤ f b) : ∃ z ≤ a, z ≤ b :=
-    ⟨a, le_rfl, (hle_iff a b).mp h⟩
-  have hd (s : Positive W) : ∃ q, f q ≤ s := hdense s.val s.property
-  exact (ForcingCover.completionIso f hl hc hd).symm.trans
+  (ForcingCover.completionIso f
+    (fun t s hs => let ⟨r, hr⟩ := hdense s.val s.property
+      ⟨r, (realizeCondition_le_iff hlim F B_bit hpos r t).mp ((show f r ≤ s from hr).trans hs), hr⟩)
+    (fun a b h => ⟨a, le_rfl, (realizeCondition_le_iff hlim F B_bit hpos a b).mp h⟩)
+    (fun s => hdense s.val s.property)).symm.trans
     (Erdos1172PositiveBoolean.completionOrderIso (B := W)).symm
 
 theorem realizeIso_condition {θ : Cardinal.{u}} {W : Type u} [CompleteBooleanAlgebra W]
@@ -309,15 +294,11 @@ theorem realizeIso_condition {θ : Cardinal.{u}} {W : Type u} [CompleteBooleanAl
     realizeIso hlim F B_bit hpos hdense (condition q) = realizeCondition F B_bit q := by
   let f : CohenCover.Condition θ (FirstAlgebra θ) →o Positive W :=
     ⟨fun r => ⟨realizeCondition F B_bit r, hpos r⟩, fun _ _ h => realizeCondition_mono F B_bit h⟩
-  have hle_iff (a b : CohenCover.Condition θ (FirstAlgebra θ)) : f a ≤ f b ↔ a ≤ b :=
-    realizeCondition_le_iff hlim F B_bit hpos a b
-  have hl : Lifts f := fun t s hs => by
-    obtain ⟨r, hr⟩ := hdense s.val s.property
-    exact ⟨r, (hle_iff r t).mp ((show f r ≤ s from hr).trans hs), hr⟩
+  have hl : Lifts f := fun t s hs => let ⟨r, hr⟩ := hdense s.val s.property
+    ⟨r, (realizeCondition_le_iff hlim F B_bit hpos r t).mp ((show f r ≤ s from hr).trans hs), hr⟩
   have hc (a b : CohenCover.Condition θ (FirstAlgebra θ)) (h : f a ≤ f b) : ∃ z ≤ a, z ≤ b :=
-    ⟨a, le_rfl, (hle_iff a b).mp h⟩
-  have hd (s : Positive W) : ∃ r, f r ≤ s := hdense s.val s.property
-  let iso1 := ForcingCover.completionIso f hl hc hd
+    ⟨a, le_rfl, (realizeCondition_le_iff hlim F B_bit hpos a b).mp h⟩
+  let iso1 := ForcingCover.completionIso f hl hc (fun s => hdense s.val s.property)
   have h1 : iso1 (condition (f q)) = condition q := ForcingCover.booleanHom_condition f hl hc q
   have h2 : iso1.symm (condition q) = condition (f q) := by
     rw [← h1, OrderIso.symm_apply_apply]

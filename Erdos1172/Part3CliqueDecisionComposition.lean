@@ -61,44 +61,6 @@ theorem compose_decides_iff (E : FunctionDecisions P J I)
     (compose E core hordered).decides p j x ↔
       ∃ i, E.decides p j i ∧ core.decides p i x := Iff.rfl
 
-/-- Every new decision retains its actually selected old index. -/
-theorem compose_origin (E : FunctionDecisions P J I)
-    (core : CliqueDecisions P I X G) (hordered : OrderedDecisions E)
-    {p : P} {j : J} {x : X}
-    (hx : (compose E core hordered).decides p j x) :
-    ∃ i, E.decides p j i ∧ core.decides p i x := hx
-
-/-- Any predicate true of actual old-core values remains true of
-actual values of the selected core, at the same condition. -/
-theorem compose_actual (E : FunctionDecisions P J I)
-    (core : CliqueDecisions P I X G) (hordered : OrderedDecisions E)
-    (U : P → X → Prop)
-    (hU : ∀ p i x, core.decides p i x → U p x) :
-    ∀ p j x, (compose E core hordered).decides p j x → U p x := by
-  rintro p j x ⟨i, _, hx⟩
-  exact hU p i x hx
-
-/-- A selector-side assertion is retained together with the exact
-old-core witness, rather than merely as a possible index. -/
-theorem compose_selected_origin (E : FunctionDecisions P J I)
-    (core : CliqueDecisions P I X G) (hordered : OrderedDecisions E)
-    (U : P → I → Prop)
-    (hU : ∀ p j i, E.decides p j i → U p i)
-    {p : P} {j : J} {x : X}
-    (hx : (compose E core hordered).decides p j x) :
-    ∃ i, E.decides p j i ∧ U p i ∧ core.decides p i x := by
-  obtain ⟨i, hi, hxi⟩ := hx
-  exact ⟨i, hi, hU p j i hi, hxi⟩
-
-theorem compose_cross (E : FunctionDecisions P J I)
-    (core : CliqueDecisions P I X G) (hordered : OrderedDecisions E)
-    (U : P → X → Prop)
-    (hcross : ∀ p a, U p a → ∀ i x, core.decides p i x → x < a ∧ G.Adj x a) :
-    ∀ p a, U p a → ∀ j x, (compose E core hordered).decides p j x →
-      x < a ∧ G.Adj x a := by
-  rintro p a ha j x ⟨i, _, hx⟩
-  exact hcross p a ha i x hx
-
 /-- Generic cone restriction. Existing iterated-Hechler base lifting
 is supplied by `Erdos1172Part3IteratedHechlerPreservation.liftClique`. -/
 def onCone (p0 : P) (core : CliqueDecisions P I X G) :
@@ -112,9 +74,5 @@ def onCone (p0 : P) (core : CliqueDecisions P I X G) :
   unique := core.unique
   ordered := core.ordered
   adjacent := core.adjacent
-
-theorem onCone_decides_iff (p0 : P) (core : CliqueDecisions P I X G)
-    (p : Set.Iic p0) (i : I) (x : X) :
-    (onCone p0 core).decides p i x ↔ core.decides p.val i x := Iff.rfl
 
 end Erdos1172Part3CliqueDecisionComposition

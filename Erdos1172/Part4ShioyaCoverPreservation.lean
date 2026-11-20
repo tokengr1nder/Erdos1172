@@ -4,10 +4,11 @@ Licensed under the Apache License, Version 2.0.
 -/
 module
 
-public import Erdos1172.Part4ShioyaIntervalCollapse
+public import Mathlib.SetTheory.Cardinal.Ordinal
+public import Erdos1172.Part4ShioyaStringTransport
+public import Mathlib.Order.Bounds.OrderIso
+public import Erdos1172.Part4BooleanWeightedDenseBasis
 public import Erdos1172.Part4LevyAnonymousCH
-public import Erdos1172.Part4ShioyaCardinalPreservation
-public import Erdos1172.Part4InternalFullGCH
 
 @[expose] public section
 
@@ -80,28 +81,6 @@ end ForcingCover
 
 variable {B C : Type u} [NontrivialCompleteBooleanAlgebra B] [NontrivialCompleteBooleanAlgebra C]
 
-theorem checked_noninjection_of_cover (e : CompleteLatticeHom B C) (he : Function.Injective e)
-    (α β : Ordinal.{u}) (h : (injects_into (check (PSet.ordinalMk α)) (check (PSet.ordinalMk β)) : C) = ⊥) :
-    (injects_into (check (PSet.ordinalMk α)) (check (PSet.ordinalMk β)) : B) = ⊥ := by
-  let b : B := injects_into (check (PSet.ordinalMk α)) (check (PSet.ordinalMk β))
-  have ho : e b ≤ Ord (mapNames e (check (PSet.ordinalMk β))) := by
-    rw [map_check]
-    exact check_Ord (PSet.Ord_mk β)
-  have hi := map_injects_into_of_ordinal e (show b ≤
-    injects_into (check (PSet.ordinalMk α)) (check (PSet.ordinalMk β)) from le_rfl) ho
-  rw [map_check, map_check, h] at hi
-  exact he ((bot_unique hi).trans (map_bot e).symm)
-
-theorem checked_powerset_bound_of_cover (e : CompleteLatticeHom B C) (he : Function.Injective e)
-    (α : Ordinal.{u}) (θ : Cardinal.{u}) {Γ : B}
-    (hgap : (injects_into (check (PSet.ordinalMk (Order.succ θ).ord)) (check (PSet.ordinalMk θ.ord)) : C) = ⊥)
-    (hpow : e Γ ≤ injects_into (bv_powerset (check (PSet.ordinalMk α))) (check (PSet.ordinalMk θ.ord))) :
-    Γ ≤ injects_into (bv_powerset (check (PSet.ordinalMk α))) (check (PSet.ordinalMk θ.ord)) := by
-  apply descend_checked_cardinal_bound e he θ _ hgap
-  have hs := map_powerset_subset e (check (PSet.ordinalMk α))
-  rw [map_check] at hs
-  exact injects_into_trans (le_top.trans (injects_into_of_subset hs)) hpow
-
 section Poset
 
 variable {T : Type u} [Preorder T] [Nonempty T]
@@ -124,43 +103,6 @@ theorem successor_gap_of_dense_cover (θ : Cardinal.{u}) (hinf : Cardinal.aleph0
   have hm : (⊤ : Completion T) ≤ exists_mem (check (PSet.ordinalMk μ.ord)) :=
     le_iSup_of_le (check x) (check_mem hx)
   exact bot_unique ((surjects_onto_of_injects_into' le_rfl (le_top.trans hm)).trans_eq hs)
-
-variable {κ θ : Cardinal.{u}} [Fact (Cardinal.aleph0 < κ)] [Nonempty (Condition κ θ)]
-
-theorem upper_hartogs_of_cover (hκ : κ.IsRegular) (hκθ : κ < θ) (hθ : θ.IsInaccessible)
-    (e : CompleteLatticeHom (Algebra κ θ) C) (he : Function.Injective e)
-    (hn : (injects_into (check (PSet.ordinalMk θ.ord)) (check (PSet.ordinalMk κ.ord)) : C) = ⊥) :
-    (⊤ : Algebra κ θ) ≤ ErdosHartogs.hartogsProperty (check (PSet.ordinalMk κ.ord))
-      (check (PSet.ordinalMk θ.ord)) := by
-  refine le_inf (check_Ord (PSet.Ord_mk _)) (le_inf ?_ (interval_collapse hκ hκθ hθ))
-  rw [checked_noninjection_of_cover e he θ.ord κ.ord hn, compl_bot]
-
-theorem cardinal_bounds_of_dense_cover (hκ : κ.IsRegular) (hκθ : κ < θ) (hθ : θ.IsInaccessible)
-    (e : CompleteLatticeHom (Algebra κ θ) (Completion T)) (he : Function.Injective e)
-    (D : Set T) (hd : ∀ p : T, ∃ d ∈ D, d ≤ p) (hD : Cardinal.mk D ≤ θ)
-    (hn : (injects_into (check (PSet.ordinalMk θ.ord)) (check (PSet.ordinalMk κ.ord)) : Completion T) = ⊥)
-    (hpow : (⊤ : Completion T) ≤ injects_into (bv_powerset (check (PSet.ordinalMk κ.ord)))
-      (check (PSet.ordinalMk θ.ord))) :
-    (⊤ : Algebra κ θ) ≤ ErdosHartogs.hartogsProperty (check (PSet.ordinalMk κ.ord)) (check (PSet.ordinalMk θ.ord)) ⊓
-      (injects_into (check (PSet.ordinalMk θ.ord)) (bv_powerset (check (PSet.ordinalMk κ.ord))) ⊓
-       injects_into (bv_powerset (check (PSet.ordinalMk κ.ord))) (check (PSet.ordinalMk θ.ord))) := by
-  have hh := upper_hartogs_of_cover hκ hκθ hθ e he hn
-  exact le_inf hh (le_inf (ErdosFullGCH.hartogs_injects_powerset hh)
-    (checked_powerset_bound_of_cover e he κ.ord θ (successor_gap_of_dense_cover θ hθ.aleph0_lt.le D hd hD)
-      (le_top.trans hpow)))
-
-theorem projection_cover_forces_gchAt (hκ : κ.IsRegular) (hκθ : κ < θ) (hθ : θ.IsInaccessible)
-    (π : T →o Condition κ θ) (hl : ForcingCover.Lifts π) (hr : ∀ p, ∃ t, π t ≤ p)
-    (D : Set T) (hd : ∀ p : T, ∃ d ∈ D, d ≤ p) (hD : Cardinal.mk D ≤ θ)
-    (hn : (injects_into (check (PSet.ordinalMk θ.ord)) (check (PSet.ordinalMk κ.ord)) : Completion T) = ⊥)
-    (hpow : (⊤ : Completion T) ≤ injects_into (bv_powerset (check (PSet.ordinalMk κ.ord)))
-      (check (PSet.ordinalMk θ.ord))) :
-    (⊤ : Algebra κ θ) ≤ ErdosHartogs.initialOrdinal (check (PSet.ordinalMk θ.ord)) ⊓
-      ErdosFullGCH.gchAt (check (PSet.ordinalMk κ.ord)) := by
-  have hb := cardinal_bounds_of_dense_cover hκ hκθ hθ (ForcingCover.booleanHom π hl)
-    (ForcingCover.booleanHom_injective π hl hr) D hd hD hn hpow
-  exact le_inf (ErdosFullGCH.initialOrdinal_of_hartogsProperty (hb.trans inf_le_left))
-    (ErdosFullGCH.gchAt_of_witness (hb.trans inf_le_left) (hb.trans (inf_le_right.trans inf_le_right)))
 
 end Poset
 end Erdos1172Shioya

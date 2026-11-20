@@ -4,9 +4,7 @@ Licensed under the Apache License, Version 2.0.
 -/
 module
 
-public import Erdos1172.Part4InternalRelationGraph
 public import Erdos1172.Part4InternalSmallFamilyUnion
-public import Erdos1172.Part4InternalCountableImage
 
 @[expose] public section
 
@@ -214,26 +212,6 @@ theorem right_subset_aggregate {K L T A B : bSet 𝔹} {Γ : 𝔹}
   rw [← deduction]
   exact mem_aggregateRight_of_pair (inf_le_left.trans Hpair)
     (inf_le_left.trans Hbounds.1) (inf_le_left.trans Hbounds.2) inf_le_right
-
-theorem aggregateLeft_mono {K L T U : bSet 𝔹} {Γ : 𝔹}
-    (H : Γ ≤ T ⊆ᴮ U) : Γ ≤ aggregateLeft K L T ⊆ᴮ aggregateLeft K L U := by
-  rw [subset_unfold']
-  apply le_iInf
-  intro x
-  rw [← deduction]
-  obtain ⟨A, B, Hpair, HA, HB, Hx⟩ := aggregateLeft_witness
-    (show Γ ⊓ x ∈ᴮ aggregateLeft K L T ≤ x ∈ᴮ aggregateLeft K L T from inf_le_right)
-  exact mem_aggregateLeft_of_pair (mem_of_mem_subset (inf_le_left.trans H) Hpair) HA HB Hx
-
-theorem aggregateRight_mono {K L T U : bSet 𝔹} {Γ : 𝔹}
-    (H : Γ ≤ T ⊆ᴮ U) : Γ ≤ aggregateRight K L T ⊆ᴮ aggregateRight K L U := by
-  rw [subset_unfold']
-  apply le_iInf
-  intro x
-  rw [← deduction]
-  obtain ⟨A, B, Hpair, HA, HB, Hx⟩ := aggregateRight_witness
-    (show Γ ⊓ x ∈ᴮ aggregateRight K L T ≤ x ∈ᴮ aggregateRight K L T from inf_le_right)
-  exact mem_aggregateRight_of_pair (mem_of_mem_subset (inf_le_left.trans H) Hpair) HA HB Hx
 
 theorem leftProjection_smallValues {K L T : bSet 𝔹} {Γ : 𝔹}
     (Hsmall : Γ ≤ ⨅ A, ⨅ B, _root_.imp (pair A B ∈ᴮ T) (injects_into A omegaOne)) :

@@ -4,9 +4,7 @@ Licensed under the Apache License, Version 2.0.
 -/
 module
 
-public import Erdos1172.Part4ShioyaStringTransport
 public import Erdos1172.Part4ShioyaCoverPreservation
-public import Erdos1172.Part4PositiveBooleanCompletion
 
 @[expose] public section
 
@@ -53,16 +51,11 @@ theorem le_iff (q p : Condition θ B) : q ≤ p ↔ q.value ≤ p.value ∧
   rw [le_iff_extension, extensionValue_iff_bits _ _ _ q.positive]
   simp only [name, StringName.bits_ofBits, CompleteLatticeHom.id_apply]
 
-theorem value_mono : Monotone (Condition.value (θ := θ) (B := B)) := fun _ _ h => h.1
-
 def withValue (p : Condition θ B) (b : B) (hb : b ≠ ⊥) : Condition θ B :=
   { p with value := b, positive := hb }
 
 theorem withValue_le (p : Condition θ B) (b : B) (hb : b ≠ ⊥) (hbp : b ≤ p.value) :
     p.withValue b hb ≤ p := ⟨hbp, le_top.trans (extensionValue_refl p.name)⟩
-
-theorem withValue_le_iff (p q : Condition θ B) (b : B) (hb : b ≠ ⊥) :
-    p.withValue b hb ≤ q ↔ b ≤ q.value ∧ b ≤ extensionValue (CompleteLatticeHom.id B) q.name p.name := Iff.rfl
 
 def empty (hθ : 0 < θ) (b : B) (hb : b ≠ ⊥) : Condition θ B where
   value := b
@@ -81,14 +74,5 @@ theorem valueProjection_lifts : ForcingCover.Lifts (valueProjection θ B) :=
 def firstStageHom (θ : Cardinal.{u}) (B : Type u) [NontrivialCompleteBooleanAlgebra B] :
     CompleteLatticeHom B (Completion (Condition θ B)) :=
   (ForcingCover.booleanHom (valueProjection θ B) valueProjection_lifts).comp Erdos1172PositiveBoolean.completionHom
-
-theorem firstStageHom_injective (hθ : 0 < θ) : Function.Injective (firstStageHom θ B) :=
-  (ForcingCover.booleanHom_injective (valueProjection θ B) valueProjection_lifts
-    (fun b => ⟨Condition.empty hθ b.val b.property,le_rfl⟩)).comp Erdos1172PositiveBoolean.completionHom_injective
-
-theorem condition_le_firstStageHom_iff (p : Condition θ B) (b : B) :
-    condition p ≤ firstStageHom θ B b ↔ p.value ≤ b := by
-  rw [condition_le_iff]
-  rfl
 
 end Erdos1172Shioya.CohenCover

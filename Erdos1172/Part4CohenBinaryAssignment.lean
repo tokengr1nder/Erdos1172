@@ -4,7 +4,8 @@ Licensed under the Apache License, Version 2.0.
 -/
 module
 
-public import Erdos1172.Part4InternalCohenCountableAssignment
+public import Erdos1172.Part4InternalCohenCountableUnion
+public import Erdos1172.Part4InternalNameSequence
 
 @[expose] public section
 
@@ -57,29 +58,5 @@ theorem binaryAssignmentName_mem_two (b : B) :
     check_mem (PSet.ofNat_mem_of_lt (show 0 < 2 by omega))
   exact (two_term_mixture_mem_top (two : bSet B) (1 : bSet B) (0 : bSet B)
     b bᶜ inf_compl_eq_bot sup_compl_eq_top (top_unique Hone) (top_unique Hzero)).ge
-
-/-- One actual extension realizes a countable Boolean binary assignment.
-Its two clauses hold on the corresponding pieces of the original condition. -/
-theorem exists_countable_binary_assignment {K p : bSet B} {Γ : B}
-    (HK : Γ ≤ ErdosHartogs.hartogsProperty omega K)
-    (Hp : Γ ≤ condition K p) (a : ℕ → bSet B) (b : ℕ → B)
-    (Ha : ∀ n, Γ ≤ a n ∈ᴮ K)
-    (Hsep : ∀ m n, m ≠ n → Γ ≤ (a m =ᴮ a n)ᶜ)
-    (Hfresh : ∀ n, Γ ≤ (a n ∈ᴮ graphDomain K two p)ᶜ) :
-    ∃ q : bSet B, Γ ≤ condition K q ∧ Γ ≤ p ⊆ᴮ q ∧
-      ∀ n, (Γ ⊓ b n ≤ pair (a n) (1 : bSet B) ∈ᴮ q) ∧
-        (Γ ⊓ (b n)ᶜ ≤ pair (a n) (0 : bSet B) ∈ᴮ q) := by
-  obtain ⟨q, Hq, Hsub, Hpair⟩ :=
-    exists_countable_assignment HK Hp a (fun n => binaryAssignmentName (b n))
-      Ha (fun n => le_top.trans (binaryAssignmentName_mem_two (b n))) Hsep Hfresh
-  refine ⟨q, Hq, Hsub, ?_⟩
-  intro n
-  constructor
-  · exact mem_congr
-      (pair_congr bv_refl (inf_le_right.trans (binaryAssignmentName_eq_one (b n))))
-      bv_refl (inf_le_left.trans (Hpair n))
-  · exact mem_congr
-      (pair_congr bv_refl (inf_le_right.trans (binaryAssignmentName_eq_zero (b n))))
-      bv_refl (inf_le_left.trans (Hpair n))
 
 end bSet.ErdosCohen

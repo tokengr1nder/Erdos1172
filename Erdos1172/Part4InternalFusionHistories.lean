@@ -6,7 +6,6 @@ module
 
 public import Erdos1172.Part4InternalCanonicalBlockEnumeration
 public import Erdos1172.Part4InternalBoundedFunctionValue
-public import Erdos1172.Part4InternalCountableImage
 
 @[expose] public section
 

@@ -92,13 +92,6 @@ theorem increasingOn_comp {A κ L f e : bSet 𝔹} {Γ : 𝔹}
     (Hu.trans (inf_le_right.trans inf_le_right))
     (Hv.trans (inf_le_right.trans inf_le_right))
 
-/-- The actual function constructor is unchanged. -/
-theorem increasingOn_function_comp {A κ L f e : bSet 𝔹} {Γ : 𝔹}
-    (Hf : Γ ≤ is_function A κ f) (He : Γ ≤ is_function κ L e)
-    (Hincf : Γ ≤ increasingOn A f) (Hince : Γ ≤ increasingOn κ e) :
-    Γ ≤ increasingOn A (function_comp Hf He) :=
-  increasingOn_comp (is_func'_of_is_function Hf) (is_func'_of_is_function He) Hincf Hince
-
 theorem increasingOn_injective_function_comp {A κ L f e : bSet 𝔹} {Γ : 𝔹}
     (Hf : Γ ≤ is_injective_function A κ f) (He : Γ ≤ is_injective_function κ L e)
     (Hincf : Γ ≤ increasingOn A f) (Hince : Γ ≤ increasingOn κ e) :
@@ -178,16 +171,6 @@ theorem homogeneousUnion_comp_pullback {color : Bool}
     (Hu.trans inf_le_left) (Hv.trans inf_le_left)
     (Hu.trans (inf_le_right.trans inf_le_right))
     (Hv.trans (inf_le_right.trans inf_le_right))).mp Hedge
-
-theorem homogeneousUnion_function_comp_pullback {color : Bool}
-    {A B κ L R f g e : bSet 𝔹} {Γ : 𝔹}
-    (Hκ : Γ ≤ Ord κ)
-    (Hf : Γ ≤ is_function A κ f) (Hg : Γ ≤ is_function B κ g)
-    (He : Γ ≤ is_function κ L e) (Hince : Γ ≤ increasingOn κ e)
-    (Hhom : Γ ≤ homogeneousUnion color (pullbackRelation κ R e) A B f g) :
-    Γ ≤ homogeneousUnion color R A B (function_comp Hf He) (function_comp Hg He) :=
-  homogeneousUnion_comp_pullback Hκ (is_func'_of_is_function Hf)
-    (is_func'_of_is_function Hg) (is_func'_of_is_function He) Hince Hhom
 
 theorem homogeneousUnion_injective_function_comp_pullback {color : Bool}
     {A B κ L R f g e : bSet 𝔹} {Γ : 𝔹}

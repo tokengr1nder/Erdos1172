@@ -7,7 +7,6 @@ module
 public import Erdos1172.Part4InternalMixedProductInjection
 public import Erdos1172.Part4InternalStoppedCoordinateTriangle
 public import Erdos1172.Part4InternalCountableSubsetCodes
-public import Erdos1172.Part4InternalCardinalSquare
 
 @[expose] public section
 
@@ -85,11 +84,6 @@ theorem stoppedCoordinateTriangle_congr {ρ τ P Q : bSet 𝔹} {Γ : 𝔹}
     Γ ≤ stoppedCoordinateTriangle ρ P =ᴮ stoppedCoordinateTriangle τ Q :=
   subset_ext (stoppedCoordinateTriangle_subset_of_eq Hρ HP)
     (stoppedCoordinateTriangle_subset_of_eq (bv_symm Hρ) (bv_symm HP))
-
-theorem stoppedCoordinateTriangle_congr_stage (P : bSet 𝔹) :
-    B_congr (fun ρ => stoppedCoordinateTriangle ρ P) := by
-  intro ρ τ Γ H
-  exact stoppedCoordinateTriangle_congr H bv_refl
 
 theorem stoppedCoordinateTriangle_congr_graph (ρ : bSet 𝔹) :
     B_congr (stoppedCoordinateTriangle ρ) := by

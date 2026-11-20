@@ -6,7 +6,6 @@ module
 
 public import Erdos1172.Part4AnonymousInternalLevyMaster
 public import Erdos1172.Part4CohenNamedDenseRun
-public import Erdos1172.Part4BooleanUltrapowerConstants
 
 @[expose] public section
 
@@ -85,18 +84,6 @@ def coneInMaster {m₀ p : bSet R}
     LocalizedSourceCohen R m₀ hm₀ :=
   ⟨(masterPositive p hp).val,
    nameCone_mono_of_subset (ErdosCohen.mem_conditions_iff.mpr hm₀) hsub⟩
-
-theorem coneInMaster_ne_bot {m₀ p : bSet R}
-    (hm₀ : (⊤ : R) ≤ ErdosCohen.condition omegaOne m₀)
-    (hp : (⊤ : R) ≤ ErdosCohen.condition omegaOne p)
-    (hsub : (⊤ : R) ≤ m₀ ⊆ᴮ p) :
-    coneInMaster hm₀ hp hsub ≠ ⊥ :=
-  fun h0 => (masterPositive p hp).property (congrArg Subtype.val h0)
-
-theorem coneInMaster_self {m₀ : bSet R}
-    (hm₀ : (⊤ : R) ≤ ErdosCohen.condition omegaOne m₀) :
-    coneInMaster hm₀ hm₀ subset_self = ⊤ :=
-  Subtype.ext rfl
 
 theorem coneInMaster_mono {m₀ p₁ p₂ : bSet R}
     (hm₀ : (⊤ : R) ≤ ErdosCohen.condition omegaOne m₀)
@@ -253,75 +240,11 @@ theorem transfer_const_formula {W₁ : Type u} [NontrivialCompleteBooleanAlgebra
     ⟨Classical.choice ‹Nonempty θ.ord.ToType›, fun _ => env, Eventually.of_forall fun _ => rfl⟩
     (Eventually.of_forall fun _ => htruth)
 
-theorem transfer_const_subset {W₁ : Type u} [NontrivialCompleteBooleanAlgebra W₁]
-    (hk : κ ≤ θ) (hf : FineOn U a) (hn : NormalOn U a)
-    (ht : FiberOrderType U κ θ a) (hκ : κ.IsInaccessible)
-    (j₀ : CompleteLatticeHom (Erdos1172BooleanUltrapower.Algebra U (anonymousAlgebra κ)) W₁)
-    (X Y : bSet (anonymousAlgebra κ)) (hsub : (⊤ : anonymousAlgebra κ) ≤ X ⊆ᴮ Y) :
-    (⊤ : W₁) ≤ mapNames j₀ (Preparation.boundedAnonName U a (fun _ => X)) ⊆ᴮ
-      mapNames j₀ (Preparation.boundedAnonName U a (fun _ => Y)) := by
-  have hVA : (⊤ : Erdos1172BooleanUltrapower.Algebra U (anonymousAlgebra κ)) ≤
-      Preparation.boundedAnonName U a (fun _ => X) ⊆ᴮ
-        Preparation.boundedAnonName U a (fun _ => Y) := by
-    rw [← Preparation.boundedAnonName_subset U a hk hf hn ht hκ (fun _ => X) (fun _ => Y)
-      (Preparation.Supported.const X) (Preparation.Supported.const Y),
-      value_eq_of_eventuallyEq U (g := fun _ => ⊤) (Eventually.of_forall fun _ => top_unique hsub),
-      value_top]
-  have hm := OrderHomClass.mono j₀ hVA
-  rw [TopHomClass.map_top, map_subset] at hm
-  exact hm
-
 omit [CountableInterFilter (U : Filter I)] [Nonempty θ.ord.ToType] in
 theorem subset_iff_allIn_mem {B : Type u} [NontrivialCompleteBooleanAlgebra B]
     (X Y : bSet B) :
     (X ⊆ᴮ Y) = allIn X (fun z => z ∈ᴮ Y) :=
   subset_unfold'
-
-def denseTestFormula : InterpretedMaster.Formula Bool :=
-  .allIn false (.someIn (some true) (.allIn (some none) (.mem none (some none))))
-
-private theorem denseTestFormula_eval {B : Type u} [NontrivialCompleteBooleanAlgebra B]
-    (D P : bSet B) :
-    denseTestFormula.eval (fun b => if b then D else P) =
-      allIn P (fun g => someIn D (fun r => allIn g (fun x => x ∈ᴮ r))) :=
-  rfl
-
-/-- Every stage-`α` dense subset `D ⊆ᴮ internalLevyPoset κ α` admits an actual mixed witness
-`z : bSet W₁` extending `q₀` at the UNCHANGED Boolean condition `Γ : W₁`. -/
-theorem exists_dense_test_extension {W₁ : Type u} [NontrivialCompleteBooleanAlgebra W₁]
-    (hk : κ ≤ θ) (hf : FineOn U a) (hn : NormalOn U a)
-    (ht : FiberOrderType U κ θ a) (hκ : κ.IsInaccessible)
-    (j₀ : CompleteLatticeHom (Erdos1172BooleanUltrapower.Algebra U (anonymousAlgebra κ)) W₁)
-    (α : Ordinal.{u}) (D : bSet (anonymousAlgebra κ))
-    (hD_sub : (⊤ : anonymousAlgebra κ) ≤ D ⊆ᴮ internalLevyPoset κ α)
-    (hD_dense : (⊤ : anonymousAlgebra κ) ≤
-      allIn (internalLevyPoset κ α) (fun g => someIn D (fun r => g ⊆ᴮ r)))
-    {Γ : W₁} {q₀ : bSet W₁}
-    (hq₀ : Γ ≤ q₀ ∈ᴮ mapNames j₀ (Preparation.boundedAnonName U a (fun _ => internalLevyPoset κ α))) :
-    ∃ z : bSet W₁,
-      Γ ≤ z ∈ᴮ mapNames j₀ (Preparation.boundedAnonName U a (fun _ => internalLevyPoset κ α)) ∧
-      Γ ≤ z ∈ᴮ mapNames j₀ (Preparation.boundedAnonName U a (fun _ => D)) ∧
-      Γ ≤ q₀ ⊆ᴮ z := by
-  let P_A := internalLevyPoset κ α
-  let env : Bool → bSet (anonymousAlgebra κ) := fun b => if b then D else P_A
-  have hφ_A : (⊤ : anonymousAlgebra κ) ≤ denseTestFormula.eval env := by
-    rw [denseTestFormula_eval]
-    simp_rw [← subset_iff_allIn_mem]
-    exact hD_dense
-  have hφ_W := transfer_const_formula U a hk hf hn ht hκ j₀ denseTestFormula env hφ_A
-  let P_W := mapNames j₀ (Preparation.boundedAnonName U a (fun _ => P_A))
-  let D_W := mapNames j₀ (Preparation.boundedAnonName U a (fun _ => D))
-  have henv_W : (fun v => mapNames j₀ (Preparation.boundedAnonName U a (fun _ => env v))) =
-      (fun b => if b then D_W else P_W) := by
-    funext b; cases b <;> rfl
-  rw [henv_W, denseTestFormula_eval] at hφ_W
-  simp_rw [← subset_iff_allIn_mem] at hφ_W
-  have hex_W : Γ ≤ ⨆ r : bSet W₁, (r ∈ᴮ D_W) ⊓ (q₀ ⊆ᴮ r) :=
-    allIn_elim (le_top.trans hφ_W) hq₀
-  obtain ⟨z, hz⟩ := exists_convert hex_W (B_ext_inf B_ext_mem_left B_ext_subset_right)
-  have hDP_W := transfer_const_subset U a hk hf hn ht hκ j₀ D P_A hD_sub
-  exact ⟨z, mem_of_mem_subset (le_top.trans hDP_W) (hz.trans inf_le_left),
-    hz.trans inf_le_left, hz.trans inf_le_right⟩
 
 end DeltaZeroTransferHelpers
 

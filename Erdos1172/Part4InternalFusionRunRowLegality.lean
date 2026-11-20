@@ -4,8 +4,6 @@ Licensed under the Apache License, Version 2.0.
 -/
 module
 
-public import Erdos1172.Part4InternalFusionSeedBridge
-public import Erdos1172.Part4InternalFusionRunLocalStep
 public import Erdos1172.Part4InternalFusionRunPoolInvariant
 public import Erdos1172.Part4InternalFusionPrefixCoherence
 
@@ -79,63 +77,6 @@ theorem currentChoices_least_of_stored_candidates
     (graphValue_pair_mem HBlocks Hparts.1) Hstored
   exact currentChoices_least_of_witness Hchoice Hactive (Hw.trans inf_le_right)
 
-/-- Every consequence concerns the same selected coordinate and the
-same canonical row. Strict coordinate growth also retains failed stages. -/
-theorem row_properties_of_least
-    {color : Bool} {R E top ξ Blocks X ν v : bSet 𝔹} {Γ : 𝔹}
-    (HE : Γ ≤ is_function (blockObjects color R) blockEnumerationCodes E)
-    (HElaw : Γ ≤ blockEnumerationFamilyLaw color R E)
-    (HX : Γ ≤ is_func' (prod ξ omegaOne) omegaOne X)
-    (Hν : Γ ≤ ν ∈ᴮ omegaOne)
-    (Hb : Γ ≤ blockValue Blocks ν ∈ᴮ blockObjects color R)
-    (Hleast : Γ ≤ leastIn (rowCandidatesAt color R E top ξ Blocks X ν) v) :
-    Γ ≤ (⨅ x, _root_.imp (pair v x ∈ᴮ canonicalRow E (blockValue Blocks ν))
-      (graphColor (!color) R x top)) ⊓
-      ((⨅ j, ⨅ c, ⨅ x, ⨅ y, _root_.imp
-        ((j ∈ᴮ ξ ⊓ ν ∈ᴮ j) ⊓
-          (pair j c ∈ᴮ Blocks ⊓ (pair v x ∈ᴮ canonicalRow E (blockValue Blocks ν) ⊓ y ∈ᴮ c)))
-        (graphColor (!color) R x y)) ⊓
-       (⨅ j, ⨅ w, _root_.imp ((j ∈ᴮ ξ ⊓ ν ∈ᴮ j) ⊓ pair (pair j ν) w ∈ᴮ X)
-         (w ∈ᴮ v))) := by
-  have Hv : Γ ≤ v ∈ᴮ fusionRowCandidates (!color) R E (blockValue Blocks ν)
-      top ξ ν Blocks X := leastIn_mem Hleast
-  have Hr : Γ ≤ is_function omegaOne omegaTwo (canonicalRow E (blockValue Blocks ν)) :=
-    (canonicalRow_data HE HElaw Hb).trans (inf_le_left.trans inf_le_left)
-  apply le_inf
-  · apply le_iInf
-    intro x
-    rw [← deduction]
-    exact fusionCandidate_seed_edge (inf_le_left.trans HX) (inf_le_left.trans Hν)
-      (inf_le_left.trans (Hr.trans (inf_le_left.trans inf_le_left)))
-      (inf_le_left.trans Hv) inf_le_right
-  · apply le_inf
-    · apply le_iInf
-      intro j
-      apply le_iInf
-      intro c
-      apply le_iInf
-      intro x
-      apply le_iInf
-      intro y
-      rw [← deduction]
-      exact fusionCandidate_cross_previous_block (inf_le_left.trans HX)
-        (inf_le_left.trans Hν) (inf_le_left.trans Hv)
-        (inf_le_right.trans (inf_le_left.trans inf_le_left))
-        (inf_le_right.trans (inf_le_left.trans inf_le_right))
-        (inf_le_right.trans (inf_le_right.trans inf_le_left))
-        (inf_le_right.trans (inf_le_right.trans (inf_le_right.trans inf_le_left)))
-        (inf_le_right.trans (inf_le_right.trans (inf_le_right.trans inf_le_right)))
-    · apply le_iInf
-      intro j
-      apply le_iInf
-      intro w
-      rw [← deduction]
-      exact fusionCandidate_above_previous (inf_le_left.trans HX)
-        (inf_le_left.trans Hν) (inf_le_left.trans Hv)
-        (inf_le_right.trans (inf_le_left.trans inf_le_left))
-        (inf_le_right.trans (inf_le_left.trans inf_le_right))
-        (inf_le_right.trans inf_le_right)
-
 /-- No structural prefix law is supplied here: pool preservation and
 stored candidate coherence are consequences of the actual run. -/
 theorem fusion_run_next_row_least
@@ -196,46 +137,6 @@ theorem fusion_run_row_least
   exact fusion_run_next_row_least HJ Habsorb Hclosure HE HElaw HF HFlaw Hhull Hseeds Htop
     HRun Hlaw (mem_domain_of_is_function Hentry HRun) Hactive
     (mem_congr bv_refl HZ Hνv)
-
-/-- Seed adjacency, all activated whole-block cross edges, and strict
-growth follow for the actual stored value under the same hypotheses. -/
-theorem fusion_run_row_properties
-    {color : Bool} {R J E S F B P Y top Run ξ A Z U ν v : bSet 𝔹} {Γ : 𝔹}
-    (HJ : Γ ≤ properIdeal omegaOne J)
-    (Habsorb : Γ ≤ countableAbsorption omegaOne J)
-    (Hclosure : Γ ≤ countableClosure J)
-    (HE : Γ ≤ is_function (blockObjects color R) blockEnumerationCodes E)
-    (HElaw : Γ ≤ blockEnumerationFamilyLaw color R E)
-    (HF : Γ ≤ is_function (choicePoolDomain (blockObjects color R) omegaTwo)
-      (bv_powerset omegaTwo) F)
-    (HFlaw : Γ ≤ blockSelectorLaw color R J E S F)
-    (Hhull : Γ ≤ closedHullData color R F B P)
-    (Hseeds : Γ ≤ poolSeedLaw color R J E B Y) (Htop : Γ ≤ top ∈ᴮ Y)
-    (HRun : Γ ≤ is_function omegaOne runSpace Run)
-    (Hlaw : Γ ≤ runLaw color R E F top Run)
-    (Hentry : Γ ≤ pair ξ (pair ξ (entry A Z U)) ∈ᴮ Run)
-    (Hactive : Γ ≤ ν ∈ᴮ successfulRows color R ξ
-      (blockHistory (taggedPrefix ξ omegaOne entrySpace Run)))
-    (Hνv : Γ ≤ pair ν v ∈ᴮ Z) :
-    let T := taggedPrefix ξ omegaOne entrySpace Run
-    let Blocks := blockHistory T
-    let X := coordinateHistory T
-    Γ ≤ (⨅ x, _root_.imp (pair v x ∈ᴮ canonicalRow E (blockValue Blocks ν))
-      (graphColor (!color) R x top)) ⊓
-      ((⨅ j, ⨅ c, ⨅ x, ⨅ y, _root_.imp
-        ((j ∈ᴮ ξ ⊓ ν ∈ᴮ j) ⊓
-          (pair j c ∈ᴮ Blocks ⊓ (pair v x ∈ᴮ canonicalRow E (blockValue Blocks ν) ⊓ y ∈ᴮ c)))
-        (graphColor (!color) R x y)) ⊓
-       (⨅ j, ⨅ w, _root_.imp ((j ∈ᴮ ξ ⊓ ν ∈ᴮ j) ⊓ pair (pair j ν) w ∈ᴮ X)
-         (w ∈ᴮ v))) := by
-  have Hξ := mem_domain_of_is_function Hentry HRun
-  have Hparts := mem_successfulRows_iff.mp Hactive
-  exact row_properties_of_least HE HElaw
-    (is_func'_of_is_function
-      (fusion_prefix_coordinates_function HRun Hlaw (subset_of_mem_Ord Hξ omegaOne_Ord)))
-    (mem_of_mem_Ord Hparts.1 Hξ omegaOne_Ord) Hparts.2
-    (fusion_run_row_least HJ Habsorb Hclosure HE HElaw HF HFlaw Hhull Hseeds Htop
-      HRun Hlaw Hentry Hactive Hνv)
 
 /-- The computed physical point on each successful old row has the
 opposite-color edge to the same terminal, before choosing the next block. -/

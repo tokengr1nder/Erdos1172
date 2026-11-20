@@ -83,38 +83,4 @@ theorem mapNames_comp (e : CompleteLatticeHom B C) (f : CompleteLatticeHom C D)
   | mk ι X w ih =>
     simp only [mapNames, CompleteLatticeHom.comp_apply, ih]
 
-/-- An injective complete homomorphism also reflects each atomic forcing inequality. -/
-theorem le_bv_eq_iff (e : CompleteLatticeHom B C) (he : Function.Injective e)
-    (Γ : B) (x y : bSet B) :
-    Γ ≤ x =ᴮ y ↔ e Γ ≤ mapNames e x =ᴮ mapNames e y := by
-  rw [← map_bv_eq]
-  constructor
-  · intro h
-    exact OrderHomClass.mono e h
-  · intro h
-    have hmeet : Γ ⊓ (x =ᴮ y) = Γ := he (by rw [map_inf, inf_eq_left.mpr h])
-    exact inf_eq_left.mp hmeet
-
-theorem le_mem_iff (e : CompleteLatticeHom B C) (he : Function.Injective e)
-    (Γ : B) (x y : bSet B) :
-    Γ ≤ x ∈ᴮ y ↔ e Γ ≤ mapNames e x ∈ᴮ mapNames e y := by
-  rw [← map_mem]
-  constructor
-  · intro h
-    exact OrderHomClass.mono e h
-  · intro h
-    have hmeet : Γ ⊓ (x ∈ᴮ y) = Γ := he (by rw [map_inf, inf_eq_left.mpr h])
-    exact inf_eq_left.mp hmeet
-
-theorem le_subset_iff (e : CompleteLatticeHom B C) (he : Function.Injective e)
-    (Γ : B) (x y : bSet B) :
-    Γ ≤ x ⊆ᴮ y ↔ e Γ ≤ mapNames e x ⊆ᴮ mapNames e y := by
-  rw [← map_subset]
-  constructor
-  · intro h
-    exact OrderHomClass.mono e h
-  · intro h
-    have hmeet : Γ ⊓ (x ⊆ᴮ y) = Γ := he (by rw [map_inf, inf_eq_left.mpr h])
-    exact inf_eq_left.mp hmeet
-
 end bSet.ErdosNameTransport

@@ -6,7 +6,6 @@ module
 
 public import Erdos1172.Part4InternalPrefixFunction
 public import Erdos1172.Part4InternalRowCandidateCongruence
-public import Erdos1172.Part4InternalIdealLossFamily
 
 @[expose] public section
 
@@ -95,12 +94,6 @@ theorem imageRecPartial_function {θ V P : bSet 𝔹}
     (HP : Γ ≤ imageRecPartial θ V Φ P) :
     Γ ≤ is_function (graphDomain θ V P) V P :=
   prefixGraph_function (HP.trans inf_le_left)
-
-theorem imageRecPartial_domain_Ord {θ V P : bSet 𝔹}
-    {Φ : bSet 𝔹 → bSet 𝔹 → bSet 𝔹} {Γ : 𝔹}
-    (Hθ : Γ ≤ Ord θ) (HP : Γ ≤ imageRecPartial θ V Φ P) :
-    Γ ≤ Ord (graphDomain θ V P) :=
-  prefixGraph_domain_Ord Hθ (HP.trans inf_le_left)
 
 theorem imageRecPartial_is_func'_prefix {θ V P i y : bSet 𝔹}
     {Φ : bSet 𝔹 → bSet 𝔹 → bSet 𝔹} {Γ : 𝔹}

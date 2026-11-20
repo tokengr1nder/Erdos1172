@@ -73,43 +73,4 @@ theorem exists_initial_reading (hθ : θ.IsInaccessible) {J : Type u} (hJ : Card
   exact (iSup_congr (fun p => (initialCollapseHom_condition hμ.le _).trans
     (congrArg condition (supported j p)))).trans (supA j)
 
-/-- Every real name in the full collapse is locally equal, on the entire
-condition forcing it to be a real, to a name from one bounded collapse. -/
-theorem realName_from_initial (hθ : θ.IsInaccessible) (x : bSet (Completion (BelowCondition θ)))
-    {Γ : Completion (BelowCondition θ)} (hx : Γ ≤ x ⊆ᴮ omega)
-    {start : Cardinal.{u}} (hs : start < θ) :
-    ∃ (μ : Cardinal.{u}) (hμ : μ < θ), start < μ ∧
-      ∃ g : ℕ → Completion (BelowCondition μ),
-        Γ ≤ x =ᴮ mapNames (initialCollapseHom hμ.le) (Erdos1172CohenIteration.realName g) := by
-  let coeff (n : ULift.{u} ℕ) := (of_nat n.down : bSet (Completion (BelowCondition θ))) ∈ᴮ x
-  obtain ⟨μ,hμ,high,g,reads⟩ := exists_initial_reading hθ (by simpa using hθ.aleph0_lt) coeff hs
-  refine ⟨μ,hμ,high,fun n => g ⟨n⟩,Erdos1172CohenIteration.eq_map_realName_of_binary_agreement _ hx ?_⟩
-  intro n
-  rw [reads ⟨n⟩]
-  simp [coeff]
-
-open ErdosCheckedIndicator in
-/-- A single proper initial collapse suffices simultaneously for any short
-family of names for subsets of small ground sets, with their original
-Boolean conditions. -/
-theorem small_subsets_from_initial (hθ : θ.IsInaccessible) {J : Type u} (hJ : Cardinal.mk J < θ)
-    (A : J → PSet.{u}) (hA : ∀ j, Cardinal.mk (A j).Type < θ)
-    (x : J → bSet (Completion (BelowCondition θ))) (Γ : J → Completion (BelowCondition θ))
-    (hx : ∀ j, Γ j ≤ x j ⊆ᴮ check (A j)) {start : Cardinal.{u}} (hs : start < θ) :
-    ∃ (μ : Cardinal.{u}) (hμ : μ < θ), start < μ ∧
-      ∃ g : (j : J) → (A j).Type → Completion (BelowCondition μ), ∀ j,
-        Γ j ≤ x j =ᴮ mapNames (initialCollapseHom hμ.le) (checkedIndicator (A j) (g j)) := by
-  let T := (j : J) × (A j).Type
-  have hT : Cardinal.mk T < θ := by
-    rw [show Cardinal.mk T = _ from Cardinal.mk_sigma _]
-    exact Cardinal.sum_lt_of_isRegular hθ.isRegular hJ hA
-  let coeff (z : T) := (check ((A z.1).Func z.2) : bSet (Completion (BelowCondition θ))) ∈ᴮ x z.1
-  obtain ⟨μ,hμ,high,g,reads⟩ := exists_initial_reading hθ hT coeff hs
-  refine ⟨μ,hμ,high,fun j i => g ⟨j,i⟩,fun j => ?_⟩
-  simp only [checkedIndicator,mapNames_mk,map_check]
-  apply eq_checkedIndicator_of_binary_agreement (A j) (hx j)
-  intro i
-  rw [reads ⟨j,i⟩]
-  simp [coeff]
-
 end Erdos1172LevyCollapse

@@ -59,14 +59,6 @@ def upperSetCode (c : Positive C) : PSet.{u} :=
     (PSet.ordinalMk (Cardinal.mk (Positive C)).ord).Func
       (ordinalLabelEmbedding C d.val))
 
-theorem upperSetCode_type (c : Positive C) :
-    (upperSetCode c).Type = {d : Positive C // c ≤ d} := rfl
-
-theorem upperSetCode_func (c : Positive C) (d : {d : Positive C // c ≤ d}) :
-    (upperSetCode c).Func d =
-      (PSet.ordinalMk (Cardinal.mk (Positive C)).ord).Func
-        (ordinalLabelEmbedding C d.val) := rfl
-
 theorem upperSetCode_subset_iff (c d : Positive C) :
     upperSetCode d ⊆ upperSetCode c ↔ c ≤ d := by
   constructor
@@ -107,15 +99,6 @@ def quotientName (e : CompleteLatticeHom B C) : bSet B :=
   .mk (Positive C) (fun c => check (upperSetCode c))
     (fun c => lowerProjection e c.val)
 
-theorem quotientName_type (e : CompleteLatticeHom B C) :
-    (quotientName e).type = Positive C := rfl
-
-theorem quotientName_func (e : CompleteLatticeHom B C) (c : Positive C) :
-    (quotientName e).func c = check (upperSetCode c) := rfl
-
-theorem quotientName_bval (e : CompleteLatticeHom B C) (c : Positive C) :
-    (quotientName e).bval c = lowerProjection e c.val := rfl
-
 theorem lowerProjection_top (e : CompleteLatticeHom B C) (he : Function.Injective e) :
     lowerProjection e (⊤ : C) = ⊤ := by
   apply he
@@ -124,19 +107,5 @@ theorem lowerProjection_top (e : CompleteLatticeHom B C) (he : Function.Injectiv
 
 def topLabel (C : Type u) [NontrivialCompleteBooleanAlgebra C] : Positive C :=
   ⟨⊤, top_ne_bot⟩
-
-theorem quotientName_top_bval (e : CompleteLatticeHom B C) (he : Function.Injective e) :
-    (quotientName e).bval (topLabel C) = ⊤ :=
-  lowerProjection_top e he
-
-theorem quotientName_top_mem (e : CompleteLatticeHom B C) (he : Function.Injective e) :
-    (⊤ : B) ≤ check (upperSetCode (topLabel C)) ∈ᴮ quotientName e := by
-  rw [mem_unfold]
-  apply le_iSup_of_le (topLabel C)
-  rw [quotientName_bval, quotientName_func]
-  change (⊤ : B) ≤ lowerProjection e (⊤ : C) ⊓
-    (check (upperSetCode (topLabel C)) =ᴮ check (upperSetCode (topLabel C)))
-  rw [lowerProjection_top e he]
-  exact le_inf le_rfl bv_refl
 
 end Erdos1172BooleanQuotient

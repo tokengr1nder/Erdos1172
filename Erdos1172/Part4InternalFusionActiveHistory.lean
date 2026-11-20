@@ -6,9 +6,7 @@ module
 
 public import Erdos1172.Part4InternalFusionHistories
 public import Erdos1172.Part4InternalCountableFamilyUnion
-public import Erdos1172.Part4InternalCountableSuccessor
 public import Erdos1172.Part4InternalSmallPoolOperations
-public import Erdos1172.Part4InternalCountableSubsetCodes
 
 @[expose] public section
 
@@ -204,26 +202,5 @@ theorem activeHistory_subset_of_pool
     Γ ≤ activeHistory color R E ξ Blocks Z Acts ⊆ᴮ P :=
   binary_union_subset Hprevious
     (currentPoints_subset_of_pool HE HElaw HBlocks HZ Hξ HEarlier Hpoints)
-
-/-- A legitimate selector input, with current points retained even if
-the upcoming block output is the empty failure value. -/
-theorem activeHistory_mem_countableSubsets
-    {color : Bool} {R E ξ Blocks Z Acts B P : bSet 𝔹} {Γ : 𝔹}
-    (HActs : Γ ≤ is_func' ξ (bv_powerset omegaTwo) Acts)
-    (Hvalues : Γ ≤ countableValues ξ Acts)
-    (HE : Γ ≤ is_function (blockObjects color R) blockEnumerationCodes E)
-    (HElaw : Γ ≤ blockEnumerationFamilyLaw color R E)
-    (HBlocks : Γ ≤ is_function ξ (bv_powerset omegaTwo) Blocks)
-    (HZ : Γ ≤ is_function omegaOne omegaOne Z)
-    (Hξ : Γ ≤ ξ ⊆ᴮ omegaOne) (Hcount : Γ ≤ injects_into ξ bSet.omega)
-    (HEarlier : Γ ≤ earlierHistory color R ξ Blocks ⊆ᴮ B)
-    (Hpoints : Γ ≤ bv_union B ⊆ᴮ P)
-    (Hprevious : Γ ≤ ⨅ ν, ⨅ A, _root_.imp
-      (ν ∈ᴮ ξ ⊓ pair ν A ∈ᴮ Acts) (A ⊆ᴮ P)) :
-    Γ ≤ activeHistory color R E ξ Blocks Z Acts ∈ᴮ countableSubsets P :=
-  mem_countableSubsets_iff.mpr
-    ⟨activeHistory_subset_of_pool HE HElaw HBlocks HZ Hξ HEarlier Hpoints
-      (previousActive_subset_of_values Hprevious),
-      activeHistory_countable HActs Hvalues HE HElaw HZ Hξ Hcount⟩
 
 end bSet.ErdosFusionActiveHistory

@@ -60,21 +60,9 @@ theorem compl_mem {A : CompleteSubalgebra B} {b : B}
     (hb : b ∈ A) : bᶜ ∈ A :=
   A.compl_mem' hb
 
-theorem sup_mem {A : CompleteSubalgebra B} {b c : B}
-    (hb : b ∈ A) (hc : c ∈ A) : b ⊔ c ∈ A :=
-  A.supClosed' hb hc
-
-theorem inf_mem {A : CompleteSubalgebra B} {b c : B}
-    (hb : b ∈ A) (hc : c ∈ A) : b ⊓ c ∈ A :=
-  A.infClosed' hb hc
-
 theorem sSup_mem {A : CompleteSubalgebra B} {S : Set B}
     (hS : S ⊆ A) : sSup S ∈ A :=
   A.sSupClosed' hS
-
-theorem sInf_mem {A : CompleteSubalgebra B} {S : Set B}
-    (hS : S ⊆ A) : sInf S ∈ A :=
-  A.sInfClosed' hS
 
 @[simp] theorem bot_mem (A : CompleteSubalgebra B) : (⊥ : B) ∈ A :=
   CompleteSublattice.bot_mem (L := A.toCompleteSublattice)
@@ -140,14 +128,6 @@ theorem inclusion_sSup (A : CompleteSubalgebra B) (S : Set A) :
 theorem inclusion_sInf (A : CompleteSubalgebra B) (S : Set A) :
     inclusion A (sInf S) = sInf (inclusion A '' S) := rfl
 
-theorem inclusion_iSup (A : CompleteSubalgebra B) {ι : Sort v} (f : ι → A) :
-    inclusion A (⨆ i, f i) = ⨆ i, inclusion A (f i) :=
-  map_iSup (inclusion A) f
-
-theorem inclusion_iInf (A : CompleteSubalgebra B) {ι : Sort v} (f : ι → A) :
-    inclusion A (⨅ i, f i) = ⨅ i, inclusion A (f i) :=
-  map_iInf (inclusion A) f
-
 /-- An arbitrary intersection of complete subalgebras is complete. -/
 def sInter (F : Set (CompleteSubalgebra B)) : CompleteSubalgebra B where
   toCompleteSublattice := CompleteSublattice.mk'
@@ -164,14 +144,6 @@ def sInter (F : Set (CompleteSubalgebra B)) : CompleteSubalgebra B where
 
 @[simp] theorem mem_sInter {F : Set (CompleteSubalgebra B)} {b : B} :
     b ∈ sInter F ↔ ∀ A ∈ F, b ∈ A := Iff.rfl
-
-theorem sInter_le {F : Set (CompleteSubalgebra B)} {A : CompleteSubalgebra B}
-    (hA : A ∈ F) : sInter F ≤ A :=
-  fun _ hb => hb A hA
-
-theorem le_sInter {F : Set (CompleteSubalgebra B)} {A : CompleteSubalgebra B}
-    (hA : ∀ C ∈ F, A ≤ C) : A ≤ sInter F :=
-  fun _ hb C hC => hA C hC hb
 
 /-- The least complete Boolean subalgebra containing the given generators. -/
 def generated (S : Set B) : CompleteSubalgebra B :=
@@ -190,10 +162,6 @@ theorem generated_le {S : Set B} {A : CompleteSubalgebra B}
 theorem generated_le_iff {S : Set B} {A : CompleteSubalgebra B} :
     generated S ≤ A ↔ S ⊆ A :=
   ⟨fun h => subset_generated.trans h, generated_le⟩
-
-theorem generated_mono : Monotone (generated (B := B)) := by
-  intro S T hST
-  exact generated_le (hST.trans subset_generated)
 
 @[simp] theorem generated_coe (A : CompleteSubalgebra B) :
     generated (A : Set B) = A :=

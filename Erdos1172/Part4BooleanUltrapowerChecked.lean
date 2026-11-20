@@ -107,22 +107,4 @@ theorem liftName_checked (A : I → PSet.{u}) : (⊤ : Algebra U B) ≤
     (value_eq_of_eventuallyEq U (f := w) (g := fun _ => ⊤) hw).trans (value_top U))
     _ A (Eventually.of_forall (fun _ => rfl))
 
-section Critical
-
-variable (κ : Cardinal.{u}) (V : Ultrafilter κ.ord.ToType)
-variable [CountableInterFilter (V : Filter κ.ord.ToType)]
-variable (hN : NormalRegressive κ V) (hT : ContainsStrictTails κ V)
-
-include hN hT in
-theorem liftName_checked_fixed (α : Ordinal.{u}) (hα : α < κ.ord) : (⊤ : Algebra V B) ≤
-    liftName V (value V) (fun _ => (check (PSet.ordinalMk α) : bSet B)) =ᴮ check (PSet.ordinalMk α) :=
-  bv_trans (liftName_checked V _) (check_bv_eq (groundPSet_ordinal_fixed κ V hN hT α hα))
-
-include hN hT in
-theorem checked_critical_mem_liftName : (⊤ : Algebra V B) ≤ check (PSet.ordinalMk κ.ord) ∈ᴮ
-    liftName V (value V) (fun _ => (check (PSet.ordinalMk κ.ord) : bSet B)) :=
-  bv_rw' (liftName_checked V _) (ϕ := fun t => check (PSet.ordinalMk κ.ord) ∈ᴮ t)
-    (h_congr := B_ext_mem_right) (H_new := checked_critical_mem_image κ V hN hT)
-
-end Critical
 end Erdos1172BooleanUltrapower

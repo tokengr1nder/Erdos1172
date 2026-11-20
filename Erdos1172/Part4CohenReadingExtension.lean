@@ -74,11 +74,6 @@ theorem reads_mono_of_subset {K q r : bSet B} {Γ : B} {c : Algebra K}
   have Hnotread : t.value ≤ (reads c r)ᶜ := Htb.trans inf_le_right
   exact t.nonzero (bot_unique ((le_inf Hread Hnotread).trans inf_compl_eq_bot.le))
 
-theorem reads_of_extension {K q r : bSet B} {Γ : B} {c : Algebra K}
-    (Hsub : Γ ≤ q ⊆ᴮ r) (Hr : Γ ≤ r ∈ᴮ ErdosCohen.conditions K)
-    (Hread : Γ ≤ reads c q) : Γ ≤ reads c r :=
-  (le_inf le_rfl Hread).trans (reads_mono_of_subset Hsub Hr)
-
 /-- A mixed binary decision also persists, without selecting which branch
 holds at the whole context. -/
 theorem reads_decision_of_extension {K q r : bSet B} {Γ : B} {c : Algebra K}

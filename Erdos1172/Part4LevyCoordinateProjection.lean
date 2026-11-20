@@ -67,16 +67,6 @@ theorem evaluation_exactLifts (i : I) :
   · change (p.update i q) i = q
     simp only [DFinsupp.coe_update, Function.update_self]
 
-/-- Every factor condition is the value of a condition supported on that
-single coordinate; the alphabet may be empty. -/
-theorem evaluation_surjective (i : I) :
-    Function.Surjective (evaluationOrderHom (A := A) i) := by
-  classical
-  intro q
-  refine ⟨(⊤ : ProductCondition A).update i q, ?_⟩
-  change ((⊤ : ProductCondition A).update i q) i = q
-  simp only [DFinsupp.coe_update, Function.update_self]
-
 /-- The concrete coordinate complete homomorphism, obtained from the exact
 lifting proof rather than supplied as a hypothesis. -/
 def coordinateCompletionHom (i : I) :
@@ -84,33 +74,10 @@ def coordinateCompletionHom (i : I) :
       (Completion (ProductCondition A)) :=
   completionHom (evaluationOrderHom i) (evaluation_exactLifts i)
 
-theorem coordinateCompletionHom_injective (i : I) :
-    Function.Injective (coordinateCompletionHom (A := A) i) :=
-  completionHom_injective (evaluationOrderHom i) (evaluation_exactLifts i)
-    (evaluation_surjective i)
-
-theorem coordinateCompletionHom_compl (i : I)
-    (b : Erdos1172Collapse.Algebra (A i)) :
-    coordinateCompletionHom i bᶜ = (coordinateCompletionHom i b)ᶜ :=
-  map_compl' (coordinateCompletionHom i) b
-
-/-- The pullback is exactly tested by the corresponding coordinate. -/
-theorem condition_le_coordinateCompletionHom_iff (i : I)
-    (p : ProductCondition A) (b : Erdos1172Collapse.Algebra (A i)) :
-    condition p ≤ coordinateCompletionHom i b ↔ condition (p i) ≤ b :=
-  condition_le_completionHom_iff (evaluationOrderHom i)
-    (evaluation_exactLifts i) p b
-
 /-- Collapse matrix for one coordinate, now in the actual product algebra. -/
 def coordinateEntry (i : I) (n : ℕ) (a : A i) :
     Completion (ProductCondition A) :=
   coordinateCompletionHom i (Erdos1172Collapse.entry n a)
-
-theorem condition_le_coordinateEntry {i : I} {p : ProductCondition A}
-    {n : ℕ} {a : A i} (hp : (p i).entries[n]? = some a) :
-    condition p ≤ coordinateEntry i n a :=
-  (condition_le_coordinateCompletionHom_iff i p _).mpr
-    (Erdos1172Collapse.condition_le_entry hp)
 
 theorem coordinateEntry_inf_eq_bot {i : I} {n : ℕ} {a b : A i}
     (hab : a ≠ b) : coordinateEntry i n a ⊓ coordinateEntry i n b = ⊥ := by
@@ -131,14 +98,5 @@ theorem coordinateEntry_column_iSup_eq_top (i : I) (a : A i) :
     (⨆ n : ℕ, coordinateEntry i n a) = ⊤ := by
   unfold coordinateEntry
   rw [← map_iSup, Erdos1172Collapse.column_iSup_eq_top, map_top]
-
-theorem coordinateEntry_ne_bot (i : I) (n : ℕ) (a : A i) :
-    coordinateEntry i n a ≠ ⊥ := by
-  intro h
-  apply Erdos1172Collapse.entry_ne_bot n a
-  apply coordinateCompletionHom_injective i
-  change coordinateEntry i n a = coordinateCompletionHom i (⊥ : Erdos1172Collapse.Algebra (A i))
-  rw [map_bot]
-  exact h
 
 end Erdos1172LevyCollapse

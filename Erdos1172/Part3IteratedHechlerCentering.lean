@@ -106,45 +106,4 @@ noncomputable def CountablyCenteredCode.extend (c : CountablyCenteredCode P) (hC
     · obtain ⟨lower, _⟩ := c.lower ∅ Set.countable_empty value (fun _ h => h.elim)
       exact ⟨emptyOver lower, fun _ hp => (hne ⟨_, hp⟩).elim⟩
 
-noncomputable def hechlerCentered (hCH : CH) :
-    CountablyCenteredCode Erdos1172Part3HechlerOrder.Condition where
-  code := Erdos1172Part3HechlerCentering.centerCode hCH
-  lower := Erdos1172Part3HechlerCentering.centerCode_countably_centered hCH
-
-theorem condition_ext {p q : Condition P} (hbase : p.base = q.base)
-    (hstem : p.stem = q.stem) (hside : p.side = q.side) : p = q := by
-  cases p
-  cases q
-  cases hbase
-  cases hstem
-  cases hside
-  rfl
-
-/-- Small nice names ensure that adding another dominating-function
-stage preserves the alephTwo condition bound under GCH. -/
-theorem mk_Condition_le (hGCH : GCH) (hP : #P ≤ ℵ_ 2) : #(Condition P) ≤ ℵ_ 2 := by
-  let Side := {s : Set (NiceFunctionName P W1 W1) // #s ≤ ℵ₀}
-  have hnames : #(NiceFunctionName P W1 W1) ≤ ℵ_ 2 := mk_nice_function_name_le hGCH hP
-  have hside : #Side ≤ ℵ_ 2 := by
-    apply (Cardinal.mk_bounded_set_le (NiceFunctionName P W1 W1) ℵ₀).trans
-    exact (Cardinal.power_le_power_right (max_le hnames (Cardinal.aleph0_le_aleph 2))).trans_eq
-      hGCH.aleph_two_power_aleph_zero
-  let encode (p : Condition P) : P × (Stem × Side) :=
-    (p.base, ⟨p.stem, p.stem_countable⟩,
-      ⟨p.side, Cardinal.le_aleph0_iff_set_countable.mpr p.side_countable⟩)
-  have hinj : Injective encode := by
-    intro p q h
-    apply condition_ext
-    · exact congrArg (fun c : P × (Stem × Side) => c.1) h
-    · exact congrArg (fun c : P × (Stem × Side) => c.2.1.val) h
-    · exact congrArg (fun c : P × (Stem × Side) => c.2.2.val) h
-  apply (Cardinal.mk_le_of_injective hinj).trans
-  rw [Cardinal.mk_prod, Cardinal.mk_prod]
-  simp only [Cardinal.lift_id]
-  have hstem : #Stem ≤ ℵ_ 2 := (mk_Stem_le hGCH.toCH).trans
-    (Cardinal.aleph_le_aleph.mpr (by norm_num : (1 : Ordinal.{0}) ≤ 2))
-  have hinner : #Stem * #Side ≤ ℵ_ 2 := (mul_le_mul' hstem hside).trans_eq
-    (Cardinal.mul_eq_self (Cardinal.aleph0_le_aleph 2))
-  exact (mul_le_mul' hP hinner).trans_eq (Cardinal.mul_eq_self (Cardinal.aleph0_le_aleph 2))
-
 end Erdos1172Part3IteratedHechlerCentering

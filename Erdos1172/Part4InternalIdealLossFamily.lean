@@ -182,15 +182,4 @@ theorem positive_commonRemainder_of_countable {κ I A T : bSet 𝔹} {Γ : 𝔹}
   commonRemainder_positive_common HI Hclosure HA (lossFamily_countable HT)
     (lossFamily_subset_ideal Hsmall) lossFamily_contains_losses
 
-theorem exists_positive_common_subset_of_countable {κ I A T : bSet 𝔹} {Γ : 𝔹}
-    (HI : Γ ≤ isIdeal κ I)
-    (Hclosure : Γ ≤ countableClosure I)
-    (HA : Γ ≤ positive κ I A)
-    (HT : Γ ≤ injects_into T bSet.omega)
-    (Hsmall : Γ ≤ ⨅ B : bSet 𝔹, _root_.imp (B ∈ᴮ T) (difference A B ∈ᴮ I)) :
-    Γ ≤ ⨆ C : bSet 𝔹, positive κ I C ⊓
-      ((C ⊆ᴮ A) ⊓ ⨅ B : bSet 𝔹, _root_.imp (B ∈ᴮ T) (C ⊆ᴮ B)) :=
-  le_iSup_of_le (commonRemainder A (lossFamily A T))
-    (positive_commonRemainder_of_countable HI Hclosure HA HT Hsmall)
-
 end bSet.ErdosIdeal

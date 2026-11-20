@@ -4,7 +4,8 @@ Licensed under the Apache License, Version 2.0.
 -/
 module
 
-public import Erdos1172.Part3BHTRedCoreSectionBarrier
+public import Erdos1172.Part3OneSuccessorBarrier
+public import Mathlib.SetTheory.Cardinal.Cofinality.Ordinal
 public import Mathlib.Data.Finsupp.WellFounded
 public import Mathlib.SetTheory.Ordinal.CantorNormalForm
 public import Mathlib.SetTheory.Ordinal.Rank
@@ -457,26 +458,5 @@ theorem typeLT_le_naturalSum_partition (s : Set X) :
       (prefixType (sᶜ : Set X) x)).monotone hleft).trans_lt
         (naturalSum_strictMono_right (typeLT s)
           (prefixType_lt (sᶜ : Set X) x hxCompl))
-
-/-- Every power of `omega` is unary-indivisible: one side of
-any two-piece partition retains the whole order type. -/
-theorem typeLT_eq_opow_or_compl_eq_opow
-    {e : Ordinal} {s : Set X}
-    (htype : typeLT X = ω ^ e) :
-    typeLT s = ω ^ e ∨ typeLT (sᶜ : Set X) = ω ^ e := by
-  have hsLe : typeLT s ≤ ω ^ e := by
-    rw [← htype]
-    exact Ordinal.type_set_le s
-  have hcLe : typeLT (sᶜ : Set X) ≤ ω ^ e := by
-    rw [← htype]
-    exact Ordinal.type_set_le (sᶜ : Set X)
-  rcases hsLe.eq_or_lt with hsEq | hsLt
-  · exact Or.inl hsEq
-  rcases hcLe.eq_or_lt with hcEq | hcLt
-  · exact Or.inr hcEq
-  exfalso
-  have hmixed := typeLT_le_naturalSum_partition s
-  rw [htype] at hmixed
-  exact (not_le_of_gt (naturalSum_lt_opow hsLt hcLt)) hmixed
 
 end Erdos1172OrdinalUnaryIndivisibility

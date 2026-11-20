@@ -71,20 +71,4 @@ lemma base_mem_hartogs {κ : bSet 𝔹}
   apply (mem_hartogs_iff Hone HOrdκ).mpr
   exact injection_into_of_injects_into injects_into_refl
 
-/-- Minimality among all internal initial ordinals strictly above the base.
-No ground-model cardinal comparison or preservation assumption is used. -/
-lemma hartogs_le_of_initial_above {κ α : bSet 𝔹}
-    (Hone : (⊤ : 𝔹) ≤ injects_into (1 : bSet 𝔹) κ) {Γ : 𝔹}
-    (Hinitial : Γ ≤ initialOrdinal α) (Habove : Γ ≤ κ ∈ᴮ α) :
-    Γ ≤ hartogs (κ := κ) ⊆ᴮ α := by
-  have Hnot : Γ ≤ (injects_into α κ)ᶜ :=
-    not_injects_of_initialOrdinal Hinitial Habove
-  have Hspec : Γ ≤ leastNoninjectingOrdinal κ (hartogs (κ := κ)) :=
-    hartogs_spec Hone
-  have Hmin : Γ ≤ _root_.imp (Ord α)
-      (_root_.imp (injects_into α κ)ᶜ (hartogs (κ := κ) ⊆ᴮ α)) :=
-    (Hspec.trans (inf_le_right.trans inf_le_right)).trans (iInf_le _ α)
-  have Hstep := (le_inf Hmin (Ord_of_initialOrdinal Hinitial)).trans bv_imp_elim
-  exact (le_inf Hstep Hnot).trans bv_imp_elim
-
 end bSet.ErdosHartogs

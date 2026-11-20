@@ -5,8 +5,8 @@ Licensed under the Apache License, Version 2.0.
 module
 
 public import Erdos1172.Part4LevyAnonymousOmegaOne
-public import Erdos1172.Part4LevyCohenNameCardinalRepresentatives
-public import Erdos1172.Part4InternalCountableImage
+public import Erdos1172.Part4LevyCohenSuccessorHartogs
+public import Erdos1172.Part4InternalMutualCardinalDichotomy
 
 @[expose] public section
 
@@ -92,11 +92,5 @@ theorem anonymous_powerset_omega_injects_checked_upper (κ : Cardinal.{u}) (Hκ 
     (omega : bSet (anonymousAlgebra κ))
   simp only [omega, map_check] at Hsub
   exact injects_into_trans (injects_into_of_subset Hsub) (powerset_omega_injects_checked_upper κ Hκ)
-
-theorem anonymous_forces_CH (κ : Cardinal.{u}) (Hκ : κ.IsInaccessible) :
-    (⊤ : anonymousAlgebra κ) ≤ CH :=
-  ErdosCHHartogs.CH_iff_powerset_omega_injects_omegaOne.mpr
-    (bv_rw'' (anonymous_checked_upper_eq_omegaOne κ Hκ)
-      (anonymous_powerset_omega_injects_checked_upper κ Hκ) B_ext_injects_into_right)
 
 end Erdos1172LevyCohen

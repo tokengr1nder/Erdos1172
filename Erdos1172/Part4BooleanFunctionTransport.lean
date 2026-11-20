@@ -167,10 +167,6 @@ theorem is_func_of_boundedFunc {x y f : bSet B} {Γ : B}
     (inf_le_left.trans (inf_le_right.trans inf_le_left))
     (inf_le_left.trans (inf_le_right.trans inf_le_right)) inf_le_right
 
-theorem is_total_eq_is_total' (x y f : bSet B) :
-    is_total x y f = is_total' x y f :=
-  le_antisymm (is_total_iff_is_total'.mp le_rfl) (is_total_iff_is_total'.mpr le_rfl)
-
 /-- Exact normalization includes the support guard rather than assuming it
 at top or discarding off-product entries without justification. -/
 theorem is_function_eq_bounded (x y f : bSet B) :
@@ -202,10 +198,6 @@ theorem map_is_total' (e : CompleteLatticeHom B C) (x y f : bSet B) :
       simp only [is_total', mapNames_mk, bSet.type, bSet.func, bSet.bval,
         map_iInf, map_iSup, map_imp, map_inf, map_mem, map_pair]
 
-theorem map_is_total (e : CompleteLatticeHom B C) (x y f : bSet B) :
-    e (is_total x y f) = is_total (mapNames e x) (mapNames e y) (mapNames e f) := by
-  rw [is_total_eq_is_total', map_is_total', is_total_eq_is_total']
-
 /-- Exact transport of the supported-function Boolean value, proved only
 after bounded normalization. No surjectivity of the map on names is used. -/
 theorem map_is_function (e : CompleteLatticeHom B C) (x y f : bSet B) :
@@ -227,18 +219,5 @@ theorem map_is_function_of (e : CompleteLatticeHom B C)
     e Γ ≤ is_function (mapNames e x) (mapNames e y) (mapNames e f) := by
   rw [← map_is_function]
   exact OrderHomClass.mono e Hf
-
-theorem le_is_function_iff (e : CompleteLatticeHom B C) (he : Function.Injective e)
-    (Γ : B) (x y f : bSet B) :
-    Γ ≤ is_function x y f ↔
-      e Γ ≤ is_function (mapNames e x) (mapNames e y) (mapNames e f) := by
-  rw [← map_is_function]
-  constructor
-  · intro Hf
-    exact OrderHomClass.mono e Hf
-  · intro Hf
-    have hmeet : Γ ⊓ is_function x y f = Γ :=
-      he (by rw [map_inf, inf_eq_left.mpr Hf])
-    exact inf_eq_left.mp hmeet
 
 end bSet.ErdosNameTransport

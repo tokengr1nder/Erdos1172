@@ -76,23 +76,4 @@ theorem restricted_image_countable {T X Y f : bSet 𝔹} {Γ : 𝔹}
     Γ ≤ injects_into (image T Y f) bSet.omega :=
   image_countable (is_func'_subset_of_is_func' Hf HT) Hcount
 
-/-- In particular, every internally specified part of a countable domain
-has countable image. -/
-theorem restricted_image_countable_of_domain_countable {T X Y f : bSet 𝔹} {Γ : 𝔹}
-    (Hf : Γ ≤ is_func' X Y f) (HT : Γ ≤ T ⊆ᴮ X)
-    (Hcount : Γ ≤ injects_into X bSet.omega) :
-    Γ ≤ injects_into (image T Y f) bSet.omega :=
-  restricted_image_countable Hf HT
-    (injects_into_trans (injects_into_of_subset HT) Hcount)
-
-/-- A surjective target of a countable domain is also countable. -/
-theorem codomain_countable_of_surjection {X Y f : bSet 𝔹} {Γ : 𝔹}
-    (Hf : Γ ≤ is_func' X Y f) (Hsurj : Γ ≤ is_surj X Y f)
-    (Hcount : Γ ≤ injects_into X bSet.omega) :
-    Γ ≤ injects_into Y bSet.omega :=
-  ErdosCHHartogs.injects_into_of_larger_than_ordinal Ord_omega
-    (larger_than_of_injects_into_of_larger_than Hcount
-      (le_iSup_of_le X (le_iSup_of_le f
-        (le_inf (le_inf subset_self Hf) Hsurj))))
-
 end bSet.ErdosCountableImage

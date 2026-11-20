@@ -13,8 +13,7 @@ open Cardinal Ordinal Set Order
 
 namespace Erdos1172Part3RedCoreIdeal
 
-open Erdos1172Part3NeighborhoodCode Erdos1172Part3NeighborhoodIdeal
-  Erdos1172Part3FiniteIdealEndpoint
+open Erdos1172Part3NeighborhoodCode Erdos1172Part3NeighborhoodIdeal Erdos1172Part3FiniteIdealEndpoint
 
 def HasCore (G : SimpleGraph W2) (δ : Ordinal) (s : Set W2) : Prop :=
   ∃ c ⊆ s, G.IsClique c ∧ typeLT c = δ

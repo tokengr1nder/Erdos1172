@@ -185,13 +185,6 @@ theorem boundedCollapse_mem_boundedCollapse_iff (x y : BoundedHull U θ a) :
 
 def boundedTargetClass : Set ZFSet.{u} := Set.range (boundedCollapse U θ a)
 
-omit [Nonempty θ.ord.ToType] in
-theorem boundedTargetClass_transitive {x y : ZFSet.{u}} (hx : x ∈ boundedTargetClass U θ a)
-    (hy : y ∈ x) : y ∈ boundedTargetClass U θ a := by
-  obtain ⟨z, rfl⟩ := hx
-  obtain ⟨t, _, ht⟩ := (mem_boundedCollapse_iff U θ a y z).mp hy
-  exact ⟨t, ht⟩
-
 instance boundedTargetStructure : setLanguage.Structure (boundedTargetClass U θ a) where
   RelMap | .mem => fun x => (x 0).val ∈ (x 1).val
 

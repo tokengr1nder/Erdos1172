@@ -6,7 +6,6 @@ module
 
 public import Erdos1172.Part4LevyPreparationCoefficients
 public import Erdos1172.Part4ShioyaUltrapowerProjection
-public import Erdos1172.Part4LevyContinuumHypothesis
 
 @[expose] public section
 

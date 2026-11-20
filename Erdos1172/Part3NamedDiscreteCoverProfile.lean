@@ -6,8 +6,6 @@ module
 
 public import Erdos1172.Part3NamedShortCofinalCover
 public import Erdos1172.Part3SupportedCoverConditionalMixing
-public import Erdos1172.Part3StationaryDecisions
-public import Erdos1172.Part3CenteredStationaryLoss
 
 @[expose] public section
 

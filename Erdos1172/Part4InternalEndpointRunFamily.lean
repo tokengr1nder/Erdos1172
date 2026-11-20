@@ -6,7 +6,6 @@ module
 
 public import Erdos1172.Part4InternalRunEndpointCongruence
 public import Erdos1172.Part4InternalSimultaneousRunTotal
-public import Erdos1172.Part4InternalSmallFiberBound
 
 @[expose] public section
 
@@ -67,13 +66,5 @@ theorem exists_endpoint_run_family
     (show Γ ⊓ top ∈ᴮ omegaTwo ≤ top ∈ᴮ omegaTwo from inf_le_right)
     (inf_le_left.trans HS) (inf_le_left.trans Hrows)
   exact le_iSup_of_le P (le_inf (function_mem_runCodes (HP.trans inf_le_left)) HP)
-
-theorem endpoint_run_family_value
-    {color : Bool} {R S : bSet 𝔹} {Γ : 𝔹}
-    (HS : Γ ≤ is_func' (prod omegaOne omegaTwo) (bv_powerset omegaOne) S)
-    (Hrows : Γ ≤ ⨅ σ, _root_.imp (σ ∈ᴮ omegaOne) (⨆ J, rowIdealData S σ J)) :
-    Γ ≤ ⨆ F, is_function omegaTwo runCodes F ⊓ endpointRunFamilyLaw color R S F := by
-  obtain ⟨F, HF⟩ := exists_endpoint_run_family (color := color) (R := R) HS Hrows
-  exact le_iSup_of_le F HF
 
 end bSet.ErdosSimultaneousRun

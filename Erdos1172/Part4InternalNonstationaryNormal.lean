@@ -6,7 +6,6 @@ module
 
 public import Erdos1172.Part4InternalNonstationaryIdeal
 public import Erdos1172.Part4InternalDiagonalClubUnbounded
-public import Erdos1172.Part4InternalSmallFiberBound
 public import Erdos1172.Part4InternalIdealNormality
 
 @[expose] public section

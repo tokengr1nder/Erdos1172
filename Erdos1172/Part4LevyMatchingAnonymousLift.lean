@@ -669,68 +669,6 @@ def localizedFirstStageHom {m₀ : bSet R} (hm₀ : (⊤ : R) ≤ ErdosCohen.con
   (LocalizedBelow.restrict (masterPositive m₀ hm₀)).comp
     Erdos1172CohenIteration.omegaOneFirstStageHom
 
-theorem localizedFirstStageHom_injective {m₀ : bSet R}
-    (hm₀ : (⊤ : R) ≤ ErdosCohen.condition omegaOne m₀) :
-    Function.Injective (localizedFirstStageHom hm₀) := by
-  have hmem : (⊤ : R) ≤ m₀ ∈ᴮ ErdosCohen.conditions (omegaOne : bSet R) :=
-    ErdosCohen.mem_conditions_iff.mpr hm₀
-  have hzero (b : R) (hb : localizedFirstStageHom hm₀ b = ⊥) : b = ⊥ := by
-    by_contra hne
-    obtain ⟨p, hpv, hpeq⟩ := exists_canonical_refinement hne (le_top.trans hmem)
-    have hloc : nameCone (ErdosCohen.conditions (omegaOne : bSet R)) m₀ ⊓
-        Erdos1172CohenIteration.omegaOneFirstStageHom p.value =
-        Erdos1172PosetCompletion.condition p :=
-      nameCone_local (ErdosCohen.conditions (omegaOne : bSet R)) p hpeq
-    have hle : Erdos1172PosetCompletion.condition p ≤ (localizedFirstStageHom hm₀ b).val := by
-      change Erdos1172PosetCompletion.condition p ≤
-        Erdos1172CohenIteration.omegaOneFirstStageHom b ⊓
-          nameCone (ErdosCohen.conditions (omegaOne : bSet R)) m₀
-      erw [inf_comm_eq (Erdos1172CohenIteration.omegaOneFirstStageHom b)
-        (nameCone (ErdosCohen.conditions (omegaOne : bSet R)) m₀), ← hloc]
-      exact inf_le_inf_left _ (OrderHomClass.mono Erdos1172CohenIteration.omegaOneFirstStageHom hpv)
-    rw [hb] at hle
-    exact Erdos1172PosetCompletion.condition_ne_bot p (le_bot_iff.mp hle)
-  intro x y hxy
-  have h1 : x ⊓ yᶜ = ⊥ := by
-    apply hzero
-    rw [completeHom_inf, completeHom_compl, hxy, inf_compl_eq_bot]
-  have h2 : y ⊓ xᶜ = ⊥ := by
-    apply hzero
-    rw [completeHom_inf, completeHom_compl, hxy, inf_compl_eq_bot]
-  exact le_antisymm (disjoint_compl_right_iff.mp (disjoint_iff.mpr h1))
-    (disjoint_compl_right_iff.mp (disjoint_iff.mpr h2))
-
-/-- Every nonzero element of `LocalizedSourceCohen R m₀ hm₀` is bounded below by an actual
-iteration condition `r` whose name extends `m₀` (`r.value ≤ m₀ ⊆ᴮ name r`). -/
-theorem exists_master_condition_le {m₀ : bSet R}
-    (hm₀ : (⊤ : R) ≤ ErdosCohen.condition omegaOne m₀)
-    {c : LocalizedSourceCohen R m₀ hm₀} (hc : c ≠ ⊥) :
-    ∃ (r : Erdos1172CohenIteration.Conditions (omegaOne : bSet R))
-      (hr_cone : Erdos1172PosetCompletion.condition r ≤ (masterPositive m₀ hm₀).val),
-      r.value ≤ m₀ ⊆ᴮ name r ∧
-      (⟨Erdos1172PosetCompletion.condition r, hr_cone⟩ : LocalizedSourceCohen R m₀ hm₀) ≤ c := by
-  have hc_val : (c : LocalizedBelow _ _).val ≠ ⊥ := fun h0 => hc (Subtype.ext h0)
-  have hc_le : (c : LocalizedBelow _ _).val ≤
-      nameCone (ErdosCohen.conditions (omegaOne : bSet R)) m₀ := c.property
-  have hmeet : (c : LocalizedBelow _ _).val ⊓
-      nameCone (ErdosCohen.conditions (omegaOne : bSet R)) m₀ ≠ ⊥ := by
-    erw [inf_of_le hc_le]
-    exact hc_val
-  obtain ⟨⟨p, hp⟩, hcp⟩ := exists_mem_iSup_inf_ne_bot hmeet
-  obtain ⟨q, hq⟩ := Erdos1172PosetCompletion.exists_condition_le hcp
-  obtain ⟨r, hr_q, hr_p⟩ :=
-    (Erdos1172PosetCompletion.mem_condition_iff p q).mp
-      (Erdos1172PosetCompletion.condition_le_iff.mp (hq.trans inf_le_right)) q le_rfl
-  have hr_cone : Erdos1172PosetCompletion.condition r ≤ (masterPositive m₀ hm₀).val :=
-    (Erdos1172PosetCompletion.condition_mono hr_p).trans
-      (le_iSup (fun t : {t : Erdos1172CohenIteration.Conditions (omegaOne : bSet R) //
-        t.value ≤ m₀ =ᴮ name t} => Erdos1172PosetCompletion.condition t.val) ⟨p, hp⟩)
-  have hr_c : Erdos1172PosetCompletion.condition r ≤ c.val :=
-    (Erdos1172PosetCompletion.condition_mono hr_q).trans (hq.trans inf_le_left)
-  have hr_sub : r.value ≤ m₀ ⊆ᴮ name r :=
-    subset_trans' (subset_of_eq (hr_p.1.trans hp)) hr_p.2
-  exact ⟨r, hr_cone, hr_sub, hr_c⟩
-
 end MasterLocalization
 
 section StageOneScalarHom

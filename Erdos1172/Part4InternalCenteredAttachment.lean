@@ -8,7 +8,6 @@ public import Erdos1172.Part4InternalForwardSections
 public import Erdos1172.Part4InternalPositiveRowImage
 public import Erdos1172.Part4InternalHomogeneousAssembly
 public import Erdos1172.Part4InternalIndexedIntersection
-public import Erdos1172.Part4InternalCountableImage
 public import Erdos1172.Part4InternalIndependentHomogeneous
 
 @[expose] public section

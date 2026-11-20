@@ -6,7 +6,6 @@ module
 
 public import Erdos1172.Part4InternalOmegaSequence
 public import Erdos1172.Part4InternalGraphNeighborhood
-public import Erdos1172.Part4InternalPartitionGraph
 
 @[expose] public section
 

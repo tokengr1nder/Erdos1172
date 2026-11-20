@@ -6,7 +6,6 @@ module
 
 public import Erdos1172.Part3NamedOptionalCovers
 public import Erdos1172.Part3NamedFiniteTail
-public import Erdos1172.Part3NamedCofinalRowCovers
 
 @[expose] public section
 

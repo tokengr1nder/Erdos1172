@@ -5,8 +5,6 @@ Licensed under the Apache License, Version 2.0.
 module
 
 public import Erdos1172.Part4InternalClosedSelectorHull
-public import Erdos1172.Part4InternalSimultaneousFuture
-public import Erdos1172.Part4InternalFunctionRestriction
 
 @[expose] public section
 

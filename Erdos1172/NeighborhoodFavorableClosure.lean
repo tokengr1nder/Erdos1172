@@ -12,9 +12,7 @@ open Cardinal Ordinal Set Order
 
 namespace Erdos1172NeighborhoodFavorableClosure
 
-open Erdos1172NeighborhoodCode Erdos1172NeighborhoodIdeal
-  Erdos1172NeighborhoodIdealCore Erdos1172NeighborhoodDerivedIdeal
-  Erdos1172NeighborhoodMixedBlocks Erdos1172BHTAsymmetricEndpointFavorableOrder
+open Erdos1172NeighborhoodCode Erdos1172NeighborhoodIdeal Erdos1172NeighborhoodIdealCore Erdos1172NeighborhoodDerivedIdeal Erdos1172NeighborhoodMixedBlocks Erdos1172BHTAsymmetricEndpointFavorableOrder
 
 abbrev Part2Targets (G H : SimpleGraph Erdos1172NeighborhoodCode.W3) : Prop :=
   OrdinalRamsey.HasCliqueOfType G (ω_ 2 + ω_ 1) ∨

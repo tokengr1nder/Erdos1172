@@ -33,16 +33,12 @@ theorem alephZero_lt_cof_W2 : ℵ₀ < Order.cof W2 := by
   exact Cardinal.aleph0_lt_aleph.mpr (by norm_num)
 
 theorem mk_Code_le (hGCH : GCH) : #Code ≤ ℵ_ 2 := by
-  apply SmallUnionCode.mk_code_le (μ := ℵ₀) Cardinal.one_le_aleph0
-    (Cardinal.aleph0_le_aleph 2)
-  · exact Cardinal.mk_nat.le
-  · simp only [Atom, Cardinal.mk_prod, Cardinal.lift_id, Cardinal.mk_fin,
-      W2, Cardinal.mk_toType, Ordinal.card_omega]
-    calc
-      (3 : Cardinal) * ℵ_ 2 ≤ ℵ_ 2 * ℵ_ 2 := mul_le_mul'
-        (Cardinal.natCast_le_aleph0.trans (Cardinal.aleph0_le_aleph 2)) le_rfl
-      _ = ℵ_ 2 := Cardinal.mul_eq_self (Cardinal.aleph0_le_aleph 2)
-  · exact hGCH.aleph_two_power_aleph_zero.le
+  refine SmallUnionCode.mk_code_le (μ := ℵ₀) Cardinal.one_le_aleph0
+    (Cardinal.aleph0_le_aleph 2) Cardinal.mk_nat.le ?_ hGCH.aleph_two_power_aleph_zero.le
+  simp only [Atom, Cardinal.mk_prod, Cardinal.lift_id, Cardinal.mk_fin,
+    W2, Cardinal.mk_toType, Ordinal.card_omega]
+  exact (mul_le_mul' (Cardinal.natCast_le_aleph0.trans (Cardinal.aleph0_le_aleph 2)) le_rfl).trans_eq
+    (Cardinal.mul_eq_self (Cardinal.aleph0_le_aleph 2))
 
 noncomputable def rank (hGCH : GCH) : Code ↪ W2 :=
   Classical.choice ((Cardinal.le_def Code W2).mp (by
@@ -58,16 +54,13 @@ def eval (G H : SimpleGraph W2) : Code → Set W2 := SmallUnionCode.eval (atoms 
 abbrev LocalCode (r : Code ↪ W2) (a : W2) := {c : Code // r c < a}
 
 theorem mk_LocalCode_le (r : Code ↪ W2) (a : W2) : #(LocalCode r a) ≤ ℵ_ 1 := by
-  have he : #(LocalCode r a) ≤ #(Set.Iio a) :=
-    Cardinal.mk_le_of_injective (f := fun c : LocalCode r a =>
-      (⟨r c.val, c.property⟩ : Set.Iio a)) (by
-        intro c d h
-        exact Subtype.ext (r.injective (congrArg Subtype.val h)))
-  apply he.trans
+  refine (Cardinal.mk_le_of_injective (f := fun c : LocalCode r a =>
+    (⟨r c.val, c.property⟩ : Set.Iio a)) fun c d h =>
+      Subtype.ext (r.injective (congrArg Subtype.val h))).trans ?_
   apply Order.lt_succ_iff.mp
-  have hlt := Cardinal.mk_Iio_lt a (Cardinal.ord_cardinalMk (α := W2))
   simpa only [W2, Cardinal.mk_toType, Ordinal.card_omega,
-    Cardinal.succ_aleph, show (1 : Ordinal) + 1 = 2 by norm_num] using hlt
+    Cardinal.succ_aleph, show (1 : Ordinal) + 1 = 2 by norm_num] using
+    Cardinal.mk_Iio_lt a (Cardinal.ord_cardinalMk (α := W2))
 
 theorem exists_unionBound (hCH : CH) (r : Code ↪ W2) (a : W2) :
     ∃ b : W2, ∀ c : ℕ → LocalCode r a,
@@ -75,13 +68,10 @@ theorem exists_unionBound (hCH : CH) (r : Code ↪ W2) (a : W2) :
   have hcard : #(Set.range (fun c : ℕ → LocalCode r a =>
       r (SmallUnionCode.union (fun i => (c i).val)))) ≤ ℵ_ 1 := by
     refine Cardinal.mk_range_le.trans ?_
-    rw [Cardinal.mk_arrow]
-    simp only [Cardinal.lift_id, Cardinal.mk_nat]
+    rw [Cardinal.mk_arrow]; simp only [Cardinal.lift_id, Cardinal.mk_nat]
     exact (Cardinal.power_le_power_right (mk_LocalCode_le r a)).trans_eq
       hCH.aleph_one_power_aleph_zero
-  have hsmall := hcard.trans_lt (Cardinal.aleph_lt_aleph.mpr
-    (by norm_num : (1 : Ordinal) < 2))
-  rw [← cof_W2] at hsmall
+  have hsmall := cof_W2 ▸ hcard.trans_lt (Cardinal.aleph_lt_aleph.mpr (by norm_num : (1 : Ordinal) < 2))
   obtain ⟨b, hb⟩ := not_isCofinal_iff.mp (fun hc => hsmall.not_ge (Order.cof_le hc))
   exact ⟨b, fun c => hb _ ⟨c, rfl⟩⟩
 
@@ -100,15 +90,11 @@ theorem union_rank_lt_of_closedUnder (hCH : CH) (r : Code ↪ W2)
     r (SmallUnionCode.union c) < a := by
   obtain ⟨b, hba, hb⟩ :=
     ErdosRadoCHAsym.exists_strict_bound_of_countable_of_IsOmegaOneSup ha
-      (seed := Set.range (fun i => r (c i))) (by
-        simpa only [Cardinal.mk_nat] using
-          (Cardinal.mk_range_le (f := fun i => r (c i)))) (by
-        rintro _ ⟨i, rfl⟩
-        exact hc i)
-  exact (unionBound_spec hCH r b
-    (fun i => ⟨c i, hb _ ⟨i, rfl⟩⟩)).trans (hclosed b hba)
+      (seed := Set.range (fun i => r (c i)))
+      (by simpa only [Cardinal.mk_nat] using Cardinal.mk_range_le (f := fun i => r (c i)))
+      (by rintro _ ⟨i, rfl⟩; exact hc i)
+  exact (unionBound_spec hCH r b (fun i => ⟨c i, hb _ ⟨i, rfl⟩⟩)).trans (hclosed b hba)
 
-/-- Countable closure at points of cofinality `omegaOne`. -/
 structure GoodCut (r : Code ↪ W2) (G H : SimpleGraph W2) (a : W2) : Prop where
   isOmegaOneSup : ErdosRadoCHAsym.IsOmegaOneSup a
   empty_lt : r SmallUnionCode.empty < a
@@ -120,35 +106,21 @@ structure GoodCut (r : Code ↪ W2) (G H : SimpleGraph W2) (a : W2) : Prop where
 theorem exists_club_goodCut (hCH : CH) (r : Code ↪ W2) (G H : SimpleGraph W2) :
     ∃ club : Set W2, IsClub club ∧ ∀ a ∈ club,
       ErdosRadoCHAsym.IsOmegaOneSup a → GoodCut r G H a := by
-  let ca : Set W2 := ⋂ k : Fin 3,
-    {a | ClubClosure.ClosedUnder (fun x => r (SmallUnionCode.atom (k, x))) a}
-  have hca : IsClub ca := IsClub.iInter_of_countable alephZero_lt_cof_W2.ne'
-    (fun k => ClubClosure.isClub_closedUnder
-      (fun x => r (SmallUnionCode.atom (k, x))) alephZero_lt_cof_W2)
-  let cc : Set W2 := {a | ∀ c, r c < a → r (SmallUnionCode.compl c) < a}
-  have hcc : IsClub cc := ClubClosure.isClub_rankClosed r
-    (fun c => r (SmallUnionCode.compl c)) alephZero_lt_cof_W2
-  let cu : Set W2 := {a | ClubClosure.ClosedUnder (unionBound hCH r) a}
-  have hcu : IsClub cu := ClubClosure.isClub_closedUnder
-    (unionBound hCH r) alephZero_lt_cof_W2
-  let ce : Set W2 := {a | ClubClosure.ClosedUnder (fun _ => r SmallUnionCode.empty) a}
-  have hce : IsClub ce := ClubClosure.isClub_closedUnder
-    (fun _ => r SmallUnionCode.empty) alephZero_lt_cof_W2
-  obtain ⟨cr, hcr, hr⟩ := ClubClosure.exists_club_reflects r (eval G H)
-    Set.univ alephZero_lt_cof_W2
-  refine ⟨(((ca ∩ cc) ∩ cu) ∩ ce) ∩ cr,
-    (((hca.inter alephZero_lt_cof_W2.ne' hcc).inter alephZero_lt_cof_W2.ne' hcu).inter
-      alephZero_lt_cof_W2.ne' hce).inter alephZero_lt_cof_W2.ne' hcr, ?_⟩
+  have hcof := alephZero_lt_cof_W2
+  have hca : IsClub (⋂ k : Fin 3, {a | ClubClosure.ClosedUnder (fun x => r (SmallUnionCode.atom (k, x))) a}) :=
+    IsClub.iInter_of_countable hcof.ne' fun k =>
+      ClubClosure.isClub_closedUnder (fun x => r (SmallUnionCode.atom (k, x))) hcof
+  have hcc := ClubClosure.isClub_rankClosed r (fun c => r (SmallUnionCode.compl c)) hcof
+  have hcu := ClubClosure.isClub_closedUnder (unionBound hCH r) hcof
+  have hce := ClubClosure.isClub_closedUnder (fun _ => r SmallUnionCode.empty) hcof
+  obtain ⟨cr, hcr, hr⟩ := ClubClosure.exists_club_reflects r (eval G H) Set.univ hcof
+  refine ⟨_, (((hca.inter hcof.ne' hcc).inter hcof.ne' hcu).inter hcof.ne' hce).inter hcof.ne' hcr, ?_⟩
   rintro a ⟨⟨⟨⟨ha, hc⟩, hu⟩, he⟩, hr'⟩ hsup
-  refine ⟨hsup, ?_, hc, union_rank_lt_of_closedUnder hCH r hsup hu, ?_, ?_⟩
-  · obtain ⟨b, hba, _⟩ :=
-      ErdosRadoCHAsym.exists_strict_bound_of_countable_of_IsOmegaOneSup hsup
-        (seed := ∅) (by simp) (by simp)
-    exact he b hba
-  · intro k x hx
-    exact (Set.mem_iInter.mp ha k) x hx
-  · intro c hc hsub
-    exact hr a hr' c hc (by simpa only [Set.univ_inter] using hsub)
+  obtain ⟨b, hba, _⟩ := ErdosRadoCHAsym.exists_strict_bound_of_countable_of_IsOmegaOneSup hsup
+    (seed := ∅) (by simp) (by simp)
+  exact ⟨hsup, he b hba, hc, union_rank_lt_of_closedUnder hCH r hsup hu,
+    fun k x hx => (Set.mem_iInter.mp ha k) x hx,
+    fun c hc' hsub => hr a hr' c hc' (by simpa only [Set.univ_inter] using hsub)⟩
 
 theorem isStationary_goodCut (hCH : CH) (r : Code ↪ W2) (G H : SimpleGraph W2) :
     IsStationary {a | GoodCut r G H a} := by

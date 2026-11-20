@@ -5,7 +5,6 @@ Licensed under the Apache License, Version 2.0.
 module
 
 public import Erdos1172.Part4InternalPositiveSectionsEndpoint
-public import Erdos1172.Part4InternalCardinalDichotomy
 
 @[expose] public section
 
@@ -51,15 +50,6 @@ theorem mem_positiveSectionExceptions_iff
       (Γ ≤ y ∈ᴮ omegaTwo) ∧
         Γ ≤ positive omegaOne J (forwardSection color R r y) :=
   ErdosRelationGraph.mem_comprehend_and (positive_forwardSection_ext color R J r)
-
-theorem mem_positiveSectionExceptions (color : Bool) (R J r y : bSet 𝔹) :
-    y ∈ᴮ positiveSectionExceptions color R J r =
-      (y ∈ᴮ omegaTwo) ⊓ positive omegaOne J (forwardSection color R r y) := by
-  apply le_antisymm
-  · have H := mem_positiveSectionExceptions_iff.mp
-      (le_refl (y ∈ᴮ positiveSectionExceptions color R J r))
-    exact le_inf H.1 H.2
-  · exact mem_positiveSectionExceptions_iff.mpr ⟨inf_le_left, inf_le_right⟩
 
 theorem positiveSectionExceptions_subset
     {color : Bool} {R J r : bSet 𝔹} {Γ : 𝔹} :

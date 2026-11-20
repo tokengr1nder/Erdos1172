@@ -59,31 +59,11 @@ instance productOrderTop : OrderTop (ProductCondition A) where
 
 @[simp] theorem top_apply (i : I) : (⊤ : ProductCondition A) i = ⊤ := rfl
 
-theorem product_nonempty : Nonempty (ProductCondition A) := ⟨⊤⟩
-
-theorem le_iff_coordinates {p q : ProductCondition A} :
-    p ≤ q ↔ ∀ i, p i ≤ q i := Iff.rfl
-
 theorem le_iff_prefixes {p q : ProductCondition A} :
     p ≤ q ↔ ∀ i, (q i).entries <+: (p i).entries := Iff.rfl
 
-/-- The actual finite support; no externally supplied support bound is needed. -/
-theorem finite_support (p : ProductCondition A) : {i | p i ≠ ⊤}.Finite := by
-  classical
-  apply p.support.finite_toSet.subset
-  intro i hi
-  exact (DFinsupp.mem_support_toFun p i).mpr hi
-
 def SupportedOn (s : Set I) (p : ProductCondition A) : Prop :=
   ∀ i, i ∉ s → p i = ⊤
-
-theorem exists_finite_support (p : ProductCondition A) :
-    ∃ s : Finset I, SupportedOn (s : Set I) p := by
-  classical
-  refine ⟨p.support, ?_⟩
-  intro i hi
-  by_contra hne
-  exact hi ((DFinsupp.mem_support_toFun p i).mpr hne)
 
 /-- Discard all coordinates outside a set, leaving their values empty. -/
 def restrict (s : Set I) (p : ProductCondition A) : ProductCondition A := by
@@ -121,20 +101,6 @@ theorem restrict_eq_self_iff {s : Set I} {p : ProductCondition A} :
     restrict s (restrict s p) = restrict s p :=
   restrict_eq_self_iff.mpr (restrict_supported s p)
 
-theorem restrict_mono (s : Set I) : Monotone (restrict (A := A) s) := by
-  intro p q hpq i
-  by_cases hi : i ∈ s
-  · rw [restrict_apply_of_mem hi, restrict_apply_of_mem hi]
-    exact hpq i
-  · rw [restrict_apply_of_not_mem hi, restrict_apply_of_not_mem hi]
-
-theorem le_restrict (s : Set I) (p : ProductCondition A) : p ≤ restrict s p := by
-  intro i
-  by_cases hi : i ∈ s
-  · rw [restrict_apply_of_mem hi]
-  · rw [restrict_apply_of_not_mem hi]
-    exact le_top
-
 @[simp] theorem restrict_top (s : Set I) : restrict s (⊤ : ProductCondition A) = ⊤ :=
   restrict_eq_self_iff.mpr (fun _ _ => rfl)
 
@@ -160,33 +126,5 @@ def splice (s : Set I) (q p : ProductCondition A) : ProductCondition A := by
     (hi : i ∉ s) (q p : ProductCondition A) : splice s q p i = p i := by
   classical
   simp only [splice, DFinsupp.piecewise_apply, if_neg hi]
-
-theorem splice_le {s : Set I} {p q : ProductCondition A}
-    (h : q ≤ restrict s p) : splice s q p ≤ p := by
-  intro i
-  by_cases hi : i ∈ s
-  · rw [splice_apply_of_mem hi]
-    exact (h i).trans_eq (restrict_apply_of_mem hi p)
-  · rw [splice_apply_of_not_mem hi]
-
-theorem restrict_splice {s : Set I} {p q : ProductCondition A}
-    (hq : SupportedOn s q) : restrict s (splice s q p) = q := by
-  apply DFinsupp.ext
-  intro i
-  by_cases hi : i ∈ s
-  · rw [restrict_apply_of_mem hi, splice_apply_of_mem hi]
-  · exact (restrict_apply_of_not_mem hi (splice s q p)).trans (hq i hi).symm
-
-/-- Any strengthening of the restricted condition, supported on the selected
-coordinates, lifts to a strengthening of the original whole condition. -/
-theorem projection_lift {s : Set I} {p q : ProductCondition A}
-    (hq : SupportedOn s q) (h : q ≤ restrict s p) :
-    ∃ r : ProductCondition A, r ≤ p ∧ restrict s r = q :=
-  ⟨splice s q p, splice_le h, restrict_splice hq⟩
-
-theorem projection_lift_of_fixed {s : Set I} {p q : ProductCondition A}
-    (hq : restrict s q = q) (h : q ≤ restrict s p) :
-    ∃ r : ProductCondition A, r ≤ p ∧ restrict s r = q :=
-  projection_lift (restrict_eq_self_iff.mp hq) h
 
 end Erdos1172LevyCollapse

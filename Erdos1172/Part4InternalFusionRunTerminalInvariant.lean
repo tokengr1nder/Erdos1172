@@ -5,7 +5,6 @@ Licensed under the Apache License, Version 2.0.
 module
 
 public import Erdos1172.Part4InternalFusionRunRowLegality
-public import Erdos1172.Part4InternalImageRecursionInvariant
 
 @[expose] public section
 
@@ -170,25 +169,5 @@ theorem fusion_run_active_terminal
     (good_of_imageRecLaw_pair omegaOne_Ord HRun Hlaw (terminalActiveState_ext color R top)
       (fusion_terminal_invariant_step HJ Habsorb Hclosure HE HElaw HF HFlaw Hhull Hseeds Htop
         HRun Hlaw) Hentry)
-
-theorem fusion_run_active_terminal_apply
-    {color : Bool} {R J E S F B P Y top Run ξ A Z U x : bSet 𝔹} {Γ : 𝔹}
-    (HJ : Γ ≤ properIdeal omegaOne J)
-    (Habsorb : Γ ≤ countableAbsorption omegaOne J)
-    (Hclosure : Γ ≤ countableClosure J)
-    (HE : Γ ≤ is_function (blockObjects color R) blockEnumerationCodes E)
-    (HElaw : Γ ≤ blockEnumerationFamilyLaw color R E)
-    (HF : Γ ≤ is_function (choicePoolDomain (blockObjects color R) omegaTwo)
-      (bv_powerset omegaTwo) F)
-    (HFlaw : Γ ≤ blockSelectorLaw color R J E S F)
-    (Hhull : Γ ≤ closedHullData color R F B P)
-    (Hseeds : Γ ≤ poolSeedLaw color R J E B Y) (Htop : Γ ≤ top ∈ᴮ Y)
-    (HRun : Γ ≤ is_function omegaOne runSpace Run)
-    (Hlaw : Γ ≤ runLaw color R E F top Run)
-    (Hentry : Γ ≤ pair ξ (pair ξ (entry A Z U)) ∈ᴮ Run) (Hx : Γ ≤ x ∈ᴮ U) :
-    Γ ≤ graphColor (!color) R x top :=
-  terminalAdjacent_apply
-    (fusion_run_active_terminal HJ Habsorb Hclosure HE HElaw HF HFlaw Hhull Hseeds Htop
-      HRun Hlaw Hentry) Hx
 
 end bSet.ErdosFusionRunTerminalInvariant

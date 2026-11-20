@@ -6,7 +6,6 @@ module
 
 public import Erdos1172.Part4InternalRowSectionFamily
 public import Erdos1172.Part4InternalFutureBlockWitness
-public import Erdos1172.Part4InternalIndependentHomogeneous
 
 @[expose] public section
 

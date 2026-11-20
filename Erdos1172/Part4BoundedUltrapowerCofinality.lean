@@ -23,41 +23,6 @@ namespace Erdos1172GroundUltrapower
 variable {I : Type u} (U : Ultrafilter I) (κ θ : Cardinal.{u})
 variable (a : I → Set θ.ord.ToType)
 
-private theorem small_domain_bound {D : Type u} (hθ : θ.IsRegular)
-    (hD : Cardinal.mk D < θ) (F : D → ZFSet.{u}) :
-    ∃ α < θ.ord, ∀ t, F t ∈ θ.ord.toZFSet → F t ∈ α.toZFSet := by
-  classical
-  let g (t : D) := if h : F t ∈ θ.ord.toZFSet then (Ordinal.mem_toZFSet_iff.mp h).choose else 0
-  have hpos : 0 < θ.ord := by simpa using (Cardinal.aleph0_pos.trans_le hθ.aleph0_le)
-  have hg (t : D) : g t < θ.ord := by
-    by_cases h : F t ∈ θ.ord.toZFSet
-    · simpa only [g, dif_pos h] using (Ordinal.mem_toZFSet_iff.mp h).choose_spec.1
-    · simpa only [g, dif_neg h] using hpos
-  refine ⟨⨆ t, g t + 1, Ordinal.iSup_add_one_lt_of_lt_cof (by rwa [hθ.cof_ord]) hg, ?_⟩
-  intro t ht
-  have he : (g t).toZFSet = F t := by
-    simpa only [g, dif_pos ht] using (Ordinal.mem_toZFSet_iff.mp ht).choose_spec.2
-  rw [← he]
-  exact Ordinal.toZFSet_mem_toZFSet_iff.mpr (Ordinal.lt_iSup_add_one _ t)
-
-private theorem restricted_function_bound (hθ : θ.IsInaccessible)
-    (η : θ.ord.ToType) (F : Set θ.ord.ToType → ZFSet.{u}) :
-    ∃ α < θ.ord, ∀ S : Set θ.ord.ToType, F (S ∩ Set.Iio η) ∈ θ.ord.toZFSet →
-      F (S ∩ Set.Iio η) ∈ α.toZFSet := by
-  let expand (t : Set (Set.Iio η)) := Subtype.val '' t
-  have hcard : Cardinal.mk (Set (Set.Iio η)) < θ := by
-    rw [Cardinal.mk_set]
-    apply hθ.isStrongPrelimit
-    simpa using Cardinal.mk_Iio_lt η (by simp)
-  obtain ⟨α, hα, h⟩ := small_domain_bound θ hθ.isRegular hcard (fun t => F (expand t))
-  refine ⟨α, hα, ?_⟩
-  intro S hs
-  have he : expand (Subtype.val ⁻¹' S) = S ∩ Set.Iio η := by
-    ext z
-    exact ⟨fun ⟨t, ht, eq⟩ => eq ▸ And.intro ht t.property,
-      fun hz => ⟨⟨z,hz.2⟩,hz.1,rfl⟩⟩
-  exact he ▸ h _ (he.symm ▸ hs)
-
 private theorem type_bounded_prefix (S : Set θ.ord.ToType) (e : κ.ord.ToType ≃o S)
     (ξ : θ.ord.ToType) (hξ : ξ ∈ S) :
     typeLT ↥(S ∩ Set.Iio ξ) = (e.symm ⟨ξ,hξ⟩).toOrd.val := by
@@ -102,23 +67,7 @@ theorem fineRankGerm_boundedSupport (η : θ.ord.ToType) (hf : FineOn U a) (ht :
     BoundedSupport U θ a (fineRankGerm U κ θ a η) :=
   ⟨η, fun S => (typeLT S).toZFSet, (fineRankGerm_eq_prefix U κ θ a η hf ht).symm⟩
 
-theorem boundedHull_mem_constant_bound (hθ : θ.IsInaccessible) (x : BoundedHull U θ a)
-    (hx : memRel U x.val (Germ.const θ.ord.toZFSet)) :
-    ∃ α < θ.ord, memRel U x.val (Germ.const α.toZFSet) := by
-  obtain ⟨η, F, hF⟩ := x.property
-  rw [← hF] at hx ⊢
-  obtain ⟨α, hα, h⟩ := restricted_function_bound θ hθ η F
-  exact ⟨α, hα, (show ∀ᶠ i in U, F (boundedFiber θ a η i) ∈ θ.ord.toZFSet from hx).mono
-    (fun i hi => h (a i) hi)⟩
-
 variable [CountableInterFilter (U : Filter I)]
-
-theorem mem_boundedDiagonal_cofinal [Nonempty θ.ord.ToType] (hθ : θ.IsInaccessible) (z : ZFSet.{u})
-    (hz : z ∈ boundedCollapse U θ a (boundedConst U θ a θ.ord.toZFSet)) :
-    ∃ α < θ.ord, z ∈ boundedCollapse U θ a (boundedConst U θ a α.toZFSet) := by
-  obtain ⟨x, hx, rfl⟩ := (mem_boundedCollapse_iff U θ a _ _).mp hz
-  obtain ⟨α, hα, hm⟩ := boundedHull_mem_constant_bound U θ a hθ x hx
-  exact ⟨α, hα, (mem_boundedCollapse_iff U θ a _ _).mpr ⟨x, hm, rfl⟩⟩
 
 /-- If the hull represents all the smaller ordinals, collapsing its own
 membership relation preserves the full ultrapower's value at this ordinal. -/
@@ -156,86 +105,6 @@ theorem boundedDiagonal_critical_image [Nonempty θ.ord.ToType] (hf : FineOn U a
       (fun z : Set.Iio θ.ord => z.val.toZFSet) (Ordinal.ToType.mk.symm_apply_apply ⟨α,hα⟩))
   · exact diagonal_cardinal_eq_of_fine_order_type U κ θ a hf hn ht
 
-abbrev PrefixCodes (ν η : θ.ord.ToType) := Set (Set (Set.Iio ν) × Set.Iio η)
-
-abbrev OrdinalCodes := Σ ν : θ.ord.ToType, Σ η : θ.ord.ToType, PrefixCodes θ ν η
-
-private theorem ordinalCodes_cardinal_le (hθ : θ.IsInaccessible) : Cardinal.mk (OrdinalCodes θ) ≤ θ := by
-  have hi (ν : θ.ord.ToType) : Cardinal.mk (Set.Iio ν) < θ := by
-    simpa using Cardinal.mk_Iio_lt ν (by simp)
-  have hb (ν η : θ.ord.ToType) : Cardinal.mk (PrefixCodes θ ν η) ≤ θ := by
-    apply le_of_lt
-    rw [PrefixCodes, Cardinal.mk_set, Cardinal.mk_prod, Cardinal.mk_set]
-    simp only [Cardinal.lift_id]
-    exact hθ.isStrongPrelimit (Cardinal.mul_lt_of_lt hθ.aleph0_lt.le (hθ.isStrongPrelimit (hi ν)) (hi η))
-  have hsum (f : θ.ord.ToType → Cardinal.{u}) (hf : ∀ i, f i ≤ θ) : Cardinal.sum f ≤ θ := by
-    apply (Cardinal.sum_le_sum _ _ hf).trans
-    rw [Cardinal.sum_const', Cardinal.mk_ord_toType, Cardinal.mul_eq_self hθ.aleph0_lt.le]
-  rw [OrdinalCodes, Cardinal.mk_sigma]
-  apply hsum
-  intro ν
-  rw [Cardinal.mk_sigma]
-  exact hsum _ (hb ν)
-
-def readPrefix (ν η : θ.ord.ToType) (c : PrefixCodes θ ν η) (S : Set θ.ord.ToType) : ZFSet.{u} := by
-  classical
-  exact if h : ∃ x : Set.Iio η, (Subtype.val ⁻¹' S, x) ∈ c
-    then h.choose.val.toOrd.val.toZFSet else ∅
-
-def codeHull (c : OrdinalCodes θ) : BoundedHull U θ a :=
-  ⟨Germ.ofFun (fun i => readPrefix θ c.1 c.2.1 c.2.2 (boundedFiber θ a c.1 i)),
-    c.1, readPrefix θ c.1 c.2.1 c.2.2, rfl⟩
-
-omit [CountableInterFilter (U : Filter I)] in
-private theorem boundedHull_exists_ordinalCode (hθ : θ.IsInaccessible) (x : BoundedHull U θ a)
-    (hx : memRel U x.val (Germ.const θ.ord.toZFSet)) : ∃ c : OrdinalCodes θ, codeHull U θ a c = x := by
-  classical
-  obtain ⟨ν, F, hF⟩ := x.property
-  obtain ⟨α, hα, hbound⟩ := boundedHull_mem_constant_bound U θ a hθ x hx
-  let η := Ordinal.ToType.mk (⟨α,hα⟩ : Set.Iio θ.ord)
-  let c : PrefixCodes θ ν η := {q | q.2.val.toOrd.val.toZFSet = F (Subtype.val '' q.1)}
-  refine ⟨⟨ν,η,c⟩, Subtype.ext (hF ▸ Germ.coe_eq.mpr ?_)⟩
-  rw [← hF] at hbound
-  filter_upwards [show ∀ᶠ i in U, F (boundedFiber θ a ν i) ∈ α.toZFSet from hbound] with i hi
-  let S := boundedFiber θ a ν i
-  have hS : Subtype.val '' ((Subtype.val : Set.Iio ν → θ.ord.ToType) ⁻¹' S) = S := by
-    ext z
-    exact ⟨fun ⟨t, ht, eq⟩ => eq ▸ ht, fun hz => ⟨⟨z,hz.2⟩,hz,rfl⟩⟩
-  have hgood : ∃ b : Set.Iio η, (Subtype.val ⁻¹' S, b) ∈ c := by
-    obtain ⟨β, hβ, hf⟩ := Ordinal.mem_toZFSet_iff.mp hi
-    let v : Set.Iio θ.ord := ⟨β,hβ.trans hα⟩
-    have hv : (Ordinal.ToType.mk v).toOrd.val = β := congrArg Subtype.val (Ordinal.ToType.mk.symm_apply_apply v)
-    have hvη : Ordinal.ToType.mk v < η := Ordinal.ToType.mk.lt_iff_lt.mpr hβ
-    refine ⟨⟨Ordinal.ToType.mk v, hvη⟩, ?_⟩
-    change (Ordinal.ToType.mk v).toOrd.val.toZFSet = F (Subtype.val '' (Subtype.val ⁻¹' S))
-    rw [hS, hv]
-    exact hf
-  change readPrefix θ ν η c S = F S
-  rw [readPrefix, dif_pos hgood]
-  exact (show hgood.choose.val.toOrd.val.toZFSet = F (Subtype.val '' (Subtype.val ⁻¹' S))
-    from hgood.choose_spec).trans (congrArg F hS)
-
-/-- Every member of the image of θ is coded by two bounded ordinal
-parameters and one ground relation of cardinality below θ. -/
-theorem boundedDiagonal_cardinal_le [Nonempty θ.ord.ToType] (hθ : θ.IsInaccessible) :
-    (boundedCollapse U θ a (boundedConst U θ a θ.ord.toZFSet)).card ≤ θ := by
-  let F (c : OrdinalCodes θ) := boundedCollapse U θ a (codeHull U θ a c)
-  apply (ZFSet.card_mono (y := ZFSet.range F) ?_).trans
-  · apply (show (ZFSet.range F).card ≤ Cardinal.mk (OrdinalCodes θ) by
-      simpa only [Cardinal.lift_id] using (ZFSet.lift_card_range_le (f := F))).trans
-    exact ordinalCodes_cardinal_le θ hθ
-  · intro z hz
-    obtain ⟨x, hx, rfl⟩ := (mem_boundedCollapse_iff U θ a z _).mp hz
-    obtain ⟨c, hc⟩ := boundedHull_exists_ordinalCode U θ a hθ x hx
-    exact ZFSet.mem_range.mpr ⟨c, congrArg (boundedCollapse U θ a) hc⟩
-
-theorem boundedDiagonal_lt_successor [Nonempty θ.ord.ToType] (hθ : θ.IsInaccessible)
-    {o : Ordinal.{u}} (ho : boundedCollapse U θ a (boundedConst U θ a θ.ord.toZFSet) = o.toZFSet) :
-    o < (Order.succ θ).ord := by
-  have hc := boundedDiagonal_cardinal_le U θ a hθ
-  rw [ho, Ordinal.card_toZFSet] at hc
-  exact Cardinal.lt_ord.mpr (Order.lt_succ_of_le hc)
-
 omit [CountableInterFilter (U : Filter I)] in
 private theorem germ_rep (x : Ground U) : ∃ X : I → ZFSet.{u}, Germ.ofFun X = x :=
   Germ.inductionOn x (fun X => ⟨X,rfl⟩)
@@ -268,11 +137,5 @@ theorem boundedCollapse_isOrdinal_of_eventually (x : BoundedHull U θ a) :
       change memRel U y.val x.val at hy
       rw [← hY, ← hX] at hy
       exact (ho.and hy).mono (fun i h => h.1.mem h.2)
-
-theorem boundedDiagonal_ordinal_lt_successor [Nonempty θ.ord.ToType] (hθ : θ.IsInaccessible) :
-    ∃ o < (Order.succ θ).ord, boundedCollapse U θ a (boundedConst U θ a θ.ord.toZFSet) = o.toZFSet := by
-  have ho := boundedCollapse_isOrdinal_of_eventually U θ a (boundedConst U θ a θ.ord.toZFSet)
-    (fun _ => θ.ord.toZFSet) rfl (Eventually.of_forall (fun _ => ZFSet.isOrdinal_toZFSet _))
-  exact ⟨_, boundedDiagonal_lt_successor U θ a hθ ho.toZFSet_rank_eq.symm, ho.toZFSet_rank_eq.symm⟩
 
 end Erdos1172GroundUltrapower

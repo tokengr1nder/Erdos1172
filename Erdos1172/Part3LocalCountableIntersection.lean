@@ -4,7 +4,7 @@ Licensed under the Apache License, Version 2.0.
 -/
 module
 
-public import Erdos1172.Part3RegularBlockEnvironment
+public import Erdos1172.Part3NamedStationaryRedBlock
 
 @[expose] public section
 
@@ -62,23 +62,5 @@ theorem exists_local_intersection_code (ha : GoodCut r σ H source a)
     · rw [eval_empty]
       intro q hqp hq
       exact hq
-
-theorem exists_local_after_code (ha : GoodCut r σ H source a)
-    (selected : Set (NiceCliqueName P I W2 G)) (hcount : selected.Countable)
-    (hrank : ∀ N ∈ selected, σ N < a) :
-    ∃ c : Code P I G, r c < a ∧ ∀ p x, (eval G H c).holds p x ↔
-      ∀ N ∈ selected, (afterClique N.toClique).holds p x := by
-  obtain ⟨c, hc, heval⟩ := exists_local_intersection_code ha
-    (Cardinal.le_aleph0_iff_set_countable.mpr hcount)
-    (fun N : selected => blockName N.val)
-    (fun N => ha.block_lt N.val (hrank N.val N.property))
-  refine ⟨c, hc, ?_⟩
-  intro p x
-  rw [heval]
-  constructor
-  · intro h N hN
-    simpa only [eval_blockName] using h ⟨N, hN⟩
-  · intro h N
-    simpa only [eval_blockName] using h N.val N.property
 
 end Erdos1172Part3LocalCountableIntersection

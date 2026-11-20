@@ -173,12 +173,6 @@ noncomputable def lineTrace : CoreTrace P W1 G where
 
 noncomputable def squareTrace : CoreTrace P Square G := (lineTrace (P := P) (G := G)).product
 
-theorem squareTrace_eq (core : CliqueDecisions P Square W2 G) :
-    squareTrace.trace core = Erdos1172Part3NamedSquareTraceIdeal.squareTraceName core := by
-  apply RegularName.ext
-  intro p U
-  exact Iff.rfl
-
 noncomputable def cubeTrace : CoreTrace P Cube G := (squareTrace (P := P) (G := G)).product
 
 variable {H : SimpleGraph W2} {r : Code P I G ↪ W2}

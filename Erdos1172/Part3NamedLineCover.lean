@@ -5,7 +5,6 @@ Licensed under the Apache License, Version 2.0.
 module
 
 public import Erdos1172.Part3SupportedCoverRealization
-public import Erdos1172.Part3DecisionSelection
 public import Erdos1172.Part3CofinalLineCover
 
 @[expose] public section
@@ -49,49 +48,6 @@ theorem rowBound_persistent {data : LineCoverData V} {U : RegularName P V}
     RowBound data U q i bound :=
   fun r hrq x hx hi => h r (hrq.trans hqp) x hx hi
 
-/-- One cofinal decision bounds the relevant enumeration indices. Only
-its countable set of predecessors is decided simultaneously. -/
-theorem exists_row_bound (data : LineCoverData V) (U : RegularName P V)
-    (E : FunctionDecisions P W1 V) (hclosed : CountablyClosed P)
-    (hordered : ∀ p : P, ∀ j k x y,
-      j < k → E.decides p j x → E.decides p k y → x < y)
-    (hcover : ∀ p : P, ∀ x : V, U.holds p x →
-      ∃ q : P, q ≤ p ∧ ∃ j : W1, E.decides q j x)
-    (hcofinal : ∀ p : P, ∀ cut : V, ∃ q : P, q ≤ p ∧
-      ∃ j : W1, ∃ x : V, E.decides q j x ∧ cut ≤ x)
-    (p : P) (i : W1) :
-    ∃ q : P, q ≤ p ∧ ∃ bound : W1, RowBound data U q i bound := by
-  classical
-  obtain ⟨q, hqp, j, y, hjy, hcut⟩ := hcofinal p (data.cut i)
-  let prefixDecisions : FunctionDecisions P (Set.Iio j) V :=
-    Erdos1172Part3DecisionSelection.reindex E Subtype.val
-  have hcount : #(Set.Iio j) ≤ ℵ₀ := Cardinal.lt_aleph_one_iff.mp
-    (Erdos1172Part3ConvergentCore.mk_Iio_W1_lt j)
-  obtain ⟨r, hrq, hvalues⟩ := prefixDecisions.exists_simultaneous hclosed q hcount
-  let chosen (k : Set.Iio j) : V := (hvalues k).choose
-  have hchosen (k : Set.Iio j) : E.decides r k.val (chosen k) :=
-    (hvalues k).choose_spec
-  have hcodes : (Set.range (fun k : Set.Iio j => data.code (chosen k))).Countable :=
-    Cardinal.le_aleph0_iff_set_countable.mp (Cardinal.mk_range_le.trans hcount)
-  obtain ⟨bound, hbound⟩ := exists_bound_of_countable
-    (Set.range (fun k : Set.Iio j => data.code (chosen k))) hcodes
-  refine ⟨r, hrq.trans hqp, bound, ?_⟩
-  intro s hsr x hx hrow
-  obtain ⟨t, hts, k, hkx⟩ := hcover s x hx
-  have hjt : E.decides t j y := E.persistent ((hts.trans hsr).trans hrq) hjy
-  have hxcut : x < data.cut i := hrow ▸ data.lt_cut_row x
-  have hxy : x < y := hxcut.trans_le hcut
-  have hkj : k < j := by
-    rcases lt_trichotomy k j with hkj | hkj | hjk
-    · exact hkj
-    · have heq : x = y := E.unique (hkj ▸ hkx) hjt
-      exact (hxy.ne heq).elim
-    · exact (lt_asymm hxy (hordered t j k y x hjk hjt hkx)).elim
-  let z : Set.Iio j := ⟨k, hkj⟩
-  have heq : x = chosen z := E.unique hkx (E.persistent (hts.trans hsr) (hchosen z))
-  rw [heq]
-  exact hbound _ ⟨z, rfl⟩
-
 /-- Dense row bounds alone suffice for coherent function-name selection.
 The source of those bounds is kept as an explicit premise here. -/
 theorem exists_named_line_cover_of_dense_row_bounds
@@ -117,20 +73,5 @@ theorem exists_named_line_cover_of_dense_row_bounds
     exact hdec
   · intro g hg
     exact Or.inr (hcode.trans_le (hg (data.row x) (Finset.mem_singleton_self _)))
-
-/-- The original canonical line family covers the regular source through
-one genuine function-decision name, with actual dense membership. -/
-theorem exists_named_line_cover (data : LineCoverData V) (U : RegularName P V)
-    (E : FunctionDecisions P W1 V) (hclosed : CountablyClosed P)
-    (hordered : ∀ p : P, ∀ j k x y,
-      j < k → E.decides p j x → E.decides p k y → x < y)
-    (hcover : ∀ p : P, ∀ x : V, U.holds p x →
-      ∃ q : P, q ≤ p ∧ ∃ j : W1, E.decides q j x)
-    (hcofinal : ∀ p : P, ∀ cut : V, ∃ q : P, q ≤ p ∧
-      ∃ j : W1, ∃ x : V, E.decides q j x ∧ cut ≤ x) :
-    ∃ F : FunctionDecisions P W1 W1,
-      ∀ p : P, ∀ x : V, U.holds p x → (coverName F data.cover).holds p x :=
-  exists_named_line_cover_of_dense_row_bounds data U
-    (exists_row_bound data U E hclosed hordered hcover hcofinal)
 
 end Erdos1172Part3NamedLineCover

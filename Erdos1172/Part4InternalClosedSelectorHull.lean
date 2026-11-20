@@ -4,9 +4,7 @@ Licensed under the Apache License, Version 2.0.
 -/
 module
 
-public import Erdos1172.Part4InternalBlockPoolSmallInvariant
 public import Erdos1172.Part4InternalBlockPoolFinalCut
-public import Erdos1172.Part4InternalOmegaOneIdealBounded
 
 @[expose] public section
 
@@ -69,10 +67,6 @@ theorem closedHullData_point_small {color : Bool} {R F B P : bSet 𝔹} {Γ : �
     (H : Γ ≤ closedHullData color R F B P) : Γ ≤ injects_into P omegaOne :=
   omegaTwo_member_injects (H.trans (inf_le_right.trans (inf_le_right.trans inf_le_left)))
 
-theorem closedHullData_point_Ord {color : Bool} {R F B P : bSet 𝔹} {Γ : 𝔹}
-    (H : Γ ≤ closedHullData color R F B P) : Γ ≤ Ord P :=
-  Ord_of_mem_Ord (H.trans (inf_le_right.trans (inf_le_right.trans inf_le_left))) omegaTwo_Ord
-
 theorem final_pools_selectorClosed
     {color : Bool} {R J E S F Run : bSet 𝔹} {Γ : 𝔹}
     (HB : Γ ≤ countablyBounded omegaOne)
@@ -131,47 +125,5 @@ theorem exists_closed_pool_for_selector
   exact ⟨finalObjects color R Run, finalPoints color R Run,
     closedHullData_of_pool_recursion HCH HB HF Hlaw
       (HRun.trans inf_le_left) (HRun.trans inf_le_right)⟩
-
-theorem exists_closed_selector_hull (color : Bool) (R J E S : bSet 𝔹) {Γ : 𝔹}
-    (HCH : Γ ≤ (CH : 𝔹)) (HB : Γ ≤ countablyBounded omegaOne) :
-    ∃ F B P : bSet 𝔹,
-      Γ ≤ is_function (choicePoolDomain (blockObjects color R) omegaTwo)
-        (bv_powerset omegaTwo) F ⊓
-        (blockSelectorLaw color R J E S F ⊓ closedHullData color R F B P) := by
-  obtain ⟨F, HF⟩ := exists_block_selector color R J E S (Γ := Γ)
-  obtain ⟨B, P, Hpool⟩ := exists_closed_pool_for_selector HCH HB
-    (HF.trans inf_le_left) (HF.trans inf_le_right)
-  exact ⟨F, B, P, le_inf (HF.trans inf_le_left) (le_inf (HF.trans inf_le_right) Hpool)⟩
-
-/-- The canonical enumeration is fixed before the selector and hull,
-so later consumers use the same actual enumeration on equal objects. -/
-theorem exists_enumerated_closed_selector_hull
-    (color : Bool) (R J S : bSet 𝔹) {Γ : 𝔹}
-    (HCH : Γ ≤ (CH : 𝔹)) (HB : Γ ≤ countablyBounded omegaOne) :
-    ∃ E F B P : bSet 𝔹,
-      Γ ≤ (is_function (blockObjects color R) blockEnumerationCodes E ⊓
-        blockEnumerationFamilyLaw color R E) ⊓
-        (is_function (choicePoolDomain (blockObjects color R) omegaTwo)
-          (bv_powerset omegaTwo) F ⊓
-          (blockSelectorLaw color R J E S F ⊓ closedHullData color R F B P)) := by
-  obtain ⟨E, HE⟩ := exists_block_enumeration_family color R (Γ := Γ)
-  obtain ⟨F, B, P, Hpool⟩ := exists_closed_selector_hull color R J E S HCH HB
-  exact ⟨E, F, B, P, le_inf HE Hpool⟩
-
-/-- The existing ideal assumptions discharge countable boundedness;
-normality, density, and successful selection are not needed for the hull. -/
-theorem exists_enumerated_closed_selector_hull_of_ideal
-    (color : Bool) (R J S : bSet 𝔹) {Γ : 𝔹}
-    (HCH : Γ ≤ (CH : 𝔹)) (HJ : Γ ≤ properIdeal omegaOne J)
-    (Habsorb : Γ ≤ countableAbsorption omegaOne J)
-    (Hclosure : Γ ≤ countableClosure J) :
-    ∃ E F B P : bSet 𝔹,
-      Γ ≤ (is_function (blockObjects color R) blockEnumerationCodes E ⊓
-        blockEnumerationFamilyLaw color R E) ⊓
-        (is_function (choicePoolDomain (blockObjects color R) omegaTwo)
-          (bv_powerset omegaTwo) F ⊓
-          (blockSelectorLaw color R J E S F ⊓ closedHullData color R F B P)) :=
-  exists_enumerated_closed_selector_hull color R J S HCH
-    (countablyBounded_of_ideal HJ Habsorb Hclosure)
 
 end bSet.ErdosClosedSelectorHull

@@ -74,9 +74,6 @@ theorem mem_prodMap_iff {A B C D f g x y : bSet 𝔹} {Γ : 𝔹} :
       Γ ≤ x ∈ᴮ prod A B ∧ Γ ≤ y ∈ᴮ prod C D ∧ Γ ≤ mapRel f g x y :=
   mem_relationGraph_iff (mapRel_ext_left f g) (mapRel_ext_right f g)
 
-theorem prodMap_subset {A B C D f g : bSet 𝔹} {Γ : 𝔹} :
-    Γ ≤ prodMap A B C D f g ⊆ᴮ prod (prod A B) (prod C D) := relationGraph_subset
-
 theorem prodMap_is_function {A B C D f g : bSet 𝔹} {Γ : 𝔹}
     (Hf : Γ ≤ is_function A C f) (Hg : Γ ≤ is_function B D g) :
     Γ ≤ is_function (prod A B) (prod C D) (prodMap A B C D f g) := by

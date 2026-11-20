@@ -58,22 +58,11 @@ instance conditionInhabited : Inhabited (Condition α) := ⟨⊤⟩
 
 @[simp] theorem top_entries : (⊤ : Condition α).entries = [] := rfl
 
-theorem condition_nonempty : Nonempty (Condition α) := ⟨⊤⟩
-
 def cone (p : Condition α) : Set (Condition α) := Set.Iic p
 
 def Compatible (p q : Condition α) : Prop := ∃ r, r ≤ p ∧ r ≤ q
 
 @[simp] theorem mem_cone {p q : Condition α} : q ∈ cone p ↔ q ≤ p := Iff.rfl
-
-theorem cone_nonempty (p : Condition α) : (cone p).Nonempty :=
-  ⟨p, mem_cone.mpr le_rfl⟩
-
-theorem cone_mono {p q : Condition α} (hpq : p ≤ q) : cone p ⊆ cone q :=
-  fun _ hr => hr.trans hpq
-
-theorem cone_subset_iff {p q : Condition α} : cone p ⊆ cone q ↔ p ≤ q :=
-  ⟨fun h => h (mem_cone.mpr le_rfl), cone_mono⟩
 
 theorem compatible_iff_prefix_comparable {p q : Condition α} :
     Compatible p q ↔ p.entries <+: q.entries ∨ q.entries <+: p.entries := by
@@ -88,14 +77,6 @@ theorem compatible_iff_comparable {p q : Condition α} :
     Compatible p q ↔ p ≤ q ∨ q ≤ p := by
   rw [compatible_iff_prefix_comparable]
   exact or_comm
-
-theorem cones_inter_nonempty_iff {p q : Condition α} :
-    (cone p ∩ cone q).Nonempty ↔
-      p.entries <+: q.entries ∨ q.entries <+: p.entries :=
-  compatible_iff_prefix_comparable
-
-theorem compatible_iff_cones_inter_nonempty {p q : Condition α} :
-    Compatible p q ↔ (cone p ∩ cone q).Nonempty := Iff.rfl
 
 def extend (p : Condition α) (s : List α) : Condition α := ⟨p.entries ++ s⟩
 
@@ -113,25 +94,12 @@ theorem le_iff_exists_extend {p q : Condition α} :
   · rintro ⟨s, rfl⟩
     exact extend_le q s
 
-theorem extend_append (p : Condition α) (s t : List α) :
-    extend (extend p s) t = extend p (s ++ t) := by
-  apply Condition.ext
-  exact List.append_assoc _ _ _
-
 def DenseBelow (D : Set (Condition α)) : Prop :=
   ∀ p : Condition α, ∃ q : Condition α, q ≤ p ∧ q ∈ D
 
 def lengthDense (n : ℕ) : Set (Condition α) := {p | n ≤ p.entries.length}
 
 def targetDense (a : α) : Set (Condition α) := {p | a ∈ p.entries}
-
-theorem lengthDense_downward {n : ℕ} {p q : Condition α}
-    (hpq : p ≤ q) (hq : q ∈ lengthDense n) : p ∈ lengthDense n :=
-  hq.trans hpq.length_le
-
-theorem targetDense_downward {a : α} {p q : Condition α}
-    (hpq : p ≤ q) (hq : q ∈ targetDense a) : p ∈ targetDense a :=
-  hpq.sublist.subset hq
 
 theorem lengthDense_dense [Nonempty α] (n : ℕ) : DenseBelow (lengthDense (α := α) n) := by
   obtain ⟨a⟩ := ‹Nonempty α›
@@ -158,13 +126,5 @@ theorem cardinal_eq_list : Cardinal.mk (Condition α) = Cardinal.mk (List α) :=
 
 theorem cardinal_le : Cardinal.mk (Condition α) ≤ max Cardinal.aleph0 (Cardinal.mk α) :=
   cardinal_eq_list.trans_le (Cardinal.mk_list_le_max α)
-
-theorem cardinal_eq_of_nonempty [Nonempty α] :
-    Cardinal.mk (Condition α) = max Cardinal.aleph0 (Cardinal.mk α) :=
-  cardinal_eq_list.trans (Cardinal.mk_list_eq_max α)
-
-theorem cardinal_eq_of_infinite [Infinite α] :
-    Cardinal.mk (Condition α) = Cardinal.mk α :=
-  cardinal_eq_list.trans (Cardinal.mk_list_eq_mk α)
 
 end Erdos1172Collapse

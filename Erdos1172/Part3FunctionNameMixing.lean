@@ -68,21 +68,6 @@ theorem mix_decides_iff (A : Set P) (hA : IncompatibleFamily A)
   · intro hv
     exact ⟨a, hpa, hv⟩
 
-/-- Choose antichain branches from a dense set of local constructions.
-The dense-set property is retained at each branch, not assumed globally. -/
-theorem exists_mix_of_dense (D : Set P) (hD : DenseBelow D)
-    (F : ∀ a : D, FunctionDecisions (Iic a.val) I V) :
-    ∃ A : Set P, ∃ hAD : A ⊆ D,
-      IncompatibleFamily A ∧ (∀ p : P, ∃ a ∈ A, Compatible p a) ∧
-      ∃ G : FunctionDecisions P I V, ∀ a : A, ∀ p : P, ∀ hpa : p ≤ a.val,
-        ∀ i v, G.decides p i v ↔
-          (F ⟨a.val, hAD a.property⟩).decides ⟨p, hpa⟩ i v := by
-  obtain ⟨A, hAD, hA, hpredense⟩ := exists_predense_antichain D hD
-  let localFamily (a : A) : FunctionDecisions (Iic a.val) I V :=
-    F ⟨a.val, hAD a.property⟩
-  exact ⟨A, hAD, hA, hpredense, mix A hA hpredense localFamily,
-    mix_decides_iff A hA hpredense localFamily⟩
-
 /-- Mixing preserves each finite certificate exactly on a branch. -/
 theorem certificate_mix_iff (A : Set P) (hA : IncompatibleFamily A)
     (hpredense : ∀ p : P, ∃ a ∈ A, Compatible p a)

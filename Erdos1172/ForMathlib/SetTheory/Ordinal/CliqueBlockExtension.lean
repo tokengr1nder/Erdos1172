@@ -99,47 +99,4 @@ theorem exists_clique_type_add_of_later_block
   refine ⟨s ∪ t, SimpleGraph.IsClique.union_of_cross G hs ht hcross, ?_⟩
   rw [Ordinal.typeLT_union_of_forall_lt hlater, hstype, httype]
 
-/-- Reservoir formulation: a nonempty family of admissible later clique
-blocks suffices to extend the base clique by the block order type. -/
-theorem exists_clique_type_add_of_later_block_reservoir
-    {V : Type u} [LinearOrder V] [WellFoundedLT V]
-    (G : SimpleGraph V) {s : Set V} {β γ : Ordinal.{u}}
-    (hs : G.IsClique s) (hstype : typeLT s = β)
-    (hreservoir : Set.Nonempty
-      {t : Set V | G.IsClique t ∧ typeLT t = γ ∧
-        (∀ x ∈ s, ∀ y ∈ t, x < y) ∧
-        ∀ x ∈ s, ∀ y ∈ t, G.Adj x y}) :
-    ∃ u : Set V, G.IsClique u ∧ typeLT u = β + γ := by
-  obtain ⟨t, ht, httype, hlater, hcross⟩ := hreservoir
-  exact G.exists_clique_type_add_of_later_block
-    hs ht hstype httype hlater hcross
-
-/-- The exact `ω₂ + ω` block extension occurring as the blue target of
-Erdős Problem 1172, Part 2. -/
-theorem exists_clique_type_omegaTwo_add_omega_of_later_block
-    {V : Type u} [LinearOrder V] [WellFoundedLT V]
-    (G : SimpleGraph V) {s t : Set V}
-    (hs : G.IsClique s) (ht : G.IsClique t)
-    (hstype : typeLT s = (ω_ 2 : Ordinal.{u}))
-    (httype : typeLT t = (ω : Ordinal.{u}))
-    (hlater : ∀ x ∈ s, ∀ y ∈ t, x < y)
-    (hcross : ∀ x ∈ s, ∀ y ∈ t, G.Adj x y) :
-    ∃ z : Set V, G.IsClique z ∧ typeLT z = ω_ 2 + ω :=
-  G.exists_clique_type_add_of_later_block
-    hs ht hstype httype hlater hcross
-
-/-- The exact `ω₂ + ω₁` block extension occurring as the red target of
-Erdős Problem 1172, Part 2. -/
-theorem exists_clique_type_omegaTwo_add_omegaOne_of_later_block
-    {V : Type u} [LinearOrder V] [WellFoundedLT V]
-    (G : SimpleGraph V) {s t : Set V}
-    (hs : G.IsClique s) (ht : G.IsClique t)
-    (hstype : typeLT s = (ω_ 2 : Ordinal.{u}))
-    (httype : typeLT t = (ω_ 1 : Ordinal.{u}))
-    (hlater : ∀ x ∈ s, ∀ y ∈ t, x < y)
-    (hcross : ∀ x ∈ s, ∀ y ∈ t, G.Adj x y) :
-    ∃ z : Set V, G.IsClique z ∧ typeLT z = ω_ 2 + ω_ 1 :=
-  G.exists_clique_type_add_of_later_block
-    hs ht hstype httype hlater hcross
-
 end SimpleGraph

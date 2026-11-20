@@ -6,7 +6,6 @@ module
 
 public import Erdos1172.Part3CanonicalOmegaGluing
 public import Erdos1172.Part3CountableFamilyRankClosure
-public import Erdos1172.Part3GrowingFiniteTower
 
 @[expose] public section
 

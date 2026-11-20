@@ -106,62 +106,6 @@ theorem collapse_ordered_pair (f g : I → ZFSet.{u}) :
 
 variable (θ : Cardinal.{u})
 
-def fineSeed (a : I → Set θ.ord.ToType) : ZFSet.{u} :=
-  collapse U (fineFamilyCode U a (fun ξ _ => ξ.toOrd.val.toZFSet))
-
-theorem fineSeed_mem_targetClass (a : I → Set θ.ord.ToType) : fineSeed U θ a ∈ targetClass U :=
-  ⟨_, rfl⟩
-
-theorem fineSeed_eq_diagonal_range (a : I → Set θ.ord.ToType)
-    (hf : FineOn U a) (hn : NormalOn U a) :
-    fineSeed U θ a = ZFSet.range (fun ξ : θ.ord.ToType => diagonal U ξ.toOrd.val.toZFSet) :=
-  collapse_fineFamilyCode U a hf hn _
-
-theorem mem_fineSeed_iff (a : I → Set θ.ord.ToType) (hf : FineOn U a) (hn : NormalOn U a)
-    (x : ZFSet.{u}) : x ∈ fineSeed U θ a ↔
-      ∃ ξ : θ.ord.ToType, diagonal U ξ.toOrd.val.toZFSet = x := by
-  rw [fineSeed_eq_diagonal_range U θ a hf hn, ZFSet.mem_range]
-
-/-- The seed itself belongs to the diagonal image of the powerset of the
-ordinal. In particular this membership uses the actual small subsets
-that represent the seed at each index. -/
-theorem fineSeed_mem_diagonal_powerset (a : I → Set θ.ord.ToType) :
-    fineSeed U θ a ∈ diagonal U (ZFSet.powerset θ.ord.toZFSet) := by
-  apply (seed_mem_diagonal U _ _).mpr
-  apply Eventually.of_forall
-  intro i
-  apply ZFSet.mem_powerset.mpr
-  intro x hx
-  obtain ⟨ξ, rfl⟩ := ZFSet.mem_range.mp hx
-  exact Ordinal.toZFSet_mem_toZFSet_iff.mpr ξ.val.toOrd.property
-
-/-- This actual target graph has domain the diagonal image of the ordinal
-and value `collapse U (g ξ)` at the corresponding diagonal index. -/
-def fineSeedGraph (g : θ.ord.ToType → Ground U) : ZFSet.{u} :=
-  ZFSet.range fun ξ : θ.ord.ToType => ZFSet.pair (diagonal U ξ.toOrd.val.toZFSet) (collapse U (g ξ))
-
-theorem fineSeedGraph_mem_targetClass (a : I → Set θ.ord.ToType) (hf : FineOn U a)
-    (hn : NormalOn U a) (g : θ.ord.ToType → Ground U) : fineSeedGraph U θ g ∈ targetClass U := by
-  apply targetClass_fine_range U a hf hn
-  intro ξ
-  obtain ⟨v, hv⟩ : ∃ v : I → ZFSet.{u}, Germ.ofFun v = g ξ :=
-    Germ.inductionOn (g ξ) (fun v => ⟨v, rfl⟩)
-  rw [← hv]
-  exact ⟨_, collapse_ordered_pair U (fun _ => ξ.toOrd.val.toZFSet) v⟩
-
-theorem fineSeedGraph_value (g : θ.ord.ToType → Ground U) (ξ : θ.ord.ToType) (y : ZFSet.{u}) :
-    ZFSet.pair (diagonal U ξ.toOrd.val.toZFSet) y ∈ fineSeedGraph U θ g ↔ y = collapse U (g ξ) := by
-  constructor
-  · intro hy
-    obtain ⟨η, he⟩ := ZFSet.mem_range.mp hy
-    have hpair := ZFSet.pair_inj.mp he
-    have hd := collapse_injective U hpair.1
-    have ho := Ordinal.toZFSet_injective (Germ.const_inj.mp hd)
-    have hξ : η = ξ := Ordinal.ToType.mk.symm.injective (Subtype.ext ho)
-    simpa only [hξ] using hpair.2.symm
-  · rintro rfl
-    exact ZFSet.mem_range_self ξ
-
 /-- Fineness and normality restrict to any subfamily of the index set,
 including the empty subfamily. -/
 theorem targetClass_subindexed_range {K : Type u} (a : I → Set J) (hf : FineOn U a)

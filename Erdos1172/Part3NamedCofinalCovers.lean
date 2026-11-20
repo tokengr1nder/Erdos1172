@@ -47,30 +47,4 @@ structure NamedCofinalCovers (n : ℕ) (V : Type)
       ∃ F : FunctionDecisions P W1 W1,
         ∀ p x, U.holds p x → (coverName F family).holds p x
 
-variable {V : Type} [LinearOrder V] [WellFoundedLT V]
-
-/-- At rank zero, the canonical line cover already has the required
-named lifting property. Its exact cover type is omegaOne. -/
-theorem exists_namedCofinalCovers_zero (hV : #V ≤ ℵ_ 1)
-    (hseed : ∃ A : Set V, IsCofinal A ∧ typeLT A = ω_ 1) :
-    Nonempty (NamedCofinalCovers 0 V) := by
-  obtain ⟨A, hA, htype⟩ := hseed
-  obtain ⟨data⟩ := Erdos1172Part3CofinalLineCover.exists_lineCoverData hV A hA htype
-  refine ⟨{
-    family := data.cover
-    mono := data.cover_mono
-    supported := Erdos1172Part3CofinalCoverSupport.line_supported data
-    cofinal := data.cover_cofinal
-    orderType := ?_
-    covers := ?_
-    named_covers := ?_ }⟩
-  · intro f
-    simpa only [Nat.zero_add, Nat.cast_one, Ordinal.opow_one] using data.cover_type f
-  · intro B hB hBtype
-    apply data.covers B hB
-    simpa only [Nat.zero_add, Nat.cast_one, Ordinal.opow_one] using hBtype
-  · intro P instP hclosed U E hordered hcofinal hcoverage _hmem
-    exact Erdos1172Part3NamedLineCover.exists_named_line_cover data U E hclosed
-      (fun p j k x y hjk hx hy => hordered hjk hx hy) hcoverage hcofinal
-
 end Erdos1172Part3NamedCofinalCovers

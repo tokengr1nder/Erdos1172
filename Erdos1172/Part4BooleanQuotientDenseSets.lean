@@ -4,7 +4,7 @@ Licensed under the Apache License, Version 2.0.
 -/
 module
 
-public import Erdos1172.Part4BooleanQuotientSeparativeOrder
+public import Erdos1172.Part4BooleanQuotientName
 
 @[expose] public section
 
@@ -27,19 +27,6 @@ variable {B C : Type u} [NontrivialCompleteBooleanAlgebra B] [NontrivialComplete
 
 def denseValue (Q : bSet B) (W : bSet B → B) : B :=
   ⨅ x : bSet B, _root_.imp (x ∈ᴮ Q) (⨆ y : bSet B, y ∈ᴮ Q ⊓ ((x ⊆ᴮ y) ⊓ W y))
-
-def separativelyOpen (Q U : bSet B) : B :=
-  ⨅ x : bSet B, ⨅ y : bSet B,
-    _root_.imp (((x ∈ᴮ Q ⊓ x ∈ᴮ U) ⊓ y ∈ᴮ Q) ⊓ separativeLeValue Q y x) (y ∈ᴮ U)
-
-theorem checkedLabel_mem (e : CompleteLatticeHom B C) (p : Positive C) :
-    (check (upperSetCode p) ∈ᴮ quotientName e) = lowerProjection e p.val := by
-  apply le_antisymm _ (mem_mk' (quotientName e) p)
-  have h : (check (upperSetCode p) ∈ᴮ quotientName e) ≤
-      compatibleValue (quotientName e) (check (upperSetCode p)) (check (upperSetCode p)) :=
-    le_iSup_of_le (check (upperSetCode p)) (le_inf le_rfl (le_inf subset_self subset_self))
-  rw [compatibleValue_checked, inf_idem] at h
-  exact h
 
 private theorem below_label (e : CompleteLatticeHom B C) (W : bSet B → B) (hW : B_ext W)
     (p : Positive C) :
@@ -74,13 +61,5 @@ theorem denseValue_iff (e : CompleteLatticeHom B C) (W : bSet B → B) (hW : B_e
   apply forall_congr'
   intro p
   rw [← deduction, below_label e W hW p]
-
-theorem open_checked (e : CompleteLatticeHom B C) (U : bSet B) (Γ : B)
-    (hU : Γ ≤ separativelyOpen (quotientName e) U) (p q : Positive C) :
-    Γ ⊓ (((lowerProjection e p.val ⊓ check (upperSetCode p) ∈ᴮ U) ⊓ lowerProjection e q.val) ⊓
-      (lowerProjection e (q.val ⊓ p.valᶜ))ᶜ) ≤ check (upperSetCode q) ∈ᴮ U := by
-  have h := hU.trans ((iInf_le _ (check (upperSetCode p))).trans (iInf_le _ (check (upperSetCode q))))
-  rw [← deduction, checkedLabel_mem, checkedLabel_mem, separativeLeValue_checked] at h
-  exact h
 
 end Erdos1172BooleanQuotient

@@ -100,8 +100,4 @@ theorem nat_function_cardinal_le (κ : Cardinal.{u})
   exact (Cardinal.mk_le_of_injective HF).trans
     (small_subsets_cardinal_le κ Hκ Hprod)
 
-theorem nat_ord_function_cardinal_le (κ : Cardinal.{u})
-    (Hκ : κ.IsInaccessible) : Cardinal.mk (ℕ → κ.ord.ToType) ≤ κ :=
-  nat_function_cardinal_le κ Hκ (by rw [Cardinal.mk_ord_toType])
-
 end Erdos1172SmallSubsetCardinality

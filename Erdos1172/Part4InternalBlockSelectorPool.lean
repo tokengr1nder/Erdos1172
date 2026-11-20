@@ -5,9 +5,6 @@ Licensed under the Apache License, Version 2.0.
 module
 
 public import Erdos1172.Part4InternalBlockSelector
-public import Erdos1172.Part4InternalCountableChoicePoolStep
-public import Erdos1172.Part4InternalCanonicalBlockEnumeration
-public import Erdos1172.Part4InternalLargeTwoBlock
 
 @[expose] public section
 

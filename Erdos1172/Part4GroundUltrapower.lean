@@ -137,10 +137,4 @@ theorem collapse_mem_collapse_iff (x y : Ground U) :
 
 def diagonal (x : ZFSet.{u}) : ZFSet.{u} := collapse U (Germ.const x)
 
-/-- A seed represented by an arbitrary function tests precisely its
-ultrafilter-large membership set in every diagonal image. -/
-theorem seed_mem_diagonal (f : I → ZFSet.{u}) (x : ZFSet.{u}) :
-    collapse U (Germ.ofFun f) ∈ diagonal U x ↔ ∀ᶠ i in U, f i ∈ x :=
-  collapse_mem_collapse_iff U _ _
-
 end Erdos1172GroundUltrapower

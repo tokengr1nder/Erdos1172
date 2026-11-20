@@ -6,8 +6,6 @@ module
 
 public import Erdos1172.Part4InternalCountableSubsetCodes
 public import Erdos1172.Part4InternalMixedProductInjection
-public import Erdos1172.Part4InternalCardinalSquare
-public import Erdos1172.Part4InternalCountableImage
 public import Erdos1172.Part4InternalSmallFamilyUnion
 
 @[expose] public section
@@ -96,25 +94,8 @@ theorem choicePoolDomain_injects_omegaOne {B P : bSet 𝔹} {Γ : 𝔹}
       (countableSubsets_injects_omegaOne HCH HP))
     (ErdosCardinalSquare.omegaOne_square_injects HCH)
 
-theorem selectedObjects_subset {κ B P F : bSet 𝔹} {Γ : 𝔹} :
-    Γ ≤ selectedObjects κ B P F ⊆ᴮ bv_powerset κ := image_subset
-
 theorem selectedPoints_subset {κ B P F : bSet 𝔹} {Γ : 𝔹} :
     Γ ≤ selectedPoints κ B P F ⊆ᴮ κ := indexed_union_subset
-
-/-- A selected whole object has one actual pair of countable inputs at
-the same condition. No external enumeration of either input is chosen. -/
-theorem exists_selectedObject_witness {κ B P F A : bSet 𝔹} {Γ : 𝔹}
-    (HA : Γ ≤ A ∈ᴮ selectedObjects κ B P F) :
-    ∃ T U : bSet 𝔹, Γ ≤ T ∈ᴮ countableSubsets B ∧
-      Γ ≤ U ∈ᴮ countableSubsets P ∧ Γ ≤ pair (pair T U) A ∈ᴮ F ∧ Γ ≤ A ⊆ᴮ κ := by
-  have Himage := mem_image_iff.mp HA
-  obtain ⟨q, Hq⟩ := exists_convert Himage.2
-    (B_ext_inf B_ext_mem_left B_ext_pair_mem_left)
-  obtain ⟨T, HT, U, HU, Hpair⟩ := mem_prod_iff₂.mp (Hq.trans inf_le_left)
-  exact ⟨T, U, HT, HU,
-    mem_congr (pair_congr Hpair bv_refl) bv_refl (Hq.trans inf_le_right),
-    mem_powerset_iff.mp Himage.1⟩
 
 theorem mem_selectedObjects_of_value {κ B P F T U A : bSet 𝔹} {Γ : 𝔹}
     (HF : Γ ≤ is_func' (choicePoolDomain B P) (bv_powerset κ) F)
@@ -139,17 +120,6 @@ theorem selected_value_subset_selectedPoints {κ B P F T U A : bSet 𝔹} {Γ : 
     (Hpair : Γ ≤ pair (pair T U) A ∈ᴮ F) :
     Γ ≤ A ⊆ᴮ selectedPoints κ B P F :=
   selectedObject_subset_selectedPoints (mem_selectedObjects_of_value HF HT HU Hpair)
-
-theorem exists_selectedPoint_witness {κ B P F x : bSet 𝔹} {Γ : 𝔹}
-    (Hx : Γ ≤ x ∈ᴮ selectedPoints κ B P F) :
-    ∃ T U A : bSet 𝔹, Γ ≤ T ∈ᴮ countableSubsets B ∧
-      Γ ≤ U ∈ᴮ countableSubsets P ∧ Γ ≤ pair (pair T U) A ∈ᴮ F ∧
-        Γ ≤ A ⊆ᴮ κ ∧ Γ ≤ x ∈ᴮ A := by
-  obtain ⟨A, HA⟩ := exists_convert (mem_bv_union_iff.mp Hx)
-    (B_ext_inf B_ext_mem_left B_ext_mem_right)
-  obtain ⟨T, U, HT, HU, Hpair, Hsub⟩ :=
-    exists_selectedObject_witness (HA.trans inf_le_left)
-  exact ⟨T, U, A, HT, HU, Hpair, Hsub, HA.trans inf_le_right⟩
 
 /-- The fixed selector's local image is small. No smallness assertion is
 made about its values on any larger ambient domain. -/

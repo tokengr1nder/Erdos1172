@@ -114,16 +114,6 @@ theorem exists_glue_some (hclosed : CountablyClosed P) (hcc : OmegaTwoCC P)
     (exists_glued_name hclosed hcc blocks hne).choose_spec⟩
   simp only [glue?, dif_pos hne]
 
-theorem glue_spec_of_some (hclosed : CountablyClosed P) (hcc : OmegaTwoCC P)
-    (blocks : Blocks P G) {N : NiceCliqueName P OmegaIndex W2 G}
-    (hN : glue? hclosed hcc blocks = some N) : GluingSpec blocks N := by
-  classical
-  by_cases h : ∃ p, (allJoined blocks).holds p ()
-  · simp only [glue?, dif_pos h, Option.some.injEq] at hN
-    exact hN ▸ (exists_glued_name hclosed hcc blocks h).choose_spec
-  · simp only [glue?, dif_neg h] at hN
-    cases hN
-
 theorem GluingSpec.preserves_containment {blocks : Blocks P G} {N : NiceCliqueName P OmegaIndex W2 G}
     (spec : GluingSpec blocks N) (source : RegularName P W2) {p : P}
     (hp : (allJoined blocks).holds p ())

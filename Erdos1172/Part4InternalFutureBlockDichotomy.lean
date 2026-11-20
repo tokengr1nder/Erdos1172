@@ -76,28 +76,6 @@ theorem futureCommonBlockRows_section_apply {S L f C σ A y B : bSet 𝔹} {Γ :
     ((iInf_le _ σ).trans ((iInf_le _ A).trans ((iInf_le _ y).trans (iInf_le _ B)))))
     (le_inf (le_inf HC Hy) HB)).trans bv_imp_elim
 
-/-- Positivity is witnessed by the same original ideal whose sections
-are co-large on L, not by an ideal selected for a different future. -/
-theorem futureCommonBlockRows_positive_value {S L f C σ A : bSet 𝔹} {Γ : 𝔹}
-    (Hcommon : Γ ≤ futureCommonBlockRows S L f C) (HC : Γ ≤ pair σ A ∈ᴮ C) :
-    Γ ≤ ⨆ J, rowNormalIdealDataOn S L σ J ⊓ positive omegaOne J A := by
-  have Hσ : Γ ≤ σ ∈ᴮ omegaOne :=
-    mem_domain_of_is_function HC (Hcommon.trans inf_le_left)
-  have Hex : Γ ≤ ⨆ J, rowNormalIdealDataOn S L σ J :=
-    (le_inf ((Hcommon.trans (inf_le_right.trans inf_le_left)).trans (iInf_le _ σ))
-      Hσ).trans bv_imp_elim
-  apply (le_inf le_rfl Hex).trans
-  rw [inf_iSup_eq]
-  apply iSup_le
-  intro J
-  let Δ := Γ ⊓ rowNormalIdealDataOn S L σ J
-  have Hcolarge := futureCommonBlockRows_colarge_apply
-    (inf_le_left.trans Hcommon)
-    (show Δ ≤ rowNormalIdealDataOn S L σ J from inf_le_right) (inf_le_left.trans HC)
-  exact le_iSup_of_le J (le_inf inf_le_right
-    (colarge_positive (show Δ ≤ properIdeal omegaOne J from
-      inf_le_right.trans (inf_le_left.trans inf_le_left)) Hcolarge))
-
 /-- Composition transports the common-row law with the original row
 ideals. No surjectivity onto L or original all-endpoint row law is used. -/
 theorem futureCommonBlockRows_of_pullback {S L e f C : bSet 𝔹} {Γ : 𝔹}

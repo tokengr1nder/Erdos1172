@@ -4,7 +4,6 @@ Licensed under the Apache License, Version 2.0.
 -/
 module
 
-public import Erdos1172.Statement
 public import Erdos1172.Part4InternalFullGCHSentence
 public import Erdos1172.Part4InternalLocalConsistency
 public import Erdos1172.Part4InternalPartitionFromIdeal

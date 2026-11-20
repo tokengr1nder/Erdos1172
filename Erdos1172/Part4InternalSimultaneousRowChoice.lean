@@ -126,30 +126,6 @@ theorem exists_simultaneous_row_choices {δ S Y X top : bSet 𝔹} {Γ : 𝔹}
   ⟨simultaneousChoices δ S Y X top,
     le_inf (simultaneousChoices_is_function Hδ Htop HS HY HX Hrows) simultaneousChoices_law⟩
 
-theorem rowIdealData_of_common_ideal {J S : bSet 𝔹} {Γ : 𝔹}
-    (HJ : Γ ≤ properIdeal omegaOne J)
-    (Habsorb : Γ ≤ countableAbsorption omegaOne J)
-    (Hclosure : Γ ≤ countableClosure J)
-    (Hvalues : Γ ≤ ⨅ σ, ⨅ y, ⨅ A, _root_.imp
-      ((σ ∈ᴮ omegaOne ⊓ y ∈ᴮ omegaTwo) ⊓ pair (pair σ y) A ∈ᴮ S)
-      (colarge omegaOne J A)) :
-    Γ ≤ ⨅ σ, _root_.imp (σ ∈ᴮ omegaOne) (⨆ J, rowIdealData S σ J) := by
-  apply le_iInf
-  intro σ
-  rw [← deduction]
-  apply le_iSup_of_le J
-  refine le_inf (inf_le_left.trans HJ) (le_inf (inf_le_left.trans Habsorb)
-    (le_inf (inf_le_left.trans Hclosure) ?_))
-  apply le_iInf
-  intro y
-  apply le_iInf
-  intro A
-  rw [← deduction]
-  exact (le_inf (inf_le_left.trans (inf_le_left.trans
-    (Hvalues.trans ((iInf_le _ σ).trans ((iInf_le _ y).trans (iInf_le _ A))))))
-    (le_inf (le_inf (inf_le_left.trans inf_le_right) (inf_le_right.trans inf_le_left))
-      (inf_le_right.trans inf_le_right))).trans bv_imp_elim
-
 theorem simultaneousRowLaw_apply {δ S Y X top Z σ v : bSet 𝔹} {Γ : 𝔹}
     (Hlaw : Γ ≤ simultaneousRowLaw δ S Y X top Z)
     (Hσ : Γ ≤ σ ∈ᴮ omegaOne) (Hpair : Γ ≤ pair σ v ∈ᴮ Z) :

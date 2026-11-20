@@ -67,22 +67,6 @@ theorem coordinateCollapseName_is_surj (F : I → PSet.{u}) (i : I) :
     (fun _ _ _ h => coordinateEntry_inf_eq_bot h)
     (coordinateEntry_column_iSup_eq_top (A := fun j => (F j).Type) i)
 
-theorem coordinateCollapseName_is_surjective_function (F : I → PSet.{u}) (i : I)
-    [Nonempty (F i).Type] :
-    (⊤ : Completion (ProductCondition (fun j => (F j).Type))) ≤
-      is_function omega (check (F i)) (coordinateCollapseName F i) ⊓
-        is_surj omega (check (F i)) (coordinateCollapseName F i) :=
-  le_inf (coordinateCollapseName_is_function F i) (coordinateCollapseName_is_surj F i)
-
-/-- Matrix weights really force the corresponding pairs into the actual graph. -/
-theorem coordinateCollapseName_pair_of_entry (F : I → PSet.{u}) (i : I)
-    (n : ℕ) (a : (F i).Type) :
-    coordinateEntry (A := fun j => (F j).Type) i n a ≤
-      pair (of_nat n) (check ((F i).Func a)) ∈ᴮ coordinateCollapseName F i :=
-  graph_pair_of_weight (coordinateEntry (A := fun j => (F j).Type) i)
-    (fun a => check ((F i).Func a))
-    (fun _ _ _ h => coordinateEntry_inf_eq_bot h) n a
-
 /-- The constructed completion forces this coordinate's ground set countable,
 using the displayed graph name rather than an assumed function witness. -/
 theorem forces_coordinate_countable_surjection (F : I → PSet.{u}) (i : I)

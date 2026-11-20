@@ -7,7 +7,6 @@ module
 public import Erdos1172.Part4InternalFusionRowCandidates
 public import Erdos1172.Part4InternalFusionHistories
 public import Erdos1172.Part4InternalClosedPoolFuture
-public import Erdos1172.Part4InternalGreedyRange
 public import Erdos1172.Part4InternalSeedBlock
 
 @[expose] public section

@@ -5,7 +5,6 @@ Licensed under the Apache License, Version 2.0.
 module
 
 public import Erdos1172.Part3NamedStationaryTail
-public import Erdos1172.Part3IteratedHechlerClosure
 public import Erdos1172.Part3CenteredStationaryLoss
 public import Erdos1172.Part3SupportedCoverRealization
 
@@ -176,25 +175,6 @@ theorem pointwiseBelow_of_profileMember
         Erdos1172Part3IteratedHechlerClosure.coordinateFunction] using hw
     exact (ha.1.2 q hqp i (lt_of_not_ge hi) w hstem q.base le_rfl v hv).le
 
-/-- Dense regularization supplies a regular future membership name. -/
-def profileName (U : P → W2 → Prop)
-    (F : W2 → FunctionDecisions P W1 W1) (bound : W1)
-    (profile : Set.Iic bound → W1) : RegularName (Condition P) W2 :=
-  regularize (ProfileMembers U F bound profile)
-
-/-- A dense family of actual profile witnesses suffices for the same
-comparison at the original condition. -/
-theorem pointwiseBelow_of_regularized_profileMember
-    (hclosed : CountablyClosed P) (U : P → W2 → Prop)
-    (F : W2 → FunctionDecisions P W1 W1) (bound : W1)
-    (profile : Set.Iic bound → W1) {p : Condition P} {a : W2}
-    (ha : (profileName U F bound profile).holds p a) :
-    PointwiseBelow (liftFunction (F a)) (upperFunction hclosed bound profile) p := by
-  apply pointwiseBelow_of_dense
-  intro q hqp
-  obtain ⟨r, hrq, hr⟩ := ha q hqp
-  exact ⟨r, hrq, pointwiseBelow_of_profileMember hclosed U F bound profile hr⟩
-
 /-- A certificate-backed loss cover transfers to the single upper cover
 at each actual profile member. Density of certificates for the intended
 loss names remains an independent, explicit requirement. -/
@@ -207,17 +187,5 @@ theorem upper_cover_holds_of_profileMember {X : Type}
     (coverName (upperFunction hclosed bound profile) C).holds p x :=
   coverName_mono_of_pointwiseBelow
     (pointwiseBelow_of_profileMember hclosed U F bound profile ha) hx
-
-/-- The regularized stationary profile can be used directly with the
-regular neighborhood algebra without losing the upper-cover comparison. -/
-theorem upper_cover_holds_of_regularized_profileMember {X : Type}
-    (hclosed : CountablyClosed P) (U : P → W2 → Prop)
-    (F : W2 → FunctionDecisions P W1 W1) (bound : W1)
-    (profile : Set.Iic bound → W1) (C : (W1 → W1) → Set X)
-    {p : Condition P} {a : W2} (ha : (profileName U F bound profile).holds p a)
-    {x : X} (hx : (coverName (liftFunction (F a)) C).holds p x) :
-    (coverName (upperFunction hclosed bound profile) C).holds p x :=
-  coverName_mono_of_pointwiseBelow
-    (pointwiseBelow_of_regularized_profileMember hclosed U F bound profile ha) hx
 
 end Erdos1172Part3NamedCoverProfile

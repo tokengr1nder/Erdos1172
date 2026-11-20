@@ -4,7 +4,7 @@ Licensed under the Apache License, Version 2.0.
 -/
 module
 
-public import Erdos1172.Part3SmallDecisionRange
+public import Erdos1172.Part3NiceFunctionNames
 
 @[expose] public section
 
@@ -72,43 +72,5 @@ theorem NiceCliqueName.mk_values_le (N : NiceCliqueName P I V G) (hI : #I ≤ �
     _ = #I * ℵ_ 1 := Cardinal.sum_const' I (ℵ_ 1)
     _ ≤ ℵ_ 1 * ℵ_ 1 := mul_le_mul' hI le_rfl
     _ = ℵ_ 1 := Cardinal.mul_eq_self (Cardinal.aleph0_le_aleph 1)
-
-theorem NiceCliqueName.mem_values_of_decides (N : NiceCliqueName P I V G)
-    {p : P} {i : I} {x : V} (hx : N.toClique.decides p i x) : x ∈ N.values := by
-  obtain ⟨q, hq, _⟩ := hx
-  exact Set.mem_iUnion.mpr ⟨i, (q, x), hq, rfl⟩
-
-/-- The graph values are exactly the possible point decisions. In
-particular, this cover does not add extraneous vertices. -/
-theorem NiceCliqueName.values_eq_possible (N : NiceCliqueName P I V G) :
-    N.values = {x : V | ∃ p : P, ∃ i : I, N.toClique.decides p i x} := by
-  ext x
-  constructor
-  · rintro hx
-    obtain ⟨i, pair, hp, heq⟩ := Set.mem_iUnion.mp hx
-    refine ⟨pair.1, i, pair.1, ?_, le_rfl⟩
-    cases pair with
-    | mk p v =>
-      change v = x at heq
-      subst x
-      exact hp
-  · rintro ⟨p, i, hx⟩
-    exact N.mem_values_of_decides hx
-
-/-- Small-name normalization preserves all ground pointwise properties
-below a condition, including source containment and common-future edges. -/
-theorem ground_property_iff_of_refines (core : CliqueDecisions P I V G)
-    (N : NiceCliqueName P I V G)
-    (href : ∀ p i x, N.toClique.decides p i x → core.decides p i x)
-    (p0 : P) (B : I → V → Prop) :
-    (∀ p : P, p ≤ p0 → ∀ i x, N.toClique.decides p i x → B i x) ↔
-      (∀ p : P, p ≤ p0 → ∀ i x, core.decides p i x → B i x) := by
-  constructor
-  · intro h p hpp0 i x hx
-    obtain ⟨q, hqp, y, hy⟩ := N.toClique.dense p i
-    have heq : x = y := core.unique (core.persistent hqp hx) (href q i y hy)
-    exact heq ▸ h q (hqp.trans hpp0) i y hy
-  · intro h p hpp0 i x hx
-    exact h p hpp0 i x (href p i x hx)
 
 end Erdos1172Part3NiceCliqueNames

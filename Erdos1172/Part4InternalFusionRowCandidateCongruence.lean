@@ -220,16 +220,6 @@ theorem fusionRowCandidates_congr
           (bv_trans (fusionRowCandidates_congr_blocks edgeColor R E c other η μ X HBlocks)
             (fusionRowCandidates_congr_coordinates edgeColor R E c other η μ Other HXY)))))
 
-/-- The actual varying-row term also changes its evaluated whole object;
-fixed-object row congruence alone would not justify this corollary. -/
-theorem fusionRowCandidates_of_history_congr_row
-    (edgeColor : Bool) (R E top ξ Blocks X : bSet 𝔹) :
-    B_congr (fun ν => fusionRowCandidates edgeColor R E
-      (graphValue (bv_powerset omegaTwo) Blocks ν) top ξ ν Blocks X) := by
-  intro ν μ Γ H
-  exact fusionRowCandidates_congr (graphValue_congr_input (bv_powerset omegaTwo) Blocks H)
-    bv_refl bv_refl H bv_refl bv_refl
-
 theorem fusionRowCandidates_of_history_congr_blocks
     (edgeColor : Bool) (R E top ξ ν X : bSet 𝔹) :
     B_congr (fun Blocks => fusionRowCandidates edgeColor R E
@@ -237,18 +227,5 @@ theorem fusionRowCandidates_of_history_congr_blocks
   intro Blocks Other Γ H
   exact fusionRowCandidates_congr (graphValue_congr_graph (bv_powerset omegaTwo) ν H)
     bv_refl bv_refl bv_refl H bv_refl
-
-theorem fusionRowCandidates_of_history_congr
-    {edgeColor : Bool} {R E top other ξ η ν μ Blocks Other X Y : bSet 𝔹} {Γ : 𝔹}
-    (Htop : Γ ≤ top =ᴮ other) (Hξη : Γ ≤ ξ =ᴮ η) (Hνμ : Γ ≤ ν =ᴮ μ)
-    (HBlocks : Γ ≤ Blocks =ᴮ Other) (HXY : Γ ≤ X =ᴮ Y) :
-    Γ ≤ fusionRowCandidates edgeColor R E
-      (graphValue (bv_powerset omegaTwo) Blocks ν) top ξ ν Blocks X =ᴮ
-      fusionRowCandidates edgeColor R E
-        (graphValue (bv_powerset omegaTwo) Other μ) other η μ Other Y :=
-  fusionRowCandidates_congr
-    (bv_trans (graphValue_congr_input (bv_powerset omegaTwo) Blocks Hνμ)
-      (graphValue_congr_graph (bv_powerset omegaTwo) μ HBlocks))
-    Htop Hξη Hνμ HBlocks HXY
 
 end bSet.ErdosFusionRowCandidates

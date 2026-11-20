@@ -4,7 +4,6 @@ Licensed under the Apache License, Version 2.0.
 -/
 module
 
-public import Erdos1172.Statement
 public import Erdos1172.Part4GroundFineSeedOrderType
 public import Mathlib.SetTheory.Cardinal.Regular
 
@@ -197,17 +196,6 @@ theorem inaccessible_source_of_fine_order_type {I : Type u} {κ θ : Cardinal.{u
     obtain ⟨i, hlt, heq⟩ := ((hr x₀).and hconst).exists
     exact lt_irrefl x₀ (hlt.trans_eq heq)
 
-/-- Variant of `inaccessible_source_of_fine_order_type` assuming `ℵ₀ < κ` instead of
-`[CountableInterFilter (U : Filter I)]`. -/
-theorem inaccessible_source_of_aleph0_lt {I : Type u} {κ θ : Cardinal.{u}}
-    (U : Ultrafilter I) [CardinalInterFilter (U : Filter I) κ]
-    {a : I → Set θ.ord.ToType} (hω : ℵ₀ < κ) (hk : κ < θ)
-    (hf : FineOn U a) (hn : NormalOn U a) (ht : FiberOrderType U κ θ a) :
-    κ.IsInaccessible := by
-  have : CountableInterFilter (U : Filter I) :=
-    CardinalInterFilter.toCountableInterFilter (U : Filter I) hω
-  exact inaccessible_source_of_fine_order_type U hk hf hn ht
-
 private theorem fiber_closed_under_func {I : Type u} {θ : Cardinal.{u}}
     (U : Ultrafilter I) {a : I → Set θ.ord.ToType}
     (hf : FineOn U a) (hn : NormalOn U a) (g : θ.ord.ToType → θ.ord.ToType) :
@@ -255,55 +243,42 @@ theorem inaccessible_target_of_fine_order_type {I : Type u} {κ θ : Cardinal.{u
       Nonempty (κ.ord.ToType ≃o a i) ∧ β ∈ a i ∧ ∀ η ∈ a i, g η ∈ a i
     have hgood : ∀ᶠ i in U, good i :=
       ht.and ((hf β).and (fiber_closed_under_func U hf hn g))
-    let pickBound (i : I) (hi : good i) : θ.ord.ToType :=
+    let kTop (i : I) (hi : good i) : κ.ord.ToType :=
       let e := Classical.choice hi.1
       let b₀ : κ.ord.ToType := e.symm ⟨β, hi.2.1⟩
       let φ : Set.Iio b₀ → Ordinal.{u} := fun u =>
         (e.symm ⟨g (e u.val).val, hi.2.2 (e u.val).val (e u.val).property⟩).toOrd.val
       have hcard_u : #(Set.Iio b₀) < κ := toType_Iio_card_lt b₀
-      have ho_lt : (⨆ u : Set.Iio b₀, (φ u + 1)) < κ.ord :=
+      Ordinal.ToType.mk ⟨⨆ u : Set.Iio b₀, (φ u + 1),
         Ordinal.iSup_add_one_lt_of_lt_cof (by rwa [hκ.isRegular.cof_ord])
-          (fun u => (e.symm _).toOrd.property)
-      (e (Ordinal.ToType.mk ⟨⨆ u : Set.Iio b₀, (φ u + 1), ho_lt⟩)).val
+          (fun _ => (e.symm _).toOrd.property)⟩
     let δ_fn (i : I) : θ.ord.ToType :=
-      if hi : good i then pickBound i hi else β
+      if hi : good i then ((Classical.choice hi.1) (kTop i hi)).val else β
     have hδ_mem : ∀ᶠ i in U, δ_fn i ∈ a i :=
-      hgood.mono fun i hi => by
-        simp only [δ_fn, dif_pos hi, pickBound]
-        exact ((Classical.choice hi.1) _).property
+      hgood.mono fun i hi => by simp only [δ_fn, dif_pos hi]; exact ((Classical.choice hi.1) _).property
     obtain ⟨δ, hδ_eq⟩ := hn δ_fn hδ_mem
     have hlt_δ (x : s) : x.val < δ := by
       let η := (emb x).val
-      have hη_β : η < β := (emb x).property
       obtain ⟨i, ⟨hi, hη_in⟩, hδ_i⟩ := ((hgood.and (hf η)).and hδ_eq).exists
       let e := Classical.choice hi.1
       let b₀ : κ.ord.ToType := e.symm ⟨β, hi.2.1⟩
       let u₀ : κ.ord.ToType := e.symm ⟨η, hη_in⟩
-      have hu₀_lt : u₀ < b₀ := e.symm.lt_iff_lt.mpr hη_β
+      have hu₀_lt : u₀ < b₀ := e.symm.lt_iff_lt.mpr (emb x).property
       let φ : Set.Iio b₀ → Ordinal.{u} := fun u =>
         (e.symm ⟨g (e u.val).val, hi.2.2 (e u.val).val (e u.val).property⟩).toOrd.val
-      have hcard_u : #(Set.Iio b₀) < κ := toType_Iio_card_lt b₀
-      have ho_lt : (⨆ u : Set.Iio b₀, (φ u + 1)) < κ.ord :=
-        Ordinal.iSup_add_one_lt_of_lt_cof (by rwa [hκ.isRegular.cof_ord])
-          (fun u => (e.symm _).toOrd.property)
-      let k_top : κ.ord.ToType := Ordinal.ToType.mk ⟨⨆ u : Set.Iio b₀, (φ u + 1), ho_lt⟩
-      have hk_val : k_top.toOrd.val = ⨆ u : Set.Iio b₀, (φ u + 1) :=
-        congrArg Subtype.val (Ordinal.ToType.mk.symm_apply_apply _)
       let k_gx : κ.ord.ToType := e.symm ⟨g η, hi.2.2 η hη_in⟩
       have hφ_eq : φ ⟨u₀, hu₀_lt⟩ = k_gx.toOrd.val := by
-        dsimp only [φ, k_gx]
-        have heu₀ : e u₀ = ⟨η, hη_in⟩ := e.apply_symm_apply ⟨η, hη_in⟩
-        simp only [heu₀]
-      have hlt_ord : k_gx.toOrd.val < k_top.toOrd.val := by
-        rw [hk_val, ← hφ_eq]
+        dsimp only [φ, k_gx, u₀]
+        rw [e.apply_symm_apply ⟨η, hη_in⟩]
+      have hlt_ord : k_gx.toOrd.val < (kTop i hi).toOrd.val := by
+        rw [congrArg Subtype.val (Ordinal.ToType.mk.symm_apply_apply _), ← hφ_eq]
         exact Ordinal.lt_iSup_add_one φ ⟨u₀, hu₀_lt⟩
-      have hk_lt : k_gx < k_top := toType_lt_iff_val_lt.mpr hlt_ord
-      have he_lt : (e k_gx).val < (e k_top).val := Subtype.mk_lt_mk.mp (e.lt_iff_lt.mpr hk_lt)
+      have he_lt : (e k_gx).val < (e (kTop i hi)).val :=
+        Subtype.mk_lt_mk.mp (e.lt_iff_lt.mpr (toType_lt_iff_val_lt.mpr hlt_ord))
       have he_gx : (e k_gx).val = x.val :=
         (congrArg Subtype.val (e.apply_symm_apply ⟨g η, hi.2.2 η hη_in⟩)).trans (hg_at x)
-      have he_top : (e k_top).val = δ := by
-        have hdef : δ_fn i = (e k_top).val := by simp only [δ_fn, dif_pos hi, pickBound, e, b₀, φ, k_top]
-        exact hdef.symm.trans hδ_i
+      have hdef_top : δ_fn i = (e (kTop i hi)).val := dif_pos hi
+      have he_top : (e (kTop i hi)).val = δ := hdef_top.symm.trans hδ_i
       rwa [he_gx, he_top] at he_lt
     obtain ⟨y, hy_mem, hy_ge⟩ := hs δ
     exact lt_irrefl δ (hy_ge.trans_lt (hlt_δ ⟨y, hy_mem⟩))
@@ -410,30 +385,15 @@ theorem hugeFiberVal_orderType {κ θ : Cardinal.{u}}
     FiberOrderType U κ θ Subtype.val :=
   Eventually.of_forall fun s => s.property
 
-theorem IsHugeWithTarget.aleph0_lt {κ θ : Cardinal.{u}} (h : IsHugeWithTarget κ θ) : ℵ₀ < κ :=
-  h.1
-
-theorem IsHugeWithTarget.lt {κ θ : Cardinal.{u}} (h : IsHugeWithTarget κ θ) : κ < θ :=
-  h.2.1
-
 theorem IsHugeWithTarget.inaccessible_pair {κ θ : Cardinal.{u}}
     (h : IsHugeWithTarget κ θ) : κ.IsInaccessible ∧ θ.IsInaccessible := by
   obtain ⟨hω, hk, U, hcard, hf, hn⟩ := h
   have : CardinalInterFilter (U : Filter (HugeFiberSpace κ θ)) κ := hcard
   exact (inaccessible_pair_of_aleph0_lt U hω hk hf hn (hugeFiberVal_orderType U)).2
 
-theorem IsHugeWithTarget.inaccessible_left {κ θ : Cardinal.{u}}
-    (h : IsHugeWithTarget κ θ) : κ.IsInaccessible :=
-  h.inaccessible_pair.1
-
 theorem IsHugeWithTarget.inaccessible_right {κ θ : Cardinal.{u}}
     (h : IsHugeWithTarget κ θ) : θ.IsInaccessible :=
   h.inaccessible_pair.2
-
-theorem IsHugeCardinal.isInaccessible {κ : Cardinal.{u}}
-    (h : IsHugeCardinal κ) : κ.IsInaccessible := by
-  obtain ⟨_, hθ⟩ := h
-  exact hθ.inaccessible_left
 
 /-- Pushforward of any `(I, U, a)` fine normal measure with `FiberOrderType U κ θ a` onto
 Kanamori's canonical carrier `HugeFiberSpace κ θ`. -/

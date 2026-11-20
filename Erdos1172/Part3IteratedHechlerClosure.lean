@@ -132,31 +132,4 @@ def coordinateFunction (hclosed : CountablyClosed P) :
   persistent hqp hv := hqp.2.1 _ _ hv
   unique hv hw := Option.some.inj (hv.symm.trans hw)
 
-theorem tracked_eventual_lower_bound (p : Condition P) (F : NiceFunctionName P W1 W1)
-    (hF : F ∈ p.side) :
-    ∃ bound : W1, ∀ q : Condition P, q ≤ p → ∀ i : W1, bound < i →
-      ∀ v : W1, q.stem i = some v → BoundedAt F.toDecisions q.base i v := by
-  obtain ⟨bound, hb⟩ := Erdos1172Part3HechlerOrder.exists_bound_of_countable _ p.stem_countable
-  refine ⟨bound, ?_⟩
-  intro q hqp i hi v hv
-  have hnone : p.stem i = none := by
-    by_contra h
-    exact (hb i h).asymm hi
-  exact hqp.2.2.2 i hnone v hv F hF
-
-/-- Every earlier-stage function system is eventually bounded by new
-stem decisions below some strengthening of any starting condition.
-The arbitrary system is first normalized to a small nice name. -/
-theorem exists_eventual_bound_for_function
-    (hcc : Erdos1172Part3StationaryDecisions.OmegaTwoCC P)
-    (p0 : Condition P) (F : FunctionDecisions P W1 W1) :
-    ∃ p : Condition P, p ≤ p0 ∧ ∃ bound : W1,
-      ∀ q : Condition P, q ≤ p → ∀ i : W1, bound < i →
-        ∀ v : W1, q.stem i = some v → BoundedAt F q.base i v := by
-  obtain ⟨N, hN⟩ := exists_nice_name hcc F
-  obtain ⟨bound, hb⟩ := tracked_eventual_lower_bound (track p0 N) N (Set.mem_insert _ _)
-  refine ⟨track p0 N, track_le p0 N, bound, ?_⟩
-  intro q hqp i hi v hv
-  exact (boundedAt_iff_of_refines hN q.base i v).mp (hb q hqp i hi v hv)
-
 end Erdos1172Part3IteratedHechlerClosure

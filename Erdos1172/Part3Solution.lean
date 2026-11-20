@@ -6,7 +6,6 @@ module
 
 public import Erdos1172.Variants
 public import Erdos1172.Part3FullStationaryOmegaSuccessor
-public import Erdos1172.Part3TwoSuccessorBootstrap
 
 @[expose] public section
 

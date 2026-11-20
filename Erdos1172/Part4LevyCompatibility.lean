@@ -38,11 +38,6 @@ def Compatible (p q : ProductCondition A) : Prop :=
 theorem compatible_refl (p : ProductCondition A) : Compatible p p :=
   ⟨p, le_rfl, le_rfl⟩
 
-theorem compatible_symm {p q : ProductCondition A} (h : Compatible p q) :
-    Compatible q p := by
-  obtain ⟨r, hrp, hrq⟩ := h
-  exact ⟨r, hrq, hrp⟩
-
 /-- Choose the stronger coordinate when comparable. This is finitely
 supported even without a compatibility hypothesis. -/
 def amalgamate (p q : ProductCondition A) : ProductCondition A := by
@@ -84,12 +79,6 @@ theorem compatible_iff_coordinates {p q : ProductCondition A} :
     have hcomp : ∀ i, p i ≤ q i ∨ q i ≤ p i :=
       fun i => Erdos1172Collapse.compatible_iff_comparable.mp (h i)
     exact ⟨amalgamate p q, amalgamate_le_of_comparable hcomp⟩
-
-theorem compatible_iff_prefixes {p q : ProductCondition A} :
-    Compatible p q ↔ ∀ i,
-      (p i).entries <+: (q i).entries ∨ (q i).entries <+: (p i).entries := by
-  simp only [compatible_iff_coordinates,
-    Erdos1172Collapse.compatible_iff_prefix_comparable]
 
 /-- At coordinates where only one condition is nonempty, that condition
 already supplies the required common strengthening. -/

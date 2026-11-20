@@ -145,16 +145,4 @@ theorem twoBlockWitness_of_stored_laws
     (homogeneousUnion_of_orderedPairColorLaw HB Hg Hincg Hcolorsg)
     (forwardCross_of_storedForwardCross Hcross)
 
-theorem hasTwoBlock_of_stored_laws
-    {color : Bool} {R A B κ f g : bSet 𝔹} {Γ : 𝔹}
-    (HA : Γ ≤ Ord A) (HB : Γ ≤ Ord B)
-    (Hf : Γ ≤ is_function A κ f) (Hg : Γ ≤ is_function B κ g)
-    (Hincf : Γ ≤ increasingOn A f) (Hincg : Γ ≤ increasingOn B g)
-    (Hcolorsf : Γ ≤ orderedPairColorLaw color R A f)
-    (Hcolorsg : Γ ≤ orderedPairColorLaw color R B g)
-    (Hcross : Γ ≤ storedForwardCross color R A B f g) :
-    Γ ≤ hasTwoBlock color R A B κ :=
-  le_iSup_of_le f (le_iSup_of_le g
-    (twoBlockWitness_of_stored_laws HA HB Hf Hg Hincf Hincg Hcolorsf Hcolorsg Hcross))
-
 end bSet.ErdosOrderedPointAssembly

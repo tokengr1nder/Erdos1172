@@ -5,8 +5,6 @@ Licensed under the Apache License, Version 2.0.
 module
 
 public import Erdos1172.Statement
-public import Mathlib.SetTheory.Cardinal.Aleph
-public import Mathlib.SetTheory.Cardinal.Continuum
 
 @[expose] public section
 
@@ -33,12 +31,6 @@ namespace Cardinal
 theorem CH_iff : CH ↔ (2 : Cardinal.{0}) ^ ℵ₀ = ℵ_ 1 := by
   rw [two_power_aleph0]
   exact Iff.rfl
-
-/-- Accessor for `GCH` at a single ordinal, in the $\aleph_{o+1} = 2^{\aleph_o}$
-orientation. -/
-theorem GCH.aleph_succ (h : GCH) (o : Ordinal.{0}) :
-    ℵ_ (Order.succ o) = (2 : Cardinal.{0}) ^ ℵ_ o :=
-  (h o).symm
 
 /-- GCH implies CH: apply GCH at `o = 0` and use `ℵ_ (Order.succ 0) = ℵ_ 1`. -/
 theorem GCH.toCH (h : GCH) : CH := by

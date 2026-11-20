@@ -6,7 +6,6 @@ module
 
 public import Erdos1172.Part4AnonymousInternalLevyGCH
 public import Erdos1172.Part4ShioyaPreparationAuxiliarySquare
-public import Erdos1172.Part4LevyMatchingReasonableStages
 public import Erdos1172.Part4LevyMatchingRegularPowers
 public import Erdos1172.Part4LevyMatchingAnonymousLift
 
@@ -119,32 +118,6 @@ def internalLevyStageAuxIso (hκ : κ.IsInaccessible) (α : Ordinal.{u}) :
     (Joint.changeCompletion (sourceHom T.forcing) (auxiliaryInclusion κ)
       T.completion.symm over (internalLevyPoset κ α))
 
-theorem internalLevyStageAuxIso_ambient (hκ : κ.IsInaccessible) (α : Ordinal.{u})
-    (c : AuxiliaryAmbient κ) :
-    internalLevyStageAuxIso hκ α
-      (BaseChange.hom (sourceHom (internalLevyPoset κ α))
-        (anonymousSmallAuxiliaryWithCollapse κ hκ).forcing
-        ((anonymousSmallAuxiliaryWithCollapse κ hκ).completion c)) =
-      sourceHom (mapNames (auxiliaryInclusion κ) (internalLevyPoset κ α)) c := by
-  let _ := auxForcing_nonempty hκ
-  let _ : NontrivialCompleteBooleanAlgebra
-      (Erdos1172BooleanNameIteration.Algebra (anonymousSmallAuxiliaryWithCollapse κ hκ).forcing) :=
-    { toCompleteBooleanAlgebra := completionCompleteBooleanAlgebra, bot_lt_top := bot_lt_top }
-  unfold internalLevyStageAuxIso
-  rw [OrderIso.trans_apply, Joint.commutation_right, Joint.changeCompletion_scalar,
-    OrderIso.symm_apply_apply]
-
-theorem internalLevyStageAuxIso_scalar (hκ : κ.IsInaccessible) (α : Ordinal.{u})
-    (a : anonymousAlgebra κ) :
-    internalLevyStageAuxIso hκ α
-      (sourceHom (mapNames (sourceHom (internalLevyPoset κ α))
-        (anonymousSmallAuxiliaryWithCollapse κ hκ).forcing)
-        (sourceHom (internalLevyPoset κ α) a)) =
-      sourceHom (mapNames (auxiliaryInclusion κ) (internalLevyPoset κ α))
-        (auxiliaryInclusion κ a) := by
-  rw [← internalLevyStageAuxIso_ambient hκ α, (anonymousSmallAuxiliaryWithCollapse κ hκ).over_source,
-    BaseChange.commutes]
-
 theorem internalLevyStageAuxIso_levy (hκ : κ.IsInaccessible) (α : Ordinal.{u})
     (b : InternalLevyStage κ α) :
     internalLevyStageAuxIso hκ α
@@ -165,14 +138,6 @@ def ambientStagePairIso (hκ : κ.IsInaccessible) (α : Ordinal.{u}) :
         (anonymousSmallAuxiliaryWithCollapse κ hκ).forcing) :=
   (internalLevyStageAuxIso hκ α).symm.trans
     (Joint.stackIso (internalLevyPoset κ α) (anonymousSmallAuxiliaryWithCollapse κ hκ).forcing)
-
-/-- Full-height specialization of `internalLevyStageAuxIso`. -/
-abbrev internalLevyAuxIso {θ : Cardinal.{u}} (hκ : κ.IsInaccessible) :
-    Erdos1172BooleanNameIteration.Algebra
-      (mapNames (sourceHom (internalLevyPoset κ θ.ord))
-        (anonymousSmallAuxiliaryWithCollapse κ hκ).forcing) ≃o
-      AmbientInternalLevy κ θ :=
-  internalLevyStageAuxIso hκ θ.ord
 
 section AbstractScalarChange
 variable {A₀ B₁ B₂ B₃ : Type u} [NontrivialCompleteBooleanAlgebra A₀]
@@ -200,13 +165,6 @@ def lowerAux {s₁ : CompleteLatticeHom A₀ B₁} {s₂ : CompleteLatticeHom A�
      lowerProjection_ne_bot f p.nonzero,
      p.index,
      lowerProjection_le f (p.valid.trans_eq (hf (w p.index)).symm)⟩
-
-private theorem lowerAux_value {s₁ : CompleteLatticeHom A₀ B₁} {s₂ : CompleteLatticeHom A₀ B₂}
-    (f : CompleteLatticeHom B₁ B₂) (hf : ∀ a, f (s₁ a) = s₂ a) (V : bSet A₀)
-    (p : Condition (mapNames s₂ V)) :
-    (lowerAux f hf V p).value = lowerProjection f p.value := by
-  cases V
-  rfl
 
 theorem lowerAux_le_iff {s₁ : CompleteLatticeHom A₀ B₁} {s₂ : CompleteLatticeHom A₀ B₂}
     (f : CompleteLatticeHom B₁ B₂) (hf : ∀ a, f (s₁ a) = s₂ a) (V : bSet A₀)
@@ -332,47 +290,6 @@ private theorem auxStageHomGen_comp
     condition (lowerAux f₁₂ hf₁₂ V p) ≤ x
   rw [lowerAux_comp f₁ hf₁ f₂ hf₂ f₁₂ hf₁₂ hcomp V p]
 
-private theorem auxStageHomGen_sourceHom {s₁ : CompleteLatticeHom A₀ B₁} {s₂ : CompleteLatticeHom A₀ B₂}
-    (f : CompleteLatticeHom B₁ B₂) (hf : ∀ a, f (s₁ a) = s₂ a) (V : bSet A₀) (x : B₁) :
-    auxStageHomGen f hf V (sourceHom (mapNames s₁ V) x) = sourceHom (mapNames s₂ V) (f x) := by
-  unfold auxStageHomGen
-  apply Heyting.Regular.coe_injective
-  apply SetLike.ext
-  intro p
-  rw [← condition_le_iff, ← condition_le_iff, condition_le_completionHom_iff,
-    condition_le_source, condition_le_source]
-  change (lowerAux f hf V p).value ≤ x ↔ p.value ≤ f x
-  rw [lowerAux_value, lowerProjection_le_iff]
-
-private theorem auxStageHomGen_baseChange {s₁ : CompleteLatticeHom A₀ B₁} {s₂ : CompleteLatticeHom A₀ B₂}
-    (f : CompleteLatticeHom B₁ B₂) (hf : ∀ a, f (s₁ a) = s₂ a) (V : bSet A₀)
-    (y : Erdos1172BooleanNameIteration.Algebra V) :
-    auxStageHomGen f hf V (BaseChange.hom s₁ V y) = BaseChange.hom s₂ V y := by
-  unfold auxStageHomGen
-  apply Heyting.Regular.coe_injective
-  apply SetLike.ext
-  intro p
-  rw [← condition_le_iff, ← condition_le_iff, condition_le_completionHom_iff,
-    BaseChange.cone_le_hom, BaseChange.cone_le_hom]
-  change condition (BaseChange.lower s₁ V (lowerAux f hf V p)) ≤ y ↔
-    condition (BaseChange.lower s₂ V p) ≤ y
-  suffices BaseChange.lower s₁ V (lowerAux f hf V p) = BaseChange.lower s₂ V p by
-    rw [this]
-  cases V with
-  | mk K X w =>
-    rcases p with ⟨c, hc, idx, hvalid⟩
-    have hlp : lowerProjection s₁ (lowerProjection f c) = lowerProjection s₂ c := by
-      apply le_antisymm
-      · exact (lowerProjection_le_iff s₁).mpr
-          ((lowerProjection_le_iff f).mpr
-            ((le_image_lowerProjection s₂ c).trans_eq (hf _).symm))
-      · exact (lowerProjection_le_iff s₂).mpr
-          ((le_image_lowerProjection f c).trans
-            ((OrderHomClass.mono f (le_image_lowerProjection s₁ _)).trans_eq (hf _)))
-    change (⟨lowerProjection s₁ (lowerProjection f c), _, idx, _⟩ : Condition (.mk K X w)) =
-      (⟨lowerProjection s₂ c, _, idx, _⟩ : Condition (.mk K X w))
-    congr 1
-
 private theorem exists_auxStageHomGen_condition_le
     {s₁ : CompleteLatticeHom A₀ B₁} {s₂ : CompleteLatticeHom A₀ B₂}
     (f : CompleteLatticeHom B₁ B₂) (hinj : Function.Injective f)
@@ -432,18 +349,6 @@ private theorem auxStageHom_comp {α β γ : Ordinal.{u}} (h₁ : α ≤ β) (h�
     (stageStepHom (h₁.trans h₂)) (stageStepHom_sourceHom (h₁.trans h₂))
     (stageStepHom_comp h₁ h₂) V x
 
-private theorem auxStageHom_sourceHom {α β : Ordinal.{u}} (h : α ≤ β) (V : bSet (anonymousAlgebra κ))
-    (x : InternalLevyStage κ α) :
-    auxStageHom h V (sourceHom (mapNames (sourceHom (internalLevyPoset κ α)) V) x) =
-      sourceHom (mapNames (sourceHom (internalLevyPoset κ β)) V) (stageStepHom (κ := κ) h x) :=
-  auxStageHomGen_sourceHom (stageStepHom h) (stageStepHom_sourceHom h) V x
-
-private theorem auxStageHom_baseChange {α β : Ordinal.{u}} (h : α ≤ β) (V : bSet (anonymousAlgebra κ))
-    (y : Erdos1172BooleanNameIteration.Algebra V) :
-    auxStageHom h V (BaseChange.hom (sourceHom (internalLevyPoset κ α)) V y) =
-      BaseChange.hom (sourceHom (internalLevyPoset κ β)) V y :=
-  auxStageHomGen_baseChange (stageStepHom h) (stageStepHom_sourceHom h) V y
-
 /-- Injective complete stage embedding `AmbientInternalLevyStage κ α → AmbientInternalLevyStage κ β`. -/
 def ambientStageStepHom (hκ : κ.IsInaccessible) {α β : Ordinal.{u}} (h : α ≤ β) :
     CompleteLatticeHom (AmbientInternalLevyStage κ α) (AmbientInternalLevyStage κ β) := by
@@ -475,29 +380,6 @@ theorem ambientStageStepHom_comp (hκ : κ.IsInaccessible) {α β γ : Ordinal.{
       (internalLevyStageAuxIso hκ β (auxStageHom h₁ V ((internalLevyStageAuxIso hκ α).symm x))))) =
     internalLevyStageAuxIso hκ γ (auxStageHom (h₁.trans h₂) V ((internalLevyStageAuxIso hκ α).symm x))
   rw [OrderIso.symm_apply_apply, auxStageHom_comp]
-
-theorem ambientStageStepHom_ambient (hκ : κ.IsInaccessible) {α β : Ordinal.{u}} (h : α ≤ β)
-    (c : AuxiliaryAmbient κ) :
-    ambientStageStepHom hκ h
-      (sourceHom (mapNames (auxiliaryInclusion κ) (internalLevyPoset κ α)) c) =
-      sourceHom (mapNames (auxiliaryInclusion κ) (internalLevyPoset κ β)) c := by
-  let T := anonymousSmallAuxiliaryWithCollapse κ hκ
-  rw [← internalLevyStageAuxIso_ambient hκ α c]
-  change internalLevyStageAuxIso hκ β
-    (auxStageHom h T.forcing ((internalLevyStageAuxIso hκ α).symm
-      (internalLevyStageAuxIso hκ α (BaseChange.hom (sourceHom (internalLevyPoset κ α)) T.forcing (T.completion c))))) = _
-  rw [OrderIso.symm_apply_apply, auxStageHom_baseChange, internalLevyStageAuxIso_ambient]
-
-theorem ambientStageStepHom_levy (hκ : κ.IsInaccessible) {α β : Ordinal.{u}} (h : α ≤ β)
-    (x : InternalLevyStage κ α) :
-    ambientStageStepHom hκ h (BaseChange.hom (auxiliaryInclusion κ) (internalLevyPoset κ α) x) =
-      BaseChange.hom (auxiliaryInclusion κ) (internalLevyPoset κ β) (stageStepHom h x) := by
-  let V := (anonymousSmallAuxiliaryWithCollapse κ hκ).forcing
-  rw [← internalLevyStageAuxIso_levy hκ α x]
-  change internalLevyStageAuxIso hκ β
-    (auxStageHom h V ((internalLevyStageAuxIso hκ α).symm
-      (internalLevyStageAuxIso hκ α (sourceHom (mapNames (sourceHom (internalLevyPoset κ α)) V) x)))) = _
-  rw [OrderIso.symm_apply_apply, auxStageHom_sourceHom, internalLevyStageAuxIso_levy]
 
 /-- `DenseStageUnion` for `AmbientInternalLevy κ θ`. -/
 theorem ambientInternalLevy_denseStageUnion {θ : Cardinal.{u}}

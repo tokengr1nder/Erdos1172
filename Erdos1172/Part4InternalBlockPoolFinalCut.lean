@@ -6,7 +6,6 @@ module
 
 public import Erdos1172.Part4InternalBlockPoolOrdinalStages
 public import Erdos1172.Part4InternalBlockPoolFinalClosure
-public import Erdos1172.Part4InternalCountablyBoundedSup
 
 @[expose] public section
 

@@ -91,12 +91,6 @@ theorem liftBase_le (p : Condition P) {q : P} (hqp : q ≤ p.base) : liftBase p 
   rw [hi] at hv
   cases hv
 
-theorem base_dense_of_dense {D : Set P} (hD : DenseBelow D) :
-    DenseBelow {q : Condition P | q.base ∈ D} := by
-  intro p
-  obtain ⟨q, hqD, hqp⟩ := hD p.base
-  exact ⟨liftBase p q, hqD, liftBase_le p hqp⟩
-
 def liftFunction {I V : Type} (F : FunctionDecisions P I V) :
     FunctionDecisions (Condition P) I V where
   decides p i v := F.decides p.base i v
@@ -120,10 +114,5 @@ theorem track_le (p : Condition P) (F : NiceFunctionName P W1 W1) : track p F �
   change p.stem i = some v at hv
   rw [hi] at hv
   cases hv
-
-theorem tracking_dense (F : NiceFunctionName P W1 W1) :
-    DenseBelow {p : Condition P | F ∈ p.side} := by
-  intro p
-  exact ⟨track p F, Set.mem_insert _ _, track_le p F⟩
 
 end Erdos1172Part3IteratedHechlerOrder

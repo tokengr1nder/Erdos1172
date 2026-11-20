@@ -4,10 +4,8 @@ Licensed under the Apache License, Version 2.0.
 -/
 module
 
-public import Erdos1172.Part4InternalFusionRun
 public import Erdos1172.Part4InternalFusionRunCountable
 public import Erdos1172.Part4InternalClosedSelectorHull
-public import Erdos1172.Part4InternalBlockSelector
 
 @[expose] public section
 
@@ -90,50 +88,6 @@ theorem nextBlock_pair_of_prefix
     Γ ≤ pair (pair (earlierHistory color R ξ (blockHistory T)) (nextActive color R E top ξ T))
       (nextBlock color R E F top ξ T) ∈ᴮ F :=
   graphValue_pair_mem HF (selector_input_mem_of_prefix HE HElaw Hξ HT Hvalues)
-
-theorem nextBlock_candidate_or_empty_of_prefix
-    {color : Bool} {R J E S F top ξ T : bSet 𝔹} {Γ : 𝔹}
-    (HE : Γ ≤ is_function (blockObjects color R) blockEnumerationCodes E)
-    (HElaw : Γ ≤ blockEnumerationFamilyLaw color R E)
-    (HF : Γ ≤ is_function (choicePoolDomain (blockObjects color R) omegaTwo)
-      (bv_powerset omegaTwo) F)
-    (HFlaw : Γ ≤ blockSelectorLaw color R J E S F)
-    (Hξ : Γ ≤ ξ ∈ᴮ omegaOne) (HT : Γ ≤ is_function ξ entrySpace T)
-    (Hvalues : Γ ≤ countableValues ξ (activeFamily T)) :
-    Γ ≤ blockCandidate color R J E S (earlierHistory color R ξ (blockHistory T))
-      (nextActive color R E top ξ T) (nextBlock color R E F top ξ T) ⊔
-      nextBlock color R E F top ξ T =ᴮ (∅ : bSet 𝔹) :=
-  selected_candidate_or_empty HF HFlaw (nextBlock_pair_of_prefix HE HElaw HF Hξ HT Hvalues)
-
-theorem nextBlock_candidate_of_nonempty_of_prefix
-    {color : Bool} {R J E S F top ξ T : bSet 𝔹} {Γ : 𝔹}
-    (HE : Γ ≤ is_function (blockObjects color R) blockEnumerationCodes E)
-    (HElaw : Γ ≤ blockEnumerationFamilyLaw color R E)
-    (HF : Γ ≤ is_function (choicePoolDomain (blockObjects color R) omegaTwo)
-      (bv_powerset omegaTwo) F)
-    (HFlaw : Γ ≤ blockSelectorLaw color R J E S F)
-    (Hξ : Γ ≤ ξ ∈ᴮ omegaOne) (HT : Γ ≤ is_function ξ entrySpace T)
-    (Hvalues : Γ ≤ countableValues ξ (activeFamily T))
-    (Hnonempty : Γ ≤ (nextBlock color R E F top ξ T =ᴮ (∅ : bSet 𝔹))ᶜ) :
-    Γ ≤ blockCandidate color R J E S (earlierHistory color R ξ (blockHistory T))
-      (nextActive color R E top ξ T) (nextBlock color R E F top ξ T) :=
-  selected_candidate_of_nonempty HF HFlaw
-    (nextBlock_pair_of_prefix HE HElaw HF Hξ HT Hvalues) Hnonempty
-
-theorem nextBlock_empty_iff_no_candidate_of_prefix
-    {color : Bool} {R J E S F top ξ T : bSet 𝔹} {Γ : 𝔹}
-    (HE : Γ ≤ is_function (blockObjects color R) blockEnumerationCodes E)
-    (HElaw : Γ ≤ blockEnumerationFamilyLaw color R E)
-    (HF : Γ ≤ is_function (choicePoolDomain (blockObjects color R) omegaTwo)
-      (bv_powerset omegaTwo) F)
-    (HFlaw : Γ ≤ blockSelectorLaw color R J E S F)
-    (Hξ : Γ ≤ ξ ∈ᴮ omegaOne) (HT : Γ ≤ is_function ξ entrySpace T)
-    (Hvalues : Γ ≤ countableValues ξ (activeFamily T)) :
-    (Γ ≤ nextBlock color R E F top ξ T =ᴮ (∅ : bSet 𝔹)) ↔
-      Γ ≤ (⨆ A, blockCandidate color R J E S (earlierHistory color R ξ (blockHistory T))
-        (nextActive color R E top ξ T) A)ᶜ :=
-  selected_empty_iff_no_candidate HF HFlaw
-    (nextBlock_pair_of_prefix HE HElaw HF Hξ HT Hvalues)
 
 /-- Only successful earlier values enter the whole-object history. The
 Boolean empty-or-pool induction law therefore bounds that entire history. -/
@@ -263,25 +217,6 @@ theorem fusion_run_nextBlock_candidate_or_empty
       nextBlock color R E F top ξ (ErdosTaggedPrefix.taggedPrefix ξ omegaOne entrySpace Run)
         =ᴮ (∅ : bSet 𝔹) :=
   selected_candidate_or_empty HF HFlaw (fusion_run_nextBlock_pair HE HElaw HF HRun Hlaw Hξ)
-
-theorem fusion_run_nextBlock_empty_iff_no_candidate
-    {color : Bool} {R J E S F top Run ξ : bSet 𝔹} {Γ : 𝔹}
-    (HE : Γ ≤ is_function (blockObjects color R) blockEnumerationCodes E)
-    (HElaw : Γ ≤ blockEnumerationFamilyLaw color R E)
-    (HF : Γ ≤ is_function (choicePoolDomain (blockObjects color R) omegaTwo)
-      (bv_powerset omegaTwo) F)
-    (HFlaw : Γ ≤ blockSelectorLaw color R J E S F)
-    (HRun : Γ ≤ is_function omegaOne runSpace Run)
-    (Hlaw : Γ ≤ runLaw color R E F top Run) (Hξ : Γ ≤ ξ ∈ᴮ omegaOne) :
-    (Γ ≤ nextBlock color R E F top ξ (ErdosTaggedPrefix.taggedPrefix ξ omegaOne entrySpace Run)
-      =ᴮ (∅ : bSet 𝔹)) ↔
-      Γ ≤ (⨆ A, blockCandidate color R J E S
-        (earlierHistory color R ξ
-          (blockHistory (ErdosTaggedPrefix.taggedPrefix ξ omegaOne entrySpace Run)))
-        (nextActive color R E top ξ (ErdosTaggedPrefix.taggedPrefix ξ omegaOne entrySpace Run))
-        A)ᶜ :=
-  selected_empty_iff_no_candidate HF HFlaw
-    (fusion_run_nextBlock_pair HE HElaw HF HRun Hlaw Hξ)
 
 /-- Every actually stored output satisfies the full candidate law or is
 the empty failure value. Both its stored active set and its whole block

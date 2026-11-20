@@ -7,7 +7,6 @@ module
 public import Erdos1172.Part4InternalCohenCardinality
 public import Erdos1172.Part4BooleanIterationDensePresentation
 public import Erdos1172.Part4DenseCompletionCardinality
-public import Erdos1172.Part4LevyContinuumHypothesis
 
 @[expose] public section
 

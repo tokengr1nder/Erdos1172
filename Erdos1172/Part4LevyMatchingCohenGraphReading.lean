@@ -6,7 +6,6 @@ module
 
 public import Erdos1172.Part4LevyMatchingAnchoredArrays
 public import Erdos1172.Part4LevyPreparationCohenConditions
-public import Erdos1172.Part4BooleanCheckedIndicatorAgreement
 
 @[expose] public section
 
@@ -160,14 +159,5 @@ theorem cohen_graph_reading_of_height (hθ : ℵ₀ < θ)
   have srcd : lowerProjection g t ≤ T ⊆ᴮ check δ := lowerProjection_le g (inf_le_right.trans inf_le_left)
   have ok := source_condition (le_top.trans (count _ i.toOrd.property)) srcd srcf
   exact le_iSup_of_le y (le_inf ((lowerProjection_le_iff g).mp ok) ey)
-
-theorem upper_cohen_graph_reading (K : CompleteLatticeHom Z E)
-    (read : ∀ (X : Type u), #X < θ → ∀ v : X → Z, ArrayRead K g v)
-    (count : ∀ β : Ordinal.{u}, β < θ.ord → (⊤ : R) ≤ check (PSet.ordinalMk β) ∈ᴮ omegaOne)
-    (hθ : θ.IsInaccessible) (q : bSet Z) :
-    K (ErdosCohen.condition omegaOne q) ≤ ⨆ y : bSet R,
-      g (ErdosCohen.condition omegaOne y) ⊓ (mapNames K q =ᴮ mapNames g y) :=
-  cohen_graph_reading_of_height g K read count hθ.aleph0_lt
-    (firstStage_checked_upper_eq_omegaOne θ hθ.isRegular hθ.aleph0_lt) q
 
 end Erdos1172LevyCollapse.Matching

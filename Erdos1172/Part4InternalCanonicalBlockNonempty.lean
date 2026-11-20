@@ -61,10 +61,4 @@ theorem blockObject_nonempty {color : Bool} {R A : bSet 𝔹} {Γ : 𝔹}
   obtain ⟨x, Hx⟩ := exists_mem_of_mem_blockObjects HA
   exact nonempty_of_exists_mem A (le_iSup_of_le x Hx)
 
-/-- Empty is excluded as an object; no object-existence claim is made. -/
-theorem empty_not_mem_blockObjects {color : Bool} {R : bSet 𝔹} {Γ : 𝔹} :
-    Γ ≤ ((∅ : bSet 𝔹) ∈ᴮ blockObjects color R)ᶜ := by
-  rw [← imp_bot, ← deduction]
-  exact bv_absurd _ bv_refl (blockObject_nonempty inf_le_right)
-
 end bSet.ErdosCanonicalBlocks

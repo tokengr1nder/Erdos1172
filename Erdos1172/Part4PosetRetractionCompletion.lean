@@ -29,11 +29,6 @@ open Erdos1172PosetCompletion
 
 variable {P : Type u} {Q : Type v} [Preorder P] [Preorder Q]
 
-theorem exactLifts_of_retraction (π : P →o Q) (s : Q →o P)
-    (Hπs : ∀ q, π (s q) = q) (Hsπ : ∀ p, s (π p) ≤ p) : ExactLifts π := by
-  intro p q hq
-  exact ⟨s q, (s.monotone hq).trans (Hsπ p), Hπs q⟩
-
 theorem pullback_section_compl (π : P →o Q) (s : Q →o P)
     (Hπs : ∀ q, π (s q) = q) (Hsπ : ∀ p, s (π p) ≤ p) (A : LowerSet P) :
     pullback s Aᶜ = (pullback s A)ᶜ := by
@@ -104,10 +99,5 @@ def retractionCompletionOrderIso (π : P →o Q) (H : ExactLifts π) (s : Q →o
 @[simp] theorem retractionCompletionOrderIso_apply (π : P →o Q) (H : ExactLifts π)
     (s : Q →o P) (Hπs : ∀ q, π (s q) = q) (Hsπ : ∀ p, s (π p) ≤ p)
     (A : Completion Q) : retractionCompletionOrderIso π H s Hπs Hsπ A = completionHom π H A := rfl
-
-theorem completionHom_surjective_of_retraction (π : P →o Q) (H : ExactLifts π)
-    (s : Q →o P) (Hπs : ∀ q, π (s q) = q) (Hsπ : ∀ p, s (π p) ≤ p) :
-    Function.Surjective (completionHom π H) :=
-  (retractionCompletionOrderIso π H s Hπs Hsπ).surjective
 
 end Erdos1172PosetProjection

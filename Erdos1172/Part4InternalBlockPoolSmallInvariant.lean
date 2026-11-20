@@ -135,19 +135,6 @@ theorem pool_run_allSmall {color : Bool} {R J E S F Run : bSet 𝔹} {Γ : 𝔹}
   image_allGood_of_imageRecLaw omegaOne_Ord HRun Hrec smallState_ext
     (pool_small_invariant_step HCH HF Hlaw HRun)
 
-theorem pool_run_pair_small {color : Bool} {R J E S F Run i B P : bSet 𝔹} {Γ : 𝔹}
-    (HCH : Γ ≤ (CH : 𝔹))
-    (HF : Γ ≤ is_function (choicePoolDomain (blockObjects color R) omegaTwo)
-      (bv_powerset omegaTwo) F)
-    (Hlaw : Γ ≤ blockSelectorLaw color R J E S F)
-    (HRun : Γ ≤ is_function omegaOne (stateSpace color R) Run)
-    (Hrec : Γ ≤ imageRecLaw (stateSpace color R)
-      (fun _ T => poolUpdate color R F T) Run)
-    (Hpair : Γ ≤ pair i (pair B P) ∈ᴮ Run) :
-    Γ ≤ injects_into B omegaOne ⊓ injects_into P omegaOne :=
-  smallState_apply (good_of_imageRecLaw_pair omegaOne_Ord HRun Hrec smallState_ext
-    (pool_small_invariant_step HCH HF Hlaw HRun) Hpair)
-
 theorem pool_final_aggregates_small {color : Bool} {R J E S F Run : bSet 𝔹} {Γ : 𝔹}
     (HCH : Γ ≤ (CH : 𝔹))
     (HF : Γ ≤ is_function (choicePoolDomain (blockObjects color R) omegaTwo)
@@ -161,18 +148,5 @@ theorem pool_final_aggregates_small {color : Bool} {R J E S F Run : bSet 𝔹} {
   aggregates_small HCH image_subset
     (image_injects_into_ordinal (is_func'_of_is_function HRun) injects_into_refl omegaOne_Ord)
     (pool_run_allSmall HCH HF Hlaw HRun Hrec)
-
-/-- The run and its stagewise cardinal invariant are actual outputs. -/
-theorem exists_small_pool_recursion {color : Bool} {R J E S F : bSet 𝔹} {Γ : 𝔹}
-    (HCH : Γ ≤ (CH : 𝔹))
-    (HF : Γ ≤ is_function (choicePoolDomain (blockObjects color R) omegaTwo)
-      (bv_powerset omegaTwo) F)
-    (Hlaw : Γ ≤ blockSelectorLaw color R J E S F) :
-    ∃ Run : bSet 𝔹, Γ ≤ is_function omegaOne (stateSpace color R) Run ⊓
-      (imageRecLaw (stateSpace color R) (fun _ T => poolUpdate color R F T) Run ⊓
-        allGood smallState (image omegaOne (stateSpace color R) Run)) := by
-  obtain ⟨Run, HRun⟩ := exists_pool_recursion color R F (Γ := Γ)
-  exact ⟨Run, le_inf (HRun.trans inf_le_left) (le_inf (HRun.trans inf_le_right)
-    (pool_run_allSmall HCH HF Hlaw (HRun.trans inf_le_left) (HRun.trans inf_le_right)))⟩
 
 end bSet.ErdosBlockPoolSmallInvariant

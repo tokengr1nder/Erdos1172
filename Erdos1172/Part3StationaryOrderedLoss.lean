@@ -5,8 +5,6 @@ Licensed under the Apache License, Version 2.0.
 module
 
 public import Erdos1172.Part3OrderedCoreTrace
-public import Erdos1172.Part3OmegaSuccessorCore
-public import Erdos1172.Part3NamedDerivedStationaryLoss
 
 @[expose] public section
 

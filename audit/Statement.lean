@@ -79,6 +79,16 @@ def PairColoringRamsey (α β γ : Ordinal.{0}) : Prop :=
     (∃ f : β.ToType ↪o α.ToType, ∀ x y (h : x < y), c ⟨(f x, f y), f.strictMono h⟩ = false) ∨
     (∃ g : γ.ToType ↪o α.ToType, ∀ x y (h : x < y), c ⟨(g x, g y), g.strictMono h⟩ = true)
 
+private noncomputable def embeddingOfTypeLT {α β : Ordinal.{0}} {s : Set α.ToType}
+    (htype : typeLT s = β) : β.ToType ↪o α.ToType :=
+  (OrderIso.ofRelIsoLT (Classical.choice (Ordinal.type_eq.mp
+    ((Ordinal.type_toType β).trans htype.symm)))).toOrderEmbedding.trans
+    (OrderEmbedding.subtype (· ∈ s))
+
+private theorem embeddingOfTypeLT_mem {α β : Ordinal.{0}} {s : Set α.ToType}
+    (htype : typeLT s = β) (x : β.ToType) : embeddingOfTypeLT htype x ∈ s :=
+  Subtype.prop _
+
 theorem ordinalRamsey_iff_pairColoring (α β γ : Ordinal.{0}) :
     OrdinalRamsey α β γ ↔ PairColoringRamsey α β γ := by
   classical
@@ -91,74 +101,43 @@ theorem ordinalRamsey_iff_pairColoring (α β γ : Ordinal.{0}) :
           else False
         symm := ⟨fun x y h1 => by
           by_cases hxy : x < y
-          · have hnot : ¬ y < x := lt_asymm hxy
-            simpa [hxy, hnot] using h1
-          · by_cases hyx : y < x
-            · simpa [hxy, hyx] using h1
-            · simp [hxy, hyx] at h1⟩
+          · simpa [hxy, lt_asymm hxy] using h1
+          · by_cases hyx : y < x <;> simp_all⟩
         loopless := ⟨fun x hx => by simp at hx⟩ }
     obtain ⟨s, hs, htype⟩ | ⟨s, hs, htype⟩ := h red redᶜ isCompl_compl
-    · have htype' :
-          Ordinal.type ((· < ·) : β.ToType → β.ToType → Prop) =
-          Ordinal.type ((· < ·) : s → s → Prop) :=
-        (Ordinal.type_toType β).trans htype.symm
-      obtain ⟨er⟩ := Ordinal.type_eq.mp htype'
-      let e : β.ToType ≃o s := OrderIso.ofRelIsoLT er
-      let f : β.ToType ↪o α.ToType := e.toOrderEmbedding.trans (OrderEmbedding.subtype (· ∈ s))
+    · let f := embeddingOfTypeLT htype
       refine Or.inl ⟨f, fun x y hxy => ?_⟩
-      have hadj := hs (e x).2 (e y).2 (f.strictMono hxy).ne
-      have hlt : f x < f y := f.strictMono hxy
+      have hadj := hs (embeddingOfTypeLT_mem htype x) (embeddingOfTypeLT_mem htype y) (f.strictMono hxy).ne
       change (if h : f x < f y then c ⟨(f x, f y), h⟩ = false
               else if h' : f y < f x then c ⟨(f y, f x), h'⟩ = false else False) at hadj
-      split_ifs at hadj
+      rw [dif_pos (f.strictMono hxy)] at hadj
       exact hadj
-    · have htype' :
-          Ordinal.type ((· < ·) : γ.ToType → γ.ToType → Prop) =
-          Ordinal.type ((· < ·) : s → s → Prop) :=
-        (Ordinal.type_toType γ).trans htype.symm
-      obtain ⟨er⟩ := Ordinal.type_eq.mp htype'
-      let e : γ.ToType ≃o s := OrderIso.ofRelIsoLT er
-      let g : γ.ToType ↪o α.ToType := e.toOrderEmbedding.trans (OrderEmbedding.subtype (· ∈ s))
+    · let g := embeddingOfTypeLT htype
       refine Or.inr ⟨g, fun x y hxy => ?_⟩
-      have hadj := hs (e x).2 (e y).2 (g.strictMono hxy).ne
-      rw [SimpleGraph.compl_adj] at hadj
-      have hlt : g x < g y := g.strictMono hxy
-      have h2 := hadj.2
+      have h2 := (SimpleGraph.compl_adj _ _ _ |>.mp
+        (hs (embeddingOfTypeLT_mem htype x) (embeddingOfTypeLT_mem htype y) (g.strictMono hxy).ne)).2
       change ¬(if h : g x < g y then c ⟨(g x, g y), h⟩ = false
                else if h' : g y < g x then c ⟨(g y, g x), h'⟩ = false else False) at h2
-      split_ifs at h2
+      rw [dif_pos (g.strictMono hxy)] at h2
       exact Bool.eq_true_of_not_eq_false h2
   · intro h red blue hcompl
     let c : {p : α.ToType × α.ToType // p.1 < p.2} → Bool :=
       fun p => if red.Adj p.1.1 p.1.2 then false else true
     obtain ⟨f, hf⟩ | ⟨g, hg⟩ := h c
-    · refine Or.inl ⟨Set.range f, ?_, ?_⟩
-      · rintro _ ⟨x, rfl⟩ _ ⟨y, rfl⟩ hne
-        rcases lt_trichotomy x y with hlt | rfl | hgt
-        · have hc := hf x y hlt
-          by_contra hnr
-          simp [c, hnr] at hc
-        · exact absurd rfl hne
-        · have hc := hf y x hgt
-          have hr : red.Adj (f y) (f x) := by
-            by_contra hnr
-            simp [c, hnr] at hc
-          exact red.adj_symm hr
-      · exact f.orderIso.ordinalType_congr.symm.trans (Ordinal.type_toType β)
-    · refine Or.inr ⟨Set.range g, ?_, ?_⟩
-      · rintro _ ⟨x, rfl⟩ _ ⟨y, rfl⟩ hne
-        rw [← hcompl.compl_eq, SimpleGraph.compl_adj]
-        refine ⟨hne, ?_⟩
-        rcases lt_trichotomy x y with hlt | rfl | hgt
-        · intro hr
-          have hc := hg x y hlt
-          simp [c, hr] at hc
-        · exact absurd rfl hne
-        · intro hr
-          have hc := hg y x hgt
-          have hr' : red.Adj (g y) (g x) := red.adj_symm hr
-          simp [c, hr'] at hc
-      · exact g.orderIso.ordinalType_congr.symm.trans (Ordinal.type_toType γ)
+    · refine Or.inl ⟨Set.range f, ?_, f.orderIso.ordinalType_congr.symm.trans (Ordinal.type_toType β)⟩
+      rintro _ ⟨x, rfl⟩ _ ⟨y, rfl⟩ hne
+      rcases lt_trichotomy x y with hlt | rfl | hgt
+      · by_contra hnr; have hc := hf x y hlt; simp [c, hnr] at hc
+      · exact absurd rfl hne
+      · refine red.adj_symm (by by_contra hnr; have hc := hf y x hgt; simp [c, hnr] at hc)
+    · refine Or.inr ⟨Set.range g, ?_, g.orderIso.ordinalType_congr.symm.trans (Ordinal.type_toType γ)⟩
+      rintro _ ⟨x, rfl⟩ _ ⟨y, rfl⟩ hne
+      rw [← hcompl.compl_eq, SimpleGraph.compl_adj]
+      refine ⟨hne, fun hr => ?_⟩
+      rcases lt_trichotomy x y with hlt | rfl | hgt
+      · have hc := hg x y hlt; simp [c, hr] at hc
+      · exact absurd rfl hne
+      · have hc := hg y x hgt; simp [c, red.adj_symm hr] at hc
 
 /-- Textbook `[α]² → ℕ` pair-coloring formulation of `α → (β)²_ω`. -/
 def PairColoringCountableRamsey (α β : Ordinal.{0}) : Prop :=
@@ -175,38 +154,24 @@ theorem ordinalCountableRamsey_iff_pairColoring (α β : Ordinal.{0}) :
       if hxy : x < y then c ⟨(x, y), hxy⟩
       else if hyx : y < x then c ⟨(y, x), hyx⟩
       else 0
-    have hsymm : ∀ x y, colFun x y = colFun y x := by
-      intro x y
+    have hsymm (x y) : colFun x y = colFun y x := by
       dsimp only [colFun]
       by_cases hxy : x < y
-      · have hyx : ¬ y < x := lt_asymm hxy
-        simp [hxy, hyx]
-      · by_cases hyx : y < x
-        · simp [hxy, hyx]
-        · simp [hxy, hyx]
+      · simp [hxy, lt_asymm hxy]
+      · by_cases hyx : y < x <;> simp [hxy, hyx]
     obtain ⟨n, s, hs, htype⟩ := h (Sym2.lift ⟨colFun, hsymm⟩)
-    have htype' :
-        Ordinal.type ((· < ·) : β.ToType → β.ToType → Prop) =
-        Ordinal.type ((· < ·) : s → s → Prop) :=
-      (Ordinal.type_toType β).trans htype.symm
-    obtain ⟨er⟩ := Ordinal.type_eq.mp htype'
-    let e : β.ToType ≃o s := OrderIso.ofRelIsoLT er
-    let f : β.ToType ↪o α.ToType := e.toOrderEmbedding.trans (OrderEmbedding.subtype (· ∈ s))
+    let f := embeddingOfTypeLT htype
     refine ⟨n, f, fun x y hxy => ?_⟩
     have hlt : f x < f y := f.strictMono hxy
-    have hcol := hs (f x) (e x).2 (f y) (e y).2 hlt.ne
-    simpa [colFun, hlt] using hcol
+    simpa [colFun, hlt] using hs (f x) (embeddingOfTypeLT_mem htype x) (f y) (embeddingOfTypeLT_mem htype y) hlt.ne
   · intro h col
-    let c : {p : α.ToType × α.ToType // p.1 < p.2} → ℕ := fun p => col s(p.1.1, p.1.2)
-    obtain ⟨n, f, hf⟩ := h c
-    refine ⟨n, Set.range f, ?_, ?_⟩
-    · rintro _ ⟨x, rfl⟩ _ ⟨y, rfl⟩ hne
-      rcases lt_trichotomy x y with hlt | rfl | hgt
-      · exact hf x y hlt
-      · exact absurd rfl hne
-      · rw [Sym2.eq_swap]
-        exact hf y x hgt
-    · exact f.orderIso.ordinalType_congr.symm.trans (Ordinal.type_toType β)
+    obtain ⟨n, f, hf⟩ := h (fun p => col s(p.1.1, p.1.2))
+    refine ⟨n, Set.range f, ?_, f.orderIso.ordinalType_congr.symm.trans (Ordinal.type_toType β)⟩
+    rintro _ ⟨x, rfl⟩ _ ⟨y, rfl⟩ hne
+    rcases lt_trichotomy x y with hlt | rfl | hgt
+    · exact hf x y hlt
+    · exact absurd rfl hne
+    · rw [Sym2.eq_swap]; exact hf y x hgt
 
 theorem part1_omega_two_add_one_pairColoring (hGCH : Cardinal.GCH) :
     PairColoringCountableRamsey (ω_ 3) (ω_ 2 + 1) :=
@@ -251,23 +216,21 @@ theorem model_implies_consistent (M : Fol.Structure L_ZFC) (hM : Nonempty M.carr
     rcases hf with ⟨s, hs, rfl⟩
     exact (Fol.realize_sentence_iff (fun _ => m₀) s).mp (hsat hs)
 
+private theorem refutes_not_of_mem {s : Fol.sentence L_ZFC} (hs : s ∈ gchPart4Theory) :
+    ¬ (insert (Fol.bd_not s) gchPart4Theory).is_consistent := fun hcons =>
+  hcons ⟨Fol.prf.impE s.fst
+    (Fol.prf.axm ⟨Fol.bd_not s, Set.mem_insert _ _, rfl⟩)
+    (Fol.prf.axm ⟨s, Set.mem_insert_of_mem _ hs, rfl⟩)⟩
+
 /-- `gchPart4Theory` explicitly refutes `¬ part4Sentence`. -/
 theorem refutes_not_part4Sentence :
-    ¬ (insert (Fol.bd_not part4Sentence) gchPart4Theory).is_consistent := by
-  intro hcons
-  apply hcons
-  refine ⟨Fol.prf.impE part4Sentence.fst ?_ ?_⟩
-  · exact Fol.prf.axm ⟨Fol.bd_not part4Sentence, Set.mem_insert _ _, rfl⟩
-  · exact Fol.prf.axm ⟨part4Sentence, Set.mem_insert_of_mem _ (Or.inr (Or.inr rfl)), rfl⟩
+    ¬ (insert (Fol.bd_not part4Sentence) gchPart4Theory).is_consistent :=
+  refutes_not_of_mem (Or.inr (Or.inr rfl))
 
 /-- `gchPart4Theory` explicitly refutes `¬ fullGCHSentence`. -/
 theorem refutes_not_fullGCHSentence :
-    ¬ (insert (Fol.bd_not fullGCHSentence) gchPart4Theory).is_consistent := by
-  intro hcons
-  apply hcons
-  refine ⟨Fol.prf.impE fullGCHSentence.fst ?_ ?_⟩
-  · exact Fol.prf.axm ⟨Fol.bd_not fullGCHSentence, Set.mem_insert _ _, rfl⟩
-  · exact Fol.prf.axm ⟨fullGCHSentence, Set.mem_insert_of_mem _ (Or.inr (Or.inl rfl)), rfl⟩
+    ¬ (insert (Fol.bd_not fullGCHSentence) gchPart4Theory).is_consistent :=
+  refutes_not_of_mem (Or.inr (Or.inl rfl))
 
 /-- `gchPart4Theory` explicitly refutes `∃ x, x ∈ ∅'` via `axiom_of_emptyset ∈ ZFC`. -/
 theorem refutes_mem_emptyset :

@@ -178,22 +178,4 @@ theorem fullSuccessorRestriction_base (hGCH : GCH) (i : W2) (p : Full hGCH) :
     ((fullSuccessorRestriction hGCH i).restrict p).base = (restriction hGCH i).restrict p :=
   truncate_truncate p.val (WithTop.coe_le_coe.mpr (lt_next i).le)
 
-theorem fullSuccessorRestriction_stem (hGCH : GCH) (i : W2) (p : Full hGCH) :
-    ((fullSuccessorRestriction hGCH i).restrict p).stem = (stemAt p i).val := by
-  classical
-  have hv := value_truncate p.val ((next i : W2) : Cut) i
-  rw [if_pos (WithTop.coe_lt_coe.mpr (lt_next i))] at hv
-  exact congrArg (fun d => (unpack d).1.val) hv
-
-theorem fullSuccessorRestriction_embed_base (hGCH : GCH) (i : W2)
-    (p : Condition (Earlier hGCH i)) :
-    (restriction hGCH i).restrict ((fullSuccessorRestriction hGCH i).embed p) = p.base :=
-  truncate_fromStep hGCH i p
-
-theorem successor_embed_below_earlier_base (hGCH : GCH) (i : W2)
-    (p : Condition (Earlier hGCH i)) :
-    (fullSuccessorRestriction hGCH i).embed p ≤ (restriction hGCH i).embed p.base := by
-  rw [← fullSuccessorRestriction_embed_base hGCH i p]
-  exact (restriction hGCH i).below_embed _
-
 end Erdos1172Part3TransfiniteHechlerSuccessorOrder

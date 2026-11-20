@@ -111,12 +111,4 @@ theorem exists_increasing_injection {θ κ A : bSet 𝔹} {Γ : 𝔹}
       B_ext_is_injective_function_left)
     (Hp.trans inf_le_right)⟩
 
-theorem increasing_injection_value {θ κ A : bSet 𝔹} {Γ : 𝔹}
-    (Hκ : Γ ≤ Ord κ) (HA : Γ ≤ A ⊆ᴮ κ)
-    (Hθ : Γ ≤ ErdosHartogs.initialOrdinal θ) (Hlarge : Γ ≤ injects_into θ A) :
-    Γ ≤ ⨆ f, is_injective_function θ A f ⊓
-      (increasingOn θ f ⊓ rangeInitial θ A f) := by
-  obtain ⟨f, Hf⟩ := exists_increasing_injection Hκ HA Hθ Hlarge
-  exact le_iSup_of_le f Hf
-
 end bSet.ErdosIncreasingPartial

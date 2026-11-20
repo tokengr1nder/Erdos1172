@@ -49,19 +49,6 @@ theorem eq_or_mem_of_ordinal_subset {α κ : bSet 𝔹} {Γ : 𝔹}
     Γ ≤ (α =ᴮ κ) ⊔ (α ∈ᴮ κ) := by
   simpa only [sup_comm] using (Ord.le_iff_lt_or_eq Hα Hκ).mp Hsub
 
-theorem eq_or_mem_of_transitive_subset {κ A : bSet 𝔹} {Γ : 𝔹}
-    (Hκ : Γ ≤ Ord κ) (HA : Γ ≤ A ⊆ᴮ κ)
-    (Htrans : Γ ≤ is_transitive A) :
-    Γ ≤ (A =ᴮ κ) ⊔ (A ∈ᴮ κ) :=
-  eq_or_mem_of_ordinal_subset (Ord_of_transitive_subset Hκ HA Htrans) Hκ HA
-
-theorem ordinal_initialSegment_of_transitive_subset {κ A : bSet 𝔹} {Γ : 𝔹}
-    (Hκ : Γ ≤ Ord κ) (HA : Γ ≤ A ⊆ᴮ κ)
-    (Htrans : Γ ≤ is_transitive A) :
-    Γ ≤ Ord A ⊓ ((A =ᴮ κ) ⊔ (A ∈ᴮ κ)) :=
-  le_inf (Ord_of_transitive_subset Hκ HA Htrans)
-    (eq_or_mem_of_transitive_subset Hκ HA Htrans)
-
 theorem union_subset_of_members_subset {F κ : bSet 𝔹} {Γ : 𝔹}
     (HF : Γ ≤ ⨅ A : bSet 𝔹, _root_.imp (A ∈ᴮ F) (A ⊆ᴮ κ)) :
     Γ ≤ bv_union F ⊆ᴮ κ := by

@@ -5,7 +5,6 @@ Licensed under the Apache License, Version 2.0.
 module
 
 public import Erdos1172.Part3FiniteSupport
-public import Erdos1172.Part3FunctionDecisions
 public import Erdos1172.Part3RegularMembership
 
 @[expose] public section
@@ -64,21 +63,6 @@ theorem holds_of_certificate {F : FunctionDecisions P W1 W1}
     (h : Certificate F C p x) : (coverName F C).holds p x :=
   fun q hqp => ⟨q, le_rfl, certificate_persistent hqp h⟩
 
-/-- Ground functions recover precisely the original supported cover. -/
-theorem coverName_ofFunction (C : (W1 → W1) → Set X)
-    (hC : FinitelySupported C) (f : W1 → W1) :
-    coverName (FunctionDecisions.ofFunction (P := P) f) C = ground (C f) := by
-  apply RegularName.ext
-  intro p x
-  constructor
-  · intro h
-    obtain ⟨q, -, g, support, hdec, hcover⟩ := h p le_rfl
-    exact hcover f (fun i hi => (hdec i hi).symm.le)
-  · intro hx
-    obtain ⟨support, hsupport⟩ := hC f x hx
-    apply holds_of_certificate
-    exact ⟨f, support, fun _ _ => rfl, hsupport⟩
-
 /-- Finitely many coordinates can be decided with no closure assumption. -/
 theorem exists_finite_decisions (F : FunctionDecisions P W1 W1)
     (support : Finset W1) (p : P) :
@@ -106,15 +90,6 @@ theorem pointwiseBelow_mono {F H : FunctionDecisions P W1 W1}
     {p q : P} (h : PointwiseBelow F H p) (hqp : q ≤ p) :
     PointwiseBelow F H q :=
   fun r hr i v w hv hw => h r (hr.trans hqp) i v w hv hw
-
-/-- Shared decisions persist to a dense comparison witness, so the
-pointwise comparison itself is stable under dense refinement. -/
-theorem pointwiseBelow_of_dense {F H : FunctionDecisions P W1 W1} {p : P}
-    (h : ∀ q : P, q ≤ p → ∃ r : P, r ≤ q ∧ PointwiseBelow F H r) :
-    PointwiseBelow F H p := by
-  intro q hqp i v w hv hw
-  obtain ⟨r, hrq, hr⟩ := h q hqp
-  exact hr r le_rfl i v w (F.persistent hrq hv) (H.persistent hrq hw)
 
 /-- Decide the upper function only on the finite support of one lower
 certificate. Thus a pointwise comparison transfers membership densely. -/
@@ -196,30 +171,5 @@ theorem exists_ground_cover_of_actual_members
     (F.persistent (hanti (le_max_left (index a) i)) (hdec i hi))
     (F.persistent (hanti (le_max_right (index a) i)) (hf i))
   exact heq.le
-
-variable [LinearOrder X] [WellFoundedLT X]
-
-/-- Uniform bounds on entire ground covers transfer to actual members,
-not just to each finite or countable trace separately. -/
-theorem typeLT_actual_members_le
-    (F : FunctionDecisions P W1 W1) (C : (W1 → W1) → Set X)
-    (hclosed : CountablyClosed P) (p0 : P) (hX : #X ≤ ℵ_ 1)
-    (bound : Ordinal.{0}) (hbound : ∀ f, typeLT (C f) ≤ bound) :
-    typeLT {x : X | (coverName F C).holds p0 x} ≤ bound := by
-  obtain ⟨f, hf⟩ := exists_ground_cover_of_actual_members F C hclosed p0
-    {x : X | (coverName F C).holds p0 x}
-    ((Cardinal.mk_subtype_le _).trans hX) (fun _ hx => hx)
-  exact (Ordinal.type_mono hf).trans (hbound f)
-
-/-- The strict version needed for genuine small-order-type loss sets. -/
-theorem typeLT_actual_members_lt
-    (F : FunctionDecisions P W1 W1) (C : (W1 → W1) → Set X)
-    (hclosed : CountablyClosed P) (p0 : P) (hX : #X ≤ ℵ_ 1)
-    (bound : Ordinal.{0}) (hbound : ∀ f, typeLT (C f) < bound) :
-    typeLT {x : X | (coverName F C).holds p0 x} < bound := by
-  obtain ⟨f, hf⟩ := exists_ground_cover_of_actual_members F C hclosed p0
-    {x : X | (coverName F C).holds p0 x}
-    ((Cardinal.mk_subtype_le _).trans hX) (fun _ hx => hx)
-  exact (Ordinal.type_mono hf).trans_lt (hbound f)
 
 end Erdos1172Part3SupportedCoverRealization

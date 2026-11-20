@@ -76,18 +76,6 @@ theorem exists_external_stageWeights_from
     exact hne (bot_unique (eq.trans_eq (check_bv_eq_bot_of_not_equiv fun he => hst (stageCode_separated B C _ _ he))))
   · exact Or.inr (Or.inr (ordered h (fun he => hne ((inf_comm _ _).trans he))))
 
-theorem exists_external_stageWeights
-    (hb : ∀ {i j} (h : i ≤ j), Function.Injective (b h))
-    (hc : ∀ {i j} (h : i ≤ j), Function.Injective (c h))
-    (bid : ∀ i (x : B i), b (le_refl i) x = x)
-    (cid : ∀ i (x : C i), c (le_refl i) x = x)
-    (bcomp : ∀ {i j k} (h : i ≤ j) (h' : j ≤ k) x, b (h.trans h') x = b h' (b h x))
-    (ccomp : ∀ {i j k} (h : i ≤ j) (h' : j ≤ k) x, c (h.trans h') x = c h' (c h x))
-    (pairing : ∀ i t, CollapsingPair B C i t) (start : StageMatch B C) :
-    Nonempty (StageWeights B C b c (Algebra J)) := by
-  obtain ⟨W,_⟩ := exists_external_stageWeights_from b c hb hc bid cid bcomp ccomp pairing start
-  exact ⟨W⟩
-
 theorem hom_inf {V E : Type u} [CompleteBooleanAlgebra V] [CompleteBooleanAlgebra E]
     (k : CompleteLatticeHom V E) (x y : V) : k (x ⊓ y) = k x ⊓ k y := by
   rw [← sInf_pair,map_sInf,Set.image_pair,sInf_pair]

@@ -4,8 +4,6 @@ Licensed under the Apache License, Version 2.0.
 -/
 module
 
-public import Erdos1172.Part4InternalPartialInjection
-public import Erdos1172.Part4InternalInjectionExtension
 public import Erdos1172.Part4InternalRelationChoice
 public import Erdos1172.Part4InternalRelationGraph
 

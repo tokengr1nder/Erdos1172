@@ -4,7 +4,6 @@ Licensed under the Apache License, Version 2.0.
 -/
 module
 
-public import Mathlib.SetTheory.Cardinal.Cofinality.Club
 public import Erdos1172.ForMathlib.SetTheory.Ordinal.DushnikMillerCountable
 
 @[expose] public section
@@ -19,12 +18,6 @@ namespace Set
 
 universe u
 variable {V : Type u} [LinearOrder V]
-
-theorem nonempty_of_aleph0_lt_cof (hcof : ℵ₀ < Order.cof V) : Nonempty V := by
-  by_contra h
-  have hcofinal : IsCofinal (∅ : Set V) := fun x => (h ⟨x⟩).elim
-  have hle : Order.cof V ≤ 0 := by simpa using Order.cof_le hcofinal
-  exact (not_le_of_gt hcof) (hle.trans (Cardinal.zero_le ℵ₀))
 
 theorem exists_gt_of_aleph0_lt_cof (hcof : ℵ₀ < Order.cof V) (x : V) :
     ∃ y, x < y := by

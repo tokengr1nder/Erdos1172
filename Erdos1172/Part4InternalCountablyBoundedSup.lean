@@ -6,7 +6,6 @@ module
 
 public import Erdos1172.Part4InternalOmegaOneIdealBounded
 public import Erdos1172.Part4InternalSmallFamilyUnion
-public import Erdos1172.Part4InternalPartitionOrder
 public import Erdos1172.Part4InternalClubs
 
 @[expose] public section

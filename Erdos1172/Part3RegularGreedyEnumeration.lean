@@ -52,10 +52,6 @@ theorem aboveRegular_lt {E : FunctionDecisions P Unit (Option V)} {p : P} {x y :
     (h : (aboveRegular E).holds p x) (hy : E.decides p () (some y)) : y < x :=
   h p le_rfl (some y) hy
 
-theorem aboveRegular_not_none {E : FunctionDecisions P Unit (Option V)} {p : P} {x : V}
-    (h : (aboveRegular E).holds p x) (hn : E.decides p () none) : False :=
-  h p le_rfl none hn
-
 variable [LinearOrder I] [WellFoundedLT I] [WellFoundedLT V]
 
 /-- Transfinite recursion takes a total least-or-empty selector at every

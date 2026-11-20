@@ -34,10 +34,6 @@ def liftDecisions (r : CompleteRestriction P Q) (F : FunctionDecisions Q I X) :
   persistent hqp hx := F.persistent (r.restrict.monotone hqp) hx
   unique hx hy := F.unique hx hy
 
-theorem certificate_lift_iff (r : CompleteRestriction P Q)
-    (F : FunctionDecisions Q W1 W1) (C : (W1 → W1) → Set X) (p : P) (x : X) :
-    Certificate (liftDecisions r F) C p x ↔ Certificate F C (r.restrict p) x := Iff.rfl
-
 theorem coverName_lift_iff (r : CompleteRestriction P Q)
     (F : FunctionDecisions Q W1 W1) (C : (W1 → W1) → Set X) (p : P) (x : X) :
     (coverName (liftDecisions r F) C).holds p x ↔ (coverName F C).holds (r.restrict p) x := by
