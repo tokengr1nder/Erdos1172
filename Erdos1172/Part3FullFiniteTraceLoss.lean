@@ -39,6 +39,8 @@ open Erdos1172Part3ControlledCoreProducts (ProductData exists_guarded_source_pro
 open Erdos1172Part3FullRankedCoreReflection (LocalCoreFactory exists_club_goodCoreCut)
 open Erdos1172Part3StationaryDecisions (StationaryAt)
 open Erdos1172Part3NamedBlueDerivedIdeal (fiber)
+open Erdos1172Part3ProductTraceIdeal
+  (productTrace productTrace_mono base_small_to_product_trace prior_source_product_positive)
 open OrdinalRamsey (HasCliqueOfType)
 
 variable {P Q : Type} [Preorder P] [Preorder Q] {G : SimpleGraph W2}
@@ -87,12 +89,14 @@ theorem exists_global_finite_trace_loss (n : ℕ) (hGCH : GCH)
         StationaryAt (traceFuture (n + 1) source N.toClique H a).holds q := by
   obtain ⟨club, hclub, hc⟩ := exists_club_guarded_finite_products n hGCH G H factory source hsup hlocal
   obtain ⟨a, q, hqp0, hcut, data, X, out, hXsub, hXpos, hout, hloss⟩ :=
-    Erdos1172Part3ProductStationaryTraceLoss.exists_positive_stationary_product_trace_loss
+    Erdos1172Part3ProductStationaryTraceLoss.exists_positive_stationary_trace_loss
       hGCH.toCH (mk_index_le n) (Erdos1172Part3TransfiniteHechlerCentering.centered hGCH ⊤)
       (Erdos1172Part3TransfiniteHechlerClosure.full_countablyClosed hGCH)
       G H hcompl hred hblue (rank hGCH (mk_stage_le hGCH ⊤) (mk_index_le n) G)
       (blockRank hGCH (mk_stage_le hGCH ⊤) (mk_index_le n) G) source hsup
-      ((scheme G n).forOrder (Full hGCH)) club hclub hc p0 hstat
+      (productTrace ((scheme G n).forOrder (Full hGCH))) (productTrace_mono _)
+      (fun _ data ha p hp U hU => base_small_to_product_trace _ data ha p hp U hU)
+      (fun _ data p hp => prior_source_product_positive _ data p hp) club hclub hc p0 hstat
   obtain ⟨start, hstart, sub, hmember, htransfer⟩ := scheme_extracts G (n + 1)
     (Erdos1172Part3TransfiniteHechlerClosure.full_countablyClosed hGCH)
     data.name.toClique q X (hXpos q le_rfl)
