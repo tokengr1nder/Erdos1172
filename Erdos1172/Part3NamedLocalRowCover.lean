@@ -85,8 +85,7 @@ theorem rowPieceEndpoint_persistent {data : LineCoverData V}
   refine ⟨h.1, h.2.1, ?_⟩
   rcases h.2.2 with ⟨htype, hsingle⟩ | ⟨k, htype, hupper, hcofinal⟩
   · exact Or.inl ⟨htype, fun r hrq x hx => hsingle r (hrq.trans hqp) x hx⟩
-  · exact Or.inr ⟨k, htype, upper_persistent hqp hupper,
-      cofinalBelow_persistent hqp hcofinal⟩
+  · exact Or.inr ⟨k, htype, upper_persistent hqp hupper, cofinalBelow_persistent hqp hcofinal⟩
 
 /-- Every nonempty domain piece admits a row-witnessed endpoint densely.
 Singleton endpoints are the actual value, not its successor. -/
@@ -97,8 +96,7 @@ theorem exists_rowPieceEndpoint (data : LineCoverData V)
     (hrow : ∀ p x, U.holds p x → data.row x = i) (p0 : P) :
     ∃ q : P, q ≤ p0 ∧ ∃ y : V, RowPieceEndpoint data n E B i q y := by
   rcases hpiece with hsingle | ⟨k, hk, htype⟩
-  · obtain ⟨q, hqp0, j, x, hx, hfrozen, -⟩ :=
-      exists_frozen_singleton_piece E B hsingle p0
+  · obtain ⟨q, hqp0, j, x, hx, hfrozen, -⟩ := exists_frozen_singleton_piece E B hsingle p0
     have hxrow : data.row x = i := hrow q x (hmem q j.val x hx)
     have hxcut : x < data.cut i := hxrow ▸ data.lt_cut_row x
     exact ⟨q, hqp0, x, hxcut.le, ⟨x, hxrow, le_rfl⟩,
@@ -115,8 +113,7 @@ theorem exists_rowPieceEndpoint (data : LineCoverData V)
     have hxrow := hrow r x (pieceU_sub E U hmem B r x hxactual)
     have hxy : x < y := hupper r hrq x hxactual
     exact ⟨r, hrq.trans hqp0, y, hycut, ⟨x, hxrow, hxy.le⟩,
-      Or.inr ⟨⟨k, hk⟩, htype, upper_persistent hrq hupper,
-        cofinalBelow_persistent hrq hcofinal⟩⟩
+      Or.inr ⟨⟨k, hk⟩, htype, upper_persistent hrq hupper, cofinalBelow_persistent hrq hcofinal⟩⟩
 
 /-- Once a piece endpoint is fixed, its actual range is either that
 singleton or is covered by one of the named lower-power families. -/
@@ -128,8 +125,7 @@ theorem exists_piece_cover_at_endpoint (data : LineCoverData V)
       ∀ p : Set.Iic q, ∀ x : V, (pieceU E B).holds p.val x →
         x = y ∨ ∃ k : Fin n, (coverName F (L.into y k)).holds p x := by
   rcases hendpoint.2.2 with ⟨_, hsingle⟩ | ⟨k, htype, hupper, hcofinal⟩
-  · refine ⟨FunctionDecisions.ofFunction
-      (fun _ => Ordinal.ToType.mk ⟨0, Ordinal.omega_pos 1⟩), ?_⟩
+  · refine ⟨FunctionDecisions.ofFunction (fun _ => Ordinal.ToType.mk ⟨0, Ordinal.omega_pos 1⟩), ?_⟩
     exact fun p x hx => Or.inl (hsingle p.val p.property x hx)
   · let source : RegularName (Set.Iic q) V := onCone q (pieceU E B)
     let decisions : FunctionDecisions (Set.Iic q) B V := onConeDecisions (pieceE E B) q
@@ -182,8 +178,7 @@ theorem exists_localRowCover (data : LineCoverData V) (L : NamedLowerCovers n V)
     row_witness := by rintro _ ⟨B, rfl⟩; exact (hendpoint B).2.1
     functionName := R
     covered := fun p x hx _ => ?_ }⟩⟩
-  obtain ⟨r, hrp, B, hBD, j, hj⟩ :=
-    exists_decision_in_piece E U hcoverage D hDcover p.val x hx
+  obtain ⟨r, hrp, B, hBD, j, hj⟩ := exists_decision_in_piece E U hcoverage D hDcover p.val x hx
   let s : Set.Iic q := ⟨r, hrp.trans p.property⟩
   rcases hF ⟨B, hBD⟩ s x (pieceU_holds_of_decision E B hj) with hsingle | ⟨k, hcover⟩
   · exact ⟨s, hrp, Or.inl ⟨⟨B, hBD⟩, hsingle.symm⟩⟩

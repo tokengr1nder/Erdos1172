@@ -22,8 +22,7 @@ open ErdosPartition ErdosPartialInjection ErdosIdeal
 
 theorem partial_not_rangeMem_iff_image {θ A f x : bSet 𝔹} {Γ : 𝔹}
     (Hf : Γ ≤ partialGraph θ A f) :
-    Γ ≤ (rangeMem θ f x)ᶜ ↔
-      Γ ≤ (x ∈ᴮ image (graphDomain θ A f) A f)ᶜ := by
+    Γ ≤ (rangeMem θ f x)ᶜ ↔ Γ ≤ (x ∈ᴮ image (graphDomain θ A f) A f)ᶜ := by
   constructor
   · intro H
     rw [← imp_bot, ← deduction]
@@ -48,8 +47,7 @@ theorem exists_least_unused {θ A f u : bSet 𝔹} {Γ : 𝔹}
     change Γ ≤ u ∈ᴮ difference A (image (graphDomain θ A f) A f)
     rw [mem_difference]
     exact le_inf Hu ((partial_not_rangeMem_iff_image Hpartial).mp Hnotu)
-  have Hnonempty : Γ ≤ (U =ᴮ ∅)ᶜ :=
-    nonempty_of_exists_mem U (le_iSup_of_le u HuU)
+  have Hnonempty : Γ ≤ (U =ᴮ ∅)ᶜ := nonempty_of_exists_mem U (le_iSup_of_le u HuU)
   have Hext : B_ext (fun y : bSet 𝔹 => y ∈ᴮ U ⊓
       (⨅ z, _root_.imp (z ∈ᴮ U) (z ∈ᴮ y)ᶜ)) :=
     B_ext_inf B_ext_mem_left (B_ext_iInf (h := fun _ =>
@@ -74,8 +72,7 @@ theorem exists_least_unused {θ A f u : bSet 𝔹} {Γ : 𝔹}
       exact le_inf (inf_le_left.trans (inf_le_right.trans inf_le_left))
         ((partial_not_rangeMem_iff_image (HΞΓ.trans Hpartial)).mp inf_le_right)
     have Hnotzy : Ξ ≤ (z ∈ᴮ y)ᶜ :=
-      (le_inf (HΞΓ.trans (Hy.trans (inf_le_right.trans (iInf_le _ z))))
-        HzU).trans bv_imp_elim
+      (le_inf (HΞΓ.trans (Hy.trans (inf_le_right.trans (iInf_le _ z)))) HzU).trans bv_imp_elim
     exact bv_absurd _ (inf_le_left.trans (inf_le_right.trans inf_le_right)) Hnotzy
   simpa only [compl_compl] using Hnotnot
 
@@ -105,14 +102,12 @@ theorem range_below_unused {κ θ A f y : bSet 𝔹} {Γ : 𝔹}
     · have Hyrange : Δ ⊓ x =ᴮ y ≤ rangeMem θ f y :=
         bv_rw'' (ϕ := rangeMem θ f) inf_le_right
           (inf_le_left.trans inf_le_right) (rangeMem_ext_value θ f)
-      exact (bv_absurd _ Hyrange
-        (inf_le_left.trans (inf_le_left.trans Hnoty))).trans bot_le
+      exact (bv_absurd _ Hyrange (inf_le_left.trans (inf_le_left.trans Hnoty))).trans bot_le
     · exact inf_le_right
   · have Hyrange : Δ ⊓ y ∈ᴮ x ≤ rangeMem θ f y :=
       rangeInitial_apply (inf_le_left.trans (inf_le_left.trans Hrange))
         (inf_le_left.trans inf_le_right)
         (inf_le_left.trans (inf_le_left.trans Hy)) inf_le_right
-    exact (bv_absurd _ Hyrange
-      (inf_le_left.trans (inf_le_left.trans Hnoty))).trans bot_le
+    exact (bv_absurd _ Hyrange (inf_le_left.trans (inf_le_left.trans Hnoty))).trans bot_le
 
 end bSet.ErdosIncreasingPartial

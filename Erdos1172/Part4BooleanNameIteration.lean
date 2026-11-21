@@ -60,8 +60,7 @@ instance conditionPreorder (Q : bSet B) : Preorder (Condition Q) where
 theorem le_iff {Q : bSet B} (p q : Condition Q) :
     p ≤ q ↔ p.value ≤ q.value ∧ p.value ≤ name q ⊆ᴮ name p := Iff.rfl
 
-theorem name_mem {Q : bSet B} (p : Condition Q) :
-    p.value ≤ name p ∈ᴮ Q := by
+theorem name_mem {Q : bSet B} (p : Condition Q) : p.value ≤ name p ∈ᴮ Q := by
   rw [mem_unfold]
   apply le_iSup_of_le p.index
   exact le_inf p.valid (by simp only [name, bv_eq_refl]; exact le_top)
@@ -86,8 +85,7 @@ theorem projection_exactLifts (Q : bSet B) : ExactLifts (projection Q) := by
 
 /-- Exact projection surjectivity needs labels covering whole Boolean values. -/
 theorem projection_surjective_iff (Q : bSet B) :
-    Function.Surjective (projection Q) ↔
-      ∀ b : B, b ≠ ⊥ → ∃ i : Q.type, b ≤ Q.bval i := by
+    Function.Surjective (projection Q) ↔ ∀ b : B, b ≠ ⊥ → ∃ i : Q.type, b ≤ Q.bval i := by
   constructor
   · intro H b hb
     obtain ⟨p, hp⟩ := H ⟨b, hb⟩
@@ -126,8 +124,7 @@ theorem exists_canonical_refinement {Q q : bSet B} {b : B}
       exact h ⟨i, hi⟩
     exact hb ((membership_pieces hq).trans hbot)
   obtain ⟨i, hi⟩ := hex
-  refine ⟨⟨b ⊓ (Q.bval i ⊓ q =ᴮ Q.func i), hi, i,
-    inf_le_right.trans inf_le_left⟩, inf_le_left, ?_⟩
+  refine ⟨⟨b ⊓ (Q.bval i ⊓ q =ᴮ Q.func i), hi, i, inf_le_right.trans inf_le_left⟩, inf_le_left, ?_⟩
   exact inf_le_right.trans inf_le_right
 
 /-- Any locally valid mixed graph extension refines to an actual condition. -/

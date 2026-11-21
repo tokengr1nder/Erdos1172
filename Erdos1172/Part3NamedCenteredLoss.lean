@@ -93,13 +93,11 @@ theorem exists_loss_witness (J : RegularName P (RegularName P W2))
       exact hs.2
     · exact hs.1.2 c (Finset.mem_erase.mpr ⟨hcb, hct⟩)
   have hloss := hmono q _ _ hsub hsmall
-  refine ⟨t.erase b, herase, q, hqp.trans hpp0,
-    future.persistent hqp (hpresent b hbt), ?_, hloss⟩
+  refine ⟨t.erase b, herase, q, hqp.trans hpp0, future.persistent hqp (hpresent b hbt), ?_, hloss⟩
   intro c hc
   exact future.persistent hqp (hpresent c (Finset.mem_erase.mp hc).2)
 
-theorem mk_finite_subsets_lt {family : Set W2} (bound : W2)
-    (hbound : ∀ b ∈ family, b < bound) :
+theorem mk_finite_subsets_lt {family : Set W2} (bound : W2) (hbound : ∀ b ∈ family, b < bound) :
     #{t : Finset W2 // (↑t : Set W2) ⊆ family} < ℵ_ 2 := by
   classical
   have hfamilyCard : #family ≤ ℵ_ 1 := by
@@ -112,8 +110,7 @@ theorem mk_finite_subsets_lt {family : Set W2} (bound : W2)
   have hcard : #{t : Finset W2 // (↑t : Set W2) ⊆ family} = #(Finset family) :=
     Cardinal.mk_congr (Equiv.finsetSubtypeComm (fun x : W2 => x ∈ family)).symm
   rw [hcard]
-  have hle : #(Finset family) ≤ #(Finset W1) :=
-    Cardinal.mk_le_of_injective (Finset.map_injective e)
+  have hle : #(Finset family) ≤ #(Finset W1) := Cardinal.mk_le_of_injective (Finset.map_injective e)
   have hinfinite : Infinite W1 := by
     apply Cardinal.aleph0_le_mk_iff.mp
     simp only [W1, Cardinal.mk_toType, Ordinal.card_omega]
@@ -137,8 +134,7 @@ theorem exists_stationary_small_loss (center : CountablyCenteredCode P)
     ∃ p : P, p ≤ p0 ∧ ∃ X out : RegularName P W2,
       (∀ q x, X.holds q x → rows.holds q x) ∧
       (neg J).holds p X ∧ StationaryAt out.holds p ∧
-      ∀ q b, out.holds q b → future.holds q b ∧
-        J.holds q (meet X (ground {x | H.Adj x b})) := by
+      ∀ q b, out.holds q b → future.holds q b ∧ J.holds q (meet X (ground {x | H.Adj x b})) := by
   classical
   obtain ⟨family, hfamily⟩ := exists_maximal_centered J H rows future p0 hrows
   obtain ⟨bound, hbound⟩ := centered_bounded center J G H hcompl rows future p0 a

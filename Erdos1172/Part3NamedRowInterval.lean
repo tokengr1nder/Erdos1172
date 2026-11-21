@@ -80,8 +80,7 @@ theorem exists_least_crossing (E : FunctionDecisions P I V)
     (hcofinal : CofinalDecisions E) (p0 : P) (cut : V) :
     ∃ q : P, q ≤ p0 ∧ ∃ b : I, ∃ y : V,
       E.decides q b y ∧ cut ≤ y ∧
-      ∀ r : P, r ≤ p0 → ∀ j : I, j < b → ∀ x : V,
-        E.decides r j x → x < cut := by
+      ∀ r : P, r ≤ p0 → ∀ j : I, j < b → ∀ x : V, E.decides r j x → x < cut := by
   classical
   let crossing : Set I := {j | ∃ q : P, q ≤ p0 ∧ ∃ y : V,
     E.decides q j y ∧ cut ≤ y}
@@ -125,10 +124,8 @@ theorem exists_exact_row_interval (data : LineCoverData V) (U : RegularName P V)
           (∀ p : Set.Iic q, ∀ j : Set.Ico a b, ∀ x : V,
             (intervalE E q a b).decides p j x → (rowName data U i).holds p.val x) ∧
           DenseCoverage (intervalE E q a b) (onCone q (rowName data U i))) := by
-  obtain ⟨q, hqp0, b, y, hby, hcuty, hbefore⟩ :=
-    exists_least_crossing E hcofinal p0 (data.cut i)
-  obtain ⟨r, hrq, outcome, hleast⟩ :=
-    exists_least_deciding_refinement (rowName data U i) q
+  obtain ⟨q, hqp0, b, y, hby, hcuty, hbefore⟩ := exists_least_crossing E hcofinal p0 (data.cut i)
+  obtain ⟨r, hrq, outcome, hleast⟩ := exists_least_deciding_refinement (rowName data U i) q
   cases outcome with
   | none => exact ⟨r, hrq.trans hqp0, Or.inl hleast⟩
   | some x =>
@@ -163,8 +160,7 @@ theorem exists_exact_row_interval (data : LineCoverData V) (U : RegularName P V)
           apply le_of_not_gt
           intro hka
           have hzx : z < x := hordered hka hkz hakt
-          exact hleast.2 t (hts.trans hsr) z hzx
-            ((rowName data U i).persistent htp hzrow)
+          exact hleast.2 t (hts.trans hsr) z hzx ((rowName data U i).persistent htp hzrow)
         have hzcut : z < data.cut i := hzrow.2 ▸ data.lt_cut_row z
         have hkb : k < b := index_lt_of_value_lt E hordered hkz hbty (hzcut.trans_le hcuty)
         exact ⟨⟨t, hts⟩, htp, ⟨k, hak, hkb⟩, hkz⟩

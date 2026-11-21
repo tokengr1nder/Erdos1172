@@ -49,8 +49,7 @@ theorem finalPoints_Ord {color : Bool} {R J E S F Run : bSet 𝔹} {Γ : 𝔹}
       (bv_powerset omegaTwo) F)
     (Hlaw : Γ ≤ blockSelectorLaw color R J E S F)
     (HRun : Γ ≤ is_function omegaOne (stateSpace color R) Run)
-    (Hrec : Γ ≤ imageRecLaw (stateSpace color R)
-      (fun _ T => poolUpdate color R F T) Run) :
+    (Hrec : Γ ≤ imageRecLaw (stateSpace color R) (fun _ T => poolUpdate color R F T) Run) :
     Γ ≤ Ord (finalPoints color R Run) := by
   have Hmembers : Γ ≤ ⨅ P, _root_.imp
       (P ∈ᴮ image omegaOne (bv_powerset omegaTwo) (pointFamily HRun))
@@ -62,8 +61,7 @@ theorem finalPoints_Ord {color : Bool} {R J E S F Run : bSet 𝔹} {Γ : 𝔹}
     have Hmem := mem_image_iff.mp
       (show Δ ≤ P ∈ᴮ image omegaOne (bv_powerset omegaTwo) (pointFamily HRun) from
         inf_le_right)
-    obtain ⟨i, Hi⟩ := exists_convert Hmem.2
-      (B_ext_inf B_ext_mem_left B_ext_pair_mem_left)
+    obtain ⟨i, Hi⟩ := exists_convert Hmem.2 (B_ext_inf B_ext_mem_left B_ext_pair_mem_left)
     obtain ⟨B, HB⟩ := pointFamily_witness HRun (Hi.trans inf_le_right)
     exact le_inf (pool_run_pair_ordinal (inf_le_left.trans HCH)
       (inf_le_left.trans HF) (inf_le_left.trans Hlaw) (inf_le_left.trans HRun)
@@ -78,16 +76,14 @@ theorem finalPoints_mem_omegaTwo {color : Bool} {R J E S F Run : bSet 𝔹} {Γ 
       (bv_powerset omegaTwo) F)
     (Hlaw : Γ ≤ blockSelectorLaw color R J E S F)
     (HRun : Γ ≤ is_function omegaOne (stateSpace color R) Run)
-    (Hrec : Γ ≤ imageRecLaw (stateSpace color R)
-      (fun _ T => poolUpdate color R F T) Run) :
+    (Hrec : Γ ≤ imageRecLaw (stateSpace color R) (fun _ T => poolUpdate color R F T) Run) :
     Γ ≤ finalPoints color R Run ∈ᴮ omegaTwo := by
   have Hord := finalPoints_Ord HCH HF Hlaw HRun Hrec
   have Hsmall : Γ ≤ injects_into (finalPoints color R Run) omegaOne :=
     (pool_final_aggregates_small HCH HF Hlaw HRun Hrec).trans inf_le_right
   have Hpast : Γ ≤ past (finalPoints color R Run) ∈ᴮ omegaTwo :=
     past_mem_omegaTwo HCH aggregateRight_subset Hsmall
-  have Hcases := eq_or_mem_of_ordinal_subset Hord
-    (Ord_of_mem_Ord Hpast omegaTwo_Ord) subset_past
+  have Hcases := eq_or_mem_of_ordinal_subset Hord (Ord_of_mem_Ord Hpast omegaTwo_Ord) subset_past
   apply (le_inf le_rfl Hcases).trans
   rw [inf_sup_left]
   apply sup_le
@@ -103,12 +99,10 @@ theorem pointFamily_value_mem_finalPoints
       (bv_powerset omegaTwo) F)
     (Hlaw : Γ ≤ blockSelectorLaw color R J E S F)
     (HRun : Γ ≤ is_function omegaOne (stateSpace color R) Run)
-    (Hrec : Γ ≤ imageRecLaw (stateSpace color R)
-      (fun _ T => poolUpdate color R F T) Run)
+    (Hrec : Γ ≤ imageRecLaw (stateSpace color R) (fun _ T => poolUpdate color R F T) Run)
     (Hpair : Γ ≤ pair i P ∈ᴮ pointFamily HRun) :
     Γ ≤ P ∈ᴮ finalPoints color R Run := by
-  have Hi : Γ ≤ i ∈ᴮ omegaOne :=
-    mem_domain_of_is_function Hpair (pointFamily_is_function HRun)
+  have Hi : Γ ≤ i ∈ᴮ omegaOne := mem_domain_of_is_function Hpair (pointFamily_is_function HRun)
   obtain ⟨j, Hj⟩ := exists_above_of_countablyBounded HB Hi
   have Hex : Γ ≤ ⨆ Q, Q ∈ᴮ bv_powerset omegaTwo ⊓ pair j Q ∈ᴮ pointFamily HRun :=
     (le_inf ((is_total_of_is_function (pointFamily_is_function HRun)).trans (iInf_le _ j))
@@ -132,8 +126,7 @@ theorem finalPoints_countablyBounded
       (bv_powerset omegaTwo) F)
     (Hlaw : Γ ≤ blockSelectorLaw color R J E S F)
     (HRun : Γ ≤ is_function omegaOne (stateSpace color R) Run)
-    (Hrec : Γ ≤ imageRecLaw (stateSpace color R)
-      (fun _ T => poolUpdate color R F T) Run) :
+    (Hrec : Γ ≤ imageRecLaw (stateSpace color R) (fun _ T => poolUpdate color R F T) Run) :
     Γ ≤ countablyBounded (finalPoints color R Run) := by
   apply le_iInf
   intro T
@@ -151,8 +144,7 @@ theorem finalPoints_countablyBounded
 This containment alone requires only the actual recursion equations. -/
 theorem finalObjects_points_subset
     {color : Bool} {R F Run : bSet 𝔹} {Γ : 𝔹}
-    (Hrec : Γ ≤ imageRecLaw (stateSpace color R)
-      (fun _ T => poolUpdate color R F T) Run) :
+    (Hrec : Γ ≤ imageRecLaw (stateSpace color R) (fun _ T => poolUpdate color R F T) Run) :
     Γ ≤ bv_union (finalObjects color R Run) ⊆ᴮ finalPoints color R Run := by
   rw [subset_unfold']
   apply le_iInf

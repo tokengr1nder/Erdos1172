@@ -49,14 +49,12 @@ theorem exists_above_two {x d : bSet 𝔹} {Γ : 𝔹}
           (le_inf (mem_of_mem_Ord inf_le_right (Hy.trans inf_le_right)
             (Ord_of_mem_Ord (Hy.trans inf_le_left) omegaTwo_Ord))
             (Hy.trans inf_le_right)))
-    · obtain ⟨y, Hy⟩ := exists_above_omegaTwo_member (inf_le_left.trans HCH)
-        (inf_le_left.trans Hx)
+    · obtain ⟨y, Hy⟩ := exists_above_omegaTwo_member (inf_le_left.trans HCH) (inf_le_left.trans Hx)
       exact le_iSup_of_le y (le_inf (Hy.trans inf_le_left)
         (le_inf (Hy.trans inf_le_right)
           (mem_of_mem_Ord inf_le_right (Hy.trans inf_le_right)
             (Ord_of_mem_Ord (Hy.trans inf_le_left) omegaTwo_Ord))))
-  exact exists_convert Hex
-    (B_ext_inf B_ext_mem_left (B_ext_inf B_ext_mem_right B_ext_mem_right))
+  exact exists_convert Hex (B_ext_inf B_ext_mem_left (B_ext_inf B_ext_mem_right B_ext_mem_right))
 
 def intervalHits (Q F x y : bSet 𝔹) : 𝔹 :=
   ⨅ q, ⨅ C, _root_.imp (q ∈ᴮ Q ⊓ pair q C ∈ᴮ F)
@@ -66,8 +64,7 @@ def intervalHits (Q F x y : bSet 𝔹) : 𝔹 :=
 belong to every graph value at that index and lie above the old endpoint. -/
 theorem exists_above_selector {Q F x : bSet 𝔹} {Γ : 𝔹}
     (HF : Γ ≤ is_func' Q (bv_powerset omegaTwo) F)
-    (Hvalues : Γ ≤ ⨅ q, ⨅ C, _root_.imp
-      (q ∈ᴮ Q ⊓ pair q C ∈ᴮ F) (unboundedIn omegaTwo C))
+    (Hvalues : Γ ≤ ⨅ q, ⨅ C, _root_.imp (q ∈ᴮ Q ⊓ pair q C ∈ᴮ F) (unboundedIn omegaTwo C))
     (Hx : Γ ≤ x ∈ᴮ omegaTwo) :
     ∃ f : bSet 𝔹, Γ ≤ is_function Q omegaTwo f ⊓
       (⨅ q, ⨅ z, _root_.imp (q ∈ᴮ Q ⊓ pair q z ∈ᴮ f)
@@ -87,8 +84,7 @@ theorem exists_above_selector {Q F x : bSet 𝔹} {Γ : 𝔹}
     have HCex : Δ ≤ ⨆ C, C ∈ᴮ bv_powerset omegaTwo ⊓ pair q C ∈ᴮ F :=
       (le_inf (inf_le_left.trans ((HF.trans inf_le_right).trans (iInf_le _ q)))
         inf_le_right).trans bv_imp_elim
-    obtain ⟨C, HC⟩ := exists_convert HCex
-      (B_ext_inf B_ext_mem_left B_ext_pair_mem_right)
+    obtain ⟨C, HC⟩ := exists_convert HCex (B_ext_inf B_ext_mem_left B_ext_pair_mem_right)
     have HU : Δ ≤ unboundedIn omegaTwo C :=
       (le_inf (inf_le_left.trans (Hvalues.trans ((iInf_le _ q).trans (iInf_le _ C))))
         (le_inf inf_le_right (HC.trans inf_le_right))).trans bv_imp_elim
@@ -111,8 +107,7 @@ theorem exists_simultaneous_bound {Q F x : bSet 𝔹} {Γ : 𝔹}
     (HCH : Γ ≤ (CH : 𝔹))
     (HF : Γ ≤ is_func' Q (bv_powerset omegaTwo) F)
     (HQ : Γ ≤ injects_into Q omegaOne)
-    (Hvalues : Γ ≤ ⨅ q, ⨅ C, _root_.imp
-      (q ∈ᴮ Q ⊓ pair q C ∈ᴮ F) (unboundedIn omegaTwo C))
+    (Hvalues : Γ ≤ ⨅ q, ⨅ C, _root_.imp (q ∈ᴮ Q ⊓ pair q C ∈ᴮ F) (unboundedIn omegaTwo C))
     (Hx : Γ ≤ x ∈ᴮ omegaTwo) :
     ∃ y : bSet 𝔹, Γ ≤ y ∈ᴮ omegaTwo ⊓ (x ∈ᴮ y ⊓ intervalHits Q F x y) := by
   obtain ⟨f, Hf⟩ := exists_above_selector HF Hvalues Hx
@@ -120,8 +115,7 @@ theorem exists_simultaneous_bound {Q F x : bSet 𝔹} {Γ : 𝔹}
   obtain ⟨d, Hd⟩ := exists_strict_upper_bound HCH image_subset
     (image_injects_into_ordinal Hweak HQ omegaOne_Ord)
   obtain ⟨y, Hy⟩ := exists_above_two HCH Hx (Hd.trans inf_le_left)
-  refine ⟨y, le_inf (Hy.trans inf_le_left)
-    (le_inf (Hy.trans (inf_le_right.trans inf_le_left)) ?_)⟩
+  refine ⟨y, le_inf (Hy.trans inf_le_left) (le_inf (Hy.trans (inf_le_right.trans inf_le_left)) ?_)⟩
   apply le_iInf
   intro q
   apply le_iInf
@@ -135,8 +129,7 @@ theorem exists_simultaneous_bound {Q F x : bSet 𝔹} {Γ : 𝔹}
   obtain ⟨z, Hz⟩ := exists_convert Hzex (B_ext_inf B_ext_mem_left B_ext_pair_mem_right)
   have Hzspec : Δ ≤ ⨅ A, _root_.imp (pair q A ∈ᴮ F) (z ∈ᴮ A ⊓ x ∈ᴮ z) :=
     (le_inf (inf_le_left.trans ((Hf.trans inf_le_right).trans
-      ((iInf_le _ q).trans (iInf_le _ z)))) (le_inf Hq (Hz.trans inf_le_right))).trans
-        bv_imp_elim
+      ((iInf_le _ q).trans (iInf_le _ z)))) (le_inf Hq (Hz.trans inf_le_right))).trans bv_imp_elim
   have Hzc : Δ ≤ z ∈ᴮ C ⊓ x ∈ᴮ z :=
     (le_inf (Hzspec.trans (iInf_le _ C)) (inf_le_right.trans inf_le_right)).trans bv_imp_elim
   have Hzd : Δ ≤ z ∈ᴮ d := mem_of_mem_subset (inf_le_left.trans (Hd.trans inf_le_right))
@@ -144,7 +137,6 @@ theorem exists_simultaneous_bound {Q F x : bSet 𝔹} {Γ : 𝔹}
   have Hzy : Δ ≤ z ∈ᴮ y := mem_of_mem_Ord Hzd
     (inf_le_left.trans (Hy.trans (inf_le_right.trans inf_le_right)))
     (Ord_of_mem_Ord (inf_le_left.trans (Hy.trans inf_le_left)) omegaTwo_Ord)
-  exact le_iSup_of_le z (le_inf (Hzc.trans inf_le_left)
-    (le_inf (Hzc.trans inf_le_right) Hzy))
+  exact le_iSup_of_le z (le_inf (Hzc.trans inf_le_left) (le_inf (Hzc.trans inf_le_right) Hzy))
 
 end bSet.ErdosClubs

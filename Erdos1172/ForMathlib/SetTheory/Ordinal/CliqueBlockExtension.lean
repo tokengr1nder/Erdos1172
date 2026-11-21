@@ -41,29 +41,23 @@ theorem typeLT_union_of_forall_lt
             | inl a =>
               cases b with
               | inl b =>
-                change (a : V) ≤ b ↔
-                  (Sum.inlₗ a : s ⊕ₗ t) ≤ Sum.inlₗ b
+                change (a : V) ≤ b ↔ (Sum.inlₗ a : s ⊕ₗ t) ≤ Sum.inlₗ b
                 exact (Sum.Lex.inl_le_inl_iff (α := s) (β := t)).symm
               | inr b =>
-                change (a : V) ≤ b ↔
-                  (Sum.inlₗ a : s ⊕ₗ t) ≤ Sum.inrₗ b
-                exact iff_of_true (hst a a.property b b.property).le
-                  (Sum.Lex.inl_le_inr a b)
+                change (a : V) ≤ b ↔ (Sum.inlₗ a : s ⊕ₗ t) ≤ Sum.inrₗ b
+                exact iff_of_true (hst a a.property b b.property).le (Sum.Lex.inl_le_inr a b)
             | inr a =>
               cases b with
               | inl b =>
-                change (a : V) ≤ b ↔
-                  (Sum.inrₗ a : s ⊕ₗ t) ≤ Sum.inlₗ b
+                change (a : V) ≤ b ↔ (Sum.inrₗ a : s ⊕ₗ t) ≤ Sum.inlₗ b
                 exact iff_of_false
                   (not_le_of_gt (hst b b.property a a.property))
                   Sum.Lex.not_inr_le_inl
               | inr b =>
-                change (a : V) ≤ b ↔
-                  (Sum.inrₗ a : s ⊕ₗ t) ≤ Sum.inrₗ b
+                change (a : V) ≤ b ↔ (Sum.inrₗ a : s ⊕ₗ t) ≤ Sum.inrₗ b
                 exact (Sum.Lex.inr_le_inr_iff (α := s) (β := t)).symm }
   have he := e.ordinalType_congr
-  have hsum : typeLT (s ⊕ₗ t) = typeLT s + typeLT t :=
-    type_sum_lex (· < ·) (· < ·)
+  have hsum : typeLT (s ⊕ₗ t) = typeLT s + typeLT t := type_sum_lex (· < ·) (· < ·)
   exact he.symm.trans hsum
 
 end Ordinal

@@ -48,13 +48,11 @@ def conditions (K : bSet 𝔹) : bSet 𝔹 :=
 
 /-- Computing the graph domain respects Boolean equality of arbitrary
 graphs; neither graph is required to be a condition. -/
-theorem graphDomain_congr_graph (K S : bSet 𝔹) :
-    B_congr (graphDomain K S) := by
+theorem graphDomain_congr_graph (K S : bSet 𝔹) : B_congr (graphDomain K S) := by
   intro p q Γ Hpq
   have Hext (x : bSet 𝔹) : B_ext (fun f : bSet 𝔹 =>
       x ∈ᴮ K ⊓ ⨆ y, y ∈ᴮ S ⊓ pair x y ∈ᴮ f) :=
-    B_ext_inf B_ext_const
-      (B_ext_iSup (h := fun _ => B_ext_inf B_ext_const B_ext_mem_right))
+    B_ext_inf B_ext_const (B_ext_iSup (h := fun _ => B_ext_inf B_ext_const B_ext_mem_right))
   apply mem_ext
   · apply le_iInf
     intro x
@@ -75,8 +73,7 @@ theorem condition_ext_graph (K : bSet 𝔹) : B_ext (condition K) :=
   B_ext_inf B_ext_subset_left
     (B_ext_inf ErdosPrefixFunction.is_func_ext_graph (smallDomain_ext_graph K))
 
-theorem mem_conditions_iff {K p : bSet 𝔹} {Γ : 𝔹} :
-    Γ ≤ p ∈ᴮ conditions K ↔ Γ ≤ condition K p := by
+theorem mem_conditions_iff {K p : bSet 𝔹} {Γ : 𝔹} : Γ ≤ p ∈ᴮ conditions K ↔ Γ ≤ condition K p := by
   unfold conditions
   rw [mem_comprehend_and
     (B_ext_inf ErdosPrefixFunction.is_func_ext_graph (smallDomain_ext_graph K))]
@@ -91,8 +88,7 @@ without asserting that this domain is an initial segment. -/
 theorem condition_function {K p : bSet 𝔹} {Γ : 𝔹}
     (H : Γ ≤ condition K p) :
     Γ ≤ is_function (graphDomain K two p) two p :=
-  function_on_graphDomain (H.trans inf_le_left)
-    (H.trans (inf_le_right.trans inf_le_left))
+  function_on_graphDomain (H.trans inf_le_left) (H.trans (inf_le_right.trans inf_le_left))
 
 theorem graphDomain_empty {K S : bSet 𝔹} {Γ : 𝔹} :
     Γ ≤ graphDomain K S ∅ =ᴮ ∅ :=

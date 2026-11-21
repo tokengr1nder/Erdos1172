@@ -47,8 +47,7 @@ private theorem section_predicate_ext_endpoint (color : Bool) (R r i : bSet 𝔹
 
 theorem mem_forwardSection_iff {color : Bool} {R r y i : bSet 𝔹} {Γ : 𝔹} :
     Γ ≤ i ∈ᴮ forwardSection color R r y ↔
-      (Γ ≤ i ∈ᴮ omegaOne) ∧
-        Γ ≤ ⨆ x, pair i x ∈ᴮ r ⊓ (x ∈ᴮ y ⊓ graphColor color R x y) :=
+      (Γ ≤ i ∈ᴮ omegaOne) ∧ Γ ≤ ⨆ x, pair i x ∈ᴮ r ⊓ (x ∈ᴮ y ⊓ graphColor color R x y) :=
   mem_comprehend_and (section_predicate_ext_index color R r y)
 
 theorem forwardSection_subset {color : Bool} {R r y : bSet 𝔹} {Γ : 𝔹} :
@@ -85,11 +84,9 @@ theorem forwardSection_congr (color : Bool) (R r : bSet 𝔹) :
 /-- Fullness selects one actual row value, retaining the original context. -/
 theorem exists_forwardSection_value {color : Bool} {R r y i : bSet 𝔹} {Γ : 𝔹}
     (Hi : Γ ≤ i ∈ᴮ forwardSection color R r y) :
-    ∃ x : bSet 𝔹, (Γ ≤ pair i x ∈ᴮ r) ∧
-      (Γ ≤ x ∈ᴮ y) ∧ Γ ≤ graphColor color R x y := by
+    ∃ x : bSet 𝔹, (Γ ≤ pair i x ∈ᴮ r) ∧ (Γ ≤ x ∈ᴮ y) ∧ Γ ≤ graphColor color R x y := by
   obtain ⟨x, Hx⟩ := exists_convert (mem_forwardSection_iff.mp Hi).2
-    (B_ext_inf B_ext_pair_mem_right
-      (B_ext_inf B_ext_mem_left (graphColor_ext_left color R y)))
+    (B_ext_inf B_ext_pair_mem_right (B_ext_inf B_ext_mem_left (graphColor_ext_left color R y)))
   exact ⟨x, Hx.trans inf_le_left, Hx.trans (inf_le_right.trans inf_le_left),
     Hx.trans (inf_le_right.trans inf_le_right)⟩
 
@@ -109,8 +106,7 @@ theorem mem_forwardSection_of_pair {color : Bool} {R r y i x : bSet 𝔹} {Γ : 
     (Hi : Γ ≤ i ∈ᴮ omegaOne) (Hix : Γ ≤ pair i x ∈ᴮ r)
     (Hxy : Γ ≤ x ∈ᴮ y) (Hcolor : Γ ≤ graphColor color R x y) :
     Γ ≤ i ∈ᴮ forwardSection color R r y :=
-  mem_forwardSection_iff.mpr
-    ⟨Hi, le_iSup_of_le x (le_inf Hix (le_inf Hxy Hcolor))⟩
+  mem_forwardSection_iff.mpr ⟨Hi, le_iSup_of_le x (le_inf Hix (le_inf Hxy Hcolor))⟩
 
 def sectionFamily (color : Bool) (R r S F : bSet 𝔹) : 𝔹 :=
   ⨅ y, ⨅ A, _root_.imp (y ∈ᴮ S ⊓ pair y A ∈ᴮ F)
@@ -119,14 +115,12 @@ def sectionFamily (color : Bool) (R r S F : bSet 𝔹) : 𝔹 :=
 theorem sectionFamily_apply {color : Bool} {R r S F y A : bSet 𝔹} {Γ : 𝔹}
     (H : Γ ≤ sectionFamily color R r S F) (Hy : Γ ≤ y ∈ᴮ S)
     (HyA : Γ ≤ pair y A ∈ᴮ F) : Γ ≤ A =ᴮ forwardSection color R r y :=
-  (le_inf (H.trans ((iInf_le _ y).trans (iInf_le _ A))) (le_inf Hy HyA)).trans
-    bv_imp_elim
+  (le_inf (H.trans ((iInf_le _ y).trans (iInf_le _ A))) (le_inf Hy HyA)).trans bv_imp_elim
 
 /-- Separation constructs the full coherent section function, rather than
 assuming separately supplied witnesses for each endpoint. -/
 theorem exists_forwardSection_family (color : Bool) (R r S : bSet 𝔹) {Γ : 𝔹} :
-    ∃ F : bSet 𝔹, Γ ≤ is_function S (bv_powerset omegaOne) F ⊓
-      sectionFamily color R r S F := by
+    ∃ F : bSet 𝔹, Γ ≤ is_function S (bv_powerset omegaOne) F ⊓ sectionFamily color R r S F := by
   let P := fun y A : bSet 𝔹 => A =ᴮ forwardSection color R r y
   have hL : ∀ A, B_ext (fun y => P y A) := fun A =>
     B_ext_term (ϕ := fun X => A =ᴮ X) (t := forwardSection color R r)
@@ -141,16 +135,14 @@ theorem exists_forwardSection_family (color : Bool) (R r S : bSet 𝔹) {Γ : �
       exact le_iSup_of_le (forwardSection color R r y)
         (le_inf (mem_powerset_iff.mpr forwardSection_subset) bv_refl)
     · intro y₁ y₂ A₁ A₂ Δ _ _ _ _ _ H₁ H₂ Hyy
-      exact bv_trans H₁
-        (bv_trans (forwardSection_congr color R r Hyy) (bv_symm H₂))
+      exact bv_trans H₁ (bv_trans (forwardSection_congr color R r Hyy) (bv_symm H₂))
   refine ⟨F, le_inf Hfunction ?_⟩
   apply le_iInf
   intro y
   apply le_iInf
   intro A
   rw [← deduction]
-  exact ((mem_relationGraph_iff hL hR).mp
-    (show Γ ⊓ (y ∈ᴮ S ⊓ pair y A ∈ᴮ F) ≤ pair y A ∈ᴮ F from
+  exact ((mem_relationGraph_iff hL hR).mp (show Γ ⊓ (y ∈ᴮ S ⊓ pair y A ∈ᴮ F) ≤ pair y A ∈ᴮ F from
       inf_le_right.trans inf_le_right)).2.2
 
 /-- Pointwise positive sections give the exact positive-value premise
@@ -158,8 +150,7 @@ required by the internal dense-basis centering theorem. -/
 theorem positiveValues_of_sectionFamily
     {color : Bool} {R r S F J : bSet 𝔹} {Γ : 𝔹}
     (Hfamily : Γ ≤ sectionFamily color R r S F)
-    (Hpositive : Γ ≤ ⨅ y, _root_.imp (y ∈ᴮ S)
-      (positive omegaOne J (forwardSection color R r y))) :
+    (Hpositive : Γ ≤ ⨅ y, _root_.imp (y ∈ᴮ S) (positive omegaOne J (forwardSection color R r y))) :
     Γ ≤ positiveValues omegaOne J S F := by
   apply le_iInf
   intro y

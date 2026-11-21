@@ -36,8 +36,7 @@ variable {B C : Type u}
 variable [NontrivialCompleteBooleanAlgebra B]
 variable [NontrivialCompleteBooleanAlgebra C]
 
-theorem map_empty (e : CompleteLatticeHom B C) :
-    mapNames e (∅ : bSet B) = ∅ := by
+theorem map_empty (e : CompleteLatticeHom B C) : mapNames e (∅ : bSet B) = ∅ := by
   calc
     mapNames e (∅ : bSet B) = mapNames e (check (∅ : PSet.{u})) :=
       congrArg (mapNames e) check_empty_eq_empty.symm
@@ -95,8 +94,7 @@ theorem boundedFunc_apply {x y f : bSet B} {Γ : B}
   exact (le_inf ((le_inf Hspec (le_inf (le_inf Hi Hj) (le_inf Hpi Hpj))).trans
     bv_imp_elim) Hij).trans bv_imp_elim
 
-theorem is_func_le_boundedFunc (x y f : bSet B) :
-    is_func f ≤ boundedFunc x y f := by
+theorem is_func_le_boundedFunc (x y f : bSet B) : is_func f ≤ boundedFunc x y f := by
   apply le_iInf
   intro i
   apply le_iInf
@@ -119,35 +117,28 @@ theorem boundedFunc_eq_of_mem {x y f a b c d : bSet B} {Γ : B}
   rw [mem_unfold, inf_iSup_eq]
   apply iSup_le
   intro i
-  change Γ ⊓ ((x.bval i.1 ⊓ y.bval i.2) ⊓
-    (pair a b =ᴮ pair (x.func i.1) (y.func i.2))) ≤ b =ᴮ d
+  change Γ ⊓ ((x.bval i.1 ⊓ y.bval i.2) ⊓ (pair a b =ᴮ pair (x.func i.1) (y.func i.2))) ≤ b =ᴮ d
   apply (le_inf le_rfl (inf_le_left.trans Hcdprod)).trans
   rw [mem_unfold, inf_iSup_eq]
   apply iSup_le
   intro j
   let Δ := (Γ ⊓ ((x.bval i.1 ⊓ y.bval i.2) ⊓
     (pair a b =ᴮ pair (x.func i.1) (y.func i.2)))) ⊓
-    ((x.bval j.1 ⊓ y.bval j.2) ⊓
-      (pair c d =ᴮ pair (x.func j.1) (y.func j.2)))
+    ((x.bval j.1 ⊓ y.bval j.2) ⊓ (pair c d =ᴮ pair (x.func j.1) (y.func j.2)))
   change Δ ≤ b =ᴮ d
   have HΓ : Δ ≤ Γ := inf_le_left.trans inf_le_left
-  have Hi : Δ ≤ x.bval i.1 ⊓ y.bval i.2 :=
-    inf_le_left.trans (inf_le_right.trans inf_le_left)
+  have Hi : Δ ≤ x.bval i.1 ⊓ y.bval i.2 := inf_le_left.trans (inf_le_right.trans inf_le_left)
   have Hj : Δ ≤ x.bval j.1 ⊓ y.bval j.2 := inf_le_right.trans inf_le_left
   have Heqi : Δ ≤ pair a b =ᴮ pair (x.func i.1) (y.func i.2) :=
     inf_le_left.trans (inf_le_right.trans inf_le_right)
-  have Heqj : Δ ≤ pair c d =ᴮ pair (x.func j.1) (y.func j.2) :=
-    inf_le_right.trans inf_le_right
-  have Hpi : Δ ≤ pair (x.func i.1) (y.func i.2) ∈ᴮ f :=
-    bv_rw'' Heqi (HΓ.trans Hab) B_ext_mem_left
-  have Hpj : Δ ≤ pair (x.func j.1) (y.func j.2) ∈ᴮ f :=
-    bv_rw'' Heqj (HΓ.trans Hcd) B_ext_mem_left
+  have Heqj : Δ ≤ pair c d =ᴮ pair (x.func j.1) (y.func j.2) := inf_le_right.trans inf_le_right
+  have Hpi : Δ ≤ pair (x.func i.1) (y.func i.2) ∈ᴮ f := bv_rw'' Heqi (HΓ.trans Hab) B_ext_mem_left
+  have Hpj : Δ ≤ pair (x.func j.1) (y.func j.2) ∈ᴮ f := bv_rw'' Heqj (HΓ.trans Hcd) B_ext_mem_left
   have Hdom : Δ ≤ x.func i.1 =ᴮ x.func j.1 :=
     bv_trans (bv_symm (eq_of_eq_pair_left' Heqi))
       (bv_trans (HΓ.trans Hac) (eq_of_eq_pair_left' Heqj))
   have Hval := boundedFunc_apply (HΓ.trans Hf) i j Hi Hj Hpi Hpj Hdom
-  exact bv_trans (eq_of_eq_pair_right' Heqi)
-    (bv_trans Hval (bv_symm (eq_of_eq_pair_right' Heqj)))
+  exact bv_trans (eq_of_eq_pair_right' Heqi) (bv_trans Hval (bv_symm (eq_of_eq_pair_right' Heqj)))
 
 theorem is_func_of_boundedFunc {x y f : bSet B} {Γ : B}
     (Hsub : Γ ≤ f ⊆ᴮ prod x y) (Hf : Γ ≤ boundedFunc x y f) :
@@ -170,8 +161,7 @@ theorem is_func_of_boundedFunc {x y f : bSet B} {Γ : B}
 /-- Exact normalization includes the support guard rather than assuming it
 at top or discarding off-product entries without justification. -/
 theorem is_function_eq_bounded (x y f : bSet B) :
-    is_function x y f =
-      (boundedFunc x y f ⊓ is_total' x y f) ⊓ (f ⊆ᴮ prod x y) := by
+    is_function x y f = (boundedFunc x y f ⊓ is_total' x y f) ⊓ (f ⊆ᴮ prod x y) := by
   apply le_antisymm
   · refine le_inf (le_inf ?_ ?_) inf_le_right
     · exact (inf_le_left.trans inf_le_left).trans (is_func_le_boundedFunc x y f)
@@ -201,8 +191,7 @@ theorem map_is_total' (e : CompleteLatticeHom B C) (x y f : bSet B) :
 /-- Exact transport of the supported-function Boolean value, proved only
 after bounded normalization. No surjectivity of the map on names is used. -/
 theorem map_is_function (e : CompleteLatticeHom B C) (x y f : bSet B) :
-    e (is_function x y f) =
-      is_function (mapNames e x) (mapNames e y) (mapNames e f) := by
+    e (is_function x y f) = is_function (mapNames e x) (mapNames e y) (mapNames e f) := by
   calc
     e (is_function x y f) =
         e ((boundedFunc x y f ⊓ is_total' x y f) ⊓ (f ⊆ᴮ prod x y)) :=

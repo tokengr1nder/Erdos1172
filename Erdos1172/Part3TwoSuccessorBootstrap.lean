@@ -41,8 +41,7 @@ theorem exists_stationary_redSmall_loss {r : Code ↪ W2} {G H : SimpleGraph W2}
     (hd : IsStationary domain) (hgood : ∀ a ∈ domain, GoodCut r G H a)
     (hext : ∀ a ∈ domain, BlueSmall r G H δ a (source ∩ Set.Iio a)) :
     ∃ a ∈ domain, ∃ future : Set W2, future ⊆ domain ∧ IsStationary future ∧
-      ∀ b ∈ future, a < b ∧ RedSmall r G H δ a
-        ((source ∩ Set.Iio a) ∩ {x | H.Adj x b}) := by
+      ∀ b ∈ future, a < b ∧ RedSmall r G H δ a ((source ∩ Set.Iio a) ∩ {x | H.Adj x b}) := by
   classical
   let goodFuture (a : W2) : Set W2 :=
     {b | b ∈ domain ∧ a < b ∧ RedSmall r G H δ a
@@ -65,8 +64,7 @@ theorem exists_stationary_redSmall_loss {r : Code ↪ W2} {G H : SimpleGraph W2}
   have hdiagonal : IsClub diagonal := isClub_diagonalInter allClubs hallClubs
   obtain ⟨reflectClub, hreflectClub, hreflect⟩ :=
     exists_club_positive_trace r G H (domain ∩ diagonal)
-  obtain ⟨a, had, haDiag, haReflect⟩ := hd
-    (hdiagonal.inter alephZero_lt_cof_W2.ne' hreflectClub)
+  obtain ⟨a, had, haDiag, haReflect⟩ := hd (hdiagonal.inter alephZero_lt_cof_W2.ne' hreflectClub)
   have hpositive := hreflect a haReflect ⟨had, haDiag⟩
   apply hpositive
   apply small_mono (t := {b | b < a ∧ GoodCut r G H b ∧
@@ -102,8 +100,7 @@ theorem targets_of_stationary_small_loss {r : Code ↪ W2}
   by_cases hpair : ∃ p ∈ future, ∃ q ∈ future, p < q ∧ G.Adj p q
   · obtain ⟨p, hp, q, hq, hpq, hpqG⟩ := hpair
     let bad := (rows ∩ {x | H.Adj x p}) ∪ (rows ∩ {x | H.Adj x q})
-    have hbad : RedSmall r G H (ω ^ e) a bad :=
-      redSmall_union ha e (hloss p hp).2 (hloss q hq).2
+    have hbad : RedSmall r G H (ω ^ e) a bad := redSmall_union ha e (hloss p hp).2 (hloss q hq).2
     have hremain := (redSmallness ha e).positive_sdiff hpos hbad
     obtain ⟨c, hc, hcl, hct⟩ := core_of_red_positive ha hremain
     have hredp : ∀ x ∈ c, G.Adj x p := by
@@ -175,8 +172,7 @@ theorem ordinalRamsey_add_two_of_core (hGCH : GCH) (e : Ordinal.{0})
 
 theorem ordinalRamsey_add_two_iff_core (hGCH : GCH) (e : Ordinal.{0})
     (hδ : ω ^ e + 2 ≤ ω_ 2) :
-    OrdinalRamsey (ω_ 2) (ω ^ e + 2) (ω_ 1 + 2) ↔
-      OrdinalRamsey (ω_ 2) (ω ^ e) (ω_ 1 + 2) :=
+    OrdinalRamsey (ω_ 2) (ω ^ e + 2) (ω_ 1 + 2) ↔ OrdinalRamsey (ω_ 2) (ω ^ e) (ω_ 1 + 2) :=
   ⟨fun h => h.mono_targets le_self_add le_rfl, ordinalRamsey_add_two_of_core hGCH e hδ⟩
 
 /-- Exact Part 3 is equivalent to its red-core version under GCH. The

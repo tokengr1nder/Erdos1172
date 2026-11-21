@@ -35,8 +35,7 @@ requirement. There is no lower bound of the completed sequence. -/
 theorem exists_antitone_dense_sequence_of_card {I : Type}
     (hclosed : CountablyClosed P) (p0 : P) (D : I → Set P)
     (hD : ∀ i, DenseBelow (D i)) (hI : #I ≤ ℵ_ 1) :
-    ∃ f : W1 → P, Antitone f ∧ (∀ j, f j ≤ p0) ∧
-      ∀ i : I, ∃ j : W1, f j ∈ D i := by
+    ∃ f : W1 → P, Antitone f ∧ (∀ j, f j ≤ p0) ∧ ∀ i : I, ∃ j : W1, f j ∈ D i := by
   classical
   obtain ⟨index⟩ : Nonempty (I ↪ W1) := (Cardinal.le_def _ _).mp (by
     simpa only [W1, Cardinal.mk_toType, Ordinal.card_omega] using hI)

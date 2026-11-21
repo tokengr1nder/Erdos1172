@@ -59,8 +59,7 @@ theorem exists_small_binary_coding_extension (κ : Cardinal.{u})
               (check ((PSet.ordinalMk κ.ord).Func (j x))) (1 : bSet (FirstAlgebra κ)))ᶜ ⊓
             (firstStageHom κ (b x))ᶜ) := by
   obtain ⟨i, s, Hsp, Hbound⟩ := exists_ground_bound_refinement κ Hκ Hunc p
-  obtain ⟨j, Hj, HC, Hcount, Hjfresh⟩ :=
-    exists_small_fresh_checked_coordinates κ Hκ Hunc I HI i
+  obtain ⟨j, Hj, HC, Hcount, Hjfresh⟩ := exists_small_fresh_checked_coordinates κ Hκ Hunc I HI i
   have Hfresh (x : I) : s.value ≤
       (check ((freshCoordinateSet j).Func x) ∈ᴮ
         graphDomain omegaOne two (Erdos1172BooleanNameIteration.name s))ᶜ := by

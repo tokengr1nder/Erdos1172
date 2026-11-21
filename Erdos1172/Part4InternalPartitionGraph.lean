@@ -38,8 +38,7 @@ theorem graphColor_symm (color : Bool) (R x y : bSet 𝔹) :
   unfold graphColor
   exact sup_comm _ _
 
-theorem graphColor_self (color : Bool) (R x : bSet 𝔹) :
-    graphColor color R x x = ⊥ := by
+theorem graphColor_self (color : Bool) (R x : bSet 𝔹) : graphColor color R x x = ⊥ := by
   have Hmem : x ∈ᴮ x = ⊥ := bot_unique (bot_of_mem_self' le_rfl)
   simp only [graphColor, Hmem, bot_inf_eq, sup_self]
 
@@ -48,8 +47,7 @@ theorem membership_two_cycle_eq_bot (x y : bSet 𝔹) :
   bot_unique (bot_of_mem_mem' x y inf_le_left inf_le_right)
 
 theorem graphColor_sup (R x y : bSet 𝔹) :
-    graphColor false R x y ⊔ graphColor true R x y =
-      (x ∈ᴮ y) ⊔ (y ∈ᴮ x) := by
+    graphColor false R x y ⊔ graphColor true R x y = (x ∈ᴮ y) ⊔ (y ∈ᴮ x) := by
   change ((x ∈ᴮ y ⊓ (pair x y ∈ᴮ R)ᶜ) ⊔
     (y ∈ᴮ x ⊓ (pair y x ∈ᴮ R)ᶜ)) ⊔
     ((x ∈ᴮ y ⊓ pair x y ∈ᴮ R) ⊔ (y ∈ᴮ x ⊓ pair y x ∈ᴮ R)) = _
@@ -61,8 +59,7 @@ theorem graphColor_sup (R x y : bSet 𝔹) :
       simp only [← inf_sup_left, compl_sup_eq_top, inf_top_eq]
 
 /-- The two graph colors never overlap, even for nonordinal names. -/
-theorem graphColor_inf (R x y : bSet 𝔹) :
-    graphColor false R x y ⊓ graphColor true R x y = ⊥ := by
+theorem graphColor_inf (R x y : bSet 𝔹) : graphColor false R x y ⊓ graphColor true R x y = ⊥ := by
   apply bot_unique
   change ((x ∈ᴮ y ⊓ (pair x y ∈ᴮ R)ᶜ) ⊔
     (y ∈ᴮ x ⊓ (pair y x ∈ᴮ R)ᶜ)) ⊓
@@ -85,18 +82,15 @@ theorem graphColor_inf (R x y : bSet 𝔹) :
 /-- On a forced increasing pair, symmetrization preserves the chosen color. -/
 theorem graphColor_eq_oriented (color : Bool) (R : bSet 𝔹)
     {x y : bSet 𝔹} {Γ : 𝔹} (Hxy : Γ ≤ x ∈ᴮ y) :
-    Γ ⊓ graphColor color R x y =
-      Γ ⊓ (if color then pair x y ∈ᴮ R else (pair x y ∈ᴮ R)ᶜ) := by
+    Γ ⊓ graphColor color R x y = Γ ⊓ (if color then pair x y ∈ᴮ R else (pair x y ∈ᴮ R)ᶜ) := by
   have Hyx : Γ ⊓ (y ∈ᴮ x) = ⊥ :=
     bot_unique (bot_of_mem_mem' x y (inf_le_left.trans Hxy) inf_le_right)
   unfold graphColor
-  rw [inf_sup_left, ← inf_assoc, inf_eq_left.mpr Hxy,
-    ← inf_assoc, Hyx, bot_inf_eq, sup_bot_eq]
+  rw [inf_sup_left, ← inf_assoc, inf_eq_left.mpr Hxy, ← inf_assoc, Hyx, bot_inf_eq, sup_bot_eq]
 
 theorem le_graphColor_iff_oriented (color : Bool) (R : bSet 𝔹)
     {x y : bSet 𝔹} {Γ : 𝔹} (Hxy : Γ ≤ x ∈ᴮ y) :
-    Γ ≤ graphColor color R x y ↔
-      Γ ≤ (if color then pair x y ∈ᴮ R else (pair x y ∈ᴮ R)ᶜ) := by
+    Γ ≤ graphColor color R x y ↔ Γ ≤ (if color then pair x y ∈ᴮ R else (pair x y ∈ᴮ R)ᶜ) := by
   rw [← inf_eq_left, graphColor_eq_oriented color R Hxy, inf_eq_left]
 
 end bSet.ErdosPartition

@@ -97,7 +97,6 @@ theorem boundedRows_type_lt (bound : W1) :
     rw [Cardinal.lt_omega_iff_card_lt, Ordinal.card_type]
     exact Erdos1172Part3ConvergentCore.mk_Iic_W1_lt bound
   rw [Ordinal.opow_add_one]
-  exact htype.trans_lt (mul_lt_mul_of_pos_left hbound
-    (Ordinal.opow_pos _ (Ordinal.omega_pos 1)))
+  exact htype.trans_lt (mul_lt_mul_of_pos_left hbound (Ordinal.opow_pos _ (Ordinal.omega_pos 1)))
 
 end Erdos1172Part3ExactOmegaIndex

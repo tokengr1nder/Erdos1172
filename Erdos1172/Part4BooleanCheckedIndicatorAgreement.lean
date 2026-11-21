@@ -66,19 +66,15 @@ theorem checkedIndicator_subset_of_coefficients (A : PSet.{u})
   rw [← deduction, mem_unfold]
   exact le_iSup_of_le i (le_inf (H i) bv_refl)
 
-private theorem agreement_forward {a b Γ : B}
-    (H : Γ ≤ (a ⊓ b) ⊔ (aᶜ ⊓ bᶜ)) : Γ ⊓ a ≤ b := by
+private theorem agreement_forward {a b Γ : B} (H : Γ ≤ (a ⊓ b) ⊔ (aᶜ ⊓ bᶜ)) : Γ ⊓ a ≤ b := by
   rw [deduction]
   change Γ ≤ aᶜ ⊔ b
-  exact H.trans (sup_le (inf_le_right.trans le_sup_right)
-    (inf_le_left.trans le_sup_left))
+  exact H.trans (sup_le (inf_le_right.trans le_sup_right) (inf_le_left.trans le_sup_left))
 
-private theorem agreement_reverse {a b Γ : B}
-    (H : Γ ≤ (a ⊓ b) ⊔ (aᶜ ⊓ bᶜ)) : Γ ⊓ b ≤ a := by
+private theorem agreement_reverse {a b Γ : B} (H : Γ ≤ (a ⊓ b) ⊔ (aᶜ ⊓ bᶜ)) : Γ ⊓ b ≤ a := by
   rw [deduction]
   change Γ ≤ bᶜ ⊔ a
-  exact H.trans (sup_le (inf_le_left.trans le_sup_right)
-    (inf_le_right.trans le_sup_left))
+  exact H.trans (sup_le (inf_le_left.trans le_sup_right) (inf_le_right.trans le_sup_left))
 
 theorem checkedIndicator_eq_of_binary_agreement (A : PSet.{u})
     {b c : A.Type → B} {Γ : B}
@@ -93,8 +89,7 @@ theorem checkedIndicator_eq_of_binary_agreement (A : PSet.{u})
 theorem eq_checkedIndicator_of_binary_agreement (A : PSet.{u})
     {x : bSet B} {b : A.Type → B} {Γ : B}
     (Hx : Γ ≤ x ⊆ᴮ check A)
-    (H : ∀ i, Γ ≤ ((check (A.Func i) ∈ᴮ x) ⊓ b i) ⊔
-      ((check (A.Func i) ∈ᴮ x)ᶜ ⊓ (b i)ᶜ)) :
+    (H : ∀ i, Γ ≤ ((check (A.Func i) ∈ᴮ x) ⊓ b i) ⊔ ((check (A.Func i) ∈ᴮ x)ᶜ ⊓ (b i)ᶜ)) :
     Γ ≤ x =ᴮ checkedIndicator A b := by
   have Hrep : Γ ≤ x =ᴮ checkedIndicator A (fun i => check (A.Func i) ∈ᴮ x) := by
     rw [checkedIndicator_membership_eq]

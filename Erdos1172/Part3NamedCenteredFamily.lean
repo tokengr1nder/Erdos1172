@@ -62,8 +62,7 @@ theorem exists_maximal_centered (J : RegularName P (RegularName P W2))
     ∃ family : Set W2, Maximal (fun family =>
       family ⊆ possible future.holds p0 ∧ Centered J H rows future p0 family) family := by
   classical
-  have hempty : (∅ : Set W2) ⊆ possible future.holds p0 ∧
-      Centered J H rows future p0 ∅ := by
+  have hempty : (∅ : Set W2) ⊆ possible future.holds p0 ∧ Centered J H rows future p0 ∅ := by
     refine ⟨Set.empty_subset _, ?_⟩
     intro t ht p hpp0 hfuture
     have hte : t = ∅ := Finset.eq_empty_iff_forall_notMem.mpr (fun _ h => ht h)
@@ -140,8 +139,7 @@ theorem centered_bounded (center : CountablyCenteredCode P)
   let condition (b : family) : P := (hfamily b.property).choose
   have hcondition (b : family) : condition b ≤ p0 ∧ future.holds (condition b) b.val :=
     (hfamily b.property).choose_spec
-  let fiber (i : W1) : Set W2 :=
-    {b | ∃ hb : b ∈ family, center.code (condition ⟨b, hb⟩) = i}
+  let fiber (i : W1) : Set W2 := {b | ∃ hb : b ∈ family, center.code (condition ⟨b, hb⟩) = i}
   have hclique (i : W1) : G.IsClique (fiber i) := by
     rintro b ⟨hb, hbi⟩ c ⟨hc, hci⟩ hne
     obtain ⟨q, hqb, hqc⟩ := center.common_lower (hbi.trans hci.symm)
@@ -163,8 +161,7 @@ theorem centered_bounded (center : CountablyCenteredCode P)
     apply Cardinal.mk_range_le.trans_lt
     simpa only [W1, Cardinal.mk_toType, Ordinal.card_omega] using
       (Cardinal.aleph_lt_aleph.mpr (by norm_num : (1 : Ordinal.{0}) < 2))
-  obtain ⟨bound, hbound⟩ := not_isCofinal_iff.mp
-    (fun hc => hsmall.not_ge (Order.cof_le hc))
+  obtain ⟨bound, hbound⟩ := not_isCofinal_iff.mp (fun hc => hsmall.not_ge (Order.cof_le hc))
   refine ⟨bound, ?_⟩
   intro b hb
   exact (hbounds (center.code (condition ⟨b, hb⟩)) b ⟨hb, rfl⟩).trans

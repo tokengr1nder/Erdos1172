@@ -31,8 +31,7 @@ structure RegularName (P X : Type) [Preorder P] where
   persistent : ∀ {p q x}, q ≤ p → holds p x → holds q x
   of_dense : ∀ p x, DenseTruth holds p x → holds p x
 
-theorem RegularName.ext {U V : RegularName P X}
-    (h : ∀ p x, U.holds p x ↔ V.holds p x) : U = V := by
+theorem RegularName.ext {U V : RegularName P X} (h : ∀ p x, U.holds p x ↔ V.holds p x) : U = V := by
   have hh : U.holds = V.holds := funext fun p => funext fun x => propext (h p x)
   cases U
   cases V

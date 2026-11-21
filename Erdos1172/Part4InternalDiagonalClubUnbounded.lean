@@ -40,14 +40,11 @@ small, so its full club intersection supplies the next point. -/
 theorem exists_diagonal_step {F a : bSet 𝔹} {Γ : 𝔹}
     (HCH : Γ ≤ (CH : 𝔹))
     (HF : Γ ≤ is_func' omegaTwo (bv_powerset omegaTwo) F)
-    (Hclubs : Γ ≤ ⨅ i, ⨅ C,
-      _root_.imp (i ∈ᴮ omegaTwo ⊓ pair i C ∈ᴮ F) (club omegaTwo C))
+    (Hclubs : Γ ≤ ⨅ i, ⨅ C, _root_.imp (i ∈ᴮ omegaTwo ⊓ pair i C ∈ᴮ F) (club omegaTwo C))
     (Ha : Γ ≤ a ∈ᴮ omegaTwo) :
-    ∃ b : bSet 𝔹, Γ ≤ b ∈ᴮ omegaTwo ⊓
-      (a ∈ᴮ b ⊓ b ∈ᴮ indexedIntersection omegaTwo F a) := by
+    ∃ b : bSet 𝔹, Γ ≤ b ∈ᴮ omegaTwo ⊓ (a ∈ᴮ b ⊓ b ∈ᴮ indexedIntersection omegaTwo F a) := by
   have HaSub : Γ ≤ a ⊆ᴮ omegaTwo := subset_of_mem_Ord Ha omegaTwo_Ord
-  have Hrestricted : Γ ≤ ⨅ i, ⨅ C,
-      _root_.imp (i ∈ᴮ a ⊓ pair i C ∈ᴮ F) (club omegaTwo C) := by
+  have Hrestricted : Γ ≤ ⨅ i, ⨅ C, _root_.imp (i ∈ᴮ a ⊓ pair i C ∈ᴮ F) (club omegaTwo C) := by
     apply le_iInf
     intro i
     apply le_iInf
@@ -126,8 +123,7 @@ constructed at the original Boolean condition. -/
 theorem exists_diagonal_above {F a : bSet 𝔹} {Γ : 𝔹}
     (HCH : Γ ≤ (CH : 𝔹))
     (HF : Γ ≤ is_func' omegaTwo (bv_powerset omegaTwo) F)
-    (Hclubs : Γ ≤ ⨅ i, ⨅ C,
-      _root_.imp (i ∈ᴮ omegaTwo ⊓ pair i C ∈ᴮ F) (club omegaTwo C))
+    (Hclubs : Γ ≤ ⨅ i, ⨅ C, _root_.imp (i ∈ᴮ omegaTwo ⊓ pair i C ∈ᴮ F) (club omegaTwo C))
     (Ha : Γ ≤ a ∈ᴮ omegaTwo) :
     ∃ b : bSet 𝔹, Γ ≤ (b ∈ᴮ diagonalClub F ⊓ b ∈ᴮ omegaTwo) ⊓ a ∈ᴮ b := by
   classical
@@ -138,11 +134,9 @@ theorem exists_diagonal_above {F a : bSet 𝔹} {Γ : 𝔹}
     exact ⟨⟨y, Hy.trans inf_le_left⟩, Hy.trans inf_le_right⟩
   let next (x : {x : bSet 𝔹 // Γ ≤ x ∈ᴮ omegaTwo}) := Classical.choose (step x)
   have Hnext (x : {x : bSet 𝔹 // Γ ≤ x ∈ᴮ omegaTwo}) :
-      Γ ≤ x.val ∈ᴮ (next x).val ⊓
-        (next x).val ∈ᴮ indexedIntersection omegaTwo F x.val :=
+      Γ ≤ x.val ∈ᴮ (next x).val ⊓ (next x).val ∈ᴮ indexedIntersection omegaTwo F x.val :=
     Classical.choose_spec (step x)
-  let seq : ℕ → {x : bSet 𝔹 // Γ ≤ x ∈ᴮ omegaTwo} :=
-    fun n => Nat.rec ⟨a, Ha⟩ (fun _ x => next x) n
+  let seq : ℕ → {x : bSet 𝔹 // Γ ≤ x ∈ᴮ omegaTwo} := fun n => Nat.rec ⟨a, Ha⟩ (fun _ x => next x) n
   let v (n : ℕ) : bSet 𝔹 := (seq n).val
   have Hv (n : ℕ) : Γ ≤ v n ∈ᴮ omegaTwo := (seq n).property
   have Hstep (n : ℕ) : Γ ≤ v n ∈ᴮ v (n + 1) ⊓
@@ -154,8 +148,7 @@ theorem exists_diagonal_above {F a : bSet 𝔹} {Γ : 𝔹}
   have Hhits (n : ℕ) : Γ ≤ v (n + 1) ∈ᴮ indexedIntersection omegaTwo F (v n) :=
     (Hstep n).trans inf_le_right
   have Hsup : Γ ≤ sequenceSup v ∈ᴮ omegaTwo := sequenceSup_mem_omegaTwo HCH Hv
-  have Hne : Γ ≤ (sequenceSup v =ᴮ (∅ : bSet 𝔹))ᶜ :=
-    sequenceSup_nonempty Hv Hinc
+  have Hne : Γ ≤ (sequenceSup v =ᴮ (∅ : bSet 𝔹))ᶜ := sequenceSup_nonempty Hv Hinc
   have Hdiag : Γ ≤ sequenceSup v ∈ᴮ diagonalClub F := by
     apply mem_diagonalClub_iff.mpr
     refine ⟨Hsup, ?_⟩
@@ -184,8 +177,7 @@ theorem exists_diagonal_above {F a : bSet 𝔹} {Γ : 𝔹}
 theorem unboundedIn_diagonalClub {F : bSet 𝔹} {Γ : 𝔹}
     (HCH : Γ ≤ (CH : 𝔹))
     (HF : Γ ≤ is_func' omegaTwo (bv_powerset omegaTwo) F)
-    (Hclubs : Γ ≤ ⨅ i, ⨅ C,
-      _root_.imp (i ∈ᴮ omegaTwo ⊓ pair i C ∈ᴮ F) (club omegaTwo C)) :
+    (Hclubs : Γ ≤ ⨅ i, ⨅ C, _root_.imp (i ∈ᴮ omegaTwo ⊓ pair i C ∈ᴮ F) (club omegaTwo C)) :
     Γ ≤ unboundedIn omegaTwo (diagonalClub F) := by
   apply le_iInf
   intro a
@@ -200,8 +192,7 @@ diagonal intersection is an internal omega-two club. -/
 theorem club_diagonalClub {F : bSet 𝔹} {Γ : 𝔹}
     (HCH : Γ ≤ (CH : 𝔹))
     (HF : Γ ≤ is_func' omegaTwo (bv_powerset omegaTwo) F)
-    (Hclubs : Γ ≤ ⨅ i, ⨅ C,
-      _root_.imp (i ∈ᴮ omegaTwo ⊓ pair i C ∈ᴮ F) (club omegaTwo C)) :
+    (Hclubs : Γ ≤ ⨅ i, ⨅ C, _root_.imp (i ∈ᴮ omegaTwo ⊓ pair i C ∈ᴮ F) (club omegaTwo C)) :
     Γ ≤ club omegaTwo (diagonalClub F) := by
   refine le_inf diagonalClub_subset (le_inf (unboundedIn_diagonalClub HCH HF Hclubs) ?_)
   apply closedIn_diagonalClub

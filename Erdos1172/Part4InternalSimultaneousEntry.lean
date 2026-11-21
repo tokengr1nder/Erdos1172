@@ -74,8 +74,7 @@ private theorem rowLaw_graph_subset {δ S Y X top Z W : bSet 𝔹} {Γ : 𝔹}
   obtain ⟨σ, Hσ, v, _, Hp⟩ := mem_prod_iff₂.mp Hprod
   have HpairZ : Δ ≤ pair σ v ∈ᴮ Z := mem_congr Hp bv_refl inf_le_right
   have Hex : Δ ≤ ⨆ w, w ∈ᴮ omegaOne ⊓ pair σ w ∈ᴮ W :=
-    (le_inf (HΔ.trans ((is_total_of_is_function HW).trans (iInf_le _ σ))) Hσ).trans
-      bv_imp_elim
+    (le_inf (HΔ.trans ((is_total_of_is_function HW).trans (iInf_le _ σ))) Hσ).trans bv_imp_elim
   obtain ⟨w, Hw⟩ := exists_convert Hex (B_ext_inf B_ext_mem_left B_ext_pair_mem_right)
   have Hvw : Δ ≤ v =ᴮ w := leastIn_unique
     (simultaneousRowLaw_apply (HΔ.trans HZlaw) Hσ HpairZ)
@@ -92,8 +91,7 @@ theorem simultaneousRowLaw_graph_unique {δ S Y X top Z W : bSet 𝔹} {Γ : �
     (HW : Γ ≤ is_function omegaOne omegaOne W)
     (HZlaw : Γ ≤ simultaneousRowLaw δ S Y X top Z)
     (HWlaw : Γ ≤ simultaneousRowLaw δ S Y X top W) : Γ ≤ Z =ᴮ W :=
-  subset_ext (rowLaw_graph_subset HZ HW HZlaw HWlaw)
-    (rowLaw_graph_subset HW HZ HWlaw HZlaw)
+  subset_ext (rowLaw_graph_subset HZ HW HZlaw HWlaw) (rowLaw_graph_subset HW HZ HWlaw HZlaw)
 
 /-- Equality of whole entries follows from exact row and vertex laws,
 including on Boolean pieces where the next vertex is the sentinel. -/
@@ -117,8 +115,7 @@ theorem entryValid_mem_entrySpace
     {color : Bool} {δ R S Y X top y Z : bSet 𝔹} {Γ : 𝔹}
     (Hy : Γ ≤ y ∈ᴮ omegaTwo) (Hentry : Γ ≤ entryValid color δ R S Y X top y Z) :
     Γ ≤ pair y Z ∈ᴮ (entrySpace : bSet 𝔹) :=
-  prod_mem Hy (mem_powerset_iff.mpr
-    (subset_prod_of_is_function (Hentry.trans inf_le_left)))
+  prod_mem Hy (mem_powerset_iff.mpr (subset_prod_of_is_function (Hentry.trans inf_le_left)))
 
 /-- A full next entry exists, with all row coordinates and the vertex
 bounded. The proper ideals may vary over rows by an internal existential. -/
@@ -134,8 +131,7 @@ theorem exists_bounded_next_entry
   obtain ⟨y, Hy⟩ := exists_next_vertex (color := color) (δ := δ) (R := R)
     (S := S) (Y := Y) (X := X) (Z := Z) Htop
   exact ⟨y, Z, le_inf (Hy.trans inf_le_left)
-    (le_inf (HZ.trans inf_le_left)
-      (le_inf (HZ.trans inf_le_right) (Hy.trans inf_le_right)))⟩
+    (le_inf (HZ.trans inf_le_left) (le_inf (HZ.trans inf_le_right) (Hy.trans inf_le_right)))⟩
 
 /-- The constructed entry is a member of one fixed actual set of possible
 entries, suitable for set-sized prefix recursion. -/
@@ -146,10 +142,8 @@ theorem exists_next_entry
     (HY : Γ ≤ is_func' δ omegaTwo Y)
     (HX : Γ ≤ is_func' (prod δ omegaOne) omegaOne X)
     (Hrows : Γ ≤ ⨅ σ, _root_.imp (σ ∈ᴮ omegaOne) (⨆ J, rowIdealData S σ J)) :
-    ∃ y Z : bSet 𝔹, Γ ≤ pair y Z ∈ᴮ (entrySpace : bSet 𝔹) ⊓
-      entryValid color δ R S Y X top y Z := by
-  obtain ⟨y, Z, H⟩ := exists_bounded_next_entry (color := color) (R := R)
-    Hδ Htop HS HY HX Hrows
+    ∃ y Z : bSet 𝔹, Γ ≤ pair y Z ∈ᴮ (entrySpace : bSet 𝔹) ⊓ entryValid color δ R S Y X top y Z := by
+  obtain ⟨y, Z, H⟩ := exists_bounded_next_entry (color := color) (R := R) Hδ Htop HS HY HX Hrows
   exact ⟨y, Z, le_inf (entryValid_mem_entrySpace (H.trans inf_le_left)
     (H.trans inf_le_right)) (H.trans inf_le_right)⟩
 

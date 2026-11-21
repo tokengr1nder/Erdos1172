@@ -144,8 +144,7 @@ theorem empty_runPartial {color : Bool} {R S top : bSet 𝔹} {Γ : 𝔹} :
 
 theorem runMaps_nonempty {color : Bool} {R S top : bSet 𝔹} {Γ : 𝔹} :
     Γ ≤ (runMaps color R S top =ᴮ ∅)ᶜ :=
-  nonempty_of_exists_mem _ (le_iSup_of_le (∅ : bSet 𝔹)
-    (mem_runMaps_iff.mpr empty_runPartial))
+  nonempty_of_exists_mem _ (le_iSup_of_le (∅ : bSet 𝔹) (mem_runMaps_iff.mpr empty_runPartial))
 
 /-- Old entries keep their exact law in any functional extension whose
 stored rows remain actual functions. No prefix or success law is required

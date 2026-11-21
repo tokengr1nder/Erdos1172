@@ -42,12 +42,10 @@ theorem exists_cone_color_core (hclosed : CountablyClosed P)
     (hcolor : ∀ p : P, p ≤ p0 → ∀ x, U.holds p x → (colorGraph G H b).Adj x a) :
     ∃ core : CliqueDecisions (Set.Iic p0) W1 W2 (colorGraph G H b),
       ∀ p i x, core.decides p i x → U.holds p.val x ∧ x < a ∧ (colorGraph G H b).Adj x a := by
-  let R (p : Set.Iic p0) (x : W2) : Prop :=
-    U.holds p.val x ∧ x < a ∧ (colorGraph G H b).Adj x a
+  let R (p : Set.Iic p0) (x : W2) : Prop := U.holds p.val x ∧ x < a ∧ (colorGraph G H b).Adj x a
   have hR : ∀ {p q : Set.Iic p0} {x}, q ≤ p → R p x → R q x :=
     fun hqp h => ⟨U.persistent hqp h.1, h.2⟩
-  have hextend : Erdos1172Part3CountableDecisionFusion.CountableExtension
-      (colorGraph G H b) R := by
+  have hextend : Erdos1172Part3CountableDecisionFusion.CountableExtension (colorGraph G H b) R := by
     intro p selected hcount hselected
     obtain ⟨q, hqp, y, hya, hqy, hcross⟩ := exists_actual_extension hclosed ha b U
       p.val (hpositive p.val p.property) selected hcount

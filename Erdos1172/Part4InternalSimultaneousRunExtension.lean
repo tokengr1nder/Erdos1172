@@ -49,8 +49,7 @@ theorem runPartial_insert_next {color : Bool} {R S top P y Z : bSet 𝔹} {Γ : 
     prefixGraph_insert_next (HP.trans inf_le_left) HD (Hnew.trans inf_le_left)
   have HfuncQ : Γ ≤ is_func Q := HprefixQ.trans (inf_le_right.trans inf_le_left)
   have HrowsQ : Γ ≤ rowFunctions Q :=
-    rowFunctions_insert (runPartial_rowFunctions HP)
-      (Hnew.trans (inf_le_right.trans inf_le_left))
+    rowFunctions_insert (runPartial_rowFunctions HP) (Hnew.trans (inf_le_right.trans inf_le_left))
   have HfunctionP : Γ ≤ is_function D entrySpace P := runPartial_function HP
   have HY : Γ ≤ is_func' D omegaTwo (vertexHistory P) :=
     vertexHistory_is_func' graphDomain_subset (is_func'_of_is_function HfunctionP)

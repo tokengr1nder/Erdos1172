@@ -78,8 +78,7 @@ theorem twoBlockWitness_selectedPoints :
     rw [← deduction]
     exact mem_of_mem_subset (inf_le_left.trans HB)
       (mem_image (inf_le_right.trans inf_le_right) (inf_le_right.trans inf_le_left)
-        (mem_codomain_of_is_function (inf_le_right.trans inf_le_right)
-          (inf_le_left.trans HBlocks)))
+        (mem_codomain_of_is_function (inf_le_right.trans inf_le_right) (inf_le_left.trans HBlocks)))
   have HtailObjects : Γ ≤ ⨅ i, ⨅ b, _root_.imp
       (i ∈ᴮ bSet.omega ⊓ pair i b ∈ᴮ Tail) (b ∈ᴮ blockObjects color R) := by
     apply le_iInf
@@ -92,8 +91,7 @@ theorem twoBlockWitness_selectedPoints :
   have Hg := selectedPoints_is_function HE HElaw HTail HtailObjects Hv
   have Hincf := selectedPoints_increasingOn HE HElaw HBlocks Hobjects Hu Horder
   have HtailOrder : Γ ≤ ⨅ i, ⨅ j, ⨅ b, ⨅ c, ⨅ x, ⨅ y, _root_.imp
-      ((i ∈ᴮ j ⊓ (pair i b ∈ᴮ Tail ⊓ pair j c ∈ᴮ Tail)) ⊓
-        (x ∈ᴮ b ⊓ y ∈ᴮ c)) (x ∈ᴮ y) := by
+      ((i ∈ᴮ j ⊓ (pair i b ∈ᴮ Tail ⊓ pair j c ∈ᴮ Tail)) ⊓ (x ∈ᴮ b ⊓ y ∈ᴮ c)) (x ∈ᴮ y) := by
     apply le_iInf
     intro i
     apply le_iInf
@@ -208,8 +206,7 @@ theorem twoBlockWitness_selectedPoints :
 include HJ Hclosure HE HElaw HBlocks HB HX Hcandidate Hactive Horder HTail Htail Hmasks in
 /-- Coherent survivor coordinate graphs are constructed, not assumed.
 The conclusion is the full opposite-color omega-one plus omega target. -/
-theorem hasTwoBlock_of_masked_tail :
-    Γ ≤ hasTwoBlock (!color) R omegaOne bSet.omega omegaTwo := by
+theorem hasTwoBlock_of_masked_tail : Γ ≤ hasTwoBlock (!color) R omegaOne bSet.omega omegaTwo := by
   obtain ⟨u, v, Hselection⟩ := exists_survivor_coordinates
     HJ Hclosure HE HBlocks HB HTail Htail Hmasks
   have Hwitness := twoBlockWitness_selectedPoints HE HElaw HBlocks HB HX Hcandidate

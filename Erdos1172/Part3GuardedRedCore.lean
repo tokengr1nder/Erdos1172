@@ -56,8 +56,7 @@ theorem exists_club_guarded_red_cores (hCH : CH) (hclosed : CountablyClosed P)
         ((∃ p : P, source.holds p a) → Nonempty (CoreData r H source a)) := by
   have hI : #W1 ≤ ℵ_ 1 := by
     simp only [W1, Cardinal.mk_toType, Ordinal.card_omega, le_refl]
-  obtain ⟨closed, hclosedClub, hgood⟩ := exists_club_goodCut hCH center.omegaTwoCC hI
-    G H r σ source
+  obtain ⟨closed, hclosedClub, hgood⟩ := exists_club_goodCut hCH center.omegaTwoCC hI G H r σ source
   let family (_ : Code P W1 G) : RegularName P W2 := source
   obtain ⟨positive, hpositiveClub, hpositive⟩ :=
     exists_club_red_positive_family_of_no_blue_target center r H hcompl hblue r family

@@ -59,8 +59,7 @@ def tailCandidatesLaw (color : Bool) (R J E S B Tail : bSet 𝔹) : 𝔹 :=
       (binary_union B (image i (bv_powerset omegaTwo) Tail)) ∅ A ⊓ (A =ᴮ ∅)ᶜ)
 
 theorem mem_filteredPast_iff {color : Bool} {R T A : bSet 𝔹} {Γ : 𝔹} :
-    Γ ≤ A ∈ᴮ filteredPast color R T ↔
-      Γ ≤ A ∈ᴮ T ∧ Γ ≤ A ∈ᴮ blockObjects color R :=
+    Γ ≤ A ∈ᴮ filteredPast color R T ↔ Γ ≤ A ∈ᴮ T ∧ Γ ≤ A ∈ᴮ blockObjects color R :=
   mem_comprehend_and B_ext_mem_left
 
 theorem filteredPast_subset {color : Bool} {R T : bSet 𝔹} {Γ : 𝔹} :
@@ -77,8 +76,7 @@ theorem filteredPast_subset_objects {color : Bool} {R T : bSet 𝔹} {Γ : 𝔹}
     (show Γ ⊓ A ∈ᴮ filteredPast color R T ≤ A ∈ᴮ filteredPast color R T from
       inf_le_right)).2
 
-theorem filteredPast_congr (color : Bool) (R : bSet 𝔹) :
-    B_congr (filteredPast color R) := by
+theorem filteredPast_congr (color : Bool) (R : bSet 𝔹) : B_congr (filteredPast color R) := by
   intro T U Γ H
   exact B_congr_comprehend (ϕ := fun A => A ∈ᴮ blockObjects color R)
     (H_congr := B_ext_mem_left) H
@@ -104,13 +102,11 @@ theorem tailEarlier_subset_objects {color : Bool} {R B T : bSet 𝔹} {Γ : 𝔹
     Γ ≤ tailEarlier color R B T ⊆ᴮ blockObjects color R :=
   binary_union_subset HB filteredPast_subset_objects
 
-theorem tailEarlier_congr (color : Bool) (R B : bSet 𝔹) :
-    B_congr (tailEarlier color R B) := by
+theorem tailEarlier_congr (color : Bool) (R B : bSet 𝔹) : B_congr (tailEarlier color R B) := by
   intro T U Γ H
   exact binary_union_congr bv_refl (filteredPast_congr color R H)
 
-theorem tailStep_congr (color : Bool) (R B G : bSet 𝔹) :
-    B_congr (tailStep color R B G) := by
+theorem tailStep_congr (color : Bool) (R B G : bSet 𝔹) : B_congr (tailStep color R B G) := by
   intro T U Γ H
   exact graphValue_congr_input _ _ (tailEarlier_congr color R B H)
 
@@ -143,8 +139,7 @@ theorem tailEarlier_small {color : Bool} {R B Tail i : bSet 𝔹} {Γ : 𝔹}
       omegaOne := by
   have Hisub : Γ ≤ i ⊆ᴮ bSet.omega := subset_of_mem_Ord Hi Ord_omega
   have Hcount : Γ ≤ injects_into (image i (bv_powerset omegaTwo) Tail) bSet.omega :=
-    restricted_image_countable (is_func'_of_is_function HTail) Hisub
-      (injects_into_of_subset Hisub)
+    restricted_image_countable (is_func'_of_is_function HTail) Hisub (injects_into_of_subset Hisub)
   have Hfiltered : Γ ≤ injects_into
       (filteredPast color R (image i (bv_powerset omegaTwo) Tail)) omegaOne :=
     injects_into_trans (injects_into_of_subset filteredPast_subset)
@@ -155,8 +150,7 @@ theorem tailEarlier_small {color : Bool} {R B Tail i : bSet 𝔹} {Γ : 𝔹}
 theorem tailStep_candidate {color : Bool} {R J E S B G Tail i : bSet 𝔹} {Γ : 𝔹}
     (HCH : Γ ≤ (CH : 𝔹)) (HB : Γ ≤ B ⊆ᴮ blockObjects color R)
     (HBsmall : Γ ≤ injects_into B omegaOne)
-    (HG : Γ ≤ is_function (bv_powerset (blockObjects color R))
-      (bv_powerset omegaTwo) G)
+    (HG : Γ ≤ is_function (bv_powerset (blockObjects color R)) (bv_powerset omegaTwo) G)
     (Hchoice : Γ ≤ smallTailCandidates color R J E S G)
     (HTail : Γ ≤ is_function bSet.omega (bv_powerset omegaTwo) Tail)
     (Hi : Γ ≤ i ∈ᴮ bSet.omega) :
@@ -172,8 +166,7 @@ and countable prefix-image size supplies the selector's small input. -/
 theorem tailRun_object_step {color : Bool} {R J E S B G Tail : bSet 𝔹} {Γ : 𝔹}
     (HCH : Γ ≤ (CH : 𝔹)) (HB : Γ ≤ B ⊆ᴮ blockObjects color R)
     (HBsmall : Γ ≤ injects_into B omegaOne)
-    (HG : Γ ≤ is_function (bv_powerset (blockObjects color R))
-      (bv_powerset omegaTwo) G)
+    (HG : Γ ≤ is_function (bv_powerset (blockObjects color R)) (bv_powerset omegaTwo) G)
     (Hchoice : Γ ≤ smallTailCandidates color R J E S G)
     (HTail : Γ ≤ is_function bSet.omega (bv_powerset omegaTwo) Tail) :
     Γ ≤ imageRecInvariantStep bSet.omega (bv_powerset omegaTwo)
@@ -188,8 +181,7 @@ theorem tailRun_object_step {color : Bool} {R J E S B G Tail : bSet 𝔹} {Γ : 
 theorem tailRun_values_objects {color : Bool} {R J E S B G Tail : bSet 𝔹} {Γ : 𝔹}
     (HCH : Γ ≤ (CH : 𝔹)) (HB : Γ ≤ B ⊆ᴮ blockObjects color R)
     (HBsmall : Γ ≤ injects_into B omegaOne)
-    (HG : Γ ≤ is_function (bv_powerset (blockObjects color R))
-      (bv_powerset omegaTwo) G)
+    (HG : Γ ≤ is_function (bv_powerset (blockObjects color R)) (bv_powerset omegaTwo) G)
     (Hchoice : Γ ≤ smallTailCandidates color R J E S G)
     (HTail : Γ ≤ is_function bSet.omega (bv_powerset omegaTwo) Tail)
     (Hlaw : Γ ≤ tailRunLaw color R B G Tail) :
@@ -201,8 +193,7 @@ theorem tailRun_prefix_subset_objects
     {color : Bool} {R J E S B G Tail i : bSet 𝔹} {Γ : 𝔹}
     (HCH : Γ ≤ (CH : 𝔹)) (HB : Γ ≤ B ⊆ᴮ blockObjects color R)
     (HBsmall : Γ ≤ injects_into B omegaOne)
-    (HG : Γ ≤ is_function (bv_powerset (blockObjects color R))
-      (bv_powerset omegaTwo) G)
+    (HG : Γ ≤ is_function (bv_powerset (blockObjects color R)) (bv_powerset omegaTwo) G)
     (Hchoice : Γ ≤ smallTailCandidates color R J E S G)
     (HTail : Γ ≤ is_function bSet.omega (bv_powerset omegaTwo) Tail)
     (Hlaw : Γ ≤ tailRunLaw color R B G Tail) :
@@ -225,8 +216,7 @@ theorem tailRun_candidate_of_pair
     {color : Bool} {R J E S B G Tail i A : bSet 𝔹} {Γ : 𝔹}
     (HCH : Γ ≤ (CH : 𝔹)) (HB : Γ ≤ B ⊆ᴮ blockObjects color R)
     (HBsmall : Γ ≤ injects_into B omegaOne)
-    (HG : Γ ≤ is_function (bv_powerset (blockObjects color R))
-      (bv_powerset omegaTwo) G)
+    (HG : Γ ≤ is_function (bv_powerset (blockObjects color R)) (bv_powerset omegaTwo) G)
     (Hchoice : Γ ≤ smallTailCandidates color R J E S G)
     (HTail : Γ ≤ is_function bSet.omega (bv_powerset omegaTwo) Tail)
     (Hlaw : Γ ≤ tailRunLaw color R B G Tail) (Hpair : Γ ≤ pair i A ∈ᴮ Tail) :
@@ -251,8 +241,7 @@ theorem tailRun_candidate_of_pair
 theorem tailRun_candidates {color : Bool} {R J E S B G Tail : bSet 𝔹} {Γ : 𝔹}
     (HCH : Γ ≤ (CH : 𝔹)) (HB : Γ ≤ B ⊆ᴮ blockObjects color R)
     (HBsmall : Γ ≤ injects_into B omegaOne)
-    (HG : Γ ≤ is_function (bv_powerset (blockObjects color R))
-      (bv_powerset omegaTwo) G)
+    (HG : Γ ≤ is_function (bv_powerset (blockObjects color R)) (bv_powerset omegaTwo) G)
     (Hchoice : Γ ≤ smallTailCandidates color R J E S G)
     (HTail : Γ ≤ is_function bSet.omega (bv_powerset omegaTwo) Tail)
     (Hlaw : Γ ≤ tailRunLaw color R B G Tail) :

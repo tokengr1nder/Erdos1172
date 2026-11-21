@@ -42,8 +42,7 @@ theorem rowCandidatesAt_congr_row (color : Bool) (R E top ξ Blocks X : bSet �
     B_congr (rowCandidatesAt color R E top ξ Blocks X) := by
   intro ν μ Γ H
   exact bv_trans
-    (fusionRowCandidates_congr_object (!color) R E top ξ ν Blocks X
-      (blockValue_congr Blocks H))
+    (fusionRowCandidates_congr_object (!color) R E top ξ ν Blocks X (blockValue_congr Blocks H))
     (fusionRowCandidates_congr_row (!color) R E (blockValue Blocks μ) top ξ Blocks X H)
 
 def maskedCandidates (color : Bool) (R E top ξ Blocks X ν : bSet 𝔹) : bSet 𝔹 :=
@@ -125,8 +124,7 @@ theorem currentChoices_is_function
       ErdosLargeDifference.zero_mem_omegaOne
     exact le_iSup_of_le v Hv
   · intro ν μ v w Δ _ _ _ _ _ Hv Hw Hνμ
-    exact leastOrTop_unique_of_eq
-      (maskedCandidates_congr_row color R E top ξ Blocks X Hνμ) Hv Hw
+    exact leastOrTop_unique_of_eq (maskedCandidates_congr_row color R E top ξ Blocks X Hνμ) Hv Hw
 
 theorem currentChoices_least_of_witness
     {color : Bool} {R E top ξ Blocks X ν v w : bSet 𝔹} {Γ : 𝔹}

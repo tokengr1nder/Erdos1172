@@ -42,14 +42,11 @@ theorem exists_common_above {Q F a : bSet 𝔹} {Γ : 𝔹}
     (HCH : Γ ≤ (CH : 𝔹))
     (HF : Γ ≤ is_func' Q (bv_powerset omegaTwo) F)
     (HQ : Γ ≤ injects_into Q omegaOne)
-    (Hclubs : Γ ≤ ⨅ q, ⨅ C,
-      _root_.imp (q ∈ᴮ Q ⊓ pair q C ∈ᴮ F) (club omegaTwo C))
+    (Hclubs : Γ ≤ ⨅ q, ⨅ C, _root_.imp (q ∈ᴮ Q ⊓ pair q C ∈ᴮ F) (club omegaTwo C))
     (Ha : Γ ≤ a ∈ᴮ omegaTwo) :
-    ∃ b : bSet 𝔹, Γ ≤
-      (b ∈ᴮ indexedIntersection omegaTwo F Q ⊓ b ∈ᴮ omegaTwo) ⊓ a ∈ᴮ b := by
+    ∃ b : bSet 𝔹, Γ ≤ (b ∈ᴮ indexedIntersection omegaTwo F Q ⊓ b ∈ᴮ omegaTwo) ⊓ a ∈ᴮ b := by
   classical
-  have Hvalues : Γ ≤ ⨅ q, ⨅ C,
-      _root_.imp (q ∈ᴮ Q ⊓ pair q C ∈ᴮ F) (unboundedIn omegaTwo C) := by
+  have Hvalues : Γ ≤ ⨅ q, ⨅ C, _root_.imp (q ∈ᴮ Q ⊓ pair q C ∈ᴮ F) (unboundedIn omegaTwo C) := by
     apply le_iInf
     intro q
     apply le_iInf
@@ -67,19 +64,15 @@ theorem exists_common_above {Q F a : bSet 𝔹} {Γ : 𝔹}
   have Hnext (x : {x : bSet 𝔹 // Γ ≤ x ∈ᴮ omegaTwo}) :
       Γ ≤ x.val ∈ᴮ (next x).val ⊓ intervalHits Q F x.val (next x).val :=
     Classical.choose_spec (step x)
-  let seq : ℕ → {x : bSet 𝔹 // Γ ≤ x ∈ᴮ omegaTwo} :=
-    fun n => Nat.rec ⟨a, Ha⟩ (fun _ x => next x) n
+  let seq : ℕ → {x : bSet 𝔹 // Γ ≤ x ∈ᴮ omegaTwo} := fun n => Nat.rec ⟨a, Ha⟩ (fun _ x => next x) n
   let v (n : ℕ) : bSet 𝔹 := (seq n).val
   have Hv (n : ℕ) : Γ ≤ v n ∈ᴮ omegaTwo := (seq n).property
-  have Hstep (n : ℕ) : Γ ≤ v n ∈ᴮ v (n + 1) ⊓
-      intervalHits Q F (v n) (v (n + 1)) := by
-    change Γ ≤ (seq n).val ∈ᴮ (next (seq n)).val ⊓
-      intervalHits Q F (seq n).val (next (seq n)).val
+  have Hstep (n : ℕ) : Γ ≤ v n ∈ᴮ v (n + 1) ⊓ intervalHits Q F (v n) (v (n + 1)) := by
+    change Γ ≤ (seq n).val ∈ᴮ (next (seq n)).val ⊓ intervalHits Q F (seq n).val (next (seq n)).val
     exact Hnext (seq n)
   have Hinc (n : ℕ) : Γ ≤ v n ∈ᴮ v (n + 1) := (Hstep n).trans inf_le_left
   have Hsup : Γ ≤ sequenceSup v ∈ᴮ omegaTwo := sequenceSup_mem_omegaTwo HCH Hv
-  have Hne : Γ ≤ (sequenceSup v =ᴮ (∅ : bSet 𝔹))ᶜ :=
-    sequenceSup_nonempty Hv Hinc
+  have Hne : Γ ≤ (sequenceSup v =ᴮ (∅ : bSet 𝔹))ᶜ := sequenceSup_nonempty Hv Hinc
   have Hcommon : Γ ≤ sequenceSup v ∈ᴮ indexedIntersection omegaTwo F Q := by
     apply mem_indexedIntersection_iff.mpr
     refine ⟨Hsup, ?_⟩
@@ -99,8 +92,7 @@ theorem exists_common_above {Q F a : bSet 𝔹} {Γ : 𝔹}
         inf_le_right).trans bv_imp_elim
     have HU : Δ ≤ unboundedIn (sequenceSup v) C :=
       interval_points_cofinal (fun n => inf_le_left.trans (Hv n)) Hinterval
-    exact closedIn_apply (club_closed HC) (inf_le_left.trans Hsup)
-      (inf_le_left.trans Hne) HU
+    exact closedIn_apply (club_closed HC) (inf_le_left.trans Hsup) (inf_le_left.trans Hne) HU
   have Habove : Γ ≤ a ∈ᴮ sequenceSup v := by
     change Γ ≤ v 0 ∈ᴮ sequenceSup v
     exact sequence_value_mem_sup Hv Hinc 0
@@ -112,8 +104,7 @@ theorem unboundedIn_indexedIntersection {Q F : bSet 𝔹} {Γ : 𝔹}
     (HCH : Γ ≤ (CH : 𝔹))
     (HF : Γ ≤ is_func' Q (bv_powerset omegaTwo) F)
     (HQ : Γ ≤ injects_into Q omegaOne)
-    (Hclubs : Γ ≤ ⨅ q, ⨅ C,
-      _root_.imp (q ∈ᴮ Q ⊓ pair q C ∈ᴮ F) (club omegaTwo C)) :
+    (Hclubs : Γ ≤ ⨅ q, ⨅ C, _root_.imp (q ∈ᴮ Q ⊓ pair q C ∈ᴮ F) (club omegaTwo C)) :
     Γ ≤ unboundedIn omegaTwo (indexedIntersection omegaTwo F Q) := by
   apply le_iInf
   intro a
@@ -129,8 +120,7 @@ theorem club_indexedIntersection {Q F : bSet 𝔹} {Γ : 𝔹}
     (HCH : Γ ≤ (CH : 𝔹))
     (HF : Γ ≤ is_func' Q (bv_powerset omegaTwo) F)
     (HQ : Γ ≤ injects_into Q omegaOne)
-    (Hclubs : Γ ≤ ⨅ q, ⨅ C,
-      _root_.imp (q ∈ᴮ Q ⊓ pair q C ∈ᴮ F) (club omegaTwo C)) :
+    (Hclubs : Γ ≤ ⨅ q, ⨅ C, _root_.imp (q ∈ᴮ Q ⊓ pair q C ∈ᴮ F) (club omegaTwo C)) :
     Γ ≤ club omegaTwo (indexedIntersection omegaTwo F Q) := by
   refine le_inf indexedIntersection_subset
     (le_inf (unboundedIn_indexedIntersection HCH HF HQ Hclubs) ?_)

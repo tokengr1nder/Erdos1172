@@ -37,8 +37,7 @@ theorem tailCandidate_of_pair
     {color : Bool} {R J E S B Tail i A : bSet 𝔹} {Γ : 𝔹}
     (Htail : Γ ≤ tailCandidatesLaw color R J E S B Tail)
     (Hpair : Γ ≤ pair i A ∈ᴮ Tail) :
-    Γ ≤ blockCandidate color R J E S
-      (binary_union B (image i (bv_powerset omegaTwo) Tail)) ∅ A :=
+    Γ ≤ blockCandidate color R J E S (binary_union B (image i (bv_powerset omegaTwo) Tail)) ∅ A :=
   ((le_inf (Htail.trans ((iInf_le _ i).trans (iInf_le _ A))) Hpair).trans
     bv_imp_elim).trans inf_le_left
 

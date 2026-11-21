@@ -33,8 +33,7 @@ theorem hereditary_subset_test (X : I → bSet B) (Z : bSet (Algebra U B))
   rw [← deduction]
   apply inf_le_right.trans ((value_le_value_iff U).2 ?_ |>.trans (h (child U X a)))
   filter_upwards [a.large] with i hi
-  simpa only [weight, selected, child, dif_pos hi] using
-    (mem_mk' (X i) (a.pick ⟨i, hi⟩))
+  simpa only [weight, selected, child, dif_pos hi] using (mem_mk' (X i) (a.pick ⟨i, hi⟩))
 
 private theorem mem_empty_value {A : Type u} [NontrivialCompleteBooleanAlgebra A]
     (z : bSet A) : (z ∈ᴮ (∅ : bSet A)) = ⊥ := bot_unique (bot_of_mem_empty le_rfl)

@@ -40,19 +40,16 @@ def vertexHistory (P : bSet 𝔹) : bSet 𝔹 :=
 theorem vertexRel_ext_index (P y : bSet 𝔹) : B_ext (fun i => vertexRel P i y) :=
   B_ext_iSup (h := fun _ => B_ext_pair_mem_left)
 
-theorem vertexRel_ext_value (P i : bSet 𝔹) : B_ext (vertexRel P i) :=
-  B_ext_iSup (h := fun _ =>
+theorem vertexRel_ext_value (P i : bSet 𝔹) : B_ext (vertexRel P i) := B_ext_iSup (h := fun _ =>
     B_ext_pair_left (ϕ := fun e => pair i e ∈ᴮ P) B_ext_pair_mem_right)
 
 theorem vertexRel_witness {P i y : bSet 𝔹} {Γ : 𝔹}
     (H : Γ ≤ vertexRel P i y) :
     ∃ Z : bSet 𝔹, Γ ≤ pair i (pair y Z) ∈ᴮ P :=
-  exists_convert H
-    (B_ext_pair_right (ϕ := fun e => pair i e ∈ᴮ P) B_ext_pair_mem_right)
+  exists_convert H (B_ext_pair_right (ϕ := fun e => pair i e ∈ᴮ P) B_ext_pair_mem_right)
 
 theorem mem_vertexHistory_iff {P i y : bSet 𝔹} {Γ : 𝔹} :
-    Γ ≤ pair i y ∈ᴮ vertexHistory P ↔
-      Γ ≤ i ∈ᴮ omegaOne ∧ Γ ≤ y ∈ᴮ omegaTwo ∧ Γ ≤ vertexRel P i y :=
+    Γ ≤ pair i y ∈ᴮ vertexHistory P ↔ Γ ≤ i ∈ᴮ omegaOne ∧ Γ ≤ y ∈ᴮ omegaTwo ∧ Γ ≤ vertexRel P i y :=
   mem_relationGraph_iff (vertexRel_ext_index P) (vertexRel_ext_value P)
 
 /-- The original condition is preserved when the entry's row component
@@ -134,8 +131,7 @@ theorem vertexHistory_is_func' {δ P : bSet 𝔹} {Γ : 𝔹}
     (le_inf (inf_le_left.trans ((HP.trans inf_le_right).trans (iInf_le _ i)))
       inf_le_right).trans bv_imp_elim
   obtain ⟨e, He⟩ := exists_convert Hex (B_ext_inf B_ext_mem_left B_ext_pair_mem_right)
-  have Hprod : Δ ≤ e ∈ᴮ prod omegaTwo (bv_powerset (prod omegaOne omegaOne)) :=
-    He.trans inf_le_left
+  have Hprod : Δ ≤ e ∈ᴮ prod omegaTwo (bv_powerset (prod omegaOne omegaOne)) := He.trans inf_le_left
   obtain ⟨y, Hy, Z, _, HePair⟩ := mem_prod_iff₂.mp Hprod
   have Hentry : Δ ≤ pair i (pair y Z) ∈ᴮ P :=
     bv_rw'' (ϕ := fun a => pair i a ∈ᴮ P) HePair (He.trans inf_le_right)

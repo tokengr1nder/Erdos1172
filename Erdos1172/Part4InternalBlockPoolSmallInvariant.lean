@@ -104,8 +104,7 @@ theorem poolUpdate_smallState {color : Bool} {R J E S F T : bSet 𝔹} {Γ : �
   have Hagg := aggregates_small HCH HT HTsmall Hgood
   have Hnext := update_small HCH (Hagg.trans inf_le_left) (Hagg.trans inf_le_right)
     HF Hlaw aggregateLeft_subset aggregateRight_subset
-  exact smallState_of_pair (Hnext.trans inf_le_left)
-    (Hnext.trans (inf_le_right.trans inf_le_right))
+  exact smallState_of_pair (Hnext.trans inf_le_left) (Hnext.trans (inf_le_right.trans inf_le_right))
 
 theorem pool_small_invariant_step {color : Bool} {R J E S F Run : bSet 𝔹} {Γ : 𝔹}
     (HCH : Γ ≤ (CH : 𝔹))
@@ -129,8 +128,7 @@ theorem pool_run_allSmall {color : Bool} {R J E S F Run : bSet 𝔹} {Γ : 𝔹}
       (bv_powerset omegaTwo) F)
     (Hlaw : Γ ≤ blockSelectorLaw color R J E S F)
     (HRun : Γ ≤ is_function omegaOne (stateSpace color R) Run)
-    (Hrec : Γ ≤ imageRecLaw (stateSpace color R)
-      (fun _ T => poolUpdate color R F T) Run) :
+    (Hrec : Γ ≤ imageRecLaw (stateSpace color R) (fun _ T => poolUpdate color R F T) Run) :
     Γ ≤ allGood smallState (image omegaOne (stateSpace color R) Run) :=
   image_allGood_of_imageRecLaw omegaOne_Ord HRun Hrec smallState_ext
     (pool_small_invariant_step HCH HF Hlaw HRun)
@@ -141,8 +139,7 @@ theorem pool_final_aggregates_small {color : Bool} {R J E S F Run : bSet 𝔹} {
       (bv_powerset omegaTwo) F)
     (Hlaw : Γ ≤ blockSelectorLaw color R J E S F)
     (HRun : Γ ≤ is_function omegaOne (stateSpace color R) Run)
-    (Hrec : Γ ≤ imageRecLaw (stateSpace color R)
-      (fun _ T => poolUpdate color R F T) Run) :
+    (Hrec : Γ ≤ imageRecLaw (stateSpace color R) (fun _ T => poolUpdate color R F T) Run) :
     Γ ≤ injects_into (priorObjects color R (image omegaOne (stateSpace color R) Run)) omegaOne ⊓
       injects_into (priorPoints color R (image omegaOne (stateSpace color R) Run)) omegaOne :=
   aggregates_small HCH image_subset

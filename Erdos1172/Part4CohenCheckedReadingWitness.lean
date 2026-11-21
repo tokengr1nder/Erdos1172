@@ -49,22 +49,19 @@ theorem exists_checked_reading_witness (r : Conditions (ErdosOmegaTwo.omegaOne :
     ∃ y : bSet B, r.value ≤ y ∈ᴮ check A ∧
       condition r ≤ x =ᴮ mapNames (omegaOneFirstStageHom) y := by
   let W : bSet B → B := fun y => ⨆ i : A.Type,
-    reads (x =ᴮ check (A.Func i)) (Erdos1172BooleanNameIteration.name r) ⊓
-      (y =ᴮ check (A.Func i))
+    reads (x =ᴮ check (A.Func i)) (Erdos1172BooleanNameIteration.name r) ⊓ (y =ᴮ check (A.Func i))
   have Hex : r.value ≤ ⨆ y : bSet B, W y := by
     apply Hread.trans
     apply iSup_le
     intro i
     exact le_iSup_of_le (check (A.Func i)) (le_iSup_of_le i (le_inf le_rfl bv_refl))
-  have Hext : B_ext W :=
-    B_ext_iSup (h := fun _ => B_ext_inf B_ext_const B_ext_bv_eq_left)
+  have Hext : B_ext W := B_ext_iSup (h := fun _ => B_ext_inf B_ext_const B_ext_bv_eq_left)
   obtain ⟨y, Hy⟩ := exists_convert Hex Hext
   have Hymem : r.value ≤ y ∈ᴮ check A := by
     apply Hy.trans
     apply iSup_le
     intro i
-    exact mem_congr (bv_symm inf_le_right) bv_refl
-      (check_mem (PSet.func_mem A i))
+    exact mem_congr (bv_symm inf_le_right) bv_refl (check_mem (PSet.func_mem A i))
   refine ⟨y, Hymem, ?_⟩
   have Hlift : condition r ≤ omegaOneFirstStageHom (W y) :=
     (condition_le_firstStageHom_iff ErdosOmegaTwo.omegaOne r (W y)).mpr Hy
@@ -78,8 +75,7 @@ theorem exists_checked_reading_witness (r : Conditions (ErdosOmegaTwo.omegaOne :
   apply iSup_le
   intro i
   let Δ : omegaOneAlgebra B := condition r ⊓ omegaOneFirstStageHom
-    (reads (x =ᴮ check (A.Func i)) (Erdos1172BooleanNameIteration.name r) ⊓
-      (y =ᴮ check (A.Func i)))
+    (reads (x =ᴮ check (A.Func i)) (Erdos1172BooleanNameIteration.name r) ⊓ (y =ᴮ check (A.Func i)))
   have HreadPiece : Δ ≤ condition r ⊓ omegaOneFirstStageHom
       (reads (x =ᴮ check (A.Func i)) (Erdos1172BooleanNameIteration.name r)) :=
     le_inf inf_le_left (inf_le_right.trans (OrderHomClass.mono (omegaOneFirstStageHom) inf_le_left))

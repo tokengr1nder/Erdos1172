@@ -28,10 +28,8 @@ theorem on_set
   have htype : typeLT α.ToType ≤ typeLT r := by
     simpa only [Ordinal.type_toType] using hr
   let f := Classical.choice (Ordinal.type_le_iff.mp htype)
-  let e : α.ToType ↪o V :=
-    f.toOrderEmbedding.trans (OrderEmbedding.subtype fun x ↦ x ∈ r)
-  obtain ⟨s, hs, hstype⟩ | ⟨s, hs, hstype⟩ :=
-    h (red.comap e) ((red.comap e)ᶜ) isCompl_compl
+  let e : α.ToType ↪o V := f.toOrderEmbedding.trans (OrderEmbedding.subtype fun x ↦ x ∈ r)
+  obtain ⟨s, hs, hstype⟩ | ⟨s, hs, hstype⟩ := h (red.comap e) ((red.comap e)ᶜ) isCompl_compl
   · refine Or.inl ⟨e '' s, ?_, ?_, ?_⟩
     · rintro _ ⟨x, -, rfl⟩
       exact (f x).property

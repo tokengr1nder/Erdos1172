@@ -40,8 +40,7 @@ def OmegaTwoCC (P : Type) [Preorder P] : Prop :=
 the whole order. The conditions in the antichain retain their dense-set
 membership, which is needed for intersecting their associated clubs. -/
 theorem exists_predense_antichain (D : Set P) (hD : DenseBelow D) :
-    ∃ A : Set P, A ⊆ D ∧ IncompatibleFamily A ∧
-      ∀ p : P, ∃ q ∈ A, Compatible p q := by
+    ∃ A : Set P, A ⊆ D ∧ IncompatibleFamily A ∧ ∀ p : P, ∃ q ∈ A, Compatible p q := by
   classical
   obtain ⟨A, _, hA⟩ := zorn_subset_nonempty
     {A : Set P | A ⊆ D ∧ IncompatibleFamily A} (fun chain hchain hordered _ => by
@@ -109,8 +108,7 @@ theorem exists_stationary_condition (hcc : OmegaTwoCC P)
     obtain ⟨q, hqp, hq⟩ := h p
     exact ⟨q, hq, hqp⟩
   obtain ⟨A, hAD, hA, hpredense⟩ := exists_predense_antichain D hD
-  choose clubs hclubs hdisjoint using
-    fun q : A => not_isStationary_iff.mp (hAD q.property)
+  choose clubs hclubs hdisjoint using fun q : A => not_isStationary_iff.mp (hAD q.property)
   have hclub : IsClub (⋂ q : A, clubs q) := IsClub.iInter alephZero_lt_cof_W2.ne'
     (by simpa only [Cardinal.lift_id, cof_W2] using hcc A hA) hclubs
   obtain ⟨a, ⟨p, hpa⟩, hac⟩ := hstat hclub
@@ -125,8 +123,7 @@ theorem exists_stationary_refinement (hcc : OmegaTwoCC P)
     (hstat : IsStationary (possible U p0)) :
     ∃ p : P, p ≤ p0 ∧ StationaryAt U p := by
   let restricted (p : P) (a : W2) : Prop := p ≤ p0 ∧ U p a
-  have hrestricted : Persistent restricted :=
-    fun hpq h => ⟨hpq.trans h.1, hU hpq h.2⟩
+  have hrestricted : Persistent restricted := fun hpq h => ⟨hpq.trans h.1, hU hpq h.2⟩
   have hs : IsStationary {a : W2 | ∃ p : P, restricted p a} := hstat
   obtain ⟨p, hp⟩ := exists_stationary_condition hcc restricted hrestricted hs
   obtain ⟨a, q, hqp, hq0, hqa⟩ := (hp p le_rfl).nonempty

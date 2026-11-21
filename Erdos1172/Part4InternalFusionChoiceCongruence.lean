@@ -140,15 +140,13 @@ theorem currentChoices_congr
     {color : Bool} {R E top other ξ η Blocks Other X Y : bSet 𝔹} {Γ : 𝔹}
     (Htop : Γ ≤ top =ᴮ other) (Hξη : Γ ≤ ξ =ᴮ η)
     (HBlocks : Γ ≤ Blocks =ᴮ Other) (HXY : Γ ≤ X =ᴮ Y) :
-    Γ ≤ currentChoices color R E top ξ Blocks X =ᴮ
-      currentChoices color R E other η Other Y :=
+    Γ ≤ currentChoices color R E top ξ Blocks X =ᴮ currentChoices color R E other η Other Y :=
   bv_trans (currentChoices_congr_top color R E ξ Blocks X Htop)
     (bv_trans (currentChoices_congr_stage color R E other Blocks X Hξη)
       (bv_trans (currentChoices_congr_blocks color R E other η X HBlocks)
         (currentChoices_congr_coordinates color R E other η Other HXY)))
 
-theorem previousActive_congr_stage (Acts : bSet 𝔹) :
-    B_congr (fun ξ => previousActive ξ Acts) := by
+theorem previousActive_congr_stage (Acts : bSet 𝔹) : B_congr (fun ξ => previousActive ξ Acts) := by
   intro ξ η Γ H
   exact B_congr_bv_union (B_congr_image_left H)
 
@@ -181,8 +179,7 @@ theorem activeHistory_congr
     {color : Bool} {R E ξ η Blocks Other Z W Acts OtherActs : bSet 𝔹} {Γ : 𝔹}
     (Hξη : Γ ≤ ξ =ᴮ η) (HBlocks : Γ ≤ Blocks =ᴮ Other)
     (HZW : Γ ≤ Z =ᴮ W) (HActs : Γ ≤ Acts =ᴮ OtherActs) :
-    Γ ≤ activeHistory color R E ξ Blocks Z Acts =ᴮ
-      activeHistory color R E η Other W OtherActs :=
+    Γ ≤ activeHistory color R E ξ Blocks Z Acts =ᴮ activeHistory color R E η Other W OtherActs :=
   bv_trans (activeHistory_congr_stage color R E Blocks Z Acts Hξη)
     (bv_trans (activeHistory_congr_blocks color R E η Z Acts HBlocks)
       (bv_trans (activeHistory_congr_indices color R E η Other Acts HZW)

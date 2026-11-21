@@ -65,8 +65,7 @@ theorem merge_restrictions_lower (hGCH : GCH) {a : Cut} (C : Set (Stage hGCH a))
   classical
   have hc : CoordinateChains C := coordinateChains_of_chain hGCH hchain
   let q : Carrier a := merge C hC
-  change ∀ b : Cut, b ≤ a → ∀ p ∈ C,
-    (stage hGCH b).Le (truncate q.val b) (truncate p.val b)
+  change ∀ b : Cut, b ≤ a → ∀ p ∈ C, (stage hGCH b).Le (truncate q.val b) (truncate p.val b)
   intro b
   induction b using WellFoundedLT.induction with
   | ind b ih =>
@@ -117,7 +116,6 @@ theorem countablyClosed (hGCH : GCH) (a : Cut) : CountablyClosed (Stage hGCH a) 
   intro C _ hC hchain
   exact ⟨merge C hC, fun p hp => merge_lower hGCH C hC hchain p hp⟩
 
-theorem full_countablyClosed (hGCH : GCH) : CountablyClosed (Stage hGCH ⊤) :=
-  countablyClosed hGCH ⊤
+theorem full_countablyClosed (hGCH : GCH) : CountablyClosed (Stage hGCH ⊤) := countablyClosed hGCH ⊤
 
 end Erdos1172Part3TransfiniteHechlerClosure

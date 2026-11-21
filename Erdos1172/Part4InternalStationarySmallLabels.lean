@@ -68,8 +68,7 @@ theorem labelFibers_is_function (K f : bSet 𝔹) {Γ : 𝔹} :
   · apply le_iInf
     intro k
     rw [← deduction]
-    exact le_iSup_of_le (fiber omegaTwo f k)
-      (le_inf (mem_powerset_iff.mpr fiber_subset) bv_refl)
+    exact le_iSup_of_le (fiber omegaTwo f k) (le_inf (mem_powerset_iff.mpr fiber_subset) bv_refl)
   · intro k₁ k₂ A₁ A₂ Δ _ _ _ _ _ H₁ H₂ Hk
     exact bv_trans H₁ (bv_trans (label_fiber_congr f Hk) (bv_symm H₂))
 
@@ -78,12 +77,10 @@ def fiberSet (K f : bSet 𝔹) : bSet 𝔹 :=
 
 theorem fiberSet_injects_omegaOne {K f : bSet 𝔹} {Γ : 𝔹}
     (HK : Γ ≤ injects_into K omegaOne) : Γ ≤ injects_into (fiberSet K f) omegaOne :=
-  image_injects_into_ordinal (is_func'_of_is_function (labelFibers_is_function K f))
-    HK omegaOne_Ord
+  image_injects_into_ordinal (is_func'_of_is_function (labelFibers_is_function K f)) HK omegaOne_Ord
 
 theorem fiberSet_subset_nonstationary {K f : bSet 𝔹} {Γ : 𝔹}
-    (Hsmall : Γ ≤ ⨅ k, _root_.imp (k ∈ᴮ K)
-      (fiber omegaTwo f k ∈ᴮ nonstationaryIdeal)) :
+    (Hsmall : Γ ≤ ⨅ k, _root_.imp (k ∈ᴮ K) (fiber omegaTwo f k ∈ᴮ nonstationaryIdeal)) :
     Γ ≤ fiberSet K f ⊆ᴮ nonstationaryIdeal := by
   rw [subset_unfold']
   apply le_iInf
@@ -93,8 +90,7 @@ theorem fiberSet_subset_nonstationary {K f : bSet 𝔹} {Γ : 𝔹}
   obtain ⟨k, Hk⟩ := exists_convert
     ((mem_image_iff.mp (show Δ ≤ A ∈ᴮ fiberSet K f from inf_le_right)).2)
     (B_ext_inf B_ext_mem_left B_ext_pair_mem_left)
-  have Heq : Δ ≤ A =ᴮ fiber omegaTwo f k :=
-    (mem_labelFibers_iff.mp (Hk.trans inf_le_right)).2.2
+  have Heq : Δ ≤ A =ᴮ fiber omegaTwo f k := (mem_labelFibers_iff.mp (Hk.trans inf_le_right)).2.2
   have Hfiber : Δ ≤ fiber omegaTwo f k ∈ᴮ nonstationaryIdeal :=
     (le_inf (inf_le_left.trans (Hsmall.trans (iInf_le _ k)))
       (Hk.trans inf_le_left)).trans bv_imp_elim
@@ -119,8 +115,7 @@ theorem source_subset_fiberSet_union {S K f : bSet 𝔹} {Γ : 𝔹}
       (mem_powerset_iff.mpr fiber_subset)
   have Hx : Δ ≤ x ∈ᴮ fiber omegaTwo f k := by
     rw [mem_fiber]
-    exact le_inf (mem_of_mem_subset (inf_le_left.trans HS) inf_le_right)
-      (Hk.trans inf_le_right)
+    exact le_inf (mem_of_mem_subset (inf_le_left.trans HS) inf_le_right) (Hk.trans inf_le_right)
   exact mem_bv_union_iff.mpr (le_iSup_of_le (fiber omegaTwo f k) (le_inf Hmem Hx))
 
 /-- The supported source function retains the fiber inside S even when
@@ -146,8 +141,7 @@ theorem stationary_label_value {S K f : bSet 𝔹} {Γ : 𝔹}
   change Γ ≤ E
   rw [← compl_compl E, ← imp_bot, ← deduction]
   let Δ := Γ ⊓ Eᶜ
-  have Hsmall : Δ ≤ ⨅ k, _root_.imp (k ∈ᴮ K)
-      (fiber omegaTwo f k ∈ᴮ nonstationaryIdeal) := by
+  have Hsmall : Δ ≤ ⨅ k, _root_.imp (k ∈ᴮ K) (fiber omegaTwo f k ∈ᴮ nonstationaryIdeal) := by
     apply le_iInf
     intro k
     rw [← deduction, ← compl_compl (fiber omegaTwo f k ∈ᴮ nonstationaryIdeal),
@@ -186,7 +180,6 @@ theorem exists_stationary_large_subfiber_of_small_labels {S K f : bSet 𝔹} {Γ
   obtain ⟨k, Hk⟩ := exists_stationary_subfiber_of_small_labels HCH HS Hf HK
   have Hpos := Hk.trans (inf_le_right.trans inf_le_left)
   exact ⟨k, le_inf (Hk.trans inf_le_left) (le_inf Hpos
-    (le_inf (stationary_injects_omegaTwo HCH Hpos)
-      (Hk.trans (inf_le_right.trans inf_le_right))))⟩
+    (le_inf (stationary_injects_omegaTwo HCH Hpos) (Hk.trans (inf_le_right.trans inf_le_right))))⟩
 
 end bSet.ErdosStationarySmallLabels

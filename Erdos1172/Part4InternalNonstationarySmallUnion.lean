@@ -50,10 +50,8 @@ theorem exists_avoiding_club_selector {T : bSet 𝔹} {Γ : 𝔹}
   intro A
   rw [← deduction]
   obtain ⟨C, HC⟩ := exists_avoiding_club
-    (mem_of_mem_subset (inf_le_left.trans HT)
-      (show Γ ⊓ A ∈ᴮ T ≤ A ∈ᴮ T from inf_le_right))
-  exact le_iSup_of_le C
-    (le_inf (mem_powerset_iff.mpr (club_subset (HC.trans inf_le_left))) HC)
+    (mem_of_mem_subset (inf_le_left.trans HT) (show Γ ⊓ A ∈ᴮ T ≤ A ∈ᴮ T from inf_le_right))
+  exact le_iSup_of_le C (le_inf (mem_powerset_iff.mpr (club_subset (HC.trans inf_le_left))) HC)
 
 /-- Unions of arbitrary internally omega-one-small families of members
 remain in the actual nonstationary ideal. -/
@@ -63,16 +61,14 @@ theorem nonstationaryIdeal_small_union {T : bSet 𝔹} {Γ : 𝔹}
     Γ ≤ bv_union T ∈ᴮ nonstationaryIdeal := by
   obtain ⟨F, HF⟩ := exists_avoiding_club_selector HT
   have Hweak := is_func'_of_is_function (HF.trans inf_le_left)
-  have Hclubs : Γ ≤ ⨅ A, ⨅ C,
-      _root_.imp (A ∈ᴮ T ⊓ pair A C ∈ᴮ F) (club omegaTwo C) := by
+  have Hclubs : Γ ≤ ⨅ A, ⨅ C, _root_.imp (A ∈ᴮ T ⊓ pair A C ∈ᴮ F) (club omegaTwo C) := by
     apply le_iInf
     intro A
     apply le_iInf
     intro C
     rw [← deduction]
     exact ((le_inf (inf_le_left.trans ((HF.trans inf_le_right).trans
-      ((iInf_le _ A).trans (iInf_le _ C)))) inf_le_right).trans bv_imp_elim).trans
-        inf_le_left
+      ((iInf_le _ A).trans (iInf_le _ C)))) inf_le_right).trans bv_imp_elim).trans inf_le_left
   have Hclub := club_indexedIntersection HCH Hweak Hsmall Hclubs
   apply mem_nonstationaryIdeal_of_club Hclub
   rw [subset_unfold']
@@ -86,13 +82,11 @@ theorem nonstationaryIdeal_small_union {T : bSet 𝔹} {Γ : 𝔹}
   have Hcex : Δ ≤ ⨆ C, C ∈ᴮ bv_powerset omegaTwo ⊓ pair A C ∈ᴮ F :=
     (le_inf (inf_le_left.trans ((Hweak.trans inf_le_right).trans (iInf_le _ A)))
       (HA.trans inf_le_left)).trans bv_imp_elim
-  obtain ⟨C, HC⟩ := exists_convert Hcex
-    (B_ext_inf B_ext_mem_left B_ext_pair_mem_right)
+  obtain ⟨C, HC⟩ := exists_convert Hcex (B_ext_inf B_ext_mem_left B_ext_pair_mem_right)
   have Havoid : Δ ≤ A ⊆ᴮ difference omegaTwo C :=
     ((le_inf (inf_le_left.trans ((HF.trans inf_le_right).trans
       ((iInf_le _ A).trans (iInf_le _ C))))
-      (le_inf (HA.trans inf_le_left) (HC.trans inf_le_right))).trans bv_imp_elim).trans
-        inf_le_right
+      (le_inf (HA.trans inf_le_left) (HC.trans inf_le_right))).trans bv_imp_elim).trans inf_le_right
   have Hx := mem_of_mem_subset Havoid (HA.trans inf_le_right)
   rw [mem_difference] at Hx
   rw [mem_difference]

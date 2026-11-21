@@ -62,8 +62,7 @@ theorem runPartial_union_of_chain {color : Bool} {R S top C : bSet 𝔹} {Γ : �
     (Hchain : Γ ≤ inclusionChain C)
     (Hfamily : Γ ≤ ⨅ P, _root_.imp (P ∈ᴮ C) (runPartial color R S top P)) :
     Γ ≤ runPartial color R S top (bv_union C) := by
-  have HprefixFamily : Γ ≤ ⨅ P, _root_.imp (P ∈ᴮ C)
-      (prefixGraph omegaOne entrySpace P) := by
+  have HprefixFamily : Γ ≤ ⨅ P, _root_.imp (P ∈ᴮ C) (prefixGraph omegaOne entrySpace P) := by
     apply le_iInf
     intro P
     rw [← deduction]
@@ -74,13 +73,11 @@ theorem runPartial_union_of_chain {color : Bool} {R S top C : bSet 𝔹} {Γ : �
     intro P
     rw [← deduction]
     exact runPartial_rowFunctions
-      ((le_inf (inf_le_left.trans (Hfamily.trans (iInf_le _ P))) inf_le_right).trans
-        bv_imp_elim)
+      ((le_inf (inf_le_left.trans (Hfamily.trans (iInf_le _ P))) inf_le_right).trans bv_imp_elim)
   have Hprefix : Γ ≤ prefixGraph omegaOne entrySpace (bv_union C) :=
     prefixGraph_union_of_chain Hchain HprefixFamily
   have Hrows : Γ ≤ rowFunctions (bv_union C) := rowFunctions_union HrowsFamily
-  exact le_inf Hprefix (runLaw_union
-    (Hprefix.trans (inf_le_right.trans inf_le_left)) Hrows Hfamily)
+  exact le_inf Hprefix (runLaw_union (Hprefix.trans (inf_le_right.trans inf_le_left)) Hrows Hfamily)
 
 theorem runMaps_chain_union {color : Bool} {R S top C : bSet 𝔹} {Γ : 𝔹}
     (Hsub : Γ ≤ C ⊆ᴮ runMaps color R S top) (Hchain : Γ ≤ inclusionChain C) :
@@ -96,41 +93,35 @@ theorem runMaps_chain_union {color : Bool} {R S top C : bSet 𝔹} {Γ : 𝔹}
 its empty member and the union of the empty chain. -/
 theorem exists_maximal_runMap {color : Bool} {R S top : bSet 𝔹} {Γ : 𝔹} :
     Γ ≤ ⨆ P : bSet 𝔹, P ∈ᴮ runMaps color R S top ⊓
-      ⨅ Q : bSet 𝔹, _root_.imp (Q ∈ᴮ runMaps color R S top)
-        (_root_.imp (P ⊆ᴮ Q) (P =ᴮ Q)) := by
+      ⨅ Q : bSet 𝔹, _root_.imp (Q ∈ᴮ runMaps color R S top) (_root_.imp (P ⊆ᴮ Q) (P =ᴮ Q)) := by
   have Hclosure : Γ ≤ ⨅ C : bSet 𝔹,
       _root_.imp (C ⊆ᴮ runMaps color R S top ⊓ inclusionChain C)
         (bv_union C ∈ᴮ runMaps color R S top) := by
     apply le_iInf
     intro C
     rw [← deduction]
-    exact runMaps_chain_union (inf_le_right.trans inf_le_left)
-      (inf_le_right.trans inf_le_right)
+    exact runMaps_chain_union (inf_le_right.trans inf_le_left) (inf_le_right.trans inf_le_right)
   have Hzorn : Γ ≤ _root_.imp (runMaps color R S top =ᴮ ∅)ᶜ
       (_root_.imp
         (⨅ C : bSet 𝔹,
           _root_.imp (C ⊆ᴮ runMaps color R S top ⊓ inclusionChain C)
             (bv_union C ∈ᴮ runMaps color R S top))
         (⨆ P : bSet 𝔹, P ∈ᴮ runMaps color R S top ⊓
-          ⨅ Q : bSet 𝔹, _root_.imp (Q ∈ᴮ runMaps color R S top)
-            (_root_.imp (P ⊆ᴮ Q) (P =ᴮ Q)))) :=
+          ⨅ Q : bSet 𝔹, _root_.imp (Q ∈ᴮ runMaps color R S top) (_root_.imp (P ⊆ᴮ Q) (P =ᴮ Q)))) :=
     (bSet_zorns_lemma' (Γ := Γ)).trans (iInf_le _ (runMaps color R S top))
-  exact (le_inf ((le_inf Hzorn runMaps_nonempty).trans bv_imp_elim)
-    Hclosure).trans bv_imp_elim
+  exact (le_inf ((le_inf Hzorn runMaps_nonempty).trans bv_imp_elim) Hclosure).trans bv_imp_elim
 
 /-- A maximal lawful partial run is constructed without ideal or success
 assumptions. Establishing full domain still requires a separate extension. -/
 theorem exists_maximal_runPartial {color : Bool} {R S top : bSet 𝔹} {Γ : 𝔹} :
     Γ ≤ ⨆ P : bSet 𝔹, runPartial color R S top P ⊓
-      ⨅ Q : bSet 𝔹, _root_.imp (runPartial color R S top Q)
-        (_root_.imp (P ⊆ᴮ Q) (P =ᴮ Q)) := by
+      ⨅ Q : bSet 𝔹, _root_.imp (runPartial color R S top Q) (_root_.imp (P ⊆ᴮ Q) (P =ᴮ Q)) := by
   simpa only [mem_runMaps] using
     (exists_maximal_runMap (color := color) (R := R) (S := S) (top := top) (Γ := Γ))
 
 theorem maximal_runPartial_ext (color : Bool) (R S top : bSet 𝔹) :
     B_ext (fun P : bSet 𝔹 => runPartial color R S top P ⊓
-      ⨅ Q : bSet 𝔹, _root_.imp (runPartial color R S top Q)
-        (_root_.imp (P ⊆ᴮ Q) (P =ᴮ Q))) :=
+      ⨅ Q : bSet 𝔹, _root_.imp (runPartial color R S top Q) (_root_.imp (P ⊆ᴮ Q) (P =ᴮ Q))) :=
   B_ext_inf (runPartial_ext_graph color R S top)
     (B_ext_iInf (h := fun _ => B_ext_imp (h₁ := B_ext_const)
       (h₂ := B_ext_imp (h₁ := B_ext_subset_left) (h₂ := B_ext_bv_eq_left))))

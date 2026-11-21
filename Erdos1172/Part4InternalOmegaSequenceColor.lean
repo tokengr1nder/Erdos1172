@@ -33,8 +33,7 @@ variable {𝔹 : Type u} [NontrivialCompleteBooleanAlgebra 𝔹]
 
 /-- Exact internal range membership, including arbitrary mixed values. -/
 theorem rangeMem_sequenceGraph (v : ℕ → bSet 𝔹) (x : bSet 𝔹) :
-    rangeMem bSet.omega (sequenceGraph v) x =
-      ⨆ n : (bSet.omega : bSet 𝔹).type, x =ᴮ v n.down := by
+    rangeMem bSet.omega (sequenceGraph v) x = ⨆ n : (bSet.omega : bSet 𝔹).type, x =ᴮ v n.down := by
   apply le_antisymm
   · unfold rangeMem
     apply iSup_le
@@ -89,8 +88,7 @@ whole internal sequence range homogeneous in the exact partition semantics. -/
 theorem sequenceGraph_homogeneousUnion {color : Bool}
     {R : bSet 𝔹} {v : ℕ → bSet 𝔹} {Γ : 𝔹}
     (Hcolor : ∀ m n, m < n → Γ ≤ graphColor color R (v m) (v n)) :
-    Γ ≤ homogeneousUnion color R bSet.omega bSet.omega
-      (sequenceGraph v) (sequenceGraph v) := by
+    Γ ≤ homogeneousUnion color R bSet.omega bSet.omega (sequenceGraph v) (sequenceGraph v) := by
   apply le_iInf
   intro x
   apply le_iInf

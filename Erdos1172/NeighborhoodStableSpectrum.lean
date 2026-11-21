@@ -54,8 +54,7 @@ theorem exists_stable_spectrum {r : Code ↪ W3} {G H : SimpleGraph W3}
     ∃ s : Set W3, s ⊆ domain ∧ IsStationary s ∧ ∃ patterns : Finset WordCode,
       (∀ a ∈ s, spectrum r G H a s ⊆ patterns) ∧
       ∀ t : Set W3, t ⊆ s → IsStationary t →
-        ∃ club : Set W3, IsClub club ∧ ∀ a ∈ t, a ∈ club →
-          spectrum r G H a t = patterns := by
+        ∃ club : Set W3, IsClub club ∧ ∀ a ∈ t, a ∈ club → spectrum r G H a t = patterns := by
   classical
   let admissible : Nat → Prop := fun n =>
     ∃ s : Set W3, s ⊆ domain ∧ IsStationary s ∧ ∃ p : Finset WordCode,
@@ -81,8 +80,7 @@ theorem exists_stable_spectrum {r : Code ↪ W3} {G H : SimpleGraph W3}
       simp only [fiber, Set.mem_iUnion, Set.mem_ofPred_eq]
       exact ⟨fun ⟨_, ha, _⟩ => ha, fun ha => ⟨spectrum r G H a t, ha, rfl⟩⟩
     have hstatUnion : IsStationary (⋃ q, fiber q) := hunion.symm ▸ hbad
-    obtain ⟨q, hq⟩ := (isStationary_iUnion_iff_of_countable
-      alephZero_lt_cof_W3.ne').mp hstatUnion
+    obtain ⟨q, hq⟩ := (isStationary_iUnion_iff_of_countable alephZero_lt_cof_W3.ne').mp hstatUnion
     have hqt : fiber q ⊆ t := fun _ hx => hx.1.1
     have hqdomain : fiber q ⊆ domain := hqt.trans (hts.trans hsDomain)
     have hqbound : ∀ a ∈ fiber q, spectrum r G H a (fiber q) ⊆ q := by
@@ -92,12 +90,10 @@ theorem exists_stable_spectrum {r : Code ↪ W3} {G H : SimpleGraph W3}
     obtain ⟨a, ha⟩ := hq.nonempty
     have hqsub : q ⊆ patterns := by
       rw [← ha.2]
-      exact (spectrum_mono (hgood a (hqdomain ha)) hts).trans
-        (hbound a (hts ha.1.1))
+      exact (spectrum_mono (hgood a (hqdomain ha)) hts).trans (hbound a (hts ha.1.1))
     have hqne : q ≠ patterns := by
       simpa only [ha.2] using ha.1.2
-    have hlt : q.card < patterns.card :=
-      Finset.card_lt_card (lt_of_le_of_ne hqsub hqne)
+    have hlt : q.card < patterns.card := Finset.card_lt_card (lt_of_le_of_ne hqsub hqne)
     exact hlt.not_ge (hminimal (fiber q) hqdomain hq q hqbound)
   obtain ⟨club, hclub, hdisj⟩ := not_isStationary_iff.mp hbad
   refine ⟨club, hclub, ?_⟩

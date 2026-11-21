@@ -105,8 +105,7 @@ theorem LineCoverData.cover_prefix_countable (data : LineCoverData V) (f : W1 �
   have hraw : ({y : V | data.code y < f (data.row y)} ∩ Set.Iio x).Countable := by
     apply (hrows.biUnion (fun i _ => data.row_selection_countable f i)).mono
     intro y hy
-    exact Set.mem_iUnion.mpr ⟨data.row y, Set.mem_iUnion.mpr
-      ⟨data.row_mono hy.2.le, rfl, hy.1⟩⟩
+    exact Set.mem_iUnion.mpr ⟨data.row y, Set.mem_iUnion.mpr ⟨data.row_mono hy.2.le, rfl, hy.1⟩⟩
   have hseed := cofinal_omegaOne_prefix_countable data.seed data.seed_cofinal data.seed_type x
   apply (hseed.union hraw).mono
   intro y hy

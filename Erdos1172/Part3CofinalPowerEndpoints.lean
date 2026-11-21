@@ -44,8 +44,7 @@ theorem exists_cofinal_endpoint (A : Set V) (cut : V) (hbound : A ⊆ Set.Iio cu
   have hupper : upper.Nonempty := ⟨cut, fun a ha => (hbound ha).le⟩
   let bound : V := wellFounded_lt.min upper hupper
   have hbupper : ∀ a ∈ A, a ≤ bound := wellFounded_lt.min_mem upper hupper
-  have hbleast (x : V) (hx : ∀ a ∈ A, a ≤ x) : bound ≤ x :=
-    wellFounded_lt.min_le (s := upper) hx
+  have hbleast (x : V) (hx : ∀ a ∈ A, a ≤ x) : bound ≤ x := wellFounded_lt.min_le (s := upper) hx
   let : NoMaxOrder A := Ordinal.isSuccPrelimit_type_lt_iff.mp hlimit
   have hsub : A ⊆ Set.Iio bound := by
     intro a ha

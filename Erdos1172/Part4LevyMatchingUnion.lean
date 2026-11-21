@@ -74,8 +74,7 @@ private theorem glued_iSup {J : Type u} (b : J → Algebra θ) :
   rw [← glued_stage hθ f agrees μ hm, hv j]
   exact le_iSup (fun i => glued hθ f agrees (b i)) j.val
 
-private theorem glued_compl (b : Algebra θ) :
-    glued hθ f agrees bᶜ = (glued hθ f agrees b)ᶜ := by
+private theorem glued_compl (b : Algebra θ) : glued hθ f agrees bᶜ = (glued hθ f agrees b)ᶜ := by
   obtain ⟨μ,hm,_,v,hv⟩ := exists_initial_reading hθ (J := ULift.{u} Unit)
     (Cardinal.mk_lt_aleph0.trans hθ.aleph0_lt) (fun _ => b) hθ.aleph0_lt
   rw [← hv ⟨()⟩,← map_compl',glued_stage hθ f agrees μ hm,glued_stage hθ f agrees μ hm,map_compl']

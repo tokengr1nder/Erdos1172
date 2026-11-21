@@ -54,8 +54,7 @@ theorem forces_gchPart4Theory_of_values {Γ : β}
   apply le_iInf
   intro Hf
   rcases mem_gchPart4Theory.mp Hf with HZFC | rfl | rfl
-  · have HZ : (⊤ : β) ≤ ⨅ f ∈ ZFC, boolean_realize_sentence (V β) f :=
-      bSet_models_ZFC
+  · have HZ : (⊤ : β) ≤ ⨅ f ∈ ZFC, boolean_realize_sentence (V β) f := bSet_models_ZFC
     exact le_top.trans (HZ.trans ((iInf_le _ f).trans (iInf_le _ HZFC)))
   · exact forces_fullGCHSentence_iff.mpr HGCH
   · exact forces_part4Sentence_iff.mpr Hpart

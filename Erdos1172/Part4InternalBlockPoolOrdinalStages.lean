@@ -47,8 +47,7 @@ theorem pool_prefix_allSmall {color : Bool} {R J E S F Run i : bSet 𝔹} {Γ : 
       (bv_powerset omegaTwo) F)
     (Hlaw : Γ ≤ blockSelectorLaw color R J E S F)
     (HRun : Γ ≤ is_function omegaOne (stateSpace color R) Run)
-    (Hrec : Γ ≤ imageRecLaw (stateSpace color R)
-      (fun _ T => poolUpdate color R F T) Run) :
+    (Hrec : Γ ≤ imageRecLaw (stateSpace color R) (fun _ T => poolUpdate color R F T) Run) :
     Γ ≤ allGood smallState (image i (stateSpace color R) Run) := by
   have Hgood := pool_run_allSmall HCH HF Hlaw HRun Hrec
   apply le_iInf
@@ -73,8 +72,7 @@ theorem pool_prefix_pointInput_small
       (bv_powerset omegaTwo) F)
     (Hlaw : Γ ≤ blockSelectorLaw color R J E S F)
     (HRun : Γ ≤ is_function omegaOne (stateSpace color R) Run)
-    (Hrec : Γ ≤ imageRecLaw (stateSpace color R)
-      (fun _ T => poolUpdate color R F T) Run)
+    (Hrec : Γ ≤ imageRecLaw (stateSpace color R) (fun _ T => poolUpdate color R F T) Run)
     (Hi : Γ ≤ i ∈ᴮ omegaOne) :
     Γ ≤ injects_into (pointInput
       (priorObjects color R (image i (stateSpace color R) Run))
@@ -82,8 +80,7 @@ theorem pool_prefix_pointInput_small
   have Hagg := aggregates_small HCH image_subset (prefix_image_small HRun Hi)
     (pool_prefix_allSmall HCH HF Hlaw HRun Hrec (i := i))
   exact (update_small HCH (Hagg.trans inf_le_left) (Hagg.trans inf_le_right)
-    HF Hlaw aggregateLeft_subset aggregateRight_subset).trans
-      (inf_le_right.trans inf_le_left)
+    HF Hlaw aggregateLeft_subset aggregateRight_subset).trans (inf_le_right.trans inf_le_left)
 
 /-- Both ordinalness and the actual predecessor marker belong to the
 same stage value of the same run. -/
@@ -94,8 +91,7 @@ theorem pool_run_pair_ordinal_and_growth
       (bv_powerset omegaTwo) F)
     (Hlaw : Γ ≤ blockSelectorLaw color R J E S F)
     (HRun : Γ ≤ is_function omegaOne (stateSpace color R) Run)
-    (Hrec : Γ ≤ imageRecLaw (stateSpace color R)
-      (fun _ T => poolUpdate color R F T) Run)
+    (Hrec : Γ ≤ imageRecLaw (stateSpace color R) (fun _ T => poolUpdate color R F T) Run)
     (Hpair : Γ ≤ pair i (pair B P) ∈ᴮ Run) :
     Γ ≤ Ord P ⊓ past (pointInput
       (priorObjects color R (image i (stateSpace color R) Run))
@@ -106,8 +102,7 @@ theorem pool_run_pair_ordinal_and_growth
     HCH aggregateLeft_subset aggregateRight_subset Hinput
   have Heq := (pool_recursion_entry Hrec Hpair).trans inf_le_right
   exact le_inf
-    (bv_rw' (ϕ := Ord) Heq (h_congr := B_ext_Ord)
-      (H_new := Hnext.trans inf_le_left))
+    (bv_rw' (ϕ := Ord) Heq (h_congr := B_ext_Ord) (H_new := Hnext.trans inf_le_left))
     (bv_rw' (ϕ := fun Q => past (pointInput
       (priorObjects color R (image i (stateSpace color R) Run))
       (priorPoints color R (image i (stateSpace color R) Run)) F) ∈ᴮ Q)
@@ -120,8 +115,7 @@ theorem pool_run_pair_ordinal
       (bv_powerset omegaTwo) F)
     (Hlaw : Γ ≤ blockSelectorLaw color R J E S F)
     (HRun : Γ ≤ is_function omegaOne (stateSpace color R) Run)
-    (Hrec : Γ ≤ imageRecLaw (stateSpace color R)
-      (fun _ T => poolUpdate color R F T) Run)
+    (Hrec : Γ ≤ imageRecLaw (stateSpace color R) (fun _ T => poolUpdate color R F T) Run)
     (Hpair : Γ ≤ pair i (pair B P) ∈ᴮ Run) : Γ ≤ Ord P :=
   (pool_run_pair_ordinal_and_growth HCH HF Hlaw HRun Hrec Hpair).trans inf_le_left
 
@@ -129,8 +123,7 @@ theorem pool_run_pair_ordinal
 the point pool of this same stage. No cardinal hypotheses are needed. -/
 theorem pool_run_pair_blockPoints_subset
     {color : Bool} {R F Run i B P : bSet 𝔹} {Γ : 𝔹}
-    (Hrec : Γ ≤ imageRecLaw (stateSpace color R)
-      (fun _ T => poolUpdate color R F T) Run)
+    (Hrec : Γ ≤ imageRecLaw (stateSpace color R) (fun _ T => poolUpdate color R F T) Run)
     (Hpair : Γ ≤ pair i (pair B P) ∈ᴮ Run) : Γ ≤ bv_union B ⊆ᴮ P := by
   have Hentry := pool_recursion_entry Hrec Hpair
   have Hnext : Γ ≤ bv_union (nextObjects color R
@@ -152,30 +145,25 @@ theorem pool_run_points_strict_mono
       (bv_powerset omegaTwo) F)
     (Hlaw : Γ ≤ blockSelectorLaw color R J E S F)
     (HRun : Γ ≤ is_function omegaOne (stateSpace color R) Run)
-    (Hrec : Γ ≤ imageRecLaw (stateSpace color R)
-      (fun _ T => poolUpdate color R F T) Run)
+    (Hrec : Γ ≤ imageRecLaw (stateSpace color R) (fun _ T => poolUpdate color R F T) Run)
     (Hji : Γ ≤ j ∈ᴮ i)
     (Hjpair : Γ ≤ pair j (pair B P) ∈ᴮ Run)
     (Hipair : Γ ≤ pair i (pair C Q) ∈ᴮ Run) : Γ ≤ P ∈ᴮ Q := by
   let T := image i (stateSpace color R) Run
   let U := pointInput (priorObjects color R T) (priorPoints color R T) F
-  have Hpast : Γ ≤ pair B P ∈ᴮ T :=
-    mem_image Hjpair Hji (mem_codomain_of_is_function Hjpair HRun)
-  have HPprior : Γ ≤ P ⊆ᴮ priorPoints color R T :=
-    right_subset_aggregate image_subset Hpast
+  have Hpast : Γ ≤ pair B P ∈ᴮ T := mem_image Hjpair Hji (mem_codomain_of_is_function Hjpair HRun)
+  have HPprior : Γ ≤ P ⊆ᴮ priorPoints color R T := right_subset_aggregate image_subset Hpast
   have HPmarker : Γ ≤ P ⊆ᴮ past U :=
     subset_trans' (subset_trans' HPprior subset_binary_union_left) subset_past
   have HPord : Γ ≤ Ord P := pool_run_pair_ordinal HCH HF Hlaw HRun Hrec Hjpair
   have Hnew := pool_run_pair_ordinal_and_growth HCH HF Hlaw HRun Hrec Hipair
   have HQord : Γ ≤ Ord Q := Hnew.trans inf_le_left
   have Hmarker : Γ ≤ past U ∈ᴮ Q := Hnew.trans inf_le_right
-  have Hcases := eq_or_mem_of_ordinal_subset HPord
-    (Ord_of_mem_Ord Hmarker HQord) HPmarker
+  have Hcases := eq_or_mem_of_ordinal_subset HPord (Ord_of_mem_Ord Hmarker HQord) HPmarker
   apply (le_inf le_rfl Hcases).trans
   rw [inf_sup_left]
   apply sup_le
   · exact mem_congr (bv_symm inf_le_right) bv_refl (inf_le_left.trans Hmarker)
-  · exact mem_of_mem_Ord inf_le_right (inf_le_left.trans Hmarker)
-      (inf_le_left.trans HQord)
+  · exact mem_of_mem_Ord inf_le_right (inf_le_left.trans Hmarker) (inf_le_left.trans HQord)
 
 end bSet.ErdosBlockPoolOrdinalStages

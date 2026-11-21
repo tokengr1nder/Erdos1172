@@ -44,8 +44,7 @@ theorem union_type_lt (n : ℕ) {A B : Set V}
     (hA : typeLT A < (ω_ 1 : Ordinal.{0}) ^ ((n + 1 : ℕ) : Ordinal))
     (hB : typeLT B < (ω_ 1 : Ordinal.{0}) ^ ((n + 1 : ℕ) : Ordinal)) :
     typeLT (A ∪ B : Set V) < (ω_ 1 : Ordinal.{0}) ^ ((n + 1 : ℕ) : Ordinal) := by
-  have hsmall := countable_biUnion_type_lt_finite_power n ({A, B} : Set (Set V))
-    (by simp) id (by
+  have hsmall := countable_biUnion_type_lt_finite_power n ({A, B} : Set (Set V)) (by simp) id (by
       intro C hC
       rcases Set.mem_insert_iff.mp hC with rfl | hC
       · exact hA
@@ -63,8 +62,7 @@ theorem lower_power_lt (n k : ℕ) (hk : k < n) :
     (Ordinal.one_lt_omega0.trans_le (Ordinal.omega0_le_omega 1))).mpr
   exact_mod_cast Nat.succ_lt_succ hk
 
-theorem omegaOne_le_power (n : ℕ) :
-    (ω_ 1 : Ordinal.{0}) ≤ (ω_ 1) ^ ((n + 1 : ℕ) : Ordinal) := by
+theorem omegaOne_le_power (n : ℕ) : (ω_ 1 : Ordinal.{0}) ≤ (ω_ 1) ^ ((n + 1 : ℕ) : Ordinal) := by
   have h := Ordinal.opow_le_opow_right (Ordinal.omega_pos 1)
     (show (1 : Ordinal.{0}) ≤ ((n + 1 : ℕ) : Ordinal) by exact_mod_cast Nat.succ_pos n)
   simpa only [Ordinal.opow_one] using h
@@ -130,7 +128,6 @@ noncomputable def decode (f : W1 → W1) : Profile := f ∘ profileRank
 theorem decode_mono : Monotone decode := fun _ _ h i => h (profileRank i)
 
 theorem decode_surjective : Function.Surjective decode :=
-  profileRank.injective.surjective_comp_right'
-    (fun _ => Ordinal.ToType.mk ⟨0, Ordinal.omega_pos 1⟩)
+  profileRank.injective.surjective_comp_right' (fun _ => Ordinal.ToType.mk ⟨0, Ordinal.omega_pos 1⟩)
 
 end Erdos1172Part3CoverProfileTools

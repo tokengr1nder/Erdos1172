@@ -33,8 +33,7 @@ def commonLoss (J F U A0 : bSet 𝔹) : 𝔹 :=
 theorem positiveValues_apply {κ J D F x A : bSet 𝔹} {Γ : 𝔹}
     (H : Γ ≤ positiveValues κ J D F)
     (Hx : Γ ≤ x ∈ᴮ D) (HA : Γ ≤ pair x A ∈ᴮ F) : Γ ≤ positive κ J A :=
-  (le_inf (H.trans ((iInf_le _ x).trans (iInf_le _ A))) (le_inf Hx HA)).trans
-    bv_imp_elim
+  (le_inf (H.trans ((iInf_le _ x).trans (iInf_le _ A))) (le_inf Hx HA)).trans bv_imp_elim
 
 theorem difference_congr_left {A B C : bSet 𝔹} {Γ : 𝔹}
     (H : Γ ≤ A =ᴮ B) : Γ ≤ difference A C =ᴮ difference B C :=
@@ -46,14 +45,12 @@ actual value at the original family index. -/
 def basisChoice (J F B x i : bSet 𝔹) : 𝔹 :=
   ⨆ A, ⨆ A0, ((pair x A ∈ᴮ F) ⊓ pair i A0 ∈ᴮ B) ⊓ difference A0 A ∈ᴮ J
 
-theorem basisChoice_ext_left (J F B i : bSet 𝔹) :
-    B_ext (fun x => basisChoice J F B x i) := by
+theorem basisChoice_ext_left (J F B i : bSet 𝔹) : B_ext (fun x => basisChoice J F B x i) := by
   unfold basisChoice
   exact B_ext_iSup (h := fun _ => B_ext_iSup (h := fun _ =>
     B_ext_inf (B_ext_inf B_ext_pair_mem_left B_ext_const) B_ext_const))
 
-theorem basisChoice_ext_right (J F B x : bSet 𝔹) :
-    B_ext (basisChoice J F B x) := by
+theorem basisChoice_ext_right (J F B x : bSet 𝔹) : B_ext (basisChoice J F B x) := by
   unfold basisChoice
   exact B_ext_iSup (h := fun _ => B_ext_iSup (h := fun _ =>
     B_ext_inf (B_ext_inf B_ext_const B_ext_pair_mem_left) B_ext_const))
@@ -90,8 +87,7 @@ theorem exists_basis_selector {κ J S I F B : bSet 𝔹} {Γ : 𝔹}
     (HFpos : Γ ≤ positiveValues κ J S F)
     (Hdense : Γ ≤ denseValues κ J I B) :
     ∃ g : bSet 𝔹, Γ ≤ is_function S I g ⊓
-      ⨅ x, ⨅ i, _root_.imp ((x ∈ᴮ S) ⊓ pair x i ∈ᴮ g)
-        (basisChoice J F B x i) := by
+      ⨅ x, ⨅ i, _root_.imp ((x ∈ᴮ S) ⊓ pair x i ∈ᴮ g) (basisChoice J F B x i) := by
   apply ErdosSmallFiberBound.exists_selector_of_pointwise
     (basisChoice_ext_left J F B) (basisChoice_ext_right J F B)
   apply le_iInf; intro x; rw [← deduction]
@@ -99,8 +95,7 @@ theorem exists_basis_selector {κ J S I F B : bSet 𝔹} {Γ : 𝔹}
   have Hvalue : Δ ≤ ⨆ A, (A ∈ᴮ bv_powerset κ) ⊓ pair x A ∈ᴮ F :=
     (le_inf (inf_le_left.trans ((is_total_of_is_function HF).trans (iInf_le _ x)))
       inf_le_right).trans bv_imp_elim
-  obtain ⟨A, HA⟩ := exists_convert Hvalue
-    (B_ext_inf B_ext_mem_left B_ext_pair_mem_right)
+  obtain ⟨A, HA⟩ := exists_convert Hvalue (B_ext_inf B_ext_mem_left B_ext_pair_mem_right)
   have Hpositive : Δ ≤ positive κ J A :=
     positiveValues_apply (inf_le_left.trans HFpos) inf_le_right (HA.trans inf_le_right)
   have Hindex : Δ ≤ ⨆ i, ⨆ A0,

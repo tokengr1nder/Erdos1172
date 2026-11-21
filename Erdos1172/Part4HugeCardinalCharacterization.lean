@@ -191,8 +191,7 @@ theorem inaccessible_source_of_fine_order_type {I : Type u} {κ θ : Cardinal.{u
       ((Filter.eventually_cardinal_forall hcard_μ).mpr hpt).mono fun _ hi => Set.ext hi
     obtain ⟨i₀, hi₀⟩ := hall.exists
     let x₀ : κ.ord.ToType := r i₀
-    have hconst : ∀ᶠ i in U, r i = x₀ :=
-      hall.mono fun i hi => F.injective (hi.trans hi₀.symm)
+    have hconst : ∀ᶠ i in U, r i = x₀ := hall.mono fun i hi => F.injective (hi.trans hi₀.symm)
     obtain ⟨i, hlt, heq⟩ := ((hr x₀).and hconst).exists
     exact lt_irrefl x₀ (hlt.trans_eq heq)
 
@@ -207,13 +206,11 @@ private theorem fiber_closed_under_func {I : Type u} {θ : Cardinal.{u}}
     by_contra hall_i
     exact hi fun η hη => Classical.not_not.mp fun hgn => hall_i ⟨η, hη, hgn⟩
   obtain ⟨_, η₀, _⟩ := hex.exists
-  let sel (i : I) : θ.ord.ToType :=
-    if h : ∃ η, η ∈ a i ∧ g η ∉ a i then h.choose else η₀
+  let sel (i : I) : θ.ord.ToType := if h : ∃ η, η ∈ a i ∧ g η ∉ a i then h.choose else η₀
   have hsel : ∀ᶠ i in U, sel i ∈ a i ∧ g (sel i) ∉ a i :=
     hex.mono fun i hi => by simpa only [sel, dif_pos hi] using hi.choose_spec
   obtain ⟨η, hη⟩ := hn sel (hsel.mono fun _ h => h.1)
-  have hbad : ∀ᶠ i in U, g η ∉ a i :=
-    (hsel.and hη).mono fun _ h => h.2 ▸ h.1.2
+  have hbad : ∀ᶠ i in U, g η ∉ a i := (hsel.and hη).mono fun _ h => h.2 ▸ h.1.2
   obtain ⟨_, hin, hout⟩ := ((hf (g η)).and hbad).exists
   exact hout hin
 
@@ -239,10 +236,8 @@ theorem inaccessible_target_of_fine_order_type {I : Type u} {κ θ : Cardinal.{u
       simp only [g, dif_pos hex]
       have heq_sub : emb hex.choose = emb x := Subtype.ext hex.choose_spec
       exact congrArg Subtype.val (emb.injective heq_sub)
-    let good (i : I) : Prop :=
-      Nonempty (κ.ord.ToType ≃o a i) ∧ β ∈ a i ∧ ∀ η ∈ a i, g η ∈ a i
-    have hgood : ∀ᶠ i in U, good i :=
-      ht.and ((hf β).and (fiber_closed_under_func U hf hn g))
+    let good (i : I) : Prop := Nonempty (κ.ord.ToType ≃o a i) ∧ β ∈ a i ∧ ∀ η ∈ a i, g η ∈ a i
+    have hgood : ∀ᶠ i in U, good i := ht.and ((hf β).and (fiber_closed_under_func U hf hn g))
     let kTop (i : I) (hi : good i) : κ.ord.ToType :=
       let e := Classical.choice hi.1
       let b₀ : κ.ord.ToType := e.symm ⟨β, hi.2.1⟩
@@ -300,8 +295,7 @@ theorem inaccessible_target_of_fine_order_type {I : Type u} {κ θ : Cardinal.{u
         have hlt : e u.val < e b₀ := e.lt_iff_lt.mpr u.property
         have hb₀ : (e b₀).val = β := congrArg Subtype.val (e.apply_symm_apply ⟨β, hi.2⟩)
         exact (Subtype.mk_lt_mk.mp hlt).trans_eq hb₀
-      let rest' (k : κ.ord.ToType) : Set (Set.Iio b₀) :=
-        {u | ⟨(e u.val).val, hub u⟩ ∈ F (e k).val}
+      let rest' (k : κ.ord.ToType) : Set (Set.Iio b₀) := {u | ⟨(e u.val).val, hub u⟩ ∈ F (e k).val}
       have hcard_set : #(Set (Set.Iio b₀)) < #κ.ord.ToType := by
         rw [Cardinal.mk_set, Cardinal.mk_ord_toType]
         exact hκ.isStrongLimit.isStrongPrelimit (toType_Iio_card_lt b₀)
@@ -321,10 +315,8 @@ theorem inaccessible_target_of_fine_order_type {I : Type u} {κ θ : Cardinal.{u
       have hu₀ : u₀ < b₀ := e.symm.lt_iff_lt.mpr hη_lt
       have hmem_iff : (⟨u₀, hu₀⟩ : Set.Iio b₀) ∈ rest' k₁ ↔ ⟨u₀, hu₀⟩ ∈ rest' k₂ := by
         rw [heq_r]
-      have hu₀_raw : (e u₀).val = η :=
-        congrArg Subtype.val (e.apply_symm_apply ⟨η, hη_in⟩)
-      have hu₀_val : (⟨(e u₀).val, hub ⟨u₀, hu₀⟩⟩ : Set.Iio β) = ⟨η, hη_lt⟩ :=
-        Subtype.ext hu₀_raw
+      have hu₀_raw : (e u₀).val = η := congrArg Subtype.val (e.apply_symm_apply ⟨η, hη_in⟩)
+      have hu₀_val : (⟨(e u₀).val, hub ⟨u₀, hu₀⟩⟩ : Set.Iio β) = ⟨η, hη_lt⟩ := Subtype.ext hu₀_raw
       change (⟨(e u₀).val, hub ⟨u₀, hu₀⟩⟩ : Set.Iio β) ∈ F (e k₁).val ↔
         (⟨(e u₀).val, hub ⟨u₀, hu₀⟩⟩ : Set.Iio β) ∈ F (e k₂).val at hmem_iff
       rwa [hu₀_val] at hmem_iff
@@ -408,8 +400,7 @@ theorem isHugeWithTarget_of_fine_measure {I : Type u} {κ θ : Cardinal.{u}}
   let dflt : HugeFiberSpace κ θ := ⟨a i₀, hi₀⟩
   let π (i : I) : HugeFiberSpace κ θ :=
     if h : Nonempty (κ.ord.ToType ≃o a i) then ⟨a i, h⟩ else dflt
-  have hπ_val : ∀ᶠ i in U, (π i).val = a i :=
-    ht.mono fun i hi => by simp only [π, dif_pos hi]
+  have hπ_val : ∀ᶠ i in U, (π i).val = a i := ht.mono fun i hi => by simp only [π, dif_pos hi]
   let W : Ultrafilter (HugeFiberSpace κ θ) := Ultrafilter.map π U
   have hW_card : CardinalInterFilter (W : Filter (HugeFiberSpace κ θ)) κ :=
     { cardinal_sInter_mem := fun S hS hmem => by
@@ -443,8 +434,7 @@ theorem isHugeWithTarget_iff_exists_fine_measure {κ θ : Cardinal.{u}} :
     have : CardinalInterFilter (U : Filter (HugeFiberSpace κ θ)) κ := hcard
     have hcnt : CountableInterFilter (U : Filter (HugeFiberSpace κ θ)) :=
       CardinalInterFilter.toCountableInterFilter (U : Filter (HugeFiberSpace κ θ)) hω
-    exact ⟨HugeFiberSpace κ θ, U, Subtype.val, hcnt, hcard, hk, hf, hn,
-      hugeFiberVal_orderType U⟩
+    exact ⟨HugeFiberSpace κ θ, U, Subtype.val, hcnt, hcard, hk, hf, hn, hugeFiberVal_orderType U⟩
   · rintro ⟨I, U, a, hcnt, hcard, hk, hf, hn, ht⟩
     have : CountableInterFilter (U : Filter I) := hcnt
     have : CardinalInterFilter (U : Filter I) κ := hcard

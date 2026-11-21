@@ -56,8 +56,7 @@ theorem exists_optionalNamedCofinalCovers (hV : #V ≤ ℵ_ 1) (n : ℕ) :
   classical
   by_cases hseed : ∃ A : Set V, IsCofinal A ∧
       typeLT A = (ω_ 1 : Ordinal.{0}) ^ ((n + 1 : ℕ) : Ordinal)
-  · obtain ⟨C⟩ :=
-      Erdos1172Part3NamedCofinalPowerCovers.exists_namedCofinalCovers n V hV hseed
+  · obtain ⟨C⟩ := Erdos1172Part3NamedCofinalPowerCovers.exists_namedCofinalCovers n V hV hseed
     exact ⟨{
       family := C.family
       mono := C.mono

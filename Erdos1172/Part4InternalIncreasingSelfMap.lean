@@ -34,8 +34,7 @@ def descendingIndices (κ f : bSet 𝔹) : bSet 𝔹 :=
   comprehend (fun i => ⨆ x, pair i x ∈ᴮ f ⊓ x ∈ᴮ i) κ
 
 theorem mem_descendingIndices_iff {κ f i : bSet 𝔹} {Γ : 𝔹} :
-    Γ ≤ i ∈ᴮ descendingIndices κ f ↔
-      Γ ≤ i ∈ᴮ κ ∧ Γ ≤ ⨆ x, pair i x ∈ᴮ f ⊓ x ∈ᴮ i :=
+    Γ ≤ i ∈ᴮ descendingIndices κ f ↔ Γ ≤ i ∈ᴮ κ ∧ Γ ≤ ⨆ x, pair i x ∈ᴮ f ⊓ x ∈ᴮ i :=
   ErdosRelationGraph.mem_comprehend_and
     (B_ext_iSup (h := fun _ => B_ext_inf B_ext_pair_mem_left B_ext_mem_right))
 
@@ -56,27 +55,23 @@ theorem bot_of_descending_value {κ f i x : bSet 𝔹} {Γ : 𝔹}
     nonempty_of_exists_mem _ (le_iSup_of_le i HiBad)
   obtain ⟨j, Hj⟩ := exists_least_of_nonempty Hκ descendingIndices_subset Hnonempty
   have HjBad := mem_descendingIndices_iff.mp (leastIn_mem Hj)
-  obtain ⟨y, Hy⟩ := exists_convert HjBad.2
-    (B_ext_inf B_ext_pair_mem_right B_ext_mem_left)
+  obtain ⟨y, Hy⟩ := exists_convert HjBad.2 (B_ext_inf B_ext_pair_mem_right B_ext_mem_left)
   have Hyκ : Γ ≤ y ∈ᴮ κ := mem_of_mem_Ord (Hy.trans inf_le_right) HjBad.1 Hκ
   have Htotal : Γ ≤ ⨆ z, z ∈ᴮ κ ⊓ pair y z ∈ᴮ f :=
     (le_inf ((Hf.trans inf_le_right).trans (iInf_le _ y)) Hyκ).trans bv_imp_elim
-  obtain ⟨z, Hz⟩ := exists_convert Htotal
-    (B_ext_inf B_ext_mem_left B_ext_pair_mem_right)
+  obtain ⟨z, Hz⟩ := exists_convert Htotal (B_ext_inf B_ext_mem_left B_ext_pair_mem_right)
   have Hzy : Γ ≤ z ∈ᴮ y :=
     increasingOn_apply Hinc Hyκ HjBad.1 (Hy.trans inf_le_right)
       (Hz.trans inf_le_right) (Hy.trans inf_le_left)
   have HyBad : Γ ≤ y ∈ᴮ descendingIndices κ f :=
-    mem_descendingIndices_iff.mpr
-      ⟨Hyκ, le_iSup_of_le z (le_inf (Hz.trans inf_le_right) Hzy)⟩
+    mem_descendingIndices_iff.mpr ⟨Hyκ, le_iSup_of_le z (le_inf (Hz.trans inf_le_right) Hzy)⟩
   have Hmin : Γ ≤ j =ᴮ y ⊔ j ∈ᴮ y := leastIn_apply Hj HyBad
   apply (le_inf (le_refl Γ) Hmin).trans
   rw [inf_sup_left]
   apply sup_le
   · exact bot_of_mem_self'
       (mem_congr bv_refl inf_le_right (inf_le_left.trans (Hy.trans inf_le_right)))
-  · exact bot_of_mem_mem' y j
-      (inf_le_left.trans (Hy.trans inf_le_right)) inf_le_right
+  · exact bot_of_mem_mem' y j (inf_le_left.trans (Hy.trans inf_le_right)) inf_le_right
 
 theorem value_not_below_index {κ f i x : bSet 𝔹} {Γ : 𝔹}
     (Hκ : Γ ≤ Ord κ) (Hf : Γ ≤ is_func' κ κ f)
@@ -97,8 +92,7 @@ theorem index_le_value {κ f i x : bSet 𝔹} {Γ : 𝔹}
   have Htri := epsilon_trichotomy_of_Ord Hi Hxκ Hκ
   apply (le_inf (le_refl Γ) Htri).trans
   rw [inf_sup_left]
-  exact sup_le inf_le_right
-    ((bv_absurd _ inf_le_right (inf_le_left.trans Hnot)).trans bot_le)
+  exact sup_le inf_le_right ((bv_absurd _ inf_le_right (inf_le_left.trans Hnot)).trans bot_le)
 
 theorem index_subset_value {κ f i x : bSet 𝔹} {Γ : 𝔹}
     (Hκ : Γ ≤ Ord κ) (Hf : Γ ≤ is_func' κ κ f)

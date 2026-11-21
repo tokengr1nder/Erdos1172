@@ -49,13 +49,11 @@ theorem rowIdealAvailability_of_normal {S : bSet 𝔹} {Γ : 𝔹}
   intro σ
   rw [← deduction]
   have Hex : Γ ⊓ σ ∈ᴮ omegaOne ≤ ⨆ J, rowNormalIdealData S σ J :=
-    (le_inf (inf_le_left.trans (Hrows.trans (iInf_le _ σ))) inf_le_right).trans
-      bv_imp_elim
+    (le_inf (inf_le_left.trans (Hrows.trans (iInf_le _ σ))) inf_le_right).trans bv_imp_elim
   apply Hex.trans
   apply iSup_le
   intro J
-  exact le_iSup_of_le J
-    (show rowNormalIdealData S σ J ≤ rowIdealData S σ J from inf_le_left)
+  exact le_iSup_of_le J (show rowNormalIdealData S σ J ≤ rowIdealData S σ J from inf_le_left)
 
 /-- Both branches are derived at their local Boolean conditions; an
 external global choice of a successful endpoint or of a color is not used. -/

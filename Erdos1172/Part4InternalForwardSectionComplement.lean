@@ -43,8 +43,7 @@ private theorem color_of_not_opposite {color : Bool} {R x y : bSet 𝔹} {Γ : �
         exact Hxy.trans le_sup_left
   apply (le_inf (le_refl Γ) Hcover).trans
   rw [inf_sup_left]
-  exact sup_le inf_le_right
-    ((bv_absurd _ inf_le_right (inf_le_left.trans Hnot)).trans bot_le)
+  exact sup_le inf_le_right ((bv_absurd _ inf_le_right (inf_le_left.trans Hnot)).trans bot_le)
 
 /-- Totality gives a real value at every coordinate; above that value,
 failure of the opposite forward section forces the chosen-color section. -/
@@ -52,8 +51,7 @@ theorem forwardSection_complement_subset
     {color : Bool} {R r y : bSet 𝔹} {Γ : 𝔹}
     (Hr : Γ ≤ is_function omegaOne omegaTwo r)
     (Hbefore : Γ ≤ ⨅ x, _root_.imp (rangeMem omegaOne r x) (x ∈ᴮ y)) :
-    Γ ≤ difference omegaOne (forwardSection (!color) R r y) ⊆ᴮ
-      forwardSection color R r y := by
+    Γ ≤ difference omegaOne (forwardSection (!color) R r y) ⊆ᴮ forwardSection color R r y := by
   rw [subset_unfold']
   apply le_iInf
   intro i
@@ -65,8 +63,7 @@ theorem forwardSection_complement_subset
   have Htotal : Δ ≤ ⨆ x, x ∈ᴮ omegaTwo ⊓ pair i x ∈ᴮ r :=
     (le_inf ((is_total_of_is_function (inf_le_left.trans Hr)).trans (iInf_le _ i))
       (Hi.trans inf_le_left)).trans bv_imp_elim
-  obtain ⟨x, Hx⟩ := exists_convert Htotal
-    (B_ext_inf B_ext_mem_left B_ext_pair_mem_right)
+  obtain ⟨x, Hx⟩ := exists_convert Htotal (B_ext_inf B_ext_mem_left B_ext_pair_mem_right)
   have Hrange : Δ ≤ rangeMem omegaOne r x :=
     le_iSup_of_le i (le_inf (Hi.trans inf_le_left) (Hx.trans inf_le_right))
   have Hxy : Δ ≤ x ∈ᴮ y :=

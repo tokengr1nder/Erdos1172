@@ -81,8 +81,7 @@ theorem exists_positive_fiber
     ∃ p : P, ¬J.small (x ∩ f ⁻¹' {p}) := by
   by_contra h
   push Not at h
-  have hall : J.small (⋃ p : P, x ∩ f ⁻¹' {p}) :=
-    J.iUnion_small (fun p : P => x ∩ f ⁻¹' {p}) hP h
+  have hall : J.small (⋃ p : P, x ∩ f ⁻¹' {p}) := J.iUnion_small (fun p : P => x ∩ f ⁻¹' {p}) hP h
   apply hx
   apply J.mono (t := ⋃ p : P, x ∩ f ⁻¹' {p})
   · intro a ha
@@ -149,14 +148,12 @@ def blueBlockSupport (data : FavorableEndpointData red blue)
     (x : W3) : Set I1 :=
   {i | ∃ y ∈ data.blocks i, blue.Adj x y}
 
-private theorem block_card
-    (data : FavorableEndpointData red blue) (i : I1) :
+private theorem block_card (data : FavorableEndpointData red blue) (i : I1) :
     #(data.blocks i) = aleph 1 := by
   have h := congrArg Ordinal.card (data.block_type i)
   simpa only [Ordinal.card_type, Ordinal.card_omega] using h
 
-private theorem blockPoint_card
-    (data : FavorableEndpointData red blue) :
+private theorem blockPoint_card (data : FavorableEndpointData red blue) :
     #(BlockPoint data) = aleph 1 := by
   rw [BlockPoint, Cardinal.mk_sigma]
   calc
@@ -173,12 +170,10 @@ private theorem blockPoint_card
 
 /-- CH puts all countable transversals below the `alephTwo` completeness
 threshold. -/
-theorem blueTransversalCode_card_lt_alephTwo
-    (hCH : CH) (data : FavorableEndpointData red blue) :
+theorem blueTransversalCode_card_lt_alephTwo (hCH : CH) (data : FavorableEndpointData red blue) :
     #(BlueTransversalCode data) < aleph 2 := by
   calc
-    #(BlueTransversalCode data) ≤ #(Nat → BlockPoint data) :=
-      Cardinal.mk_subtype_le _
+    #(BlueTransversalCode data) ≤ #(Nat → BlockPoint data) := Cardinal.mk_subtype_le _
     _ = #(BlockPoint data) ^ #Nat := by
       rw [Cardinal.mk_arrow]
       simp only [Cardinal.lift_id]
@@ -228,27 +223,20 @@ private theorem transversal_range_blue
   rintro _ ⟨m, rfl⟩ _ ⟨n, rfl⟩ hne
   have hmn : m ≠ n := fun h => hne (congrArg q.point h)
   have hindex : (q.1 m).1 ≠ (q.1 n).1 := fun h => hmn (q.2 h)
-  exact data.distinct_blocks_blue hindex
-    (point_mem_block data q m) (point_mem_block data q n)
+  exact data.distinct_blocks_blue hindex (point_mem_block data q m) (point_mem_block data q n)
 
 private theorem exists_blue_tail_of_transversal
     (data : FavorableEndpointData red blue)
     (q : BlueTransversalCode data) :
-    ∃ tail : Set W3,
-      tail ⊆ Set.range q.point ∧ blue.IsClique tail ∧
-        typeLT tail = ω := by
+    ∃ tail : Set W3, tail ⊆ Set.range q.point ∧ blue.IsClique tail ∧ typeLT tail = ω := by
   have hrangeCard : #(Set.range q.point) = aleph0 := by
-    rw [Cardinal.mk_range_eq q.point
-      (transversal_points_injective data q)]
+    rw [Cardinal.mk_range_eq q.point (transversal_points_injective data q)]
     exact Cardinal.mk_nat
   have homega : ω ≤ typeLT (Set.range q.point) := by
     simpa only [hrangeCard, Cardinal.ord_aleph0] using
-      (Cardinal.ord_le_type
-        ((· < ·) : Set.range q.point → Set.range q.point → Prop))
-  obtain ⟨tail, htailSub, htailType⟩ :=
-    Ordinal.exists_subset_typeLT_eq (Set.range q.point) homega
-  exact ⟨tail, htailSub,
-    (transversal_range_blue data q).subset htailSub, htailType⟩
+      (Cardinal.ord_le_type ((· < ·) : Set.range q.point → Set.range q.point → Prop))
+  obtain ⟨tail, htailSub, htailType⟩ := Ordinal.exists_subset_typeLT_eq (Set.range q.point) homega
+  exact ⟨tail, htailSub, (transversal_range_blue data q).subset htailSub, htailType⟩
 
 private theorem blue_target_of_positive_transversal
     (data : FavorableEndpointData red blue)
@@ -258,8 +246,7 @@ private theorem blue_target_of_positive_transversal
   have hrowSub : blueRows data q ⊆ data.rows := fun _ hx => hx.1
   obtain ⟨core, hcoreSub, hcoreBlue, hcoreType⟩ :=
     data.blue_core (blueRows data q) hrowSub hpositive
-  obtain ⟨tail, htailSub, htailBlue, htailType⟩ :=
-    exists_blue_tail_of_transversal data q
+  obtain ⟨tail, htailSub, htailBlue, htailType⟩ := exists_blue_tail_of_transversal data q
   refine Erdos1172BlockCriterion.exists_clique_type_omegaTwo_add_of_later_block
     blue hcoreBlue hcoreType ⟨tail, htailBlue, htailType, ?_, ?_⟩
   · intro x hx y hy

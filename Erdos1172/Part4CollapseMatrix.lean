@@ -60,11 +60,9 @@ theorem condition_inf_eq_bot_of_entries_ne {p q : Condition α} {n : ℕ} {a b :
   classical
   by_contra h
   obtain ⟨r, hrp, hrq⟩ := (condition_inf_ne_bot_iff p q).mp h
-  exact hab (Option.some.inj
-    ((getElem?_eq_of_le hrp hp).symm.trans (getElem?_eq_of_le hrq hq)))
+  exact hab (Option.some.inj ((getElem?_eq_of_le hrp hp).symm.trans (getElem?_eq_of_le hrq hq)))
 
-theorem entry_inf_eq_bot {n : ℕ} {a b : α} (hab : a ≠ b) :
-    entry n a ⊓ entry n b = ⊥ := by
+theorem entry_inf_eq_bot {n : ℕ} {a b : α} (hab : a ≠ b) : entry n a ⊓ entry n b = ⊥ := by
   unfold entry
   erw [iSup_inf_eq]
   apply le_antisymm ?_ bot_le
@@ -75,8 +73,7 @@ theorem entry_inf_eq_bot {n : ℕ} {a b : α} (hab : a ≠ b) :
   intro q
   exact (condition_inf_eq_bot_of_entries_ne p.property q.property hab).le
 
-theorem row_iSup_eq_top [Nonempty α] (n : ℕ) :
-    (⨆ a : α, entry n a) = ⊤ := by
+theorem row_iSup_eq_top [Nonempty α] (n : ℕ) : (⨆ a : α, entry n a) = ⊤ := by
   have hD : (⨆ p : lengthDense (α := α) (n + 1), condition p.val) = ⊤ := by
     apply iSup_condition_eq_top_of_dense
     intro p
@@ -86,13 +83,11 @@ theorem row_iSup_eq_top [Nonempty α] (n : ℕ) :
   rw [← hD]
   apply iSup_le
   intro p
-  have hn : n < p.val.entries.length :=
-    (Nat.lt_succ_self n).trans_le p.property
+  have hn : n < p.val.entries.length := (Nat.lt_succ_self n).trans_le p.property
   exact (condition_le_entry (List.getElem?_eq_getElem hn)).trans
     (le_iSup (fun a : α => entry n a) (p.val.entries[n]'hn))
 
-theorem column_iSup_eq_top (a : α) :
-    (⨆ n : ℕ, entry n a) = ⊤ := by
+theorem column_iSup_eq_top (a : α) : (⨆ n : ℕ, entry n a) = ⊤ := by
   have hD : (⨆ p : targetDense a, condition p.val) = ⊤ := by
     apply iSup_condition_eq_top_of_dense
     intro p

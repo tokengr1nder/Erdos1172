@@ -170,8 +170,7 @@ theorem simultaneousCandidates_colarge {J δ S Y X top σ : bSet 𝔹} {Γ : �
   have HseedEx : Γ ≤ ⨆ A, A ∈ᴮ bv_powerset omegaOne ⊓ pair (pair σ top) A ∈ᴮ S :=
     (le_inf ((HS.trans inf_le_right).trans (iInf_le _ (pair σ top)))
       (mem_prod_iff.mpr ⟨Hσ, Htop⟩)).trans bv_imp_elim
-  obtain ⟨seed, Hseed⟩ := exists_convert HseedEx
-    (B_ext_inf B_ext_mem_left B_ext_pair_mem_right)
+  obtain ⟨seed, Hseed⟩ := exists_convert HseedEx (B_ext_inf B_ext_mem_left B_ext_pair_mem_right)
   have HseedColarge : Γ ≤ colarge omegaOne J seed :=
     (le_inf (Hvalues.trans ((iInf_le _ top).trans (iInf_le _ seed)))
       (le_inf Htop (Hseed.trans inf_le_right))).trans bv_imp_elim

@@ -71,8 +71,7 @@ theorem earlier_endpoint_mem_future_of_frozen_histories
     Γ ≤ α ∈ᴮ futureCandidates color ρ R S (vertexHistory Q) (coordinateHistory Q) Z β := by
   have Hρ : Γ ≤ ρ ∈ᴮ omegaOne := least_stop_mem_omegaOne HleastP
   have HρOrd : Γ ≤ Ord ρ := Ord_of_mem_Ord Hρ omegaOne_Ord
-  have HZ : Γ ≤ is_function omegaOne omegaOne Z :=
-    (runLaw_apply HlawQ HentryQ).trans inf_le_left
+  have HZ : Γ ≤ is_function omegaOne omegaOne Z := (runLaw_apply HlawQ HentryQ).trans inf_le_left
   apply mem_futureCandidates_iff.mpr
   refine ⟨Hαβ, ?_⟩
   unfold futureRequirements

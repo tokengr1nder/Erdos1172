@@ -38,12 +38,9 @@ def diagonalClub (F : bSet 𝔹) : bSet 𝔹 :=
 
 theorem mem_diagonalClub_iff {F a : bSet 𝔹} {Γ : 𝔹} :
     Γ ≤ a ∈ᴮ diagonalClub F ↔
-      Γ ≤ a ∈ᴮ omegaTwo ∧ Γ ≤ ⨅ i, ⨅ C,
-        _root_.imp (i ∈ᴮ a ⊓ pair i C ∈ᴮ F) (a ∈ᴮ C) :=
-  ErdosRelationGraph.mem_comprehend_and
-    (B_ext_iInf (h := fun _ => B_ext_iInf (h := fun _ =>
-      B_ext_imp (h₁ := B_ext_inf B_ext_mem_right B_ext_const)
-        (h₂ := B_ext_mem_left))))
+      Γ ≤ a ∈ᴮ omegaTwo ∧ Γ ≤ ⨅ i, ⨅ C, _root_.imp (i ∈ᴮ a ⊓ pair i C ∈ᴮ F) (a ∈ᴮ C) :=
+  ErdosRelationGraph.mem_comprehend_and (B_ext_iInf (h := fun _ => B_ext_iInf (h := fun _ =>
+      B_ext_imp (h₁ := B_ext_inf B_ext_mem_right B_ext_const) (h₂ := B_ext_mem_left))))
 
 theorem diagonalClub_subset {F : bSet 𝔹} {Γ : 𝔹} :
     Γ ≤ diagonalClub F ⊆ᴮ omegaTwo :=
@@ -68,24 +65,20 @@ theorem exists_unbounded_above_two {κ C a b : bSet 𝔹} {Γ : 𝔹}
     rw [inf_sup_left, inf_sup_left]
     apply sup_le
     · apply sup_le
-      · obtain ⟨z, Hz⟩ := exists_unbounded_above (inf_le_left.trans HU)
-          (inf_le_left.trans Hb)
+      · obtain ⟨z, Hz⟩ := exists_unbounded_above (inf_le_left.trans HU) (inf_le_left.trans Hb)
         exact le_iSup_of_le z (le_inf (Hz.trans inf_le_left)
           (le_inf (mem_congr (bv_symm inf_le_right) bv_refl (Hz.trans inf_le_right))
             (Hz.trans inf_le_right)))
-      · obtain ⟨z, Hz⟩ := exists_unbounded_above (inf_le_left.trans HU)
-          (inf_le_left.trans Hb)
+      · obtain ⟨z, Hz⟩ := exists_unbounded_above (inf_le_left.trans HU) (inf_le_left.trans Hb)
         exact le_iSup_of_le z (le_inf (Hz.trans inf_le_left)
           (le_inf (mem_of_mem_Ord inf_le_right (Hz.trans inf_le_right)
             (Ord_of_mem_Ord (Hz.trans (inf_le_left.trans inf_le_right))
               (inf_le_left.trans Hκ))) (Hz.trans inf_le_right)))
-    · obtain ⟨z, Hz⟩ := exists_unbounded_above (inf_le_left.trans HU)
-        (inf_le_left.trans Ha)
+    · obtain ⟨z, Hz⟩ := exists_unbounded_above (inf_le_left.trans HU) (inf_le_left.trans Ha)
       exact le_iSup_of_le z (le_inf (Hz.trans inf_le_left)
         (le_inf (Hz.trans inf_le_right)
           (mem_of_mem_Ord inf_le_right (Hz.trans inf_le_right)
-            (Ord_of_mem_Ord (Hz.trans (inf_le_left.trans inf_le_right))
-              (inf_le_left.trans Hκ)))))
+            (Ord_of_mem_Ord (Hz.trans (inf_le_left.trans inf_le_right)) (inf_le_left.trans Hκ)))))
   exact exists_convert Hex
     (B_ext_inf (B_ext_inf B_ext_mem_left B_ext_mem_left)
       (B_ext_inf B_ext_mem_right B_ext_mem_right))
@@ -94,18 +87,15 @@ theorem exists_unbounded_above_two {κ C a b : bSet 𝔹} {Γ : 𝔹}
 No family-function, cardinal arithmetic, or unboundedness premise on the
 individual values is needed for this direction. -/
 theorem closedIn_diagonalClub {F : bSet 𝔹} {Γ : 𝔹}
-    (Hclosed : Γ ≤ ⨅ i, ⨅ C, _root_.imp
-      (i ∈ᴮ omegaTwo ⊓ pair i C ∈ᴮ F) (closedIn omegaTwo C)) :
+    (Hclosed : Γ ≤ ⨅ i, ⨅ C, _root_.imp (i ∈ᴮ omegaTwo ⊓ pair i C ∈ᴮ F) (closedIn omegaTwo C)) :
     Γ ≤ closedIn omegaTwo (diagonalClub F) := by
   apply le_iInf
   intro a
   rw [← deduction]
-  let Δ := Γ ⊓ ((a ∈ᴮ omegaTwo ⊓ (a =ᴮ (∅ : bSet 𝔹))ᶜ) ⊓
-    unboundedIn a (diagonalClub F))
+  let Δ := Γ ⊓ ((a ∈ᴮ omegaTwo ⊓ (a =ᴮ (∅ : bSet 𝔹))ᶜ) ⊓ unboundedIn a (diagonalClub F))
   have HΔ : Δ ≤ Γ := inf_le_left
   have Ha : Δ ≤ a ∈ᴮ omegaTwo := inf_le_right.trans (inf_le_left.trans inf_le_left)
-  have Hne : Δ ≤ (a =ᴮ (∅ : bSet 𝔹))ᶜ :=
-    inf_le_right.trans (inf_le_left.trans inf_le_right)
+  have Hne : Δ ≤ (a =ᴮ (∅ : bSet 𝔹))ᶜ := inf_le_right.trans (inf_le_left.trans inf_le_right)
   have HU : Δ ≤ unboundedIn a (diagonalClub F) := inf_le_right.trans inf_le_right
   apply mem_diagonalClub_iff.mpr
   refine ⟨Ha, ?_⟩

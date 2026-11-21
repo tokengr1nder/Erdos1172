@@ -36,17 +36,14 @@ theorem exists_clique_map_with_origins (core : CliqueDecisions P I V G)
   classical
   let D (i : I) : Set P := {p | ∃ v, core.decides p i v}
   obtain ⟨conditions, hanti, hstart, hmeet⟩ :=
-    Erdos1172Part3ClosedDenseRequirements.exists_antitone_dense_sequence_of_card
-      hclosed p0 D (by
+    Erdos1172Part3ClosedDenseRequirements.exists_antitone_dense_sequence_of_card hclosed p0 D (by
         intro i p
         obtain ⟨q, hqp, v, hv⟩ := core.dense p i
         exact ⟨q, ⟨v, hv⟩, hqp⟩) hI
   let stage (i : I) : W1 := (hmeet i).choose
-  have hdec (i : I) : ∃ v, core.decides (conditions (stage i)) i v :=
-    (hmeet i).choose_spec
+  have hdec (i : I) : ∃ v, core.decides (conditions (stage i)) i v := (hmeet i).choose_spec
   let value (i : I) : V := (hdec i).choose
-  have hvalue (i : I) : core.decides (conditions (stage i)) i (value i) :=
-    (hdec i).choose_spec
+  have hvalue (i : I) : core.decides (conditions (stage i)) i (value i) := (hdec i).choose_spec
   have common (i j : I) : ∃ p, core.decides p i (value i) ∧ core.decides p j (value j) :=
     ⟨conditions (max (stage i) (stage j)),
       core.persistent (hanti (le_max_left _ _)) (hvalue i),

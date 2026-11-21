@@ -34,16 +34,14 @@ theorem exists_prefix_and_finite_tail
       typeLT T < (ω_ 1 : Ordinal.{0}) ^ ((n + 1 : ℕ) : Ordinal) := by
   classical
   by_cases hcofinal : IsCofinal A
-  · obtain ⟨n, T, -, -, hT, cut, hrest⟩ :=
-      exists_cofinal_power_tail hV A hcofinal hA
+  · obtain ⟨n, T, -, -, hT, cut, hrest⟩ := exists_cofinal_power_tail hV A hcofinal hA
     refine ⟨cut, n + 1, T, ?_, ?_⟩
     · intro x hx
       by_cases hxT : x ∈ T
       · exact Or.inr hxT
       · exact Or.inl (hrest ⟨hx, hxT⟩)
     · rw [hT]
-      exact Erdos1172Part3CoverProfileTools.lower_power_lt (n + 1) n
-        (Nat.lt_succ_self n)
+      exact Erdos1172Part3CoverProfileTools.lower_power_lt (n + 1) n (Nat.lt_succ_self n)
   · obtain ⟨cut, hcut⟩ := not_forall.mp hcofinal
     refine ⟨cut, 0, ∅, ?_, ?_⟩
     · intro x hx
@@ -61,13 +59,11 @@ theorem union_type_lt
     typeLT (A ∪ B : Set V) < (ω_ 1 : Ordinal.{0}) ^ (ω + 1) := by
   obtain ⟨a, n, S, hAS, hS⟩ := exists_prefix_and_finite_tail hV A hA
   obtain ⟨b, m, T, hBT, hT⟩ := exists_prefix_and_finite_tail hV B hB
-  have hS' : typeLT S <
-      (ω_ 1 : Ordinal.{0}) ^ ((max n m + 1 : ℕ) : Ordinal) := by
+  have hS' : typeLT S < (ω_ 1 : Ordinal.{0}) ^ ((max n m + 1 : ℕ) : Ordinal) := by
     apply hS.trans_le
     apply Ordinal.opow_le_opow_right (Ordinal.omega_pos 1)
     exact_mod_cast Nat.succ_le_succ (le_max_left n m)
-  have hT' : typeLT T <
-      (ω_ 1 : Ordinal.{0}) ^ ((max n m + 1 : ℕ) : Ordinal) := by
+  have hT' : typeLT T < (ω_ 1 : Ordinal.{0}) ^ ((max n m + 1 : ℕ) : Ordinal) := by
     apply hT.trans_le
     apply Ordinal.opow_le_opow_right (Ordinal.omega_pos 1)
     exact_mod_cast Nat.succ_le_succ (le_max_right n m)
@@ -77,8 +73,7 @@ theorem union_type_lt
     apply (Ordinal.opow_lt_opow_iff_right
       (Ordinal.one_lt_omega0.trans_le (Ordinal.omega0_le_omega 1))).mpr
     exact (Ordinal.natCast_lt_omega0 (max n m + 1)).trans_le le_self_add
-  have hcut : typeLT (Set.Iio (max a b)) <
-      (ω_ 1 : Ordinal.{0}) ^ (ω + 1) := by
+  have hcut : typeLT (Set.Iio (max a b)) < (ω_ 1 : Ordinal.{0}) ^ (ω + 1) := by
     rw [Ordinal.type_Iio_lt]
     exact (Ordinal.typein_lt_type _ (max a b)).trans_eq hV
   have hsub : A ∪ B ⊆ Set.Iio (max a b) ∪ (S ∪ T) := by

@@ -75,13 +75,11 @@ private theorem exists_cover_condition_extension {K q : bSet R} {Γ : R}
       hnot (disjoint_compl_right_iff.mp (disjoint_iff.mpr h0))
     obtain ⟨p, hpb, hpeq⟩ := exists_canonical_refinement hpos (inf_le_left.trans hq_mem)
     obtain ⟨r, j, hrp, hru⟩ := exists_cover_condition p u (le_top.trans hcov)
-    have hsub : r.value ≤ q ⊆ᴮ name r :=
-      subset_trans' (bSet.subset_of_eq (hrp.1.trans hpeq)) hrp.2
+    have hsub : r.value ≤ q ⊆ᴮ name r := subset_trans' (bSet.subset_of_eq (hrp.1.trans hpeq)) hrp.2
     have hread : r.value ≤ ⨆ i : J, Erdos1172CohenIteration.reads (u i) (name r) :=
       (Erdos1172CohenIteration.value_le_reads hru).trans
         (le_iSup (fun i : J => Erdos1172CohenIteration.reads (u i) (name r)) j)
-    have hrV : r.value ≤ V :=
-      le_iSup_of_le (name r) (le_inf (name_mem r) (le_inf hsub hread))
+    have hrV : r.value ≤ V := le_iSup_of_le (name r) (le_inf (name_mem r) (le_inf hsub hread))
     exact r.nonzero (le_bot_iff.mp ((le_inf hrV (hrp.1.trans (hpb.trans inf_le_right))).trans
       inf_compl_eq_bot.le))
   obtain ⟨r, hr⟩ := exists_convert hle_V
@@ -209,8 +207,7 @@ def funcBoundedFormula : InterpretedMaster.Formula (Fin 3) :=
 
 theorem funcBoundedFormula_eval {B : Type u} [NontrivialCompleteBooleanAlgebra B]
     (g D V : bSet B) :
-    funcBoundedFormula.eval ![g, D, V] =
-      allIn D (fun d => allIn V (fun y₁ => allIn V (fun y₂ =>
+    funcBoundedFormula.eval ![g, D, V] = allIn D (fun d => allIn V (fun y₁ => allIn V (fun y₂ =>
         _root_.imp (edge g d y₁ ⊓ edge g d y₂) (y₁ =ᴮ y₂)))) :=
   rfl
 
@@ -237,8 +234,7 @@ theorem is_func_of_subset_prod_and_funcBoundedFormula {B : Type u} [NontrivialCo
   have hm₂ : Δ ≤ pair a₂ y₂ ∈ᴮ g := inf_le_left.trans (inf_le_right.trans inf_le_right)
   have hp₁ := mem_prod_iff.mp (mem_of_mem_subset (hΔ_Γ.trans hsub) hm₁)
   have hp₂ := mem_prod_iff.mp (mem_of_mem_subset (hΔ_Γ.trans hsub) hm₂)
-  have he₂ : Δ ≤ edge g a₁ y₂ :=
-    mem_congr (pair_congr (bv_symm inf_le_right) bv_refl) bv_refl hm₂
+  have he₂ : Δ ≤ edge g a₁ y₂ := mem_congr (pair_congr (bv_symm inf_le_right) bv_refl) bv_refl hm₂
   have himp := allIn_elim (allIn_elim (allIn_elim (hΔ_Γ.trans hfn) hp₁.1) hp₁.2) hp₂.2
   exact (le_inf himp (le_inf hm₁ he₂)).trans bv_imp_elim
 
@@ -530,8 +526,7 @@ private theorem bot_of_ground_levyBoundPred_ge' {α : Ordinal.{u}}
       (check ((levyTriplePSet κ α).Func idx) : bSet (anonymousAlgebra κ)) ≤ ⊥ := by
   let A := anonymousAlgebra κ
   let P₀ : bSet A := pair
-    (pair (check ((PSet.ordinalMk α).Func idx.1.1))
-      (check ((PSet.ordinalMk κ.ord).Func idx.1.2)))
+    (pair (check ((PSet.ordinalMk α).Func idx.1.1)) (check ((PSet.ordinalMk κ.ord).Func idx.1.2)))
     (check ((PSet.ordinalMk α).Func idx.2))
   have hp₀ : (⊤ : A) ≤ check ((levyTriplePSet κ α).Func idx) =ᴮ P₀ :=
     check_levyTriplePSet_func α idx
@@ -549,8 +544,7 @@ private theorem bot_of_ground_levyBoundPred_ge' {α : Ordinal.{u}}
     bv_trans (le_top.trans (bv_symm hp₀)) (inf_le_right.trans inf_le_right)
   have hξ_eq : F ≤ check ((PSet.ordinalMk α).Func idx.1.1) =ᴮ ξ :=
     (pair_eq_pair_iff.mp (pair_eq_pair_iff.mp hp_eq).1).1
-  have hy_eq : F ≤ check ((PSet.ordinalMk α).Func idx.2) =ᴮ y :=
-    (pair_eq_pair_iff.mp hp_eq).2
+  have hy_eq : F ≤ check ((PSet.ordinalMk α).Func idx.2) =ᴮ y := (pair_eq_pair_iff.mp hp_eq).2
   have hy_in : F ≤ check (PSet.ordinalMk (ordOfPSetIdx idx.2)) ∈ᴮ
       check (PSet.ordinalMk (ordOfPSetIdx idx.1.1)) :=
     mem_congr
@@ -756,8 +750,7 @@ def posetFuncFormula : InterpretedMaster.Formula (Fin 3) :=
 omit [CountableInterFilter (U : Filter I)] [Nonempty θ.ord.ToType] [CardinalInterFilter (U : Filter I) κ] in
 private theorem posetFuncFormula_eval {B : Type u} [NontrivialCompleteBooleanAlgebra B]
     (P D L : bSet B) :
-    posetFuncFormula.eval ![P, D, L] =
-      allIn P (fun g => funcBoundedFormula.eval ![g, D, L]) :=
+    posetFuncFormula.eval ![P, D, L] = allIn P (fun g => funcBoundedFormula.eval ![g, D, L]) :=
   rfl
 
 omit [CardinalInterFilter (U : Filter I) κ] in
@@ -851,8 +844,7 @@ private theorem lifted_poset_mem_props {W₁ : Type u} [NontrivialCompleteBoolea
     obtain ⟨ν_ch, G_ch, hG_ch⟩ := ch.property
     have hcov_S (S : Set θ.ord.ToType) :
         ∃ x_S : ULift.{u} ℕ → bSet A, ∀ w : bSet A,
-          ((G_ch S ∈ᴮ P_A) ⊓ (w ∈ᴮ G_ch S)) ≤
-            ⨆ n : ULift.{u} ℕ, (x_S n ∈ᴮ G_ch S) ⊓ (w =ᴮ x_S n) :=
+          ((G_ch S ∈ᴮ P_A) ⊓ (w ∈ᴮ G_ch S)) ≤ ⨆ n : ULift.{u} ℕ, (x_S n ∈ᴮ G_ch S) ⊓ (w =ᴮ x_S n) :=
       exists_countable_member_cover (G_ch S) (G_ch S ∈ᴮ P_A)
         (countableCollapse_mem.mp (mem_internalLevyCollapse.mp le_rfl).1).2.2
     choose x_fn hx_fn using hcov_S
@@ -905,8 +897,7 @@ private theorem lifted_poset_mem_props {W₁ : Type u} [NontrivialCompleteBoolea
       rwa [hfam_eq] at hm
     have hg_cnt : j₀ (value U (Erdos1172BooleanUltrapower.weight U (fun _ => P_A) ch.val)) ≤
         injects_into (mapNames j₀ (Preparation.boundedAnonName U a g_ch)) omega :=
-      injects_into_trans (injects_into_of_subset hW_sub)
-        (ErdosNameSequence.family_countable _)
+      injects_into_trans (injects_into_of_subset hW_sub) (ErdosNameSequence.family_countable _)
     exact bv_rw' (ϕ := fun X => injects_into X omega) inf_le_right
       (h_congr := B_ext_injects_into_left) (H_new := inf_le_left.trans hg_cnt)
   exact ⟨hz_sub, hz_func, hz_cnt⟩
@@ -1035,8 +1026,7 @@ theorem compress_lifted_witness_to_R_gen
   have hc_le : c_p' ≤ c_p := coneInMaster_mono hm₀ hp hsub hp' hsub_m₀' hsub_p'
   -- On `c_p'`, each `w_piece n t` equals `c_p' ⊓ j_R (reads (w_piece n t).val p')`.
   have hw_read_eq (n : ℕ) (t : ValidLiftedTriple U a θ α) :
-      c_p' ⊓ w_piece n t =
-        c_p' ⊓ j_R (Erdos1172CohenIteration.reads (w_piece n t).val p') := by
+      c_p' ⊓ w_piece n t = c_p' ⊓ j_R (Erdos1172CohenIteration.reads (w_piece n t).val p') := by
     have hdec' : (⊤ : R) ≤
         (⨆ s : ValidLiftedTriple U a θ α, Erdos1172CohenIteration.reads (w_piece n s).val p') ⊔
           Erdos1172CohenIteration.reads (u_part n none) p' := by
@@ -1103,8 +1093,7 @@ theorem compress_lifted_witness_to_R_gen
       have hlhs : c_p' ⊓ (check (V_dst.Func t) ∈ᴮ z) =
           ⨆ n : ℕ, c_p' ⊓ j_R (Erdos1172CohenIteration.reads (w_piece n t).val p') := by
         calc
-          c_p' ⊓ (check (V_dst.Func t) ∈ᴮ z)
-            = c_p' ⊓ (c_p ⊓ (check (V_dst.Func t) ∈ᴮ z)) := by
+          c_p' ⊓ (check (V_dst.Func t) ∈ᴮ z) = c_p' ⊓ (c_p ⊓ (check (V_dst.Func t) ∈ᴮ z)) := by
               rw [← inf_assoc, inf_eq_left.mpr hc_le]
           _ = c_p' ⊓ ⨆ n : ℕ, w_piece n t := by rw [hw_join t]
           _ = ⨆ n : ℕ, c_p' ⊓ w_piece n t := inf_iSup_eq c_p' _
@@ -1623,8 +1612,7 @@ private theorem boundedAnon_q_raw_and_pos_eq
     (hev_active : ∀ k : Idx, ∀ᶠ i in U, k ∈ Active (boundedFiber θ a ν_all i))
     (helem_eq : ∀ k : Idx,
       (⊤ : Erdos1172BooleanUltrapower.Algebra U (anonymousAlgebra κ)) ≤
-        Preparation.boundedAnonName (κ := κ) U a
-          (fun i => elem_S (boundedFiber θ a ν_all i) k) =ᴮ
+        Preparation.boundedAnonName (κ := κ) U a (fun i => elem_S (boundedFiber θ a ν_all i) k) =ᴮ
         check (triple_dst k))
     (hwt_eq : ∀ k : Idx,
       value U (fun i => wt_S (boundedFiber θ a ν_all i) k) =
@@ -1843,10 +1831,8 @@ theorem code_small_ground_func_into_stage_gen
       (g_ξ k (S ∩ Set.Iio (ν_ξ k))).toOrd.val
     let y_S (S : Set θ.ord.ToType) (k : G.Idx) : Ordinal.{u} :=
       (g_y k (S ∩ Set.Iio (ν_y k))).toOrd.val
-    let η_S (S : Set θ.ord.ToType) (k : G.Idx) : Ordinal.{u} :=
-      typeLT ↥(S ∩ Set.Iio (η_t k))
-    let rk_ζ (S : Set θ.ord.ToType) (k : G.Idx) : Ordinal.{u} :=
-      typeLT ↥(S ∩ Set.Iio (ζ k))
+    let η_S (S : Set θ.ord.ToType) (k : G.Idx) : Ordinal.{u} := typeLT ↥(S ∩ Set.Iio (η_t k))
+    let rk_ζ (S : Set θ.ord.ToType) (k : G.Idx) : Ordinal.{u} := typeLT ↥(S ∩ Set.Iio (ζ k))
     let Active (S : Set θ.ord.ToType) : Set G.Idx :=
       {k : G.Idx | ζ k ∈ S ∧ y_S S k < ξ_S S k ∧ η_S S k < κ.ord}
     let elem_S (S : Set θ.ord.ToType) (k : G.Idx) : bSet A :=

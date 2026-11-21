@@ -74,8 +74,7 @@ theorem firstStage_condition_domain_bound_cover (κ : Cardinal.{u})
     (Hκ : κ.IsRegular) (Hunc : Cardinal.aleph0 < κ)
     {q : bSet (FirstAlgebra κ)} {Γ : FirstAlgebra κ}
     (Hq : Γ ≤ ErdosCohen.condition omegaOne q) :
-    Γ ≤ ⨆ i : κ.ord.ToType,
-      graphDomain omegaOne two q ⊆ᴮ check (PSet.ordinalMk i.toOrd.val) := by
+    Γ ≤ ⨆ i : κ.ord.ToType, graphDomain omegaOne two q ⊆ᴮ check (PSet.ordinalMk i.toOrd.val) := by
   apply firstStage_countable_subset_bound_cover κ Hκ Hunc
   · exact bv_rw''
       (bv_symm (le_top.trans (firstStage_checked_upper_eq_omegaOne κ Hκ Hunc)))
@@ -89,8 +88,7 @@ theorem firstStage_condition_domain_bound_cover (κ : Cardinal.{u})
 refinement. The selected condition keeps the original canonical graph. -/
 theorem exists_ground_bound_refinement (κ : Cardinal.{u})
     (Hκ : κ.IsRegular) (Hunc : Cardinal.aleph0 < κ)
-    (p : Erdos1172CohenIteration.Conditions
-      (omegaOne : bSet (FirstAlgebra κ))) :
+    (p : Erdos1172CohenIteration.Conditions (omegaOne : bSet (FirstAlgebra κ))) :
     ∃ (i : κ.ord.ToType)
       (r : Erdos1172CohenIteration.Conditions (omegaOne : bSet (FirstAlgebra κ))),
       r ≤ p ∧ r.value ≤ graphDomain omegaOne two

@@ -72,8 +72,7 @@ theorem commonRemainder_subset_indexedIntersection {κ T F : bSet 𝔹} {Γ : �
   let Δ := Γ ⊓ (t ∈ᴮ T ⊓ pair t A ∈ᴮ F)
   have Ht : Δ ≤ t ∈ᴮ T := inf_le_right.trans inf_le_left
   have Hpair : Δ ≤ pair t A ∈ᴮ F := inf_le_right.trans inf_le_right
-  have Hcod : Δ ≤ A ∈ᴮ bv_powerset κ :=
-    value_mem_codomain (inf_le_left.trans HF) Ht Hpair
+  have Hcod : Δ ≤ A ∈ᴮ bv_powerset κ := value_mem_codomain (inf_le_left.trans HF) Ht Hpair
   have Him : Δ ≤ A ∈ᴮ image T (bv_powerset κ) F := mem_image Hpair Ht Hcod
   exact commonRemainder_subset_of_loss_mem (difference_mem_lossFamily Him)
 
@@ -84,18 +83,15 @@ theorem indexedIntersection_complement_small {κ J T F : bSet 𝔹} {Γ : 𝔹}
     (HJ : Γ ≤ isIdeal κ J) (Hclosure : Γ ≤ countableClosure J)
     (HF : Γ ≤ is_func' T (bv_powerset κ) F)
     (HT : Γ ≤ injects_into T bSet.omega)
-    (Hvalues : Γ ≤ ⨅ t, ⨅ A,
-      _root_.imp (t ∈ᴮ T ⊓ pair t A ∈ᴮ F) (difference κ A ∈ᴮ J)) :
+    (Hvalues : Γ ≤ ⨅ t, ⨅ A, _root_.imp (t ∈ᴮ T ⊓ pair t A ∈ᴮ F) (difference κ A ∈ᴮ J)) :
     Γ ≤ difference κ (indexedIntersection κ F T) ∈ᴮ J := by
   let V := image T (bv_powerset κ) F
   let L := lossFamily κ V
-  have HVcount : Γ ≤ injects_into V bSet.omega :=
-    ErdosCountableImage.image_countable HF HT
+  have HVcount : Γ ≤ injects_into V bSet.omega := ErdosCountableImage.image_countable HF HT
   have HVsmall : Γ ≤ ⨅ A, _root_.imp (A ∈ᴮ V) (difference κ A ∈ᴮ J) :=
     commonLoss_image_small (U := T) Hvalues subset_self
   have HLsmall : Γ ≤ bv_union L ∈ᴮ J :=
-    countable_union_small Hclosure (lossFamily_countable HVcount)
-      (lossFamily_subset_ideal HVsmall)
+    countable_union_small Hclosure (lossFamily_countable HVcount) (lossFamily_subset_ideal HVsmall)
   have Hcover : Γ ≤ difference κ (indexedIntersection κ F T) ⊆ᴮ bv_union L :=
     complement_subset_of_remainder_subset (commonRemainder_subset_indexedIntersection HF)
   exact small_of_subset (downwardClosed_of_isIdeal HJ) HLsmall Hcover
@@ -104,11 +100,9 @@ theorem indexedIntersection_colarge {κ J T F : bSet 𝔹} {Γ : 𝔹}
     (HJ : Γ ≤ isIdeal κ J) (Hclosure : Γ ≤ countableClosure J)
     (HF : Γ ≤ is_func' T (bv_powerset κ) F)
     (HT : Γ ≤ injects_into T bSet.omega)
-    (Hvalues : Γ ≤ ⨅ t, ⨅ A,
-      _root_.imp (t ∈ᴮ T ⊓ pair t A ∈ᴮ F) (difference κ A ∈ᴮ J)) :
+    (Hvalues : Γ ≤ ⨅ t, ⨅ A, _root_.imp (t ∈ᴮ T ⊓ pair t A ∈ᴮ F) (difference κ A ∈ᴮ J)) :
     Γ ≤ colarge κ J (indexedIntersection κ F T) :=
-  le_inf indexedIntersection_subset
-    (indexedIntersection_complement_small HJ Hclosure HF HT Hvalues)
+  le_inf indexedIntersection_subset (indexedIntersection_complement_small HJ Hclosure HF HT Hvalues)
 
 /-- The usual co-large-values predicate also implies the complement-only
 premise; powerset support is already supplied by the weak function. -/
@@ -116,8 +110,7 @@ theorem indexedIntersection_colarge_of_colarge_values {κ J T F : bSet 𝔹} {Γ
     (HJ : Γ ≤ isIdeal κ J) (Hclosure : Γ ≤ countableClosure J)
     (HF : Γ ≤ is_func' T (bv_powerset κ) F)
     (HT : Γ ≤ injects_into T bSet.omega)
-    (Hvalues : Γ ≤ ⨅ t, ⨅ A,
-      _root_.imp (t ∈ᴮ T ⊓ pair t A ∈ᴮ F) (colarge κ J A)) :
+    (Hvalues : Γ ≤ ⨅ t, ⨅ A, _root_.imp (t ∈ᴮ T ⊓ pair t A ∈ᴮ F) (colarge κ J A)) :
     Γ ≤ colarge κ J (indexedIntersection κ F T) := by
   apply indexedIntersection_colarge HJ Hclosure HF HT
   apply le_iInf
@@ -139,8 +132,7 @@ theorem complement_difference_subset_union {κ A L : bSet 𝔹} {Γ : 𝔹} :
   intro x
   rw [← deduction, mem_difference, mem_difference, mem_binary_union, mem_difference,
     compl_inf, compl_compl, inf_sup_left]
-  exact inf_le_right.trans
-    (sup_le le_sup_left (inf_le_right.trans le_sup_right))
+  exact inf_le_right.trans (sup_le le_sup_left (inf_le_right.trans le_sup_right))
 
 /-- Removing any ideal-small set preserves co-largeness. -/
 theorem colarge_difference_of_small {κ J A L : bSet 𝔹} {Γ : 𝔹}

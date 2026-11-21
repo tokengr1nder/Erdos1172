@@ -37,14 +37,12 @@ variable (U : Ultrafilter I) (e : CompleteLatticeHom B C)
 
 /-- An injective complete Boolean homomorphism induces an injective `scalarHom` on Boolean
 ultrapower completions. -/
-theorem scalarHom_injective (he : Function.Injective e) :
-    Function.Injective (scalarHom U e) := by
+theorem scalarHom_injective (he : Function.Injective e) : Function.Injective (scalarHom U e) := by
   intro x y hxy
   have ref {a b : Algebra U B} (hle : scalarHom U e a ≤ scalarHom U e b) : a ≤ b := by
     apply le_of_dense_conditions_le Set.univ (fun p => ⟨p, Set.mem_univ _, le_rfl⟩)
     rintro ⟨p, _⟩ hp
-    obtain ⟨f, hf⟩ : ∃ f : I → B, Germ.ofFun f = p.val :=
-      Germ.inductionOn p.val fun f => ⟨f, rfl⟩
+    obtain ⟨f, hf⟩ : ∃ f : I → B, Germ.ofFun f = p.val := Germ.inductionOn p.val fun f => ⟨f, rfl⟩
     have hval : condition p = value U f := by
       apply le_antisymm
       · apply condition_le_iff.mpr
@@ -60,8 +58,7 @@ theorem scalarHom_injective (he : Function.Injective e) :
     have hpos : condition p ⊓ bᶜ ≠ ⊥ := fun h0 =>
       hnb (disjoint_compl_right_iff.mp (disjoint_iff.mpr h0))
     obtain ⟨q, hq⟩ := exists_condition_le hpos
-    obtain ⟨g, hg⟩ : ∃ g : I → B, Germ.ofFun g = q.val :=
-      Germ.inductionOn q.val fun g => ⟨g, rfl⟩
+    obtain ⟨g, hg⟩ : ∃ g : I → B, Germ.ofFun g = q.val := Germ.inductionOn q.val fun g => ⟨g, rfl⟩
     have hqg : value U g ≤ condition q := by
       intro r hr
       exact (mem_condition_iff q r).mpr fun s hs =>
@@ -108,8 +105,7 @@ theorem exists_supported_lower_bound_levyCohen
   obtain ⟨d₀, hd₀D, _⟩ := hDdense p₀
   let defaultD : D := ⟨d₀, hd₀D⟩
   obtain ⟨q, hqz⟩ := exists_condition_le hz
-  obtain ⟨f, hf_eq⟩ : ∃ f : I → C, Germ.ofFun f = q.val :=
-    Germ.inductionOn q.val fun f => ⟨f, rfl⟩
+  obtain ⟨f, hf_eq⟩ : ∃ f : I → C, Germ.ofFun f = q.val := Germ.inductionOn q.val fun f => ⟨f, rfl⟩
   have hf_pos : ∀ᶠ i in U, f i ≠ ⊥ := U.eventually_not.mpr fun h0 =>
     q.property (hf_eq.symm.trans (Germ.coe_eq.mpr h0))
   let pickD (c : C) : D :=
@@ -270,8 +266,7 @@ theorem bounded_child_exists_anonymous (X : I → bSet A) (P : I → bSet A → 
     have hterm_val : sHom (term t) = value U (fun i => ι (weight U X t i ⊓ P i (child U X t i))) := by
       change sHom (value U (weight U X t) ⊓ value U (fun i => P i (child U X t i))) = _
       rw [← value_inf, scalarHom_value]
-    have hg_disj : value U g ⊓ sHom (term t) ≤ ⊥ :=
-      (inf_le_inf hg_le hterm_le).trans hs_rhs_disj
+    have hg_disj : value U g ⊓ sHom (term t) ≤ ⊥ := (inf_le_inf hg_le hterm_le).trans hs_rhs_disj
     rw [hterm_val, ← value_inf, ← value_bot U] at hg_disj
     obtain ⟨i, hi_bad, hi_bot⟩ := (hbad.and ((value_le_value_iff U).mp hg_disj)).exists
     apply hi_bad.choose_spec
@@ -386,8 +381,7 @@ private theorem boundedAnonName_subset_test (X : I → bSet A) (Z : bSet VA)
   filter_upwards [t.val.large] with i hi
   simpa only [weight, selected, child, dif_pos hi] using (mem_mk' (X i) (t.val.pick ⟨i, hi⟩))
 
-theorem boundedAnonName_empty :
-    (⊤ : VA) ≤ liftA (fun _ => (∅ : bSet A)) =ᴮ (∅ : bSet VA) := by
+theorem boundedAnonName_empty : (⊤ : VA) ≤ liftA (fun _ => (∅ : bSet A)) =ᴮ (∅ : bSet VA) := by
   apply subset_ext _ empty_subset
   apply boundedAnonName_subset_test
   intro W _

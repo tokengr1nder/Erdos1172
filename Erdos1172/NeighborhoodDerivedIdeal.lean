@@ -100,8 +100,7 @@ theorem base_le_derived (word : List Bool) {a : W3} (ha : GoodCut r G H a)
       · exact Or.inl hmem
       by_cases hle : β ≤ r c
       · exact Or.inr hle
-      exact (hβ.2.2 (ih hβ.2.1
-        ⟨c, lt_of_not_ge hle, hmem, fun x hx => hsub hx.1.1⟩)).elim
+      exact (hβ.2.2 (ih hβ.2.1 ⟨c, lt_of_not_ge hle, hmem, fun x hx => hsub hx.1.1⟩)).elim
 
 /-- Adding innermost colors only enlarges the ideal. Equivalently, positivity
 of a longer word implies positivity of every outer initial segment. -/
@@ -149,8 +148,7 @@ and the future endpoint construction are separate obligations. -/
 theorem exists_core_of_derived_positive (word : List Bool) {a : W3}
     (ha : GoodCut r G H a) (s : Set W3) (hsBelow : s ⊆ Set.Iio a)
     (hs : ¬DerivedSmall r G H word a s) (color : Bool) (hcolor : color ∈ word) :
-    ∃ core : Set W3, core ⊆ s ∧ (colorGraph G H color).IsClique core ∧
-      typeLT core = ω_ 2 := by
+    ∃ core : Set W3, core ⊆ s ∧ (colorGraph G H color).IsClique core ∧ typeLT core = ω_ 2 := by
   classical
   induction word generalizing a s with
   | nil => simp only [List.not_mem_nil] at hcolor

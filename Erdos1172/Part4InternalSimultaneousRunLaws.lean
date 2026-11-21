@@ -41,8 +41,7 @@ open ErdosSimultaneousCandidates ErdosSimultaneousVertex
 theorem vertexHistory_is_function_of_run {P : bSet 𝔹} {Γ : 𝔹}
     (HP : Γ ≤ is_function omegaOne entrySpace P) :
     Γ ≤ is_function omegaOne omegaTwo (vertexHistory P) :=
-  le_inf (vertexHistory_is_func' subset_self (is_func'_of_is_function HP))
-    vertexHistory_subset
+  le_inf (vertexHistory_is_func' subset_self (is_func'_of_is_function HP)) vertexHistory_subset
 
 /-- The stored entry law supplies the row functionality not contained in
 the entry-space bound alone. Every stage supplies all omega-one rows. -/
@@ -60,8 +59,7 @@ theorem coordinate_least_of_run
     {color : Bool} {R S top P i σ v : bSet 𝔹} {Γ : 𝔹}
     (Hlaw : Γ ≤ runLaw color R S top P)
     (Hcoord : Γ ≤ pair (pair i σ) v ∈ᴮ coordinateHistory P) :
-    Γ ≤ leastIn (simultaneousCandidates i S (vertexHistory P)
-      (coordinateHistory P) top σ) v := by
+    Γ ≤ leastIn (simultaneousCandidates i S (vertexHistory P) (coordinateHistory P) top σ) v := by
   obtain ⟨y, Z, Hentry, Hrow⟩ := coordinateHistory_witness Hcoord
   have Hvalid := runLaw_apply Hlaw Hentry
   exact simultaneousRowLaw_apply (Hvalid.trans (inf_le_right.trans inf_le_left))

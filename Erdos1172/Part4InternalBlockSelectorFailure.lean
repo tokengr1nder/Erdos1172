@@ -140,8 +140,7 @@ theorem exists_large_failed_history
     (failedLabel_ext_terminal color R F) (failedLabel_ext_label color R F) Hex
   obtain ⟨Earlier, HEarlier, Active, HActive, Hqeq⟩ := mem_prod_iff₂.mp Hq
   have HfixedPair : Γ ≤ ⨅ top, _root_.imp (top ∈ᴮ T)
-      (pair (pair Earlier Active) (∅ : bSet 𝔹) ∈ᴮ F ⊓
-        activeTerminalEdges color R Active top) := by
+      (pair (pair Earlier Active) (∅ : bSet 𝔹) ∈ᴮ F ⊓ activeTerminalEdges color R Active top) := by
     apply le_iInf
     intro top
     rw [← deduction]

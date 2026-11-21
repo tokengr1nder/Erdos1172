@@ -51,14 +51,12 @@ theorem mapRel_witness {f g x y : bSet 𝔹} {Γ : 𝔹}
     (B_ext_iSup (h := fun _ => B_ext_iSup (h := fun _ => B_ext_iSup (h := fun _ =>
       B_ext_inf (B_ext_pair_left B_ext_bv_eq_right)
         (B_ext_inf B_ext_const (B_ext_inf B_ext_pair_mem_left B_ext_const))))))
-  obtain ⟨b, Hb⟩ := exists_convert Ha
-    (B_ext_iSup (h := fun _ => B_ext_iSup (h := fun _ =>
+  obtain ⟨b, Hb⟩ := exists_convert Ha (B_ext_iSup (h := fun _ => B_ext_iSup (h := fun _ =>
       B_ext_inf (B_ext_pair_right B_ext_bv_eq_right)
         (B_ext_inf B_ext_const (B_ext_inf B_ext_const B_ext_pair_mem_left)))))
   obtain ⟨c, Hc⟩ := exists_convert Hb
     (B_ext_iSup (h := fun _ => B_ext_inf B_ext_const
-      (B_ext_inf (B_ext_pair_left B_ext_bv_eq_right)
-        (B_ext_inf B_ext_pair_mem_right B_ext_const))))
+      (B_ext_inf (B_ext_pair_left B_ext_bv_eq_right) (B_ext_inf B_ext_pair_mem_right B_ext_const))))
   obtain ⟨d, Hd⟩ := exists_convert Hc
     (B_ext_inf B_ext_const (B_ext_inf (B_ext_pair_right B_ext_bv_eq_right)
       (B_ext_inf B_ext_const B_ext_pair_mem_right)))
@@ -82,8 +80,7 @@ theorem prodMap_is_function {A B C D f g : bSet 𝔹} {Γ : 𝔹}
     intro x
     rw [← deduction]
     let Δ := Γ ⊓ x ∈ᴮ prod A B
-    obtain ⟨a, Ha, b, Hb, Hx⟩ := mem_prod_iff₂.mp
-      (show Δ ≤ x ∈ᴮ prod A B from inf_le_right)
+    obtain ⟨a, Ha, b, Hb, Hx⟩ := mem_prod_iff₂.mp (show Δ ≤ x ∈ᴮ prod A B from inf_le_right)
     have Hc : Δ ≤ ⨆ c, c ∈ᴮ C ⊓ pair a c ∈ᴮ f :=
       (le_inf (inf_le_left.trans ((is_total_of_is_function Hf).trans (iInf_le _ a))) Ha).trans
         bv_imp_elim
@@ -98,8 +95,7 @@ theorem prodMap_is_function {A B C D f g : bSet 𝔹} {Γ : 𝔹}
   · intro x₁ x₂ y₁ y₂ Δ HΔ _ _ _ _ H₁ H₂ Hx
     obtain ⟨a₁, b₁, c₁, d₁, Hx₁, Hy₁, Hf₁, Hg₁⟩ := mapRel_witness H₁
     obtain ⟨a₂, b₂, c₂, d₂, Hx₂, Hy₂, Hf₂, Hg₂⟩ := mapRel_witness H₂
-    have Hin : Δ ≤ pair a₁ b₁ =ᴮ pair a₂ b₂ :=
-      bv_trans (bv_symm Hx₁) (bv_trans Hx Hx₂)
+    have Hin : Δ ≤ pair a₁ b₁ =ᴮ pair a₂ b₂ := bv_trans (bv_symm Hx₁) (bv_trans Hx Hx₂)
     have Hc : Δ ≤ c₁ =ᴮ c₂ :=
       eq_of_is_func_of_eq (HΔ.trans (Hf.trans (inf_le_left.trans inf_le_left)))
         (eq_of_eq_pair_left' Hin) Hf₁ Hf₂
@@ -120,13 +116,10 @@ theorem prodMap_is_inj {A B C D f g : bSet 𝔹} {Γ : 𝔹}
   apply le_iInf
   intro y₂
   rw [← deduction]
-  let Δ := Γ ⊓ (pair x₁ y₁ ∈ᴮ prodMap A B C D f g ⊓
-    pair x₂ y₂ ∈ᴮ prodMap A B C D f g ⊓ y₁ =ᴮ y₂)
-  have H₁ := (mem_prodMap_iff.mp
-    (show Δ ≤ pair x₁ y₁ ∈ᴮ prodMap A B C D f g from
+  let Δ := Γ ⊓ (pair x₁ y₁ ∈ᴮ prodMap A B C D f g ⊓ pair x₂ y₂ ∈ᴮ prodMap A B C D f g ⊓ y₁ =ᴮ y₂)
+  have H₁ := (mem_prodMap_iff.mp (show Δ ≤ pair x₁ y₁ ∈ᴮ prodMap A B C D f g from
       inf_le_right.trans (inf_le_left.trans inf_le_left))).2.2
-  have H₂ := (mem_prodMap_iff.mp
-    (show Δ ≤ pair x₂ y₂ ∈ᴮ prodMap A B C D f g from
+  have H₂ := (mem_prodMap_iff.mp (show Δ ≤ pair x₂ y₂ ∈ᴮ prodMap A B C D f g from
       inf_le_right.trans (inf_le_left.trans inf_le_right))).2.2
   obtain ⟨a₁, b₁, c₁, d₁, Hx₁, Hy₁, Hf₁, Hg₁⟩ := mapRel_witness H₁
   obtain ⟨a₂, b₂, c₂, d₂, Hx₂, Hy₂, Hf₂, Hg₂⟩ := mapRel_witness H₂

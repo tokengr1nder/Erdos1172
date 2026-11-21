@@ -23,8 +23,7 @@ theorem exists_subset_typeLT_eq {α : Type u} [LinearOrder α] [WellFoundedLT α
   have htype : typeLT β.ToType ≤ typeLT s := by
     simpa only [type_toType] using hβ
   obtain ⟨f⟩ := type_le_iff.mp htype
-  let e : β.ToType ↪o α :=
-    f.toOrderEmbedding.trans (OrderEmbedding.subtype fun x ↦ x ∈ s)
+  let e : β.ToType ↪o α := f.toOrderEmbedding.trans (OrderEmbedding.subtype fun x ↦ x ∈ s)
   refine ⟨Set.range e, ?_, ?_⟩
   · rintro _ ⟨x, rfl⟩
     exact (f x).property
@@ -40,11 +39,9 @@ theorem mono_targets {α β β' γ γ' : Ordinal.{u}}
     OrdinalRamsey α β' γ' := by
   intro red blue hcompl
   obtain ⟨s, hs, hstype⟩ | ⟨s, hs, hstype⟩ := h red blue hcompl
-  · obtain ⟨t, hts, httype⟩ :=
-      Ordinal.exists_subset_typeLT_eq s (hβ.trans_eq hstype.symm)
+  · obtain ⟨t, hts, httype⟩ := Ordinal.exists_subset_typeLT_eq s (hβ.trans_eq hstype.symm)
     exact Or.inl ⟨t, hs.subset hts, httype⟩
-  · obtain ⟨t, hts, httype⟩ :=
-      Ordinal.exists_subset_typeLT_eq s (hγ.trans_eq hstype.symm)
+  · obtain ⟨t, hts, httype⟩ := Ordinal.exists_subset_typeLT_eq s (hγ.trans_eq hstype.symm)
     exact Or.inr ⟨t, hs.subset hts, httype⟩
 
 end OrdinalRamsey

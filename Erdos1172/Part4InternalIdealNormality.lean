@@ -29,8 +29,7 @@ private theorem mem_comprehend_value (ϕ : bSet 𝔹 → 𝔹) (Hϕ : B_ext ϕ)
   · apply ((mem_comprehend_iff₂ ϕ A Hϕ).mp le_rfl).trans
     apply iSup_le
     intro y
-    have Heq : y ∈ᴮ A ⊓ (x =ᴮ y ⊓ ϕ y) ≤ x =ᴮ y :=
-      inf_le_right.trans inf_le_left
+    have Heq : y ∈ᴮ A ⊓ (x =ᴮ y ⊓ ϕ y) ≤ x =ᴮ y := inf_le_right.trans inf_le_left
     exact le_inf
       (bv_rw' Heq (h_congr := B_ext_mem_left) (H_new := inf_le_left))
       (bv_rw' Heq (h_congr := Hϕ) (H_new := inf_le_right.trans inf_le_right))
@@ -55,8 +54,7 @@ def diagonalUnion (κ R : bSet 𝔹) : bSet 𝔹 :=
   comprehend (fun x => ⨆ i, (i ∈ᴮ κ ⊓ i ∈ᴮ x) ⊓ pair x i ∈ᴮ R) κ
 
 theorem mem_diagonalUnion (κ R x : bSet 𝔹) :
-    x ∈ᴮ diagonalUnion κ R =
-      (x ∈ᴮ κ) ⊓ ⨆ i, (i ∈ᴮ κ ⊓ i ∈ᴮ x) ⊓ pair x i ∈ᴮ R :=
+    x ∈ᴮ diagonalUnion κ R = (x ∈ᴮ κ) ⊓ ⨆ i, (i ∈ᴮ κ ⊓ i ∈ᴮ x) ⊓ pair x i ∈ᴮ R :=
   mem_comprehend_value _ (B_ext_iSup (h := fun _ =>
     B_ext_inf (B_ext_inf B_ext_const B_ext_mem_right) B_ext_pair_mem_left)) _ _
 
@@ -81,8 +79,7 @@ theorem subset_diagonalUnion_of_regressiveTotal {κ S R : bSet 𝔹} {Γ : 𝔹}
   intro x
   rw [← deduction, mem_diagonalUnion]
   exact le_inf (mem_of_mem_subset (inf_le_left.trans HS) inf_le_right)
-    ((le_inf (inf_le_left.trans (HR.trans (iInf_le _ x))) inf_le_right).trans
-      bv_imp_elim)
+    ((le_inf (inf_le_left.trans (HR.trans (iInf_le _ x))) inf_le_right).trans bv_imp_elim)
 
 /-- Boolean-valued pressing down: a regressive relation on a positive set
 has a positive inverse fiber. No external choice of a ground ordinal is made. -/
@@ -91,8 +88,7 @@ theorem positive_fiber_of_regressiveTotal {κ I S R : bSet 𝔹} {Γ : 𝔹}
     (HS : Γ ≤ positive κ I S) (HR : Γ ≤ regressiveTotal κ S R) :
     Γ ≤ ⨆ i, (i ∈ᴮ κ) ⊓ positive κ I (fiber κ R i) := by
   have Hraw : Γ ≤ ⨆ i, (i ∈ᴮ κ) ⊓ (fiber κ R i ∈ᴮ I)ᶜ := by
-    rw [← compl_compl (⨆ i, (i ∈ᴮ κ) ⊓ (fiber κ R i ∈ᴮ I)ᶜ),
-      ← imp_bot, ← deduction]
+    rw [← compl_compl (⨆ i, (i ∈ᴮ κ) ⊓ (fiber κ R i ∈ᴮ I)ᶜ), ← imp_bot, ← deduction]
     let Δ := Γ ⊓ (⨆ i, (i ∈ᴮ κ) ⊓ (fiber κ R i ∈ᴮ I)ᶜ)ᶜ
     change Δ ≤ ⊥
     have HΔ : Δ ≤ Γ := inf_le_left
@@ -100,15 +96,13 @@ theorem positive_fiber_of_regressiveTotal {κ I S R : bSet 𝔹} {Γ : 𝔹}
       apply le_iInf
       intro i
       have Hi : Δ ≤ ((i ∈ᴮ κ) ⊓ (fiber κ R i ∈ᴮ I)ᶜ)ᶜ :=
-        inf_le_right.trans (compl_le_compl (le_iSup
-          (fun j => (j ∈ᴮ κ) ⊓ (fiber κ R j ∈ᴮ I)ᶜ) i))
+        inf_le_right.trans (compl_le_compl (le_iSup (fun j => (j ∈ᴮ κ) ⊓ (fiber κ R j ∈ᴮ I)ᶜ) i))
       simpa only [compl_inf, compl_compl, _root_.imp] using Hi
     have Hdiag : Δ ≤ diagonalUnion κ R ∈ᴮ I :=
       (le_inf (HΔ.trans (Hnormal.trans (iInf_le _ R))) Hfibers).trans bv_imp_elim
     have Hsmall : Δ ≤ S ∈ᴮ I :=
       small_of_subset (HΔ.trans Hdown) Hdiag
-        (subset_diagonalUnion_of_regressiveTotal
-          (HΔ.trans (HS.trans inf_le_left)) (HΔ.trans HR))
+        (subset_diagonalUnion_of_regressiveTotal (HΔ.trans (HS.trans inf_le_left)) (HΔ.trans HR))
     exact bv_absurd _ Hsmall (HΔ.trans (HS.trans inf_le_right))
   apply Hraw.trans
   apply iSup_le
@@ -125,8 +119,7 @@ theorem fiber_subset_domain {κ S R i : bSet 𝔹} {Γ : 𝔹}
   have Hpair : Γ ⊓ x ∈ᴮ fiber κ R i ≤ pair x i ∈ᴮ R := by
     rw [mem_fiber]
     exact inf_le_right.trans inf_le_right
-  exact (mem_prod_iff.mp
-    (mem_of_mem_subset (inf_le_left.trans HR) Hpair)).1
+  exact (mem_prod_iff.mp (mem_of_mem_subset (inf_le_left.trans HR) Hpair)).1
 
 /-- For a relation supported on `S`, the positive constant fiber lies inside
 `S` itself, not merely somewhere in the ambient ordinal. -/
@@ -134,8 +127,7 @@ theorem positive_subfiber_of_regressiveTotal {κ I S R : bSet 𝔹} {Γ : 𝔹}
     (Hdown : Γ ≤ downwardClosed I) (Hnormal : Γ ≤ diagonalClosure κ I)
     (HS : Γ ≤ positive κ I S) (HR : Γ ≤ regressiveTotal κ S R)
     (Hsupport : Γ ≤ R ⊆ᴮ prod S κ) :
-    Γ ≤ ⨆ i, (i ∈ᴮ κ) ⊓
-      (positive κ I (fiber κ R i) ⊓ (fiber κ R i ⊆ᴮ S)) := by
+    Γ ≤ ⨆ i, (i ∈ᴮ κ) ⊓ (positive κ I (fiber κ R i) ⊓ (fiber κ R i ⊆ᴮ S)) := by
   have H := positive_fiber_of_regressiveTotal Hdown Hnormal HS HR
   apply (le_inf (le_refl Γ) H).trans
   rw [inf_iSup_eq]
@@ -143,8 +135,7 @@ theorem positive_subfiber_of_regressiveTotal {κ I S R : bSet 𝔹} {Γ : 𝔹}
   intro i
   apply le_iSup_of_le i
   exact le_inf (inf_le_right.trans inf_le_left)
-    (le_inf (inf_le_right.trans inf_le_right)
-      (fiber_subset_domain (inf_le_left.trans Hsupport)))
+    (le_inf (inf_le_right.trans inf_le_right) (fiber_subset_domain (inf_le_left.trans Hsupport)))
 
 /-- The usual total regressive function supplies the relational hypothesis. -/
 theorem regressiveTotal_of_is_function {κ S f : bSet 𝔹} {Γ : 𝔹}
@@ -158,8 +149,7 @@ theorem regressiveTotal_of_is_function {κ S f : bSet 𝔹} {Γ : 𝔹}
     (le_inf (inf_le_left.trans
       ((Hf.trans (inf_le_left.trans inf_le_right)).trans (iInf_le _ x)))
       inf_le_right).trans bv_imp_elim
-  obtain ⟨i, Hi⟩ := exists_convert Htotal
-    (B_ext_inf B_ext_mem_left B_ext_pair_mem_right)
+  obtain ⟨i, Hi⟩ := exists_convert Htotal (B_ext_inf B_ext_mem_left B_ext_pair_mem_right)
   apply le_iSup_of_le i
   refine le_inf (le_inf (Hi.trans inf_le_left) ?_) (Hi.trans inf_le_right)
   exact (le_inf
@@ -172,8 +162,7 @@ theorem positive_subfiber_of_regressiveFunction {κ I S f : bSet 𝔹} {Γ : �
     (Hdown : Γ ≤ downwardClosed I) (Hnormal : Γ ≤ diagonalClosure κ I)
     (HS : Γ ≤ positive κ I S) (Hf : Γ ≤ is_function S κ f)
     (Hreg : Γ ≤ ⨅ x, ⨅ i, _root_.imp (pair x i ∈ᴮ f) (i ∈ᴮ x)) :
-    Γ ≤ ⨆ i, (i ∈ᴮ κ) ⊓
-      (positive κ I (fiber κ f i) ⊓ (fiber κ f i ⊆ᴮ S)) :=
+    Γ ≤ ⨆ i, (i ∈ᴮ κ) ⊓ (positive κ I (fiber κ f i) ⊓ (fiber κ f i ⊆ᴮ S)) :=
   positive_subfiber_of_regressiveTotal Hdown Hnormal HS
     (regressiveTotal_of_is_function Hf Hreg) (Hf.trans inf_le_right)
 

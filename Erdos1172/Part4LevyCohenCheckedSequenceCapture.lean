@@ -46,15 +46,13 @@ theorem firstStage_function_ground_capture (κ : Cardinal.{u})
     (A : PSet.{u}) {g : bSet (FirstAlgebra κ)} {Γ : FirstAlgebra κ}
     (Hsep : ∀ i j : A.Type, i ≠ j → ¬ PSet.Equiv (A.Func i) (A.Func j))
     (Hg : Γ ≤ is_function omega (check A) g) :
-    ∃ A₀ : PSet.{u}, Cardinal.mk A₀.Type < κ ∧ A₀ ⊆ A ∧
-      Γ ≤ is_function omega (check A₀) g := by
+    ∃ A₀ : PSet.{u}, Cardinal.mk A₀.Type < κ ∧ A₀ ⊆ A ∧ Γ ≤ is_function omega (check A₀) g := by
   have Hcount : Γ ≤ injects_into (image omega (check A) g) omega :=
     ErdosCountableImage.image_countable_of_function Hg injects_into_refl
   obtain ⟨A₀, Hsmall, Hsub, Hcapture⟩ :=
     firstStage_exists_countable_ground_capture κ Hκ Hunc A Hsep Hcount image_subset
   exact ⟨A₀, Hsmall, Hsub,
-    ErdosIndependentHomogeneous.is_function_codomain_mono Hcapture
-      (factor_image_is_function Hg)⟩
+    ErdosIndependentHomogeneous.is_function_codomain_mono Hcapture (factor_image_is_function Hg)⟩
 
 /-- Arbitrary ambient supported checked-value omega sequences are covered
 at their original condition by source functions into small ground
@@ -70,10 +68,8 @@ theorem checked_sequence_small_ground_capture_cover (κ : Cardinal.{u})
         firstStageHom κ (is_function omega (check A₀.val) g) ⊓
           (f =ᴮ mapNames (firstStageHom κ) g) := by
   have Hreading : Γ ≤ ⨆ g : bSet (FirstAlgebra κ),
-      firstStageHom κ (is_function omega (check A) g) ⊓
-        (f =ᴮ mapNames (firstStageHom κ) g) :=
-    Erdos1172CohenIteration.checked_sequence_reading_cover
-      (B := FirstAlgebra κ) A Hf
+      firstStageHom κ (is_function omega (check A) g) ⊓ (f =ᴮ mapNames (firstStageHom κ) g) :=
+    Erdos1172CohenIteration.checked_sequence_reading_cover (B := FirstAlgebra κ) A Hf
   apply Hreading.trans
   apply iSup_le
   intro g

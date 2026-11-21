@@ -59,8 +59,7 @@ theorem anonymous_checked_sequence_reading_cover (κ : Cardinal.{u})
   have Hproduct : Cardinal.mk (PSet.pSet_prod PSet.omega A₀.val).Type < κ := by
     change Cardinal.mk (ULift.{u} ℕ × A₀.val.Type) < κ
     rw [Cardinal.mk_prod, mul_comm]
-    simpa only [Cardinal.mk_prod] using
-      small_times_nat_cardinal_lt κ Hunc A₀.val.Type A₀.property.1
+    simpa only [Cardinal.mk_prod] using small_times_nat_cardinal_lt κ Hunc A₀.val.Type A₀.property.1
   have Hsupport : is_function omega (check A₀.val) g ≤
       g ⊆ᴮ check (PSet.pSet_prod PSet.omega A₀.val) :=
     subset_trans' (subset_prod_of_is_function le_rfl)
@@ -69,8 +68,7 @@ theorem anonymous_checked_sequence_reading_cover (κ : Cardinal.{u})
       ⨆ h : bSet (anonymousAlgebra κ),
         inclusion (anonymousAlgebra κ)
             (h ⊆ᴮ check (PSet.pSet_prod PSet.omega A₀.val)) ⊓
-          (mapNames (firstStageHom κ) g =ᴮ
-            mapNames (inclusion (anonymousAlgebra κ)) h) :=
+          (mapNames (firstStageHom κ) g =ᴮ mapNames (inclusion (anonymousAlgebra κ)) h) :=
     (OrderHomClass.mono (firstStageHom κ) Hsupport).trans
       (firstStage_small_subset_anonymous_cover κ Hκ Hunc
         (PSet.pSet_prod PSet.omega A₀.val) Hproduct g)
@@ -88,17 +86,14 @@ theorem anonymous_checked_sequence_reading_cover (κ : Cardinal.{u})
           (f =ᴮ mapNames (firstStageHom κ) g)) ⊓
         (inclusion (anonymousAlgebra κ)
             (h ⊆ᴮ check (PSet.pSet_prod PSet.omega A₀.val)) ⊓
-          (mapNames (firstStageHom κ) g =ᴮ
-            mapNames (inclusion (anonymousAlgebra κ)) h)) ≤
-      is_function omega (check A₀.val)
-        (mapNames (inclusion (anonymousAlgebra κ)) h) :=
+          (mapNames (firstStageHom κ) g =ᴮ mapNames (inclusion (anonymousAlgebra κ)) h)) ≤
+      is_function omega (check A₀.val) (mapNames (inclusion (anonymousAlgebra κ)) h) :=
     bv_rw' (bv_symm (inf_le_right.trans inf_le_right))
       (h_congr := B_ext_is_function_right)
       (H_new := (inf_le_left.trans inf_le_left).trans Hmapped)
   have Horiginal := ErdosIndependentHomogeneous.is_function_codomain_mono
     (check_subset A₀.property.2) Hfunction
-  refine le_inf ?_
-    (bv_trans (inf_le_left.trans inf_le_right) (inf_le_right.trans inf_le_right))
+  refine le_inf ?_ (bv_trans (inf_le_left.trans inf_le_right) (inf_le_right.trans inf_le_right))
   have Htransport : inclusion (anonymousAlgebra κ) (is_function omega (check A) h) =
       is_function omega (check A) (mapNames (inclusion (anonymousAlgebra κ)) h) := by
     rw [map_is_function]

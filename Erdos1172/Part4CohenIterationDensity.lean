@@ -37,8 +37,7 @@ variable {B : Type u} [NontrivialCompleteBooleanAlgebra B]
 /-- These are the actual two canonical children, not an extraction from a
 Boolean membership assertion at an unchanged condition. -/
 theorem two_child_eq_zero_or_one (i : (two : bSet B).type) :
-    (two : bSet B).func i = (0 : bSet B) ∨
-      (two : bSet B).func i = (1 : bSet B) := by
+    (two : bSet B).func i = (0 : bSet B) ∨ (two : bSet B).func i = (1 : bSet B) := by
   cases i with
   | none => exact Or.inr rfl
   | some j =>

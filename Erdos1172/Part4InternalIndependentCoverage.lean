@@ -41,8 +41,7 @@ private theorem insert_cases {x y A : bSet 𝔹} {Γ v : 𝔹}
     (Hx : Γ ≤ x ∈ᴮ bSet.insert1 y A)
     (Hnew : ∀ {Δ : 𝔹}, Δ ≤ Γ → Δ ≤ x =ᴮ y → Δ ≤ v)
     (Hold : ∀ {Δ : 𝔹}, Δ ≤ Γ → Δ ≤ x ∈ᴮ A → Δ ≤ v) : Γ ≤ v := by
-  have Hsplit : Γ ≤ x =ᴮ y ⊔ x ∈ᴮ A :=
-    Hx.trans (mem_insert1_value (x := x) (y := y) (A := A)).le
+  have Hsplit : Γ ≤ x =ᴮ y ⊔ x ∈ᴮ A := Hx.trans (mem_insert1_value (x := x) (y := y) (A := A)).le
   exact (le_inf le_rfl Hsplit).trans
     (bv_or_elim_right (Hnew inf_le_left inf_le_right) (Hold inf_le_left inf_le_right))
 
@@ -59,8 +58,7 @@ private theorem no_edge_congr {color : Bool} {R x₁ x₂ y₁ y₂ : bSet 𝔹}
 The adjoined vertex is not required to be externally distinct from old names. -/
 theorem independent_insert {color : Bool} {R A y : bSet 𝔹} {Γ : 𝔹}
     (HA : Γ ≤ independent color R A)
-    (Hnone : Γ ≤ ⨅ a : bSet 𝔹,
-      _root_.imp (a ∈ᴮ A) (graphColor color R a y)ᶜ) :
+    (Hnone : Γ ≤ ⨅ a : bSet 𝔹, _root_.imp (a ∈ᴮ A) (graphColor color R a y)ᶜ) :
     Γ ≤ independent color R (bSet.insert1 y A) := by
   apply le_iInf
   intro a
@@ -94,31 +92,26 @@ theorem independent_insert {color : Bool} {R A y : bSet 𝔹} {Γ : 𝔹}
           (Hnone.trans (iInf_le _ a))) (HΞ.trans HaA)).trans bv_imp_elim
       exact no_edge_congr bv_refl Hby Hay
     · intro Ξ HΞ HbA
-      exact independent_apply (((HΞ.trans HΘ).trans inf_le_left).trans HA)
-        (HΞ.trans HaA) HbA
+      exact independent_apply (((HΞ.trans HΘ).trans inf_le_left).trans HA) (HΞ.trans HaA) HbA
 
 /-- Every point outside a maximal independent subset has a selected-color
 neighbor inside it. No nonemptiness, cardinal, ordinal, or CH premise is used. -/
 theorem maximal_independent_covers {color : Bool} {R X A : bSet 𝔹} {Γ : 𝔹}
     (Hsub : Γ ≤ A ⊆ᴮ X) (Hind : Γ ≤ independent color R A)
     (Hmax : Γ ≤ ⨅ B : bSet 𝔹,
-      _root_.imp (B ⊆ᴮ X ⊓ independent color R B)
-        (_root_.imp (A ⊆ᴮ B) (A =ᴮ B))) :
+      _root_.imp (B ⊆ᴮ X ⊓ independent color R B) (_root_.imp (A ⊆ᴮ B) (A =ᴮ B))) :
     Γ ≤ ⨅ y : bSet 𝔹, _root_.imp (y ∈ᴮ difference X A)
       (⨆ a : bSet 𝔹, a ∈ᴮ A ⊓ graphColor color R a y) := by
   apply le_iInf
   intro y
   rw [← deduction]
-  rw [← compl_compl (⨆ a : bSet 𝔹, a ∈ᴮ A ⊓ graphColor color R a y),
-    ← imp_bot, ← deduction]
-  let Δ := (Γ ⊓ y ∈ᴮ difference X A) ⊓
-    (⨆ a : bSet 𝔹, a ∈ᴮ A ⊓ graphColor color R a y)ᶜ
+  rw [← compl_compl (⨆ a : bSet 𝔹, a ∈ᴮ A ⊓ graphColor color R a y), ← imp_bot, ← deduction]
+  let Δ := (Γ ⊓ y ∈ᴮ difference X A) ⊓ (⨆ a : bSet 𝔹, a ∈ᴮ A ⊓ graphColor color R a y)ᶜ
   have HΔ : Δ ≤ Γ := inf_le_left.trans inf_le_left
   have Hy : Δ ≤ y ∈ᴮ X ⊓ (y ∈ᴮ A)ᶜ := by
     rw [← mem_difference]
     exact inf_le_left.trans inf_le_right
-  have Hnone : Δ ≤ ⨅ a : bSet 𝔹,
-      _root_.imp (a ∈ᴮ A) (graphColor color R a y)ᶜ := by
+  have Hnone : Δ ≤ ⨅ a : bSet 𝔹, _root_.imp (a ∈ᴮ A) (graphColor color R a y)ᶜ := by
     apply le_iInf
     intro a
     rw [← deduction, ← imp_bot, ← deduction]
@@ -145,7 +138,6 @@ theorem maximal_independent_covers {color : Bool} {R X A : bSet 𝔹} {Γ : 𝔹
   have Hinsert : Δ ≤ y ∈ᴮ bSet.insert1 y A := by
     rw [mem_insert1_value]
     exact bv_refl.trans le_sup_left
-  exact bv_absurd _ (mem_congr bv_refl (bv_symm Heq) Hinsert)
-    (Hy.trans inf_le_right)
+  exact bv_absurd _ (mem_congr bv_refl (bv_symm Heq) Hinsert) (Hy.trans inf_le_right)
 
 end bSet.ErdosIndependentCoverage

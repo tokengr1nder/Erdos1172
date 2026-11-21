@@ -52,8 +52,7 @@ theorem rowBound_persistent {data : LineCoverData V} {U : RegularName P V}
 The source of those bounds is kept as an explicit premise here. -/
 theorem exists_named_line_cover_of_dense_row_bounds
     (data : LineCoverData V) (U : RegularName P V)
-    (hbound : ∀ p : P, ∀ i : W1,
-      ∃ q : P, q ≤ p ∧ ∃ bound : W1, RowBound data U q i bound) :
+    (hbound : ∀ p : P, ∀ i : W1, ∃ q : P, q ≤ p ∧ ∃ bound : W1, RowBound data U q i bound) :
     ∃ F : FunctionDecisions P W1 W1,
       ∀ p : P, ∀ x : V, U.holds p x → (coverName F data.cover).holds p x := by
   classical

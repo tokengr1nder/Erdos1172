@@ -73,8 +73,7 @@ theorem segmentPSet_equiv_ordinalMk {κ : Cardinal.{u}} (i : κ.ord.ToType) :
 below-κ algebra. Empty coordinate alphabets are handled separately, without
 asserting a total function from omega onto the empty set. -/
 theorem segmentPSet_countable (κ : Cardinal.{u}) (i : κ.ord.ToType) :
-    (⊤ : Completion (BelowCondition κ)) ≤
-      injects_into (check (segmentPSet i)) bSet.omega := by
+    (⊤ : Completion (BelowCondition κ)) ≤ injects_into (check (segmentPSet i)) bSet.omega := by
   classical
   by_cases h : Nonempty (Set.Iio i)
   · let : Nonempty (segmentPSet i).Type := h
@@ -112,13 +111,11 @@ theorem checked_predecessor_countable (κ : Cardinal.{u}) (i : κ.ord.ToType) :
 arbitrary mixed names, not only one globally chosen ground representative. -/
 theorem below_checked_members_countable (κ : Cardinal.{u}) :
     (⊤ : Completion (BelowCondition κ)) ≤
-      ⨅ x, _root_.imp (x ∈ᴮ check (PSet.ordinalMk κ.ord))
-        (injects_into x bSet.omega) := by
+      ⨅ x, _root_.imp (x ∈ᴮ check (PSet.ordinalMk κ.ord)) (injects_into x bSet.omega) := by
   rw [PSet.ordinalMk_eq_def, check_unfold]
   rw [← bounded_forall (h_congr := B_ext_injects_into_left)]
   change (⊤ : Completion (BelowCondition κ)) ≤
-    ⨅ i : κ.ord.ToType, _root_.imp ⊤
-      (injects_into (check (PSet.ordinalMk i.toOrd.val)) bSet.omega)
+    ⨅ i : κ.ord.ToType, _root_.imp ⊤ (injects_into (check (PSet.ordinalMk i.toOrd.val)) bSet.omega)
   apply le_iInf
   intro i
   rw [top_imp]

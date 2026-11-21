@@ -60,8 +60,7 @@ of Boolean germs. The lower projection has exact lifts on positive germs. -/
 def scalarHom : CompleteLatticeHom (Algebra U B) (Algebra U C) :=
   Erdos1172PosetProjection.completionHom (germLowerProjection U e) (germLower_exact U e)
 
-theorem scalarHom_value (f : I → B) :
-    scalarHom U e (value U f) = value U (fun i => e (f i)) := by
+theorem scalarHom_value (f : I → B) : scalarHom U e (value U f) = value U (fun i => e (f i)) := by
   apply Heyting.Regular.coe_injective
   apply SetLike.ext
   intro p

@@ -46,8 +46,7 @@ def evaluationOrderHom (i : I) :
 
 /-- Updating one coordinate gives the exact strengthening lift, without
 changing the other coordinates or assuming an external support bound. -/
-theorem evaluation_exactLifts (i : I) :
-    ExactLifts (evaluationOrderHom (A := A) i) := by
+theorem evaluation_exactLifts (i : I) : ExactLifts (evaluationOrderHom (A := A) i) := by
   classical
   intro p q hq
   change q ≤ p i at hq
@@ -56,8 +55,7 @@ theorem evaluation_exactLifts (i : I) :
     by_cases hji : j = i
     · subst j
       simpa only [DFinsupp.coe_update, Function.update_self] using hq
-    · simpa only [DFinsupp.coe_update, Function.update_of_ne hji] using
-        (le_rfl : p j ≤ p j)
+    · simpa only [DFinsupp.coe_update, Function.update_of_ne hji] using (le_rfl : p j ≤ p j)
   · change (p.update i q) i = q
     simp only [DFinsupp.coe_update, Function.update_self]
 
@@ -78,8 +76,7 @@ theorem coordinateEntry_inf_eq_bot {i : I} {n : ℕ} {a b : A i}
   apply Heyting.Regular.coe_injective
   apply SetLike.ext
   intro p
-  change p i ∈ ((Erdos1172Collapse.entry n a ⊓
-    Erdos1172Collapse.entry n b).val) ↔ False
+  change p i ∈ ((Erdos1172Collapse.entry n a ⊓ Erdos1172Collapse.entry n b).val) ↔ False
   rw [Erdos1172Collapse.entry_inf_eq_bot hab]
   rfl
 

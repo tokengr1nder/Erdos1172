@@ -54,24 +54,19 @@ theorem unboundedIn_upperTail {b : bSet 𝔹} {Γ : 𝔹}
     (Hy.trans (inf_le_right.trans inf_le_left)))
 
 /-- Closure of an upper tail needs no bound on its cut value. -/
-theorem closedIn_upperTail (b : bSet 𝔹) {Γ : 𝔹} :
-    Γ ≤ closedIn omegaTwo (upperTail b) := by
+theorem closedIn_upperTail (b : bSet 𝔹) {Γ : 𝔹} : Γ ≤ closedIn omegaTwo (upperTail b) := by
   apply le_iInf
   intro a
   rw [← deduction]
-  let Δ := Γ ⊓ ((a ∈ᴮ omegaTwo ⊓ (a =ᴮ (∅ : bSet 𝔹))ᶜ) ⊓
-    unboundedIn a (upperTail b))
+  let Δ := Γ ⊓ ((a ∈ᴮ omegaTwo ⊓ (a =ᴮ (∅ : bSet 𝔹))ᶜ) ⊓ unboundedIn a (upperTail b))
   have Ha : Δ ≤ a ∈ᴮ omegaTwo := inf_le_right.trans (inf_le_left.trans inf_le_left)
-  have Hne : Δ ≤ (a =ᴮ (∅ : bSet 𝔹))ᶜ :=
-    inf_le_right.trans (inf_le_left.trans inf_le_right)
+  have Hne : Δ ≤ (a =ᴮ (∅ : bSet 𝔹))ᶜ := inf_le_right.trans (inf_le_left.trans inf_le_right)
   obtain ⟨t, Ht⟩ := exists_convert (nonempty_iff_exists_mem.mp Hne) B_ext_mem_left
   obtain ⟨z, Hz⟩ := exists_unbounded_above
     (show Δ ≤ unboundedIn a (upperTail b) from inf_le_right.trans inf_le_right) Ht
-  have Hbz : Δ ≤ b ∈ᴮ z :=
-    (mem_upperTail_iff.mp (Hz.trans (inf_le_left.trans inf_le_left))).2
+  have Hbz : Δ ≤ b ∈ᴮ z := (mem_upperTail_iff.mp (Hz.trans (inf_le_left.trans inf_le_left))).2
   exact mem_upperTail_iff.mpr ⟨Ha,
-    mem_of_mem_Ord Hbz (Hz.trans (inf_le_left.trans inf_le_right))
-      (Ord_of_mem_Ord Ha omegaTwo_Ord)⟩
+    mem_of_mem_Ord Hbz (Hz.trans (inf_le_left.trans inf_le_right)) (Ord_of_mem_Ord Ha omegaTwo_Ord)⟩
 
 theorem club_upperTail {b : bSet 𝔹} {Γ : 𝔹}
     (HCH : Γ ≤ (CH : 𝔹)) (Hb : Γ ≤ b ∈ᴮ omegaTwo) :

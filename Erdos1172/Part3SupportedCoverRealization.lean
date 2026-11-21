@@ -106,8 +106,7 @@ theorem upper_holds_of_certificate
   have hg (i : W1) (hi : i ∈ support) : H.decides r i (g i) := by
     simpa only [g, dif_pos hi, value] using (hvalues i hi).choose_spec
   have hfg (i : W1) (hi : i ∈ support) : f i ≤ g i :=
-    hbelow r (hrq.trans hqp) i (f i) (g i)
-      (F.persistent (hrq.trans hqp) (hdec i hi)) (hg i hi)
+    hbelow r (hrq.trans hqp) i (f i) (g i) (F.persistent (hrq.trans hqp) (hdec i hi)) (hg i hi)
   refine ⟨r, hrq, g, support, hg, ?_⟩
   intro k hk
   exact hcover k (fun i hi => (hfg i hi).trans (hk i hi))
@@ -121,8 +120,7 @@ theorem coverName_mono_of_pointwiseBelow
   apply (coverName H C).of_dense p x
   intro q hqp
   obtain ⟨r, hrq, hr⟩ := hx q hqp
-  exact ⟨r, hrq, upper_holds_of_certificate
-    (pointwiseBelow_mono hbelow (hrq.trans hqp)) hr⟩
+  exact ⟨r, hrq, upper_holds_of_certificate (pointwiseBelow_mono hbelow (hrq.trans hqp)) hr⟩
 
 /-- Realize a small set of actual members in one ground cover. Only
 countable proper stages of the omegaOne sequence take lower bounds. -/
@@ -136,35 +134,28 @@ theorem exists_ground_cover_of_actual_members
   obtain ⟨index⟩ : Nonempty (A ↪ W1) := (Cardinal.le_def _ _).mp (by
     simpa only [W1, Cardinal.mk_toType, Ordinal.card_omega] using hA)
   let D (j : W1) : Set P := {p |
-    (∃ v, F.decides p j v) ∧
-      (p ≤ p0 → ∀ x : A, index x = j → Certificate F C p x.val)}
+    (∃ v, F.decides p j v) ∧ (p ≤ p0 → ∀ x : A, index x = j → Certificate F C p x.val)}
   have hD : ∀ j, DenseBelow (D j) := by
     intro j p
     obtain ⟨q, hqp, v, hv⟩ := F.dense p j
     by_cases hq0 : q ≤ p0
     · by_cases hrequest : ∃ x : A, index x = j
-      · obtain ⟨r, hrq, hcert⟩ :=
-          hactual hrequest.choose.val hrequest.choose.property q hq0
+      · obtain ⟨r, hrq, hcert⟩ := hactual hrequest.choose.val hrequest.choose.property q hq0
         refine ⟨r, ⟨⟨v, F.persistent hrq hv⟩, ?_⟩, hrq.trans hqp⟩
         intro _ x hx
-        have heq : x = hrequest.choose :=
-          index.injective (hx.trans hrequest.choose_spec.symm)
+        have heq : x = hrequest.choose := index.injective (hx.trans hrequest.choose_spec.symm)
         subst x
         exact hcert
       · exact ⟨q, ⟨⟨v, hv⟩, fun _ x hx => (hrequest ⟨x, hx⟩).elim⟩, hqp⟩
     · exact ⟨q, ⟨⟨v, hv⟩, fun h => (hq0 h).elim⟩, hqp⟩
-  obtain ⟨conditions, hanti, hstart, hmeet⟩ :=
-    exists_antitone_dense_sequence hclosed p0 D hD
-  have hvalues (i : W1) : ∃ v, F.decides (conditions i) i v :=
-    (hmeet i).1
+  obtain ⟨conditions, hanti, hstart, hmeet⟩ := exists_antitone_dense_sequence hclosed p0 D hD
+  have hvalues (i : W1) : ∃ v, F.decides (conditions i) i v := (hmeet i).1
   let f (i : W1) : W1 := (hvalues i).choose
-  have hf (i : W1) : F.decides (conditions i) i (f i) :=
-    (hvalues i).choose_spec
+  have hf (i : W1) : F.decides (conditions i) i (f i) := (hvalues i).choose_spec
   refine ⟨f, ?_⟩
   intro x hx
   let a : A := ⟨x, hx⟩
-  obtain ⟨g, support, hdec, hcover⟩ :=
-    (hmeet (index a)).2 (hstart (index a)) a rfl
+  obtain ⟨g, support, hdec, hcover⟩ := (hmeet (index a)).2 (hstart (index a)) a rfl
   apply hcover f
   intro i hi
   have heq : g i = f i := F.unique

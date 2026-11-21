@@ -52,8 +52,7 @@ noncomputable def pack (d : Stem × SideCodes) : Option Datum := by
     change pack d.val = some d
     rw [pack, dif_neg d.property]
 
-theorem pack_eq_none_iff (d : Stem × SideCodes) :
-    pack d = none ↔ d = (emptyStem, emptySide) := by
+theorem pack_eq_none_iff (d : Stem × SideCodes) : pack d = none ↔ d = (emptyStem, emptySide) := by
   constructor
   · intro h
     have heq := congrArg unpack h

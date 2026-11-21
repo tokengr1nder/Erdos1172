@@ -53,8 +53,7 @@ private theorem mem_relationGraph_iff {A B : bSet 𝔹}
     {P : bSet 𝔹 → bSet 𝔹 → 𝔹}
     (hL : ∀ b, B_ext (fun a => P a b)) (hR : ∀ a, B_ext (P a))
     {a b : bSet 𝔹} {Γ : 𝔹} :
-    Γ ≤ pair a b ∈ᴮ relationGraph A B P ↔
-      Γ ≤ a ∈ᴮ A ∧ Γ ≤ b ∈ᴮ B ∧ Γ ≤ P a b := by
+    Γ ≤ pair a b ∈ᴮ relationGraph A B P ↔ Γ ≤ a ∈ᴮ A ∧ Γ ≤ b ∈ᴮ B ∧ Γ ≤ P a b := by
   have hExt : B_ext (fun z : bSet 𝔹 =>
       ⨆ a', ⨆ b', z =ᴮ pair a' b' ⊓ P a' b') :=
     B_ext_iSup (h := fun _ => B_ext_iSup (h := fun _ =>
@@ -73,8 +72,7 @@ private theorem mem_relationGraph_iff {A B : bSet 𝔹}
         (eq_of_eq_pair_right' inf_le_left)
         (h_congr := hR a') (H_new := inf_le_right))
   · rintro ⟨Ha, Hb, HP⟩
-    exact ⟨mem_prod_iff.mpr ⟨Ha, Hb⟩,
-      le_iSup_of_le a (le_iSup_of_le b (le_inf bv_refl HP))⟩
+    exact ⟨mem_prod_iff.mpr ⟨Ha, Hb⟩, le_iSup_of_le a (le_iSup_of_le b (le_inf bv_refl HP))⟩
 
 /-- Being the least member of the indicated fiber of a relation. -/
 def leastPreimage (S f y x : bSet 𝔹) : 𝔹 :=
@@ -88,8 +86,7 @@ private theorem leastPreimage_ext_left (S f x : bSet 𝔹) :
     (B_ext_iInf (h := fun _ => B_ext_imp
       (h₁ := B_ext_inf B_ext_const B_ext_pair_mem_right) (h₂ := B_ext_const)))
 
-private theorem leastPreimage_ext_right (S f y : bSet 𝔹) :
-    B_ext (leastPreimage S f y) := by
+private theorem leastPreimage_ext_right (S f y : bSet 𝔹) : B_ext (leastPreimage S f y) := by
   unfold leastPreimage
   exact B_ext_inf (B_ext_inf B_ext_mem_left B_ext_pair_mem_left)
     (B_ext_iInf (h := fun _ => B_ext_imp
@@ -122,24 +119,20 @@ private theorem exists_leastPreimage {X S Y f y : bSet 𝔹} {Γ : 𝔹}
     apply Hex.trans
     apply iSup_le; intro x
     exact le_iSup_of_le x (hU.mpr ⟨inf_le_left, inf_le_right⟩)
-  have Hwf : Γ ≤ epsilon_well_founded X :=
-    HOrd.trans (inf_le_left.trans inf_le_right)
+  have Hwf : Γ ≤ epsilon_well_founded X := HOrd.trans (inf_le_left.trans inf_le_right)
   have Hmin : Γ ≤ ⨆ x, x ∈ᴮ U ⊓
       ⨅ z, z ∈ᴮ U ⟹ (z ∈ᴮ x)ᶜ :=
-    (le_inf ((le_inf (Hwf.trans (iInf_le _ U)) HUsub).trans bv_imp_elim)
-      HUne).trans bv_imp_elim
+    (le_inf ((le_inf (Hwf.trans (iInf_le _ U)) HUsub).trans bv_imp_elim) HUne).trans bv_imp_elim
   apply le_trans (le_inf Hmin le_rfl)
   rw [iSup_inf_eq']; apply iSup_le; intro x
-  have HxU : (x ∈ᴮ U ⊓ (⨅ z, z ∈ᴮ U ⟹ (z ∈ᴮ x)ᶜ)) ⊓ Γ ≤ x ∈ᴮ U :=
-    inf_le_left.trans inf_le_left
+  have HxU : (x ∈ᴮ U ⊓ (⨅ z, z ∈ᴮ U ⟹ (z ∈ᴮ x)ᶜ)) ⊓ Γ ≤ x ∈ᴮ U := inf_le_left.trans inf_le_left
   apply le_iSup_of_le x
   refine le_inf (mem_of_mem_subset (inf_le_right.trans HUsub) HxU) ?_
   refine le_inf (le_inf (hU.mp HxU).1 (hU.mp HxU).2) ?_
   apply le_iInf; intro z; rw [← deduction]
   exact (le_inf
     (inf_le_left.trans (inf_le_left.trans (inf_le_right.trans (iInf_le _ z))))
-    (hU.mpr ⟨inf_le_right.trans inf_le_left, inf_le_right.trans inf_le_right⟩)).trans
-      bv_imp_elim
+    (hU.mpr ⟨inf_le_right.trans inf_le_left, inf_le_right.trans inf_le_right⟩)).trans bv_imp_elim
 
 /-- The least-preimage graph is an actual internal injection into the ordinal. -/
 theorem injects_into_of_partial_surjection_ordinal {X S Y f : bSet 𝔹} {Γ : 𝔹}
@@ -148,8 +141,7 @@ theorem injects_into_of_partial_surjection_ordinal {X S Y f : bSet 𝔹} {Γ : �
     Γ ≤ injects_into Y X := by
   let g := relationGraph Y X (leastPreimage S f)
   have hg {y x : bSet 𝔹} {Δ : 𝔹} :
-      Δ ≤ pair y x ∈ᴮ g ↔
-        Δ ≤ y ∈ᴮ Y ∧ Δ ≤ x ∈ᴮ X ∧ Δ ≤ leastPreimage S f y x :=
+      Δ ≤ pair y x ∈ᴮ g ↔ Δ ≤ y ∈ᴮ Y ∧ Δ ≤ x ∈ᴮ X ∧ Δ ≤ leastPreimage S f y x :=
     mem_relationGraph_iff (leastPreimage_ext_left S f) (leastPreimage_ext_right S f)
   apply le_iSup_of_le g
   refine le_inf (le_inf ?_ ?_) ?_
@@ -218,8 +210,7 @@ theorem larger_than_of_injects_into {X Y : bSet 𝔹} {Γ : 𝔹}
 
 open ErdosOmegaTwo
 
-theorem omegaOne_not_countable {Γ : 𝔹} :
-    Γ ≤ (larger_than bSet.omega (omegaOne : bSet 𝔹))ᶜ := by
+theorem omegaOne_not_countable {Γ : 𝔹} : Γ ≤ (larger_than bSet.omega (omegaOne : bSet 𝔹))ᶜ := by
   rw [← imp_bot, ← deduction]
   exact bv_absurd _ (injects_into_of_larger_than_ordinal Ord_omega inf_le_right)
     omegaOne_not_injects
@@ -241,16 +232,14 @@ theorem CH₂_iff_powerset_omega_injects_omegaOne {Γ : 𝔹} :
       (larger_than x (bv_powerset bSet.omega))ᶜ)ᶜ
     rw [← imp_bot, ← deduction, inf_iSup_eq']
     apply iSup_le; intro x
-    let Δ := Γ ⊓ (Ord x ⊓ (larger_than bSet.omega x)ᶜ ⊓
-      (larger_than x (bv_powerset bSet.omega))ᶜ)
+    let Δ := Γ ⊓ (Ord x ⊓ (larger_than bSet.omega x)ᶜ ⊓ (larger_than x (bv_powerset bSet.omega))ᶜ)
     have HOrd : Δ ≤ Ord x := inf_le_right.trans (inf_le_left.trans inf_le_left)
     have Hnotinj : Δ ≤ (injects_into x bSet.omega)ᶜ := by
       rw [← imp_bot, ← deduction]
       exact bv_absurd _ (larger_than_of_injects_into inf_le_right)
         (inf_le_left.trans (inf_le_right.trans (inf_le_left.trans inf_le_right)))
     have Hleast : Δ ≤ omegaOne ⊆ᴮ x := by
-      have Hspec : Δ ≤ ErdosHartogs.leastNoninjectingOrdinal bSet.omega omegaOne :=
-        omegaOne_spec
+      have Hspec : Δ ≤ ErdosHartogs.leastNoninjectingOrdinal bSet.omega omegaOne := omegaOne_spec
       exact (le_inf ((le_inf
         (Hspec.trans (inf_le_right.trans (inf_le_right.trans (iInf_le _ x))))
         HOrd).trans bv_imp_elim) Hnotinj).trans bv_imp_elim

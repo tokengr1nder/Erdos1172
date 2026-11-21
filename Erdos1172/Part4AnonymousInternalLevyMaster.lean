@@ -88,8 +88,7 @@ theorem exists_small_tripleSupport_refinement (hκ : κ.IsInaccessible) (α : Or
   · obtain ⟨s, hsv, hseq⟩ := exists_canonical_refinement hemp
       (empty_mem_internalLevyCollapse (ordinalCarrier κ.ord) (ordinalCarrier α))
     have hs_p : s ≤ p :=
-      ⟨hsv.trans inf_le_left,
-       bSet.subset_of_eq (bv_trans ((hsv.trans inf_le_right)) hseq)⟩
+      ⟨hsv.trans inf_le_left, bSet.subset_of_eq (bv_trans ((hsv.trans inf_le_right)) hseq)⟩
     have hts_empty : tripleSupport α s = ∅ := by
       apply Set.eq_empty_iff_forall_notMem.mpr
       rintro ⟨idx, w⟩ ⟨hw_ne, hw_eq⟩
@@ -115,8 +114,7 @@ theorem exists_small_tripleSupport_refinement (hκ : κ.IsInaccessible) (α : Or
     let b := p.value ⊓ (is_func' omega (name p) f ⊓ is_surj omega (name p) f)
     have hweak : b ≤ is_func' omega (name p) f := inf_le_right.trans inf_le_left
     let g_fn := function_of_func' hweak
-    have hfun : b ≤ is_function omega (name p) g_fn :=
-      function_of_func'_is_function hweak
+    have hfun : b ≤ is_function omega (name p) g_fn := function_of_func'_is_function hweak
     have hrange : b ≤ name p =ᴮ image omega (check P_α) g_fn :=
       eq_image_of_surjection' (inf_le_left.trans hp_sub) hfun
         (function_of_func'_surj_of_surj hweak (inf_le_right.trans inf_le_right))
@@ -137,8 +135,7 @@ theorem exists_small_tripleSupport_refinement (hκ : κ.IsInaccessible) (α : Or
     have hc₀_sub : c₀ ≤ inc (b ⊓ (name p ⊆ᴮ check A₀.val)) := by
       rw [completeHom_inf inc, map_subset, map_check]
       refine le_inf inf_le_left ?_
-      have heq₁ : c₀ ≤ mapNames inc (name p) =ᴮ
-          image omega (check P_α) (mapNames inc g_fn) := by
+      have heq₁ : c₀ ≤ mapNames inc (name p) =ᴮ image omega (check P_α) (mapNames inc g_fn) := by
         have hm := OrderHomClass.mono inc hrange
         rw [map_bv_eq, map_bounded_image, show mapNames inc omega = omega from map_check _ _,
           map_check] at hm
@@ -285,8 +282,7 @@ theorem ordOfPSetIdx_equiv {α : Ordinal.{u}} (i : (PSet.ordinalMk α).Type) :
     PSet.Equiv ((PSet.ordinalMk α).Func i) (PSet.ordinalMk (ordOfPSetIdx i)) :=
   (PSet.mem_ordinalMk_iff.mp (PSet.func_mem (PSet.ordinalMk α) i)).choose_spec.2
 
-theorem ordOfPSetIdx_inj {α : Ordinal.{u}} :
-    Function.Injective (ordOfPSetIdx (α := α)) := by
+theorem ordOfPSetIdx_inj {α : Ordinal.{u}} : Function.Injective (ordOfPSetIdx (α := α)) := by
   intro i₁ i₂ heq
   by_contra hne
   exact PSet.ordinalMk_inj α i₁ i₂ hne
@@ -363,8 +359,7 @@ theorem stageStepHom_levyEntry {α α' : Ordinal.{u}} (h : α ≤ α')
               (le_iSup_of_le (check ((PSet.ordinalMk α).Func idx.2))
                 (le_inf (le_top.trans hy_ξ) (check_levyTriplePSet_func α idx))))))
     have hp_mem : p.value ≤ check ((levyTriplePSet κ α).Func idx) ∈ᴮ name p :=
-      mem_of_mem_subset hpsub
-        (mem_restrictLevy_iff.mpr ⟨hpv.trans hq_α, hpv.trans hbd⟩)
+      mem_of_mem_subset hpsub (mem_restrictLevy_iff.mpr ⟨hpv.trans hq_α, hpv.trans hbd⟩)
     exact le_iSup (fun r : {r : InternalLevyCondition κ α //
       r.value ≤ check ((levyTriplePSet κ α).Func idx) ∈ᴮ name r} => condition r.val) ⟨p, hp_mem⟩
 
@@ -471,8 +466,7 @@ private theorem is_func_liftedTriple_graph_of_cases {B : Type u} [NontrivialComp
       pair (pair (check ((PSet.ordinalMk (ordinalImage U a α)).Func idx₂.1.1))
         (check ((PSet.ordinalMk θ.ord).Func idx₂.1.2)))
         (check ((PSet.ordinalMk (ordinalImage U a α)).Func idx₂.2)) :=
-    bv_trans (inf_le_right.trans inf_le_right)
-      (check_liftedTriplePSet_func U a θ α idx₂)
+    bv_trans (inf_le_right.trans inf_le_right) (check_liftedTriplePSet_func U a θ α idx₂)
   have hdom_eq : E ≤ pair (check ((PSet.ordinalMk (ordinalImage U a α)).Func idx₁.1.1))
         (check ((PSet.ordinalMk θ.ord).Func idx₁.1.2)) =ᴮ
       pair (check ((PSet.ordinalMk (ordinalImage U a α)).Func idx₂.1.1))
@@ -588,8 +582,7 @@ theorem liftValidTriple_ord_first (hk : κ ≤ θ) (hf : FineOn U a) (hn : Norma
 theorem liftValidTriple_ord_second (hk : κ ≤ θ) (hf : FineOn U a) (hn : NormalOn U a)
     (ht : FiberOrderType U κ θ a) (hκ : κ.IsInaccessible) {α : Ordinal.{u}}
     (t : GroundValidTriple κ α) :
-    ordOfPSetIdx (liftValidTriple U a hk hf hn ht hκ t).val.1.2 =
-      ordOfPSetIdx t.val.1.2 :=
+    ordOfPSetIdx (liftValidTriple U a hk hf hn ht hκ t).val.1.2 = ordOfPSetIdx t.val.1.2 :=
   ordOfPSetIdx_includeOrdIdx (Cardinal.ord_le_ord.mpr hk) t.val.1.2
 
 theorem liftValidTriple_ord_val (hk : κ ≤ θ) (hf : FineOn U a) (hn : NormalOn U a)
@@ -708,8 +701,7 @@ theorem amalgamateChain_func_gen {B : Type u} [NontrivialCompleteBooleanAlgebra 
           (G_chain l).toBSet) :
     (⊤ : B) ≤ is_func (.mk ((Σ l : L, (G_chain l).Idx) ⊕ GroundValidTriple κ α')
       (fun j => check ((liftedTriplePSet U a θ α').Func
-        (Sum.elim
-          (fun lk : Σ l : L, (G_chain l).Idx =>
+        (Sum.elim (fun lk : Σ l : L, (G_chain l).Idx =>
             includeValidLiftedTriple U a hk hf hn ht hκ (hle lk.1) ((G_chain lk.1).triple lk.2))
           (liftValidTriple U a hk hf hn ht hκ) j).val))
       (Sum.elim (fun lk : Σ l : L, (G_chain l).Idx => (G_chain lk.1).weight lk.2) w_top)) := by
@@ -826,8 +818,7 @@ private theorem subset_amalgamate_inl_gen {B : Type u} [NontrivialCompleteBoolea
     (⊤ : B) ≤ (G_chain l).toBSet ⊆ᴮ
       .mk ((Σ m : L, (G_chain m).Idx) ⊕ GroundValidTriple κ α')
         (fun j => check ((liftedTriplePSet U a θ α').Func
-          (Sum.elim
-            (fun mk : Σ m : L, (G_chain m).Idx =>
+          (Sum.elim (fun mk : Σ m : L, (G_chain m).Idx =>
               includeValidLiftedTriple U a hk hf hn ht hκ (hle mk.1) ((G_chain mk.1).triple mk.2))
             (liftValidTriple U a hk hf hn ht hκ) j).val))
         (Sum.elim (fun mk : Σ m : L, (G_chain m).Idx => (G_chain mk.1).weight mk.2) w_top) := by
@@ -851,8 +842,7 @@ private theorem subset_amalgamate_inr_gen {B : Type u} [NontrivialCompleteBoolea
         w_top) ⊆ᴮ
       .mk ((Σ m : L, (G_chain m).Idx) ⊕ GroundValidTriple κ α')
         (fun j => check ((liftedTriplePSet U a θ α').Func
-          (Sum.elim
-            (fun mk : Σ m : L, (G_chain m).Idx =>
+          (Sum.elim (fun mk : Σ m : L, (G_chain m).Idx =>
               includeValidLiftedTriple U a hk hf hn ht hκ (hle mk.1) ((G_chain mk.1).triple mk.2))
             (liftValidTriple U a hk hf hn ht hκ) j).val))
         (Sum.elim (fun mk : Σ m : L, (G_chain m).Idx => (G_chain mk.1).weight mk.2) w_top) := by
@@ -879,8 +869,7 @@ theorem amalgamateChain_card_lt {B : Type u} [NontrivialCompleteBooleanAlgebra B
     (G_chain : ∀ l : L, SmallGroundLevyGraph U a θ (α_chain l) B) :
     #((Σ l : L, (G_chain l).Idx) ⊕ GroundValidTriple κ α') < θ := by
   rw [Cardinal.mk_sum, Cardinal.mk_sigma, Cardinal.lift_id, Cardinal.lift_id]
-  have hg (l : L) : (#(G_chain l).Idx).ord < θ.ord :=
-    Cardinal.ord_lt_ord.mpr (G_chain l).card_lt
+  have hg (l : L) : (#(G_chain l).Idx).ord < θ.ord := Cardinal.ord_lt_ord.mpr (G_chain l).card_lt
   let supOrd := ⨆ l : L, (#(G_chain l).Idx).ord + 1
   have hsup_ord : supOrd < θ.ord :=
     Ordinal.iSup_add_one_lt_of_lt_cof (by rwa [hθ.isRegular.cof_ord]) hg
@@ -892,8 +881,7 @@ theorem amalgamateChain_card_lt {B : Type u} [NontrivialCompleteBooleanAlgebra B
   have hsum_lt : Cardinal.sum (fun l : L => #(G_chain l).Idx) < θ :=
     ((Cardinal.sum_le_sum _ _ hle_sup).trans_eq (Cardinal.sum_const' L supOrd.card)).trans_lt
       (Cardinal.mul_lt_of_lt hθ.aleph0_lt.le hL hsup_card)
-  exact Cardinal.add_lt_of_lt hθ.aleph0_lt.le hsum_lt
-    (stageMasterGraph_card_lt hk hθ hα')
+  exact Cardinal.add_lt_of_lt hθ.aleph0_lt.le hsum_lt (stageMasterGraph_card_lt hk hθ hα')
 
 theorem amalgamateChainWithMaster_compat
     (hk : κ < θ) (hκ : κ.IsInaccessible) (hθ : θ.IsInaccessible)
@@ -998,8 +986,7 @@ def levyTruthOpen (α : Ordinal.{u}) (b : InternalLevyStage κ α) : bSet (anony
 
 theorem mem_levyTruthOpen_iff {α : Ordinal.{u}} {b : InternalLevyStage κ α}
     {Γ : anonymousAlgebra κ} {g : bSet (anonymousAlgebra κ)} :
-    Γ ≤ g ∈ᴮ levyTruthOpen α b ↔
-      Γ ≤ g ∈ᴮ internalLevyPoset κ α ∧ Γ ≤ levyReads α b g := by
+    Γ ≤ g ∈ᴮ levyTruthOpen α b ↔ Γ ≤ g ∈ᴮ internalLevyPoset κ α ∧ Γ ≤ levyReads α b g := by
   rw [levyTruthOpen, mem_comprehend_and (levyReads_ext α b)]
 
 theorem levyTruthOpen_subset (α : Ordinal.{u}) (b : InternalLevyStage κ α) :
@@ -1009,8 +996,7 @@ theorem levyTruthOpen_subset (α : Ordinal.{u}) (b : InternalLevyStage κ α) :
 theorem levyTruthOpen_forces (α : Ordinal.{u}) (p : InternalLevyCondition κ α)
     (b : InternalLevyStage κ α) (h : condition p ≤ b) :
     p.value ≤ name p ∈ᴮ levyTruthOpen α b :=
-  mem_levyTruthOpen_iff.mpr ⟨name_mem p,
-    le_iSup_of_le ⟨p, h⟩ (le_inf le_rfl bv_refl)⟩
+  mem_levyTruthOpen_iff.mpr ⟨name_mem p, le_iSup_of_le ⟨p, h⟩ (le_inf le_rfl bv_refl)⟩
 
 theorem levyTruthOpen_upward {α : Ordinal.{u}} {b : InternalLevyStage κ α}
     {Γ : anonymousAlgebra κ} {g r : bSet (anonymousAlgebra κ)}
@@ -1080,8 +1066,7 @@ theorem levyJoinTest_subset (α : Ordinal.{u}) {J : Type u} (b : J → InternalL
     (internalLevyPoset κ α)
 
 theorem levyJoinTest_dense (α : Ordinal.{u}) {J : Type u} (b : J → InternalLevyStage κ α) :
-    (⊤ : anonymousAlgebra κ) ≤
-      allIn (internalLevyPoset κ α) (fun g =>
+    (⊤ : anonymousAlgebra κ) ≤ allIn (internalLevyPoset κ α) (fun g =>
         someIn (levyJoinTest α b) (fun r => g ⊆ᴮ r)) := by
   refine allIn_intro fun {Γ} _ g hg => ?_
   let V := someIn (levyJoinTest α b) (fun r => g ⊆ᴮ r)
@@ -1103,8 +1088,7 @@ theorem levyJoinTest_dense (α : Ordinal.{u}) {J : Type u} (b : J → InternalLe
   obtain ⟨t, htq, htp⟩ :=
     (mem_condition_iff p q).mp (condition_le_iff.mp (hq.trans inf_le_left)) q le_rfl
   have hbs : condition t ≤ sign s := (condition_mono htq).trans (hq.trans inf_le_right)
-  have hsub : t.value ≤ g ⊆ᴮ name t :=
-    subset_trans' (bSet.subset_of_eq (htp.1.trans hpeq)) htp.2
+  have hsub : t.value ≤ g ⊆ᴮ name t := subset_trans' (bSet.subset_of_eq (htp.1.trans hpeq)) htp.2
   have hmem_test : t.value ≤ name t ∈ᴮ levyJoinTest α b := by
     refine mem_levyJoinTest_iff.mpr ⟨name_mem t, ?_⟩
     cases s with

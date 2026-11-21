@@ -81,8 +81,7 @@ theorem selectorCandidate_pair_eq (color : Bool)
     (R J E S Earlier Active A : bSet 𝔹) :
     selectorCandidate color R J E S (pair Earlier Active) A =
       blockCandidate color R J E S Earlier Active A :=
-  le_antisymm (selectorCandidate_pair_iff.mp le_rfl)
-    (selectorCandidate_pair_iff.mpr le_rfl)
+  le_antisymm (selectorCandidate_pair_iff.mp le_rfl) (selectorCandidate_pair_iff.mpr le_rfl)
 
 theorem blockCandidate_mem_powerset
     {color : Bool} {R J E S Earlier Active A : bSet 𝔹} {Γ : 𝔹}
@@ -145,8 +144,7 @@ theorem selected_empty_iff_no_candidate
       (bv_powerset omegaTwo) F)
     (Hlaw : Γ ≤ blockSelectorLaw color R J E S F)
     (Hpair : Γ ≤ pair (pair Earlier Active) A ∈ᴮ F) :
-    Γ ≤ A =ᴮ (∅ : bSet 𝔹) ↔
-      Γ ≤ (⨆ B, blockCandidate color R J E S Earlier Active B)ᶜ := by
+    Γ ≤ A =ᴮ (∅ : bSet 𝔹) ↔ Γ ≤ (⨆ B, blockCandidate color R J E S Earlier Active B)ᶜ := by
   constructor
   · intro Hempty
     rw [← imp_bot, ← deduction]
@@ -169,8 +167,7 @@ theorem selected_candidate_of_nonempty
     (Hnonempty : Γ ≤ (A =ᴮ (∅ : bSet 𝔹))ᶜ) :
     Γ ≤ blockCandidate color R J E S Earlier Active A := by
   apply selected_blockCandidate HF Hlaw Hpair
-  rw [← compl_compl (⨆ B, blockCandidate color R J E S Earlier Active B),
-    ← imp_bot, ← deduction]
+  rw [← compl_compl (⨆ B, blockCandidate color R J E S Earlier Active B), ← imp_bot, ← deduction]
   have Hempty := (selected_empty_iff_no_candidate (inf_le_left.trans HF)
     (inf_le_left.trans Hlaw) (inf_le_left.trans Hpair)).mpr inf_le_right
   exact bv_absurd _ Hempty (inf_le_left.trans Hnonempty)

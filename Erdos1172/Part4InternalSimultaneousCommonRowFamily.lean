@@ -77,8 +77,7 @@ private theorem commonRows_value_ext_row (S P C : bSet 𝔹) :
 
 theorem mem_commonRows_iff {S P σ C : bSet 𝔹} {Γ : 𝔹} :
     Γ ≤ pair σ C ∈ᴮ commonRows S P ↔
-      Γ ≤ σ ∈ᴮ omegaOne ∧ Γ ≤ C ∈ᴮ bv_powerset omegaOne ∧
-        Γ ≤ C =ᴮ commonRow S P σ :=
+      Γ ≤ σ ∈ᴮ omegaOne ∧ Γ ≤ C ∈ᴮ bv_powerset omegaOne ∧ Γ ≤ C =ᴮ commonRow S P σ :=
   mem_relationGraph_iff (commonRows_value_ext_row S P) (fun _ => B_ext_bv_eq_left)
 
 theorem commonRows_apply {S P σ C : bSet 𝔹} {Γ : 𝔹}
@@ -92,8 +91,7 @@ theorem commonRows_is_function (S P : bSet 𝔹) {Γ : 𝔹} :
   · apply le_iInf
     intro σ
     rw [← deduction]
-    exact le_iSup_of_le (commonRow S P σ)
-      (le_inf (mem_powerset_iff.mpr commonRow_subset) bv_refl)
+    exact le_iSup_of_le (commonRow S P σ) (le_inf (mem_powerset_iff.mpr commonRow_subset) bv_refl)
   · intro σ τ C D Δ _ _ _ _ _ HC HD Hστ
     exact bv_trans HC (bv_trans (commonRow_congr_row S P Hστ) (bv_symm HD))
 
@@ -128,8 +126,7 @@ theorem run_commonRows_value_colarge
     (mem_commonRows_iff.mp HC).1 Hdata
   have Heq := commonRows_apply HC
   exact le_inf (subset_trans' (subset_of_eq Heq) (Hcolarge.trans inf_le_left))
-    (mem_congr (bv_symm (difference_congr_right Heq)) bv_refl
-      (Hcolarge.trans inf_le_right))
+    (mem_congr (bv_symm (difference_congr_right Heq)) bv_refl (Hcolarge.trans inf_le_right))
 
 theorem run_commonRows_colarge_values
     {color : Bool} {R S top P : bSet 𝔹} {Γ : 𝔹}

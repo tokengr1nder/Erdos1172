@@ -46,8 +46,7 @@ theorem exists_indices_above_of_cardinal_le (κ : Cardinal.{u})
     ∃ j : I → κ.ord.ToType, Function.Injective j ∧ ∀ x, i ≤ j x := by
   classical
   let : Infinite κ.ord.ToType := Cardinal.infinite_iff.mpr (by simpa using Hunc.le)
-  have Hsmall : Cardinal.mk (Set.Iio i) < Cardinal.mk κ.ord.ToType :=
-    Cardinal.mk_Iio_lt i (by simp)
+  have Hsmall : Cardinal.mk (Set.Iio i) < Cardinal.mk κ.ord.ToType := Cardinal.mk_Iio_lt i (by simp)
   have Hcard : Cardinal.mk ((Set.Iio i)ᶜ : Set κ.ord.ToType) = κ := by
     simpa using Cardinal.mk_compl_of_infinite (Set.Iio i) Hsmall
   have Hbound : Cardinal.mk I ≤ Cardinal.mk ((Set.Iio i)ᶜ : Set κ.ord.ToType) :=
@@ -98,19 +97,16 @@ countability are unnecessary for this cardinal-comparison direction. -/
 theorem firstStage_checked_countable_of_cardinal_lt (κ : Cardinal.{u})
     (C : PSet.{u}) (HC : Cardinal.mk C.Type < κ) :
     (⊤ : FirstAlgebra κ) ≤ injects_into (check C) omega := by
-  have Hindex : Cardinal.mk (check C : bSet (FirstAlgebra κ)).type ≤
-      Cardinal.mk C.Type := by
+  have Hindex : Cardinal.mk (check C : bSet (FirstAlgebra κ)).type ≤ Cardinal.mk C.Type := by
     simpa only [check_type'] using (le_rfl : Cardinal.mk C.Type ≤ Cardinal.mk C.Type)
   have Hinj : (⊤ : FirstAlgebra κ) ≤ injects_into (check C)
       (check (PSet.ordinalMk (Cardinal.mk C.Type).ord)) :=
     ErdosGroundIndexNameBound.injects_checked_cardinal_of_index_cardinal_le
       (Cardinal.mk C.Type) (check C) Hindex
   have Hmember : (⊤ : FirstAlgebra κ) ≤
-      check (PSet.ordinalMk (Cardinal.mk C.Type).ord) ∈ᴮ
-        check (PSet.ordinalMk κ.ord) :=
+      check (PSet.ordinalMk (Cardinal.mk C.Type).ord) ∈ᴮ check (PSet.ordinalMk κ.ord) :=
     check_mem (PSet.mk_mem_mk_of_lt (Cardinal.ord_lt_ord.mpr HC))
-  exact injects_into_trans Hinj
-    (Erdos1172LevyCollapse.below_checked_member_countable κ Hmember)
+  exact injects_into_trans Hinj (Erdos1172LevyCollapse.below_checked_member_countable κ Hmember)
 
 theorem freshCoordinateSet_checked_countable (κ : Cardinal.{u}) {I : Type u}
     (j : I → (PSet.ordinalMk κ.ord).Type) (HI : Cardinal.mk I < κ) :

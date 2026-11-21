@@ -62,8 +62,7 @@ theorem witnessSmall_persistent {r : Code P I G ↪ W2} {H : SimpleGraph W2}
     {a : W2} {p q : P} {U : RegularName P W2} (hqp : q ≤ p)
     (h : WitnessSmall r H a p U) : WitnessSmall r H a q U := by
   obtain ⟨c, hc, hn, hsub⟩ := h
-  exact ⟨c, hc, (neg (eval G H c)).persistent hqp hn,
-    fun x hx s hsq => hsub x hx s (hsq.trans hqp)⟩
+  exact ⟨c, hc, (neg (eval G H c)).persistent hqp hn, fun x hx s hsq => hsub x hx s (hsq.trans hqp)⟩
 
 def smallName (r : Code P I G ↪ W2) (H : SimpleGraph W2) (a : W2) :
     RegularName P (RegularName P W2) := regularize (WitnessSmall r H a)

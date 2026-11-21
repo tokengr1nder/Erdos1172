@@ -73,21 +73,18 @@ theorem commonRemainder_subset_of_loss_subset {A F B : bSet 𝔹} {Γ : 𝔹}
   apply le_iInf
   intro x
   rw [← deduction]
-  have Hmem : Γ ⊓ (x ∈ᴮ commonRemainder A F) ≤
-      (x ∈ᴮ A) ⊓ (x ∈ᴮ bv_union F)ᶜ := by
+  have Hmem : Γ ⊓ (x ∈ᴮ commonRemainder A F) ≤ (x ∈ᴮ A) ⊓ (x ∈ᴮ bv_union F)ᶜ := by
     change Γ ⊓ (x ∈ᴮ difference A (bv_union F)) ≤ _
     rw [mem_difference]
     exact inf_le_right
   have Hbad : (x ∈ᴮ B)ᶜ ⊓ (Γ ⊓ (x ∈ᴮ commonRemainder A F)) ≤ ⊥ := by
-    have Hdiff : (x ∈ᴮ B)ᶜ ⊓ (Γ ⊓ (x ∈ᴮ commonRemainder A F)) ≤
-        x ∈ᴮ difference A B := by
+    have Hdiff : (x ∈ᴮ B)ᶜ ⊓ (Γ ⊓ (x ∈ᴮ commonRemainder A F)) ≤ x ∈ᴮ difference A B := by
       rw [mem_difference]
       exact le_inf (inf_le_right.trans (Hmem.trans inf_le_left)) inf_le_left
     have Hunion : (x ∈ᴮ B)ᶜ ⊓ (Γ ⊓ (x ∈ᴮ commonRemainder A F)) ≤
         x ∈ᴮ bv_union F :=
       mem_of_mem_subset (inf_le_right.trans (inf_le_left.trans Hloss)) Hdiff
-    exact (le_inf Hunion (inf_le_right.trans (Hmem.trans inf_le_right))).trans
-      inf_compl_eq_bot.le
+    exact (le_inf Hunion (inf_le_right.trans (Hmem.trans inf_le_right))).trans inf_compl_eq_bot.le
   have Hresult : Γ ⊓ (x ∈ᴮ commonRemainder A F) ≤ ((x ∈ᴮ B)ᶜ)ᶜ :=
     le_neg_of_inf_eq_bot (bot_unique Hbad)
   simpa only [compl_compl] using Hresult
@@ -100,15 +97,13 @@ theorem commonRemainder_subset_of_loss_mem {A F B : bSet 𝔹} {Γ : 𝔹}
 /-- The same concrete remainder is contained in every member of an
 arbitrary internal family whose base losses belong to `F`. -/
 theorem commonRemainder_common {A F T : bSet 𝔹} {Γ : 𝔹}
-    (Hlosses : Γ ≤ ⨅ B : bSet 𝔹,
-      _root_.imp (B ∈ᴮ T) (difference A B ∈ᴮ F)) :
+    (Hlosses : Γ ≤ ⨅ B : bSet 𝔹, _root_.imp (B ∈ᴮ T) (difference A B ∈ᴮ F)) :
     Γ ≤ ⨅ B : bSet 𝔹, _root_.imp (B ∈ᴮ T) (commonRemainder A F ⊆ᴮ B) := by
   apply le_iInf
   intro B
   rw [← deduction]
   apply commonRemainder_subset_of_loss_mem
-  exact (le_inf (inf_le_left.trans (Hlosses.trans (iInf_le _ B))) inf_le_right).trans
-    bv_imp_elim
+  exact (le_inf (inf_le_left.trans (Hlosses.trans (iInf_le _ B))) inf_le_right).trans bv_imp_elim
 
 /-- Internal countable common-basis loss removal, with the positive common
 subset explicitly constructed from the base and the loss family. -/
@@ -118,11 +113,9 @@ theorem commonRemainder_positive_common {κ I A F T : bSet 𝔹} {Γ : 𝔹}
     (HA : Γ ≤ positive κ I A)
     (Hcountable : Γ ≤ injects_into F bSet.omega)
     (Hsmall : Γ ≤ F ⊆ᴮ I)
-    (Hlosses : Γ ≤ ⨅ B : bSet 𝔹,
-      _root_.imp (B ∈ᴮ T) (difference A B ∈ᴮ F)) :
+    (Hlosses : Γ ≤ ⨅ B : bSet 𝔹, _root_.imp (B ∈ᴮ T) (difference A B ∈ᴮ F)) :
     Γ ≤ positive κ I (commonRemainder A F) ⊓
-      ((commonRemainder A F ⊆ᴮ A) ⊓
-        ⨅ B : bSet 𝔹, _root_.imp (B ∈ᴮ T) (commonRemainder A F ⊆ᴮ B)) :=
+      ((commonRemainder A F ⊆ᴮ A) ⊓ ⨅ B : bSet 𝔹, _root_.imp (B ∈ᴮ T) (commonRemainder A F ⊆ᴮ B)) :=
   le_inf (commonRemainder_positive HI Hclosure HA Hcountable Hsmall)
     (le_inf commonRemainder_subset (commonRemainder_common Hlosses))
 

@@ -38,12 +38,10 @@ theorem exists_extension_core (ha : GoodCut r G H a) (outer : Bool)
   classical
   let bad : Set W3 := ⋃ x : selected, {y | ¬(colorGraph G H outer).Adj x.val y}
   have hbad : Small r G H a bad := iUnion_small ha _ hcard (fun x =>
-    nonneighbors_small ha outer (hselected x.property)
-      (hselectedColor x.val x.property))
+    nonneighbors_small ha outer (hselected x.property) (hselectedColor x.val x.property))
   have hdeleted : DerivedSmall r G H (outer :: word) a (bad ∪ Set.Iic cutoff) :=
     base_le_derived _ ha (union_small ha hbad (bounded_interval_small ha hcutoff))
-  let remaining : Set W3 :=
-    (s ∩ {x | (colorGraph G H outer).Adj x a}) \ (bad ∪ Set.Iic cutoff)
+  let remaining : Set W3 := (s ∩ {x | (colorGraph G H outer).Adj x a}) \ (bad ∪ Set.Iic cutoff)
   have hremaining : ¬DerivedSmall r G H (outer :: word) a remaining :=
     (derivedSmallness (outer :: word) ha).positive_sdiff
       ((derivedSmall_cons_inter outer word a s).not.mpr hs) hdeleted
@@ -96,8 +94,7 @@ theorem exists_next_block (ha : GoodCut r G H a) (outer inner : Bool)
     exact hsBelow ((previous j.val j.property).subset hj)
   have hindex : #(Set.Iio i) < ℵ_ 2 := by
     have h := Cardinal.mk_Iio_lt i (by simp [W1])
-    have h12 : (ℵ_ 1 : Cardinal.{0}) < ℵ_ 2 :=
-      Cardinal.aleph_lt_aleph.mpr (by norm_num)
+    have h12 : (ℵ_ 1 : Cardinal.{0}) < ℵ_ 2 := Cardinal.aleph_lt_aleph.mpr (by norm_num)
     have h1 : #(Set.Iio i) < ℵ_ 1 := by
       simpa only [W1, Cardinal.mk_toType, Ordinal.card_omega] using h
     exact h1.trans h12

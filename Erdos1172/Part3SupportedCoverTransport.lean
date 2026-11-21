@@ -78,8 +78,7 @@ ensure the comparisons needed on its finite image support. -/
 theorem precompose_holds_of_certificate
     {F H : FunctionDecisions P W1 W1} {C : (W1 → W1) → Set X}
     (e : W1 → W1) {p : P} {x : X}
-    (hbelow : ∀ q : P, q ≤ p → ∀ i v w,
-      F.decides q i v → H.decides q (e i) w → v ≤ w)
+    (hbelow : ∀ q : P, q ≤ p → ∀ i v w, F.decides q i v → H.decides q (e i) w → v ≤ w)
     (hc : Certificate F C p x) :
     (coverName H (fun f => C (f ∘ e))).holds p x := by
   classical
@@ -101,8 +100,7 @@ theorem precompose_holds_of_certificate
 theorem holds_precompose
     {F H : FunctionDecisions P W1 W1} {C : (W1 → W1) → Set X}
     (e : W1 → W1) {p : P} {x : X}
-    (hbelow : ∀ q : P, q ≤ p → ∀ i v w,
-      F.decides q i v → H.decides q (e i) w → v ≤ w)
+    (hbelow : ∀ q : P, q ≤ p → ∀ i v w, F.decides q i v → H.decides q (e i) w → v ≤ w)
     (hc : (coverName F C).holds p x) :
     (coverName H (fun f => C (f ∘ e))).holds p x := by
   apply (coverName H (fun f => C (f ∘ e))).of_dense p x

@@ -40,8 +40,7 @@ theorem block_image_data {color : Bool} {R L f : bSet 𝔹} {Γ : 𝔹}
     (Hinc : Γ ≤ increasingOn omegaOne f)
     (Hhom : Γ ≤ homogeneousUnion color R omegaOne omegaOne f f) :
     Γ ≤ blockEnumerationData color R (image omegaOne omegaTwo f) f :=
-  le_inf (is_injective_function_codomain_mono HL Hf)
-    (le_inf Hinc (le_inf Hhom bv_refl))
+  le_inf (is_injective_function_codomain_mono HL Hf) (le_inf Hinc (le_inf Hhom bv_refl))
 
 /-- Even weak total functionality forces every vertex of the global
 bounded image to remain in the original future. -/
@@ -70,8 +69,7 @@ theorem blockObject_mem_iff_range
   · intro Hx
     exact (mem_image_iff.mp (mem_congr bv_refl (bv_symm Heq) Hx)).2
   · intro Hx
-    exact mem_congr bv_refl Heq
-      (mem_image_iff.mpr ⟨rangeMem_le_codomain Hweak Hx, Hx⟩)
+    exact mem_congr bv_refl Heq (mem_image_iff.mpr ⟨rangeMem_le_codomain Hweak Hx, Hx⟩)
 
 theorem rangeMem_of_blockObject_mem
     {color : Bool} {R B r x : bSet 𝔹} {Γ : 𝔹}

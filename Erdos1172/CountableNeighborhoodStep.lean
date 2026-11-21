@@ -119,8 +119,7 @@ theorem omegaExists_core {r : OmegaCode ↪ W3} {col : Sym2 W3 → ℕ} {a : W3}
     (ha : OmegaGoodCut r col a) (n : ℕ)
     (s : Set W3) (hs : ¬OmegaSmall r col a s) (hsBelow : s ⊆ Set.Iio a)
     (hsColor : ∀ x ∈ s, (colorGraph col n).Adj x a) :
-    ∃ core : Set W3, core ⊆ s ∧ (colorGraph col n).IsClique core ∧
-      typeLT core = ω_ 2 :=
+    ∃ core : Set W3, core ⊆ s ∧ (colorGraph col n).IsClique core ∧ typeLT core = ω_ 2 :=
   exists_core_of_small ha.isOmegaTwoSup omegaSmall_mono (omegaUnion_small ha)
     (omegaIUnion_small ha) (omegaBounded_small ha) (colorGraph col n)
     (omegaNonneighbors_small ha n) s hs hsBelow hsColor

@@ -45,11 +45,9 @@ open bSet bSet.ErdosNameTransport
 injection of the entire second-stage powerset, including mixed real names. -/
 theorem powerset_omega_injects_checked_upper (κ : Cardinal.{u})
     (Hκ : κ.IsInaccessible) :
-    (⊤ : Algebra κ) ≤
-      injects_into (bv_powerset omega) (check (PSet.ordinalMk κ.ord)) := by
+    (⊤ : Algebra κ) ≤ injects_into (bv_powerset omega) (check (PSet.ordinalMk κ.ord)) := by
   have HOrd : firstStageHom κ (⊤ : FirstAlgebra κ) ≤
-      Ord (mapNames (firstStageHom κ)
-        (check (PSet.ordinalMk κ.ord) : bSet (FirstAlgebra κ))) := by
+      Ord (mapNames (firstStageHom κ) (check (PSet.ordinalMk κ.ord) : bSet (FirstAlgebra κ))) := by
     rw [map_check]
     exact check_Ord (PSet.Ord_mk κ.ord)
   have Hmapped := map_injects_into_of_ordinal (firstStageHom κ)

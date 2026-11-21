@@ -59,14 +59,12 @@ theorem empty_small_of_isIdeal {κ I : bSet 𝔹} {Γ : 𝔹}
 theorem small_of_subset {I X Y : bSet 𝔹} {Γ : 𝔹}
     (Hdown : Γ ≤ downwardClosed I) (HY : Γ ≤ Y ∈ᴮ I)
     (Hsub : Γ ≤ X ⊆ᴮ Y) : Γ ≤ X ∈ᴮ I :=
-  (le_inf (Hdown.trans ((iInf_le _ X).trans (iInf_le _ Y)))
-    (le_inf Hsub HY)).trans bv_imp_elim
+  (le_inf (Hdown.trans ((iInf_le _ X).trans (iInf_le _ Y))) (le_inf Hsub HY)).trans bv_imp_elim
 
 theorem small_union {I X Y : bSet 𝔹} {Γ : 𝔹}
     (Hunion : Γ ≤ unionClosed I) (HX : Γ ≤ X ∈ᴮ I)
     (HY : Γ ≤ Y ∈ᴮ I) : Γ ≤ binary_union X Y ∈ᴮ I :=
-  (le_inf (Hunion.trans ((iInf_le _ X).trans (iInf_le _ Y)))
-    (le_inf HX HY)).trans bv_imp_elim
+  (le_inf (Hunion.trans ((iInf_le _ X).trans (iInf_le _ Y))) (le_inf HX HY)).trans bv_imp_elim
 
 theorem base_positive_of_properIdeal {κ I : bSet 𝔹} {Γ : 𝔹}
     (HI : Γ ≤ properIdeal κ I) : Γ ≤ positive κ I κ :=
@@ -86,8 +84,7 @@ theorem difference_subset {X Y : bSet 𝔹} {Γ : 𝔹} :
     Γ ≤ difference X Y ⊆ᴮ X :=
   comprehend_subset (ϕ := fun z => (z ∈ᴮ Y)ᶜ) (Γ := Γ) X
 
-theorem mem_difference (X Y z : bSet 𝔹) :
-    z ∈ᴮ difference X Y = (z ∈ᴮ X) ⊓ (z ∈ᴮ Y)ᶜ := by
+theorem mem_difference (X Y z : bSet 𝔹) : z ∈ᴮ difference X Y = (z ∈ᴮ X) ⊓ (z ∈ᴮ Y)ᶜ := by
   have Hext : B_ext (fun w : bSet 𝔹 => (w ∈ᴮ Y)ᶜ) :=
     B_ext_neg (h := B_ext_mem_left)
   apply le_antisymm
@@ -96,8 +93,7 @@ theorem mem_difference (X Y z : bSet 𝔹) :
     apply H.trans
     apply iSup_le
     intro w
-    have Heq : w ∈ᴮ X ⊓ (z =ᴮ w ⊓ (w ∈ᴮ Y)ᶜ) ≤ z =ᴮ w :=
-      inf_le_right.trans inf_le_left
+    have Heq : w ∈ᴮ X ⊓ (z =ᴮ w ⊓ (w ∈ᴮ Y)ᶜ) ≤ z =ᴮ w := inf_le_right.trans inf_le_left
     exact le_inf
       (bv_rw' Heq (h_congr := B_ext_mem_left) (H_new := inf_le_left))
       (bv_rw' Heq (h_congr := Hext) (H_new := inf_le_right.trans inf_le_right))
@@ -105,16 +101,14 @@ theorem mem_difference (X Y z : bSet 𝔹) :
     apply le_iSup_of_le z
     exact le_inf inf_le_left (le_inf bv_refl inf_le_right)
 
-theorem mem_binary_union (X Y z : bSet 𝔹) :
-    z ∈ᴮ binary_union X Y = (z ∈ᴮ X) ⊔ (z ∈ᴮ Y) := by
+theorem mem_binary_union (X Y z : bSet 𝔹) : z ∈ᴮ binary_union X Y = (z ∈ᴮ X) ⊔ (z ∈ᴮ Y) := by
   have Hpair (w : bSet 𝔹) : w ∈ᴮ ({X, Y} : bSet 𝔹) = (w =ᴮ X) ⊔ (w =ᴮ Y) := by
     have Hempty : w ∈ᴮ (∅ : bSet 𝔹) = ⊥ := by
       rw [mem_unfold]
       exact exists_over_empty _
     rw [mem_insert1, mem_singleton_bSet, Hempty, sup_bot_eq]
   apply le_antisymm
-  · have H := (mem_bv_union_iff (u := ({X, Y} : bSet 𝔹))).mp
-      (le_refl (z ∈ᴮ binary_union X Y))
+  · have H := (mem_bv_union_iff (u := ({X, Y} : bSet 𝔹))).mp (le_refl (z ∈ᴮ binary_union X Y))
     apply H.trans
     apply iSup_le
     intro w
@@ -139,8 +133,7 @@ theorem subset_difference_union {X Y : bSet 𝔹} {Γ : 𝔹} :
     calc
       z ∈ᴮ X = (z ∈ᴮ X ⊓ (z ∈ᴮ Y)ᶜ) ⊔ (z ∈ᴮ X ⊓ z ∈ᴮ Y) := by
         rw [← inf_sup_left, compl_sup_eq_top, inf_top_eq]
-      _ ≤ (z ∈ᴮ X ⊓ (z ∈ᴮ Y)ᶜ) ⊔ z ∈ᴮ Y :=
-        sup_le_sup_left inf_le_right _
+      _ ≤ (z ∈ᴮ X ⊓ (z ∈ᴮ Y)ᶜ) ⊔ z ∈ᴮ Y := sup_le_sup_left inf_le_right _
   exact inf_le_right.trans Hcover
 
 /-- Removing any small set leaves a positive set. This is the basic internal
@@ -154,7 +147,6 @@ theorem positive_difference_of_small {κ I X Y : bSet 𝔹} {Γ : 𝔹}
   have Hsmall : (difference X Y ∈ᴮ I) ⊓ Γ ≤ X ∈ᴮ I :=
     small_of_subset_union (inf_le_right.trans HI) inf_le_left
       (inf_le_right.trans HY) subset_difference_union
-  exact (le_inf Hsmall (inf_le_right.trans (HX.trans inf_le_right))).trans
-    inf_compl_eq_bot.le
+  exact (le_inf Hsmall (inf_le_right.trans (HX.trans inf_le_right))).trans inf_compl_eq_bot.le
 
 end bSet.ErdosIdeal

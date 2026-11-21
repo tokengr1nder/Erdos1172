@@ -70,12 +70,10 @@ theorem condition_le_binary_reading_of_decision {K : bSet B}
         (condition p ⊓ firstStageHom K
           (reads cᶜ (Erdos1172BooleanNameIteration.name p))) := inf_sup_left _ _ _
     _ ≤ (c ⊓ firstStageHom K (reads c (Erdos1172BooleanNameIteration.name p))) ⊔
-        (cᶜ ⊓ (firstStageHom K
-          (reads c (Erdos1172BooleanNameIteration.name p)))ᶜ) :=
+        (cᶜ ⊓ (firstStageHom K (reads c (Erdos1172BooleanNameIteration.name p)))ᶜ) :=
       sup_le_sup
         (le_inf (condition_inf_firstStageHom_reads_le p c) inf_le_right)
-        (le_inf (condition_inf_firstStageHom_reads_le p cᶜ)
-          (inf_le_right.trans Hother'))
+        (le_inf (condition_inf_firstStageHom_reads_le p cᶜ) (inf_le_right.trans Hother'))
 
 /-- Every actual condition has an actual strengthening on whose cone a
 countable binary sequence is read by one first-stage coefficient sequence. -/
@@ -84,8 +82,7 @@ theorem exists_relative_binary_reading {K : bSet B}
     (HK : (⊤ : B) ≤ ErdosHartogs.hartogsProperty omega K)
     (c : ℕ → Algebra K) :
     ∃ t : Conditions K, t ≤ p ∧ ∃ b : ℕ → B, ∀ n : ℕ,
-      condition t ≤ (c n ⊓ firstStageHom K (b n)) ⊔
-        ((c n)ᶜ ⊓ (firstStageHom K (b n))ᶜ) := by
+      condition t ≤ (c n ⊓ firstStageHom K (b n)) ⊔ ((c n)ᶜ ⊓ (firstStageHom K (b n))ᶜ) := by
   obtain ⟨r, Hr, Hsub, Hread⟩ := exists_countable_deciding_extension
     (le_top.trans HK)
     (ErdosCohen.mem_conditions_iff.mp (Erdos1172BooleanNameIteration.name_mem p)) c
@@ -104,11 +101,9 @@ theorem iSup_iInf_relative_binary_reading_eq_top {K : bSet B}
     (HK : (⊤ : B) ≤ ErdosHartogs.hartogsProperty omega K)
     (c : ℕ → Algebra K) :
     (⨆ b : ℕ → B, ⨅ n : ℕ,
-      (c n ⊓ firstStageHom K (b n)) ⊔
-        ((c n)ᶜ ⊓ (firstStageHom K (b n))ᶜ)) = ⊤ := by
+      (c n ⊓ firstStageHom K (b n)) ⊔ ((c n)ᶜ ⊓ (firstStageHom K (b n))ᶜ)) = ⊤ := by
   let D : Set (Conditions K) := {t | ∃ b : ℕ → B, ∀ n : ℕ,
-    condition t ≤ (c n ⊓ firstStageHom K (b n)) ⊔
-      ((c n)ᶜ ⊓ (firstStageHom K (b n))ᶜ)}
+    condition t ≤ (c n ⊓ firstStageHom K (b n)) ⊔ ((c n)ᶜ ⊓ (firstStageHom K (b n))ᶜ)}
   have Hdense : ∀ p : Conditions K, ∃ t ∈ D, t ≤ p := by
     intro p
     obtain ⟨t, Htp, b, Hb⟩ := exists_relative_binary_reading p HK c

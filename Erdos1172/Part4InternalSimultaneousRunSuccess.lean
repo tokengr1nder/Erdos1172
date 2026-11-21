@@ -42,8 +42,7 @@ theorem run_vertex_ne_top_of_success {P top i y : bSet 𝔹} {Γ : 𝔹}
     bv_rw'' (ϕ := fun z => pair i z ∈ᴮ vertexHistory P) inf_le_right
       (inf_le_left.trans Hcurrent) B_ext_pair_mem_right
   have Hrange : Γ ⊓ y =ᴮ top ≤ rangeMem omegaOne (vertexHistory P) top :=
-    le_iSup_of_le i (le_inf
-      (inf_le_left.trans (mem_vertexHistory_iff.mp Hcurrent).1) HtopPair)
+    le_iSup_of_le i (le_inf (inf_le_left.trans (mem_vertexHistory_iff.mp Hcurrent).1) HtopPair)
   exact bv_absurd _ Hrange (inf_le_left.trans Hsuccess)
 
 /-- Increasingness needs only the entry laws and absence of the sentinel;
@@ -90,12 +89,9 @@ theorem run_vertex_is_injective
   apply le_iInf
   intro y
   rw [← deduction]
-  let Δ := Γ ⊓ (pair i x ∈ᴮ vertexHistory P ⊓
-    pair j y ∈ᴮ vertexHistory P ⊓ x =ᴮ y)
-  have Hix : Δ ≤ pair i x ∈ᴮ vertexHistory P :=
-    inf_le_right.trans (inf_le_left.trans inf_le_left)
-  have Hjy : Δ ≤ pair j y ∈ᴮ vertexHistory P :=
-    inf_le_right.trans (inf_le_left.trans inf_le_right)
+  let Δ := Γ ⊓ (pair i x ∈ᴮ vertexHistory P ⊓ pair j y ∈ᴮ vertexHistory P ⊓ x =ᴮ y)
+  have Hix : Δ ≤ pair i x ∈ᴮ vertexHistory P := inf_le_right.trans (inf_le_left.trans inf_le_left)
+  have Hjy : Δ ≤ pair j y ∈ᴮ vertexHistory P := inf_le_right.trans (inf_le_left.trans inf_le_right)
   exact increasingOn_injective_on omegaOne_Ord (inf_le_left.trans Hinc)
     (mem_domain_of_is_function Hix (inf_le_left.trans Hfunction))
     (mem_domain_of_is_function Hjy (inf_le_left.trans Hfunction)) Hix Hjy
@@ -118,13 +114,10 @@ theorem run_vertex_graphColor_of_range
     (Hx : Γ ≤ rangeMem omegaOne (vertexHistory P) x)
     (Hy : Γ ≤ rangeMem omegaOne (vertexHistory P) y) (Hxy : Γ ≤ x ∈ᴮ y) :
     Γ ≤ graphColor color R x y := by
-  obtain ⟨i, Hi⟩ := exists_convert Hx
-    (B_ext_inf B_ext_mem_left B_ext_pair_mem_left)
-  obtain ⟨j, Hj⟩ := exists_convert Hy
-    (B_ext_inf B_ext_mem_left B_ext_pair_mem_left)
+  obtain ⟨i, Hi⟩ := exists_convert Hx (B_ext_inf B_ext_mem_left B_ext_pair_mem_left)
+  obtain ⟨j, Hj⟩ := exists_convert Hy (B_ext_inf B_ext_mem_left B_ext_pair_mem_left)
   have Hfunction := is_func'_of_is_function (vertexHistory_is_function_of_run HP)
-  have Htri := epsilon_trichotomy_of_Ord (Hi.trans inf_le_left)
-    (Hj.trans inf_le_left) omegaOne_Ord
+  have Htri := epsilon_trichotomy_of_Ord (Hi.trans inf_le_left) (Hj.trans inf_le_left) omegaOne_Ord
   apply or_cases Htri
   · intro Δ HΔ HeqOrLt
     apply or_cases HeqOrLt
@@ -133,8 +126,7 @@ theorem run_vertex_graphColor_of_range
         ((HΛ.trans HΔ).trans Hfunction) Heq
         ((HΛ.trans HΔ).trans (Hi.trans inf_le_right))
         ((HΛ.trans HΔ).trans (Hj.trans inf_le_right))
-      exact (bot_of_mem_self' (mem_congr Hvalues bv_refl
-        ((HΛ.trans HΔ).trans Hxy))).trans bot_le
+      exact (bot_of_mem_self' (mem_congr Hvalues bv_refl ((HΛ.trans HΔ).trans Hxy))).trans bot_le
     · intro Λ HΛ Hij
       have Hcurrent := (HΛ.trans HΔ).trans (Hj.trans inf_le_right)
       exact (nonstop_stage_above_previous ((HΛ.trans HΔ).trans Hlaw) Hcurrent

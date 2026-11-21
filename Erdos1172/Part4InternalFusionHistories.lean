@@ -53,14 +53,11 @@ theorem rowValue_congr (E Blocks : bSet 𝔹) : B_congr (rowValue E Blocks) := b
   intro ν μ Γ H
   exact graphValue_congr_input _ _ (blockValue_congr Blocks H)
 
-theorem currentPoint_congr (E Blocks Z : bSet 𝔹) :
-    B_congr (currentPoint E Blocks Z) := by
+theorem currentPoint_congr (E Blocks Z : bSet 𝔹) : B_congr (currentPoint E Blocks Z) := by
   intro ν μ Γ H
   exact bv_trans
-    (graphValue_congr_graph omegaTwo (graphValue omegaOne Z ν)
-      (rowValue_congr E Blocks H))
-    (graphValue_congr_input omegaTwo (rowValue E Blocks μ)
-      (graphValue_congr_input omegaOne Z H))
+    (graphValue_congr_graph omegaTwo (graphValue omegaOne Z ν) (rowValue_congr E Blocks H))
+    (graphValue_congr_input omegaTwo (rowValue E Blocks μ) (graphValue_congr_input omegaOne Z H))
 
 def successfulRows (color : Bool) (R ξ Blocks : bSet 𝔹) : bSet 𝔹 :=
   comprehend (fun ν => blockValue Blocks ν ∈ᴮ blockObjects color R) ξ
@@ -68,8 +65,7 @@ def successfulRows (color : Bool) (R ξ Blocks : bSet 𝔹) : bSet 𝔹 :=
 theorem mem_successfulRows_iff {color : Bool} {R ξ Blocks ν : bSet 𝔹} {Γ : 𝔹} :
     Γ ≤ ν ∈ᴮ successfulRows color R ξ Blocks ↔
       Γ ≤ ν ∈ᴮ ξ ∧ Γ ≤ blockValue Blocks ν ∈ᴮ blockObjects color R :=
-  mem_comprehend_and
-    (B_ext_term _ _ B_ext_mem_left (blockValue_congr Blocks))
+  mem_comprehend_and (B_ext_term _ _ B_ext_mem_left (blockValue_congr Blocks))
 
 theorem successfulRows_subset {color : Bool} {R ξ Blocks : bSet 𝔹} {Γ : 𝔹} :
     Γ ≤ successfulRows color R ξ Blocks ⊆ᴮ ξ :=
@@ -92,8 +88,7 @@ theorem currentPoint_spec {color : Bool} {R E Blocks Z ν : bSet 𝔹} {Γ : �
       image omegaOne omegaTwo (rowValue E Blocks ν) :=
     mem_image (Hpoint.trans inf_le_right) Hv (Hpoint.trans inf_le_left)
   exact le_inf (Hpoint.trans inf_le_left) (le_inf (Hpoint.trans inf_le_right)
-    (mem_congr bv_refl (Hr.trans (inf_le_right.trans
-      (inf_le_right.trans inf_le_right))) Himage))
+    (mem_congr bv_refl (Hr.trans (inf_le_right.trans (inf_le_right.trans inf_le_right))) Himage))
 
 /-- The point equals the value of the original selected enumeration at
 the original current coordinate, not a newly chosen row enumeration. -/

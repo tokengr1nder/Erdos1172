@@ -76,8 +76,7 @@ theorem mk_localCode_le_gen {C : Type} (r : C ↪ W3) (a : W3) :
     Cardinal.succ_aleph, show (2 : Ordinal) + 1 = 3 by norm_num] using
     Cardinal.mk_Iio_lt a (Cardinal.ord_cardinalMk (α := W3))
 
-theorem mk_unionRanks_le_gen {B : Type} (hGCH : GCH)
-    (r : SmallUnionCode.Code W1 B ↪ W3) (a : W3) :
+theorem mk_unionRanks_le_gen {B : Type} (hGCH : GCH) (r : SmallUnionCode.Code W1 B ↪ W3) (a : W3) :
     #(Set.range (fun c : W1 → {c // r c < a} =>
       r (SmallUnionCode.union (fun i => (c i).val)))) ≤ ℵ_ 2 := by
   refine Cardinal.mk_range_le.trans ?_
@@ -88,8 +87,7 @@ theorem mk_unionRanks_le_gen {B : Type} (hGCH : GCH)
 
 theorem exists_unionBound_gen {B : Type} (hGCH : GCH)
     (r : SmallUnionCode.Code W1 B ↪ W3) (a : W3) :
-    ∃ b : W3, ∀ c : W1 → {c // r c < a},
-      r (SmallUnionCode.union (fun i => (c i).val)) < b := by
+    ∃ b : W3, ∀ c : W1 → {c // r c < a}, r (SmallUnionCode.union (fun i => (c i).val)) < b := by
   have hsmall := (mk_unionRanks_le_gen hGCH r a).trans_lt
     (Cardinal.aleph_lt_aleph.mpr (by norm_num : (2 : Ordinal) < 3))
   rw [← cof_W3] at hsmall

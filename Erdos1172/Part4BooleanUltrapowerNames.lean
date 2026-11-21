@@ -47,8 +47,7 @@ theorem familyChild_wf [CountableInterFilter (U : Filter I)] :
   constructor
   rintro ⟨f, hf⟩
   obtain ⟨i, hi⟩ := (eventually_countable_forall.mpr hf).exists
-  exact (wellFounded_iff_isEmpty_descending_chain.mp immediate_wf).false
-    ⟨fun n => f n i, hi⟩
+  exact (wellFounded_iff_isEmpty_descending_chain.mp immediate_wf).false ⟨fun n => f n i, hi⟩
 
 abbrev Children (X : I → bSet B) := LargeSelection U (fun i => (X i).type)
 

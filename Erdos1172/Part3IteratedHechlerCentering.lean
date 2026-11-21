@@ -41,15 +41,12 @@ theorem CountablyCenteredCode.antichain_card_le (c : CountablyCenteredCode P)
   have hinj : Injective (fun p : A => c.code p.val) := by
     intro p q heq
     by_contra hne
-    exact hA p.val p.property q.val q.property
-      (fun h => hne (Subtype.ext h)) (c.common_lower heq)
-  simpa only [W1, Cardinal.mk_toType, Ordinal.card_omega] using
-    Cardinal.mk_le_of_injective hinj
+    exact hA p.val p.property q.val q.property (fun h => hne (Subtype.ext h)) (c.common_lower heq)
+  simpa only [W1, Cardinal.mk_toType, Ordinal.card_omega] using Cardinal.mk_le_of_injective hinj
 
 theorem CountablyCenteredCode.omegaTwoCC (c : CountablyCenteredCode P) : OmegaTwoCC P := by
   intro A hA
-  exact (c.antichain_card_le A hA).trans_lt
-    (Cardinal.aleph_lt_aleph.mpr (by norm_num))
+  exact (c.antichain_card_le A hA).trans_lt (Cardinal.aleph_lt_aleph.mpr (by norm_num))
 
 noncomputable def pairRank : (W1 × W1) ↪ W1 := by
   apply Classical.choice

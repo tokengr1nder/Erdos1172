@@ -52,8 +52,7 @@ def operate (atoms : B → Set V) :
 def eval (atoms : B → Set V) : Code I B → Set V :=
   WType.elim _ (operate atoms)
 
-@[simp] theorem eval_empty (atoms : B → Set V) :
-    eval atoms (empty : Code I B) = ∅ := rfl
+@[simp] theorem eval_empty (atoms : B → Set V) : eval atoms (empty : Code I B) = ∅ := rfl
 
 @[simp] theorem eval_compl (atoms : B → Set V) (c : Code I B) :
     eval atoms (compl c) = (eval atoms c)ᶜ := rfl
@@ -82,8 +81,7 @@ theorem mk_code_le {μ κ : Cardinal.{0}}
         #(Fin 3 ⊕ B) * ⨆ n : Fin 3 ⊕ B, κ ^ #(Arity I B n) :=
       Cardinal.sum_le_mk_mul_iSup _
     _ ≤ κ * κ := mul_le_mul' hshape (ciSup_le' fun n =>
-      (Cardinal.power_le_power_left (Cardinal.aleph0_pos.trans_le hκ).ne'
-        (harity n)).trans hpower)
+      (Cardinal.power_le_power_left (Cardinal.aleph0_pos.trans_le hκ).ne' (harity n)).trans hpower)
     _ = κ := Cardinal.mul_eq_self hκ
 
 end SmallUnionCode

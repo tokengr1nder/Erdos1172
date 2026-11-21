@@ -144,22 +144,18 @@ private theorem transformedFamily_function {Q V Rows : bSet 𝔹}
     obtain ⟨r₁, Hr₁⟩ := transformedValue_exists Hφ H₁
     obtain ⟨r₂, Hr₂⟩ := transformedValue_exists Hφ H₂
     have Hr : Δ ≤ r₁ =ᴮ r₂ :=
-      eq_of_is_function_of_eq (HΔ.trans HRows) Hq
-        (Hr₁.trans inf_le_left) (Hr₂.trans inf_le_left)
-    exact bv_trans (Hr₁.trans inf_le_right)
-      (bv_trans (Hφ Hr) (bv_symm (Hr₂.trans inf_le_right)))
+      eq_of_is_function_of_eq (HΔ.trans HRows) Hq (Hr₁.trans inf_le_left) (Hr₂.trans inf_le_left)
+    exact bv_trans (Hr₁.trans inf_le_right) (bv_trans (Hφ Hr) (bv_symm (Hr₂.trans inf_le_right)))
 
 private theorem transformedFamily_small {Q V Rows : bSet 𝔹}
     {φ : bSet 𝔹 → bSet 𝔹} {Γ : 𝔹}
     (HCH : Γ ≤ (CH : 𝔹)) (HRows : Γ ≤ is_function Q V Rows)
     (HQ : Γ ≤ injects_into Q omegaOne) (Hφ : B_congr φ)
     (Hsub : ∀ r, (⊤ : 𝔹) ≤ φ r ⊆ᴮ omegaTwo)
-    (Hsmall : Γ ≤ ⨅ q, ⨅ r,
-      _root_.imp (q ∈ᴮ Q ⊓ pair q r ∈ᴮ Rows) (injects_into (φ r) omegaOne)) :
+    (Hsmall : Γ ≤ ⨅ q, ⨅ r, _root_.imp (q ∈ᴮ Q ⊓ pair q r ∈ᴮ Rows) (injects_into (φ r) omegaOne)) :
     Γ ≤ injects_into
       (bv_union (image Q (bv_powerset omegaTwo) (transformedFamily Q Rows φ))) omegaOne := by
-  apply indexed_union_injects_omegaOne HCH
-    (transformedFamily_function HRows Hφ Hsub) HQ
+  apply indexed_union_injects_omegaOne HCH (transformedFamily_function HRows Hφ Hsub) HQ
   apply le_iInf
   intro q
   apply le_iInf
@@ -225,8 +221,7 @@ theorem row_value_mem_union {Q Rows q r x : bSet 𝔹} {Γ : 𝔹}
   obtain ⟨i, Hi⟩ := exists_convert Hx (B_ext_inf B_ext_mem_left B_ext_pair_mem_left)
   have HxTwo : Γ ≤ x ∈ᴮ omegaTwo :=
     (mem_prod_iff.mp (mem_of_mem_subset Hrsub (Hi.trans inf_le_right))).2
-  exact mem_of_mem_subset (row_image_subset_union HRows Hq Hqr)
-    (mem_image_iff.mpr ⟨HxTwo, Hx⟩)
+  exact mem_of_mem_subset (row_image_subset_union HRows Hq Hqr) (mem_image_iff.mpr ⟨HxTwo, Hx⟩)
 
 theorem row_exception_subset_union {color : Bool} {R J Q V Rows q r : bSet 𝔹} {Γ : 𝔹}
     (HRows : Γ ≤ is_function Q V Rows) (Hq : Γ ≤ q ∈ᴮ Q)

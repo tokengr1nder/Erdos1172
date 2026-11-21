@@ -46,8 +46,7 @@ theorem maximal_run_domain_eq
     (HS : Γ ≤ is_func' (prod omegaOne omegaTwo) (bv_powerset omegaOne) S)
     (Hrows : Γ ≤ ⨅ σ, _root_.imp (σ ∈ᴮ omegaOne) (⨆ J, rowIdealData S σ J))
     (HP : Γ ≤ runPartial color R S top P)
-    (Hmax : Γ ≤ ⨅ Q, _root_.imp (runPartial color R S top Q)
-      (_root_.imp (P ⊆ᴮ Q) (P =ᴮ Q))) :
+    (Hmax : Γ ≤ ⨅ Q, _root_.imp (runPartial color R S top Q) (_root_.imp (P ⊆ᴮ Q) (P =ᴮ Q))) :
     Γ ≤ graphDomain omegaOne entrySpace P =ᴮ omegaOne := by
   let D := graphDomain omegaOne entrySpace P
   have Hprefix : Γ ≤ prefixGraph omegaOne entrySpace P := HP.trans inf_le_left
@@ -61,29 +60,24 @@ theorem maximal_run_domain_eq
   · exact inf_le_right
   · let Δ := Γ ⊓ D ∈ᴮ omegaOne
     have HΔ : Δ ≤ Γ := inf_le_left
-    have HweakP : Δ ≤ is_func' D entrySpace P :=
-      is_func'_of_is_function (HΔ.trans Hfunction)
+    have HweakP : Δ ≤ is_func' D entrySpace P := is_func'_of_is_function (HΔ.trans Hfunction)
     have HDsub : Δ ≤ D ⊆ᴮ omegaOne := graphDomain_subset
-    have HY : Δ ≤ is_func' D omegaTwo (vertexHistory P) :=
-      vertexHistory_is_func' HDsub HweakP
+    have HY : Δ ≤ is_func' D omegaTwo (vertexHistory P) := vertexHistory_is_func' HDsub HweakP
     have HX : Δ ≤ is_func' (prod D omegaOne) omegaOne (coordinateHistory P) :=
-      coordinateHistory_is_func'_prefix HDsub HweakP
-        (runPartial_rowFunctions (HΔ.trans HP))
+      coordinateHistory_is_func'_prefix HDsub HweakP (runPartial_rowFunctions (HΔ.trans HP))
     obtain ⟨y, Z, Hnew⟩ := exists_next_entry (color := color) (R := R)
       (show Δ ≤ D ∈ᴮ omegaOne from inf_le_right)
       (HΔ.trans Htop) (HΔ.trans HS) HY HX (HΔ.trans Hrows)
     have Hextended : Δ ≤ runPartial color R S top
         (bSet.insert1 (pair D (pair y Z)) P) :=
-      runPartial_insert_next (HΔ.trans HP)
-        (show Δ ≤ D ∈ᴮ omegaOne from inf_le_right) Hnew
+      runPartial_insert_next (HΔ.trans HP) (show Δ ≤ D ∈ᴮ omegaOne from inf_le_right) Hnew
     have Heq : Δ ≤ P =ᴮ bSet.insert1 (pair D (pair y Z)) P :=
       (le_inf ((le_inf (HΔ.trans (Hmax.trans
         (iInf_le _ (bSet.insert1 (pair D (pair y Z)) P)))) Hextended).trans bv_imp_elim)
         ErdosInjectionExtension.subset_insertPair).trans bv_imp_elim
     have Hpair : Δ ≤ pair D (pair y Z) ∈ᴮ P :=
       mem_congr bv_refl (bv_symm Heq) ErdosInjectionExtension.pair_mem_insertPair
-    exact (bot_of_mem_self' (mem_domain_of_is_function Hpair (HΔ.trans Hfunction))).trans
-      bot_le
+    exact (bot_of_mem_self' (mem_domain_of_is_function Hpair (HΔ.trans Hfunction))).trans bot_le
 
 /-- Construct one full supported simultaneous run at the original Boolean
 condition. The theorem asserts its exact entry law, not successful vertex

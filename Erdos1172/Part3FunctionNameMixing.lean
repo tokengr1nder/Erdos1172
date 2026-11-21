@@ -73,8 +73,7 @@ theorem certificate_mix_iff (A : Set P) (hA : IncompatibleFamily A)
     (hpredense : ∀ p : P, ∃ a ∈ A, Compatible p a)
     (F : ∀ a : A, FunctionDecisions (Iic a.val) W1 W1)
     (C : (W1 → W1) → Set X) (a : A) (p : P) (hpa : p ≤ a.val) (x : X) :
-    Certificate (mix A hA hpredense F) C p x ↔
-      Certificate (F a) C ⟨p, hpa⟩ x := by
+    Certificate (mix A hA hpredense F) C p x ↔ Certificate (F a) C ⟨p, hpa⟩ x := by
   constructor
   · rintro ⟨f, support, hdec, hcover⟩
     exact ⟨f, support, fun i hi =>
@@ -90,8 +89,7 @@ theorem coverName_mix_iff (A : Set P) (hA : IncompatibleFamily A)
     (hpredense : ∀ p : P, ∃ a ∈ A, Compatible p a)
     (F : ∀ a : A, FunctionDecisions (Iic a.val) W1 W1)
     (C : (W1 → W1) → Set X) (a : A) (p : P) (hpa : p ≤ a.val) (x : X) :
-    (coverName (mix A hA hpredense F) C).holds p x ↔
-      (coverName (F a) C).holds ⟨p, hpa⟩ x := by
+    (coverName (mix A hA hpredense F) C).holds p x ↔ (coverName (F a) C).holds ⟨p, hpa⟩ x := by
   constructor
   · intro hx q hqp
     obtain ⟨r, hrq, hr⟩ := hx q.val hqp
@@ -99,7 +97,6 @@ theorem coverName_mix_iff (A : Set P) (hA : IncompatibleFamily A)
       (certificate_mix_iff A hA hpredense F C a r (hrq.trans q.property) x).mp hr⟩
   · intro hx q hqp
     obtain ⟨r, hrq, hr⟩ := hx ⟨q, hqp.trans hpa⟩ hqp
-    exact ⟨r.val, hrq,
-      (certificate_mix_iff A hA hpredense F C a r.val r.property x).mpr hr⟩
+    exact ⟨r.val, hrq, (certificate_mix_iff A hA hpredense F C a r.val r.property x).mpr hr⟩
 
 end Erdos1172Part3FunctionNameMixing

@@ -198,8 +198,7 @@ theorem prefix_union_condition_with_master {θ : Cardinal.{u}}
       exact (bv_union_spec_split F x).mpr
         (le_iSup_of_le (p_fam γ) (le_inf (le_top.trans (mem_mk' F γ)) inf_le_right))
     have hp_in : (⊤ : R) ≤ ErdosCohen.condition omegaOne (bv_union F) :=
-      Erdos1172CohenIteration.NamedRun.prefix_union_condition
-        (bv_symm hθ_w1) β p_fam hcond hmono
+      Erdos1172CohenIteration.NamedRun.prefix_union_condition (bv_symm hθ_w1) β p_fam hcond hmono
     exact ⟨bv_union F, hp_in, subset_trans' (hsub₀ γ₀) (hF_ext γ₀), hF_ext⟩
   · exact ⟨m₀, hm₀, subset_self, fun γ => (hne ⟨γ⟩).elim⟩
 
@@ -324,8 +323,7 @@ private theorem bot_of_ground_levyBoundPred_ge {α : Ordinal.{u}}
       (check ((levyTriplePSet κ α).Func idx) : bSet (anonymousAlgebra κ)) ≤ ⊥ := by
   let A := anonymousAlgebra κ
   let P₀ : bSet A := pair
-    (pair (check ((PSet.ordinalMk α).Func idx.1.1))
-      (check ((PSet.ordinalMk κ.ord).Func idx.1.2)))
+    (pair (check ((PSet.ordinalMk α).Func idx.1.1)) (check ((PSet.ordinalMk κ.ord).Func idx.1.2)))
     (check ((PSet.ordinalMk α).Func idx.2))
   have hp₀ : (⊤ : A) ≤ check ((levyTriplePSet κ α).Func idx) =ᴮ P₀ :=
     check_levyTriplePSet_func α idx
@@ -343,8 +341,7 @@ private theorem bot_of_ground_levyBoundPred_ge {α : Ordinal.{u}}
     bv_trans (le_top.trans (bv_symm hp₀)) (inf_le_right.trans inf_le_right)
   have hξ_eq : F ≤ check ((PSet.ordinalMk α).Func idx.1.1) =ᴮ ξ :=
     (pair_eq_pair_iff.mp (pair_eq_pair_iff.mp hp_eq).1).1
-  have hy_eq : F ≤ check ((PSet.ordinalMk α).Func idx.2) =ᴮ y :=
-    (pair_eq_pair_iff.mp hp_eq).2
+  have hy_eq : F ≤ check ((PSet.ordinalMk α).Func idx.2) =ᴮ y := (pair_eq_pair_iff.mp hp_eq).2
   have hy_in : F ≤ check (PSet.ordinalMk (ordOfPSetIdx idx.2)) ∈ᴮ
       check (PSet.ordinalMk (ordOfPSetIdx idx.1.1)) :=
     mem_congr
@@ -393,8 +390,7 @@ private theorem smallLevyCondition_checked_cover {α : Ordinal.{u}}
   conv at hz_P => rhs; rw [mem_unfold]
   refine ((le_inf le_rfl hz_P).trans_eq (inf_iSup_eq _ _)).trans (iSup_le fun k => ?_)
   let idx : P_α.Type := check_cast (𝔹 := A) k
-  let E : A := (s.val.value ⊓ (z ∈ᴮ name s.val)) ⊓
-    (cP.bval k ⊓ (z =ᴮ cP.func k))
+  let E : A := (s.val.value ⊓ (z ∈ᴮ name s.val)) ⊓ (cP.bval k ⊓ (z =ᴮ cP.func k))
   have hE_eq : E ≤ z =ᴮ check (P_α.Func idx) := by
     have hr : E ≤ z =ᴮ cP.func k := inf_le_right.trans inf_le_right
     exact (@check_func A _ P_α k) ▸ hr
@@ -410,8 +406,7 @@ private theorem smallLevyCondition_checked_cover {α : Ordinal.{u}}
         allIn_elim (inf_le_left.trans hs_bd) inf_le_right
       exact hw (le_bot_iff.mp (hbd_w.trans (bot_of_ground_levyBoundPred_ge idx (le_of_not_gt hnot))))
     let t_s : S_set := ⟨⟨idx, hvalid⟩, hw⟩
-    exact (le_inf hE_mem hE_eq).trans
-      ((le_iSup (fun m : S_set =>
+    exact (le_inf hE_mem hE_eq).trans ((le_iSup (fun m : S_set =>
           (s.val.value ⊓ (check (P_α.Func m.val.val) ∈ᴮ name s.val)) ⊓
             (z =ᴮ check (P_α.Func m.val.val))) t_s).trans_eq
         (mem_unfold (u := z) (v := .mk S_set (fun k => check (P_α.Func k.val.val))
@@ -623,8 +618,7 @@ theorem stageMaster_forces_constant_truthOpen
     (hq_poset : coneInMaster hm₀ hp hsub ≤
       q ∈ᴮ mapNames j₀ (Preparation.boundedAnonName U a (fun _ => internalLevyPoset κ α)))
     (hq_master : coneInMaster hm₀ hp hsub ≤
-      mapNames (localizedFirstStageHom hm₀)
-        (stageMasterGraph U a hk hκ hθ hf hn ht hα).toBSet ⊆ᴮ q)
+      mapNames (localizedFirstStageHom hm₀) (stageMasterGraph U a hk hκ hθ hf hn ht hα).toBSet ⊆ᴮ q)
     (b : InternalLevyStage κ α) :
     coneInMaster hm₀ hp hsub ⊓
       (q ∈ᴮ mapNames j₀ (Preparation.boundedAnonName U a (fun _ => levyTruthOpen α b))) =

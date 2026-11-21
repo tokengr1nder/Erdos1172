@@ -66,14 +66,12 @@ theorem commonRow_subset_section {S P σ j y A : bSet 𝔹} {Γ : 𝔹}
   apply le_iInf
   intro v
   rw [← deduction]
-  exact commonRow_mem_section inf_le_right (inf_le_left.trans Hvertex)
-    (inf_le_left.trans Hsection)
+  exact commonRow_mem_section inf_le_right (inf_le_left.trans Hvertex) (inf_le_left.trans Hsection)
 
 theorem commonRow_subset_range_section {S P σ y A : bSet 𝔹} {Γ : 𝔹}
     (Hy : Γ ≤ rangeMem omegaOne (vertexHistory P) y)
     (Hsection : Γ ≤ pair (pair σ y) A ∈ᴮ S) : Γ ≤ commonRow S P σ ⊆ᴮ A := by
-  obtain ⟨j, Hj⟩ := exists_convert Hy
-    (B_ext_inf B_ext_mem_left B_ext_pair_mem_left)
+  obtain ⟨j, Hj⟩ := exists_convert Hy (B_ext_inf B_ext_mem_left B_ext_pair_mem_left)
   exact commonRow_subset_section (Hj.trans inf_le_right) Hsection
 
 theorem active_coordinate_mem_commonRow
@@ -148,8 +146,7 @@ theorem run_commonRow_colarge
   have Hex : Γ ≤ ⨆ seed, seed ∈ᴮ bv_powerset omegaOne ⊓ pair (pair σ top) seed ∈ᴮ S :=
     (le_inf ((HS.trans inf_le_right).trans (iInf_le _ (pair σ top)))
       (mem_prod_iff.mpr ⟨Hσ, Htop⟩)).trans bv_imp_elim
-  obtain ⟨seed, Hseed⟩ := exists_convert Hex
-    (B_ext_inf B_ext_mem_left B_ext_pair_mem_right)
+  obtain ⟨seed, Hseed⟩ := exists_convert Hex (B_ext_inf B_ext_mem_left B_ext_pair_mem_right)
   have Hcolarge : Γ ≤ colarge omegaOne J seed :=
     (le_inf (Hvalues.trans ((iInf_le _ top).trans (iInf_le _ seed)))
       (le_inf Htop (Hseed.trans inf_le_right))).trans bv_imp_elim

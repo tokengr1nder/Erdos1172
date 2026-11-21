@@ -55,12 +55,10 @@ private theorem bitiff_inf_left {W : Type u} [BooleanAlgebra W] (c a b : W) :
   unfold bitiff
   rw [inf_sup_left, ← inf_assoc, ← inf_assoc]
 
-private theorem bitiff_top_left {W : Type u} [BooleanAlgebra W] (b : W) :
-    bitiff ⊤ b = b := by
+private theorem bitiff_top_left {W : Type u} [BooleanAlgebra W] (b : W) : bitiff ⊤ b = b := by
   simp [bitiff]
 
-private theorem bitiff_bot_left {W : Type u} [BooleanAlgebra W] (b : W) :
-    bitiff ⊥ b = bᶜ := by
+private theorem bitiff_bot_left {W : Type u} [BooleanAlgebra W] (b : W) : bitiff ⊥ b = bᶜ := by
   simp [bitiff]
 
 private theorem bitiff_comm {W : Type u} [BooleanAlgebra W] (a b : W) :
@@ -256,8 +254,7 @@ theorem realizeCondition_le_iff {θ : Cardinal.{u}} {W : Type u} [CompleteBoolea
       exact bitiff_le_compl_right_of_le_compl
         ((inf_le_left.trans (OrderHomClass.mono F hv)).trans_eq (map_compl' F _))
         (hr_q1.trans (inf_le_right.trans (iInf_le _ j'))))
-  have h_diff2 := h_diff (b₁ := q₁.bits j') (b₂ := q₂.bits j)
-    (fun r hr_q1 hv => by
+  have h_diff2 := h_diff (b₁ := q₁.bits j') (b₂ := q₂.bits j) (fun r hr_q1 hv => by
       dsimp only [ξ]; rw [← hξ]
       exact bitiff_le_right_of_le (inf_le_left.trans (OrderHomClass.mono F hv))
         (hr_q1.trans (inf_le_right.trans (iInf_le _ j'))))
@@ -367,8 +364,7 @@ theorem realize_bit_eq_iSup {θ : Cardinal.{u}} {W : Type u} [CompleteBooleanAlg
       have hl1_ord : l1.toOrd.val = ξ.toOrd.val + 1 :=
         congrArg Subtype.val (Ordinal.ToType.mk.symm_apply_apply _)
       have hl1_ge : q₀.length.toOrd.val ≤ l1.toOrd.val := hl1_ord ▸ (hle_len.trans (Order.le_succ _))
-      let q₁ : CohenCover.Condition θ (FirstAlgebra θ) :=
-        ⟨q₀.value, q₀.positive, l1, fun k =>
+      let q₁ : CohenCover.Condition θ (FirstAlgebra θ) := ⟨q₀.value, q₀.positive, l1, fun k =>
           if hk : k.toOrd.val < q₀.length.toOrd.val then
             q₀.bits (Ordinal.ToType.mk ⟨k.toOrd.val, hk⟩)
           else ⊤⟩
@@ -1149,8 +1145,7 @@ def AnonTerm.eval {κ : Cardinal.{u}} : AnonTerm κ → Erdos1172LevyCohen.Algeb
   | .compl t => (eval t)ᶜ
   | .sup f => ⨆ m : κ.ord.ToType, eval (f m)
 
-theorem AnonTerm.eval_mem {κ : Cardinal.{u}} (t : AnonTerm κ) :
-    t.eval ∈ anonymousAlgebra κ := by
+theorem AnonTerm.eval_mem {κ : Cardinal.{u}} (t : AnonTerm κ) : t.eval ∈ anonymousAlgebra κ := by
   induction t with
   | bot => exact bot_mem _
   | bit k => exact levyCohenBit_mem_anonymousAlgebra κ k

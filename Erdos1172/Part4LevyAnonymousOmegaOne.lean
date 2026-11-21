@@ -56,8 +56,7 @@ theorem anonymous_countable_of_surjective_sequence (κ : Cardinal.{u})
   have Hsurjg : Δ ≤ is_surj omega (check A) (mapNames e g) :=
     bv_rw'' (inf_le_right.trans inf_le_right) (inf_le_left.trans Hsurj)
       (is_surj_ext_graph omega (check A))
-  have Hmap : e (is_surj omega (check A) g) =
-      is_surj omega (check A) (mapNames e g) := by
+  have Hmap : e (is_surj omega (check A) g) = is_surj omega (check A) (mapNames e g) := by
     rw [map_is_surj]
     simp only [omega, map_check]
   have Hsource : is_function omega (check A) g ⊓ is_surj omega (check A) g ≤
@@ -79,8 +78,7 @@ theorem anonymous_checked_countable_of_ambient (κ : Cardinal.{u})
       obtain ⟨i⟩ := h
       exact le_iSup_of_le (check (A.Func i)) (check_mem (PSet.func_mem A i))
     have Honto := surjects_onto_of_injects_into' Hcount Hnonempty
-    change (⊤ : Algebra κ) ≤ inclusion (anonymousAlgebra κ)
-      (injects_into (check A) omega)
+    change (⊤ : Algebra κ) ≤ inclusion (anonymousAlgebra κ) (injects_into (check A) omega)
     apply Honto.trans
     apply iSup_le
     intro f
@@ -129,8 +127,7 @@ theorem anonymous_checked_upper_not_countable (κ : Cardinal.{u}) (Hκ : κ.IsIn
   rw [Hzero, compl_bot]
 
 theorem anonymous_checked_upper_hartogsProperty (κ : Cardinal.{u}) (Hκ : κ.IsInaccessible) :
-    (⊤ : anonymousAlgebra κ) ≤
-      ErdosHartogs.hartogsProperty omega (check (PSet.ordinalMk κ.ord)) :=
+    (⊤ : anonymousAlgebra κ) ≤ ErdosHartogs.hartogsProperty omega (check (PSet.ordinalMk κ.ord)) :=
   le_inf (check_Ord (PSet.Ord_mk κ.ord))
     (le_inf (anonymous_checked_upper_not_countable κ Hκ) (anonymous_checked_members_countable κ Hκ))
 

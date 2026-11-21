@@ -29,16 +29,12 @@ theorem no_core_union (G : SimpleGraph W2) (e : Ordinal) {s t : Set W2}
   rintro ⟨c, hc, hcl, hct⟩
   have hcs : typeLT (c ∩ s : Set W2) < ω ^ e := by
     by_contra h
-    obtain ⟨d, hd, hdt⟩ := Ordinal.exists_subset_typeLT_eq (c ∩ s)
-      (le_of_not_gt h)
-    exact hs ⟨d, hd.trans Set.inter_subset_right,
-      hcl.subset (hd.trans Set.inter_subset_left), hdt⟩
+    obtain ⟨d, hd, hdt⟩ := Ordinal.exists_subset_typeLT_eq (c ∩ s) (le_of_not_gt h)
+    exact hs ⟨d, hd.trans Set.inter_subset_right, hcl.subset (hd.trans Set.inter_subset_left), hdt⟩
   have hct' : typeLT (c ∩ t : Set W2) < ω ^ e := by
     by_contra h
-    obtain ⟨d, hd, hdt⟩ := Ordinal.exists_subset_typeLT_eq (c ∩ t)
-      (le_of_not_gt h)
-    exact ht ⟨d, hd.trans Set.inter_subset_right,
-      hcl.subset (hd.trans Set.inter_subset_left), hdt⟩
+    obtain ⟨d, hd, hdt⟩ := Ordinal.exists_subset_typeLT_eq (c ∩ t) (le_of_not_gt h)
+    exact ht ⟨d, hd.trans Set.inter_subset_right, hcl.subset (hd.trans Set.inter_subset_left), hdt⟩
   have hsmall := Erdos1172Part3BHTFiniteCommonBlueColumns.typeLT_union_lt_opow hcs hct'
   have hsub : c ⊆ (c ∩ s) ∪ (c ∩ t) := by
     intro x hx
@@ -120,14 +116,12 @@ theorem exists_club_red_positive_trace
       HasCore G δ ((source ∩ Set.Iio a) \ eval G H c) := by
     let named := source \ eval G H c
     by_cases hcof : IsCofinal named
-    · obtain ⟨core, hcore, hclique, htype⟩ := hlarge named
-        (mk_eq_alephTwo_of_isCofinal hcof)
+    · obtain ⟨core, hcore, hclique, htype⟩ := hlarge named (mk_eq_alephTwo_of_isCofinal hcof)
       have hcard : #core < Order.cof W2 := by
         have hc : #core = δ.card := by
           simpa only [Ordinal.card_type] using congrArg Ordinal.card htype
         rwa [hc, cof_W2]
-      obtain ⟨b, hb⟩ := not_isCofinal_iff.mp
-        (fun hc => hcard.not_ge (Order.cof_le hc))
+      obtain ⟨b, hb⟩ := not_isCofinal_iff.mp (fun hc => hcard.not_ge (Order.cof_le hc))
       refine ⟨b, fun a hba _ => ⟨core, ?_, hclique, htype⟩⟩
       intro x hx
       exact ⟨⟨(hcore hx).1, (hb x hx).trans hba⟩, (hcore hx).2⟩

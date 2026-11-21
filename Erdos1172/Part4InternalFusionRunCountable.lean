@@ -147,8 +147,7 @@ theorem fusion_prefix_countableValues
   apply le_iInf
   intro U
   rw [← deduction]
-  let Δ := Γ ⊓ (i ∈ᴮ ξ ⊓ pair i U ∈ᴮ
-    activeFamily (taggedPrefix ξ omegaOne entrySpace Run))
+  let Δ := Γ ⊓ (i ∈ᴮ ξ ⊓ pair i U ∈ᴮ activeFamily (taggedPrefix ξ omegaOne entrySpace Run))
   have HΔ : Δ ≤ Γ := inf_le_left
   obtain ⟨A, Z, Hentry⟩ := activeFamily_witness
     (show Δ ≤ pair i U ∈ᴮ activeFamily (taggedPrefix ξ omegaOne entrySpace Run) from

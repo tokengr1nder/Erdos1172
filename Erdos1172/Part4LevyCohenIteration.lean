@@ -49,8 +49,7 @@ theorem firstStageHom_injective (κ : Cardinal.{u}) :
 
 theorem firstStage_checked_upper_eq_omegaOne (κ : Cardinal.{u})
     (Hκ : κ.IsRegular) (Hunc : Cardinal.aleph0 < κ) :
-    (⊤ : FirstAlgebra κ) ≤
-      check (PSet.ordinalMk κ.ord) =ᴮ ErdosOmegaTwo.omegaOne :=
+    (⊤ : FirstAlgebra κ) ≤ check (PSet.ordinalMk κ.ord) =ᴮ ErdosOmegaTwo.omegaOne :=
   below_checked_upper_eq_omegaOne κ Hκ Hunc
 
 end Erdos1172LevyCohen

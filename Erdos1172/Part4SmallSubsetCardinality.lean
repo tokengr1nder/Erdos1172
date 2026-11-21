@@ -65,12 +65,10 @@ def sequenceGraph {P : Type u} (f : ℕ → P) : Set (ULift.{u} ℕ × P) :=
 
 theorem sequenceGraph_cardinal_le {P : Type u} (f : ℕ → P) :
     Cardinal.mk (sequenceGraph f) ≤ Cardinal.aleph0 := by
-  have H : Cardinal.mk (sequenceGraph f) ≤ Cardinal.mk (ULift.{u} ℕ) :=
-    Cardinal.mk_range_le
+  have H : Cardinal.mk (sequenceGraph f) ≤ Cardinal.mk (ULift.{u} ℕ) := Cardinal.mk_range_le
   simpa using H
 
-theorem sequenceGraph_injective {P : Type u} :
-    Function.Injective (sequenceGraph (P := P)) := by
+theorem sequenceGraph_injective {P : Type u} : Function.Injective (sequenceGraph (P := P)) := by
   intro f g h
   funext n
   have Hmem : (ULift.up n, f n) ∈ sequenceGraph f := ⟨ULift.up n, rfl⟩
@@ -97,7 +95,6 @@ theorem nat_function_cardinal_le (κ : Cardinal.{u})
   have HF : Function.Injective F := by
     intro f g h
     exact sequenceGraph_injective (congrArg Subtype.val h)
-  exact (Cardinal.mk_le_of_injective HF).trans
-    (small_subsets_cardinal_le κ Hκ Hprod)
+  exact (Cardinal.mk_le_of_injective HF).trans (small_subsets_cardinal_le κ Hκ Hprod)
 
 end Erdos1172SmallSubsetCardinality

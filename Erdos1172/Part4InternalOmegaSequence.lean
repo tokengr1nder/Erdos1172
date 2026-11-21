@@ -42,8 +42,7 @@ theorem mem_sequenceGraph (v : ℕ → bSet 𝔹) (z : bSet 𝔹) :
     z ∈ᴮ sequenceGraph v =
       ⨆ n : (bSet.omega : bSet 𝔹).type, z =ᴮ pair (of_nat n.down) (v n.down) := by
   rw [mem_unfold]
-  change (⨆ n : ULift.{u} ℕ, (⊤ : 𝔹) ⊓
-    z =ᴮ pair (of_nat n.down) (v n.down)) = _
+  change (⨆ n : ULift.{u} ℕ, (⊤ : 𝔹) ⊓ z =ᴮ pair (of_nat n.down) (v n.down)) = _
   simp only [top_inf_eq]
   rfl
 
@@ -78,8 +77,7 @@ theorem sequenceGraph_is_function {v : ℕ → bSet 𝔹} {S : bSet 𝔹} {Γ : 
     intro n
     apply le_iSup_of_le (v n.down)
     refine le_inf (inf_le_left.trans (Hv n.down)) ?_
-    exact mem_congr (pair_congr (bv_symm inf_le_right) bv_refl) bv_refl
-      sequenceGraph_pair
+    exact mem_congr (pair_congr (bv_symm inf_le_right) bv_refl) bv_refl sequenceGraph_pair
   · rw [subset_unfold]
     apply le_iInf
     intro n
@@ -116,8 +114,7 @@ theorem relation_of_sequenceGraph_pairs {v : ℕ → bSet 𝔹}
   intro n
   let Δ := (Γ ⊓ pair i x =ᴮ pair (of_nat m.down) (v m.down)) ⊓
     pair j y =ᴮ pair (of_nat n.down) (v n.down)
-  have Hm := pair_eq_pair_iff.mp
-    (show Δ ≤ pair i x =ᴮ pair (of_nat m.down) (v m.down) from
+  have Hm := pair_eq_pair_iff.mp (show Δ ≤ pair i x =ᴮ pair (of_nat m.down) (v m.down) from
       inf_le_left.trans inf_le_right)
   have Hn := pair_eq_pair_iff.mp
     (show Δ ≤ pair j y =ᴮ pair (of_nat n.down) (v n.down) from inf_le_right)
@@ -163,10 +160,8 @@ theorem sequenceGraph_is_injective {v : ℕ → bSet 𝔹} {S : bSet 𝔹} {Γ :
   apply le_iInf; intro x; apply le_iInf; intro y
   rw [← deduction]
   let Δ := Γ ⊓ (((pair i x ∈ᴮ sequenceGraph v) ⊓ pair j y ∈ᴮ sequenceGraph v) ⊓ x =ᴮ y)
-  have Hix : Δ ≤ pair i x ∈ᴮ sequenceGraph v :=
-    inf_le_right.trans (inf_le_left.trans inf_le_left)
-  have Hjy : Δ ≤ pair j y ∈ᴮ sequenceGraph v :=
-    inf_le_right.trans (inf_le_left.trans inf_le_right)
+  have Hix : Δ ≤ pair i x ∈ᴮ sequenceGraph v := inf_le_right.trans (inf_le_left.trans inf_le_left)
+  have Hjy : Δ ≤ pair j y ∈ᴮ sequenceGraph v := inf_le_right.trans (inf_le_left.trans inf_le_right)
   exact ErdosPartition.increasingOn_injective_on Ord_omega
     (inf_le_left.trans (sequenceGraph_increasing Hinc))
     (mem_domain_of_is_function Hix (inf_le_left.trans Hf))

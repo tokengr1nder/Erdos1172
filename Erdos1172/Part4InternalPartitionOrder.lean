@@ -34,8 +34,7 @@ theorem increasingOn_apply {A f i j x y : bSet 𝔹} {Γ : 𝔹}
     Γ ≤ x ∈ᴮ y := by
   have Hspec := Hinc.trans ((iInf_le _ i).trans
     ((iInf_le _ j).trans ((iInf_le _ x).trans (iInf_le _ y))))
-  exact (le_inf Hspec (le_inf (le_inf (le_inf Hi Hj) Hij) (le_inf Hix Hjy))).trans
-    bv_imp_elim
+  exact (le_inf Hspec (le_inf (le_inf (le_inf Hi Hj) Hij) (le_inf Hix Hjy))).trans bv_imp_elim
 
 /-- Increasingness on an ordinal domain reflects equality of graph values.
 No totality or single-valuedness assumption is needed for this implication. -/
@@ -72,8 +71,7 @@ theorem function_of_func'_is_function {A κ f : bSet 𝔹} {Γ : 𝔹}
     have Htotal : Γ ⊓ i ∈ᴮ A ≤ ⨆ x, x ∈ᴮ κ ⊓ pair i x ∈ᴮ f :=
       (le_inf (inf_le_left.trans ((Hf.trans inf_le_right).trans (iInf_le _ i)))
         inf_le_right).trans bv_imp_elim
-    obtain ⟨x, Hx⟩ := exists_convert Htotal
-      (B_ext_inf B_ext_mem_left B_ext_pair_mem_right)
+    obtain ⟨x, Hx⟩ := exists_convert Htotal (B_ext_inf B_ext_mem_left B_ext_pair_mem_right)
     apply le_iSup_of_le x
     refine le_inf (Hx.trans inf_le_left) ?_
     change Γ ⊓ i ∈ᴮ A ≤ pair i x ∈ᴮ (f ∩ᴮ prod A κ)

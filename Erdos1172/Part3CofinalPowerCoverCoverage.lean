@@ -58,8 +58,7 @@ theorem exists_pieceCover (data : LineCoverData V) (L : LowerCovers n V)
       rw [htype]
       exact (Ordinal.opow_pos _ (Ordinal.omega_pos 1)).ne')
     obtain ⟨x⟩ := hn
-    refine ⟨⟨endpoint, hend,
-      ⟨x.val.val, hrow x.val.val x.property, (hsub x.property).le⟩, f, ?_⟩⟩
+    refine ⟨⟨endpoint, hend, ⟨x.val.val, hrow x.val.val x.property, (hsub x.property).le⟩, f, ?_⟩⟩
     exact fun y hy => Or.inr ⟨⟨k, hk⟩, hf hy⟩
 
 theorem exists_covering_profile (data : LineCoverData V) (L : LowerCovers n V)

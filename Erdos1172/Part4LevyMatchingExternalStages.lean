@@ -93,8 +93,7 @@ private theorem exists_sequence [Nonempty X] (run : Condition X → S)
     have hq : p ≤ q := List.take_prefix _ _
     have len : q.entries.length = m := by simp [q,hp,Nat.min_eq_left hmn.le]
     exact le_iSup_of_le ⟨(run q,run p),hmono q p hq⟩
-      (le_inf ((condition_mono hq).trans (value_at run label q m len))
-        (value_at run label p n hp))
+      (le_inf ((condition_mono hq).trans (value_at run label q m len)) (value_at run label p n hp))
   · intro i
     let D : Set (Condition X) := {q | above i (run q)}
     rw [← iSup_condition_eq_top_of_dense D (fun p => ⟨extend p [i],habove p i,extend_le _ _⟩)]

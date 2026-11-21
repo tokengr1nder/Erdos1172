@@ -124,7 +124,6 @@ theorem exists_club_historyCut (hGCH : GCH) (G H : SimpleGraph W2)
   refine ⟨ci ∩ (cc ∩ ⋂ n, clubs n), hci.inter alephZero_lt_cof_W2.ne'
     (hcc.inter alephZero_lt_cof_W2.ne' hi), ?_⟩
   intro a ha hsa
-  exact ⟨hsa, ha.1, hcons a ha.2.1 hsa,
-    fun n => havail n a (Set.mem_iInter.mp ha.2.2 n)⟩
+  exact ⟨hsa, ha.1, hcons a ha.2.1 hsa, fun n => havail n a (Set.mem_iInter.mp ha.2.2 n)⟩
 
 end Erdos1172Part3FiniteHistorySources

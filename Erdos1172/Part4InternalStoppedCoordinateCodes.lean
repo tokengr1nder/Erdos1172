@@ -108,8 +108,7 @@ theorem stoppedCoordinateTriangle_subset_cube {ρ P : bSet 𝔹} {Γ : 𝔹}
 def coordinateHistoryCodes : bSet 𝔹 := countableSubsets coordinateSupport
 
 theorem mem_coordinateHistoryCodes_iff {g : bSet 𝔹} {Γ : 𝔹} :
-    Γ ≤ g ∈ᴮ coordinateHistoryCodes ↔
-      Γ ≤ g ⊆ᴮ coordinateSupport ∧ Γ ≤ injects_into g bSet.omega :=
+    Γ ≤ g ∈ᴮ coordinateHistoryCodes ↔ Γ ≤ g ⊆ᴮ coordinateSupport ∧ Γ ≤ injects_into g bSet.omega :=
   mem_countableSubsets_iff
 
 theorem stoppedCoordinateTriangle_mem_codes_of_func {ρ P : bSet 𝔹} {Γ : 𝔹}

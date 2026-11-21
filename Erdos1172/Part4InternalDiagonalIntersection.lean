@@ -43,8 +43,7 @@ private theorem loss_ext_right (F x : bSet 𝔹) :
 
 theorem mem_sectionLossRelation_iff {κ F x i : bSet 𝔹} {Γ : 𝔹} :
     Γ ≤ pair x i ∈ᴮ sectionLossRelation κ F ↔
-      (Γ ≤ x ∈ᴮ κ) ∧ (Γ ≤ i ∈ᴮ κ) ∧
-        Γ ≤ ⨆ A, pair i A ∈ᴮ F ⊓ (x ∈ᴮ A)ᶜ :=
+      (Γ ≤ x ∈ᴮ κ) ∧ (Γ ≤ i ∈ᴮ κ) ∧ Γ ≤ ⨆ A, pair i A ∈ᴮ F ⊓ (x ∈ᴮ A)ᶜ :=
   mem_relationGraph_iff (loss_ext_left F) (loss_ext_right F)
 
 theorem sectionLoss_fiber_subset {κ F i A : bSet 𝔹} {Γ : 𝔹}
@@ -71,10 +70,8 @@ theorem sectionLoss_fiber_subset {κ F i A : bSet 𝔹} {Γ : 𝔹}
 
 theorem sectionLoss_fibers_small {κ J F : bSet 𝔹} {Γ : 𝔹}
     (HJ : Γ ≤ isIdeal κ J) (HF : Γ ≤ is_func' κ (bv_powerset κ) F)
-    (Hvalues : Γ ≤ ⨅ i, ⨅ A, _root_.imp (i ∈ᴮ κ ⊓ pair i A ∈ᴮ F)
-      (difference κ A ∈ᴮ J)) :
-    Γ ≤ ⨅ i, _root_.imp (i ∈ᴮ κ)
-      (ErdosIdeal.fiber κ (sectionLossRelation κ F) i ∈ᴮ J) := by
+    (Hvalues : Γ ≤ ⨅ i, ⨅ A, _root_.imp (i ∈ᴮ κ ⊓ pair i A ∈ᴮ F) (difference κ A ∈ᴮ J)) :
+    Γ ≤ ⨅ i, _root_.imp (i ∈ᴮ κ) (ErdosIdeal.fiber κ (sectionLossRelation κ F) i ∈ᴮ J) := by
   apply le_iInf
   intro i
   rw [← deduction]
@@ -87,8 +84,7 @@ theorem sectionLoss_fibers_small {κ J F : bSet 𝔹} {Γ : 𝔹}
     (le_inf (inf_le_left.trans (Hvalues.trans ((iInf_le _ i).trans (iInf_le _ A))))
       (le_inf inf_le_right (HA.trans inf_le_right))).trans bv_imp_elim
   exact small_of_subset (downwardClosed_of_isIdeal (inf_le_left.trans HJ)) Hsmall
-    (sectionLoss_fiber_subset (inf_le_left.trans (HF.trans inf_le_left))
-      (HA.trans inf_le_right))
+    (sectionLoss_fiber_subset (inf_le_left.trans (HF.trans inf_le_left)) (HA.trans inf_le_right))
 
 def diagonalCommon (κ F : bSet 𝔹) : bSet 𝔹 :=
   difference κ (diagonalUnion κ (sectionLossRelation κ F))
@@ -121,8 +117,7 @@ theorem diagonalCommon_mem_value {κ F x i A : bSet 𝔹} {Γ : 𝔹}
   have Hbad : Δ ≤ x ∈ᴮ diagonalUnion κ (sectionLossRelation κ F) := by
     rw [mem_diagonalUnion]
     exact le_inf (inf_le_left.trans (Hdata.trans inf_le_left))
-      (le_iSup_of_le i (le_inf (le_inf (inf_le_left.trans Hi)
-        (inf_le_left.trans Hix)) Hpair))
+      (le_iSup_of_le i (le_inf (le_inf (inf_le_left.trans Hi) (inf_le_left.trans Hix)) Hpair))
   exact bv_absurd _ Hbad (inf_le_left.trans (Hdata.trans inf_le_right))
 
 end bSet.ErdosDiagonalIntersection

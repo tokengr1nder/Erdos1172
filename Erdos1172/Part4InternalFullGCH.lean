@@ -51,8 +51,7 @@ def fullGCHValue : 𝔹 :=
 theorem hartogsProperty_ext_witness (κ : bSet 𝔹) :
     B_ext (hartogsProperty κ) :=
   B_ext_inf B_ext_Ord
-    (B_ext_inf (B_ext_neg (h := B_ext_injects_into_left))
-      (B_ext_iInf (h := fun _ =>
+    (B_ext_inf (B_ext_neg (h := B_ext_injects_into_left)) (B_ext_iInf (h := fun _ =>
         B_ext_imp (h₁ := B_ext_mem_right) (h₂ := B_ext_const))))
 
 theorem gchAt_witness_ext (κ : bSet 𝔹) :
@@ -94,7 +93,6 @@ theorem CH_of_fullGCH {Γ : 𝔹} (H : Γ ≤ (fullGCHValue : 𝔹)) : Γ ≤ CH
 theorem hartogs_predecessor_injects {κ δ γ : bSet 𝔹} {Γ : 𝔹}
     (Hδ : Γ ≤ hartogsProperty κ δ) (Hγ : Γ ≤ γ ∈ᴮ δ) :
     Γ ≤ injects_into γ κ :=
-  (le_inf (Hδ.trans (inf_le_right.trans (inf_le_right.trans (iInf_le _ γ))))
-    Hγ).trans bv_imp_elim
+  (le_inf (Hδ.trans (inf_le_right.trans (inf_le_right.trans (iInf_le _ γ)))) Hγ).trans bv_imp_elim
 
 end bSet.ErdosFullGCH

@@ -84,10 +84,8 @@ theorem rangeMem_of_pair {θ f i x : bSet 𝔹} {Γ : 𝔹}
 
 theorem rangeMem_mono {θ f g x : bSet 𝔹} {Γ : 𝔹}
     (Hfg : Γ ≤ f ⊆ᴮ g) (Hx : Γ ≤ rangeMem θ f x) : Γ ≤ rangeMem θ g x := by
-  obtain ⟨i, Hi⟩ := exists_convert Hx
-    (B_ext_inf B_ext_mem_left B_ext_pair_mem_left)
-  exact rangeMem_of_pair (Hi.trans inf_le_left)
-    (mem_of_mem_subset Hfg (Hi.trans inf_le_right))
+  obtain ⟨i, Hi⟩ := exists_convert Hx (B_ext_inf B_ext_mem_left B_ext_pair_mem_left)
+  exact rangeMem_of_pair (Hi.trans inf_le_left) (mem_of_mem_subset Hfg (Hi.trans inf_le_right))
 
 theorem partial_rangeMem_iff_image {θ A f x : bSet 𝔹} {Γ : 𝔹}
     (Hf : Γ ≤ partialGraph θ A f) :
@@ -95,8 +93,7 @@ theorem partial_rangeMem_iff_image {θ A f x : bSet 𝔹} {Γ : 𝔹}
   have Hfunction := (partialGraph_function Hf).trans inf_le_left
   constructor
   · intro Hx
-    obtain ⟨i, Hi⟩ := exists_convert Hx
-      (B_ext_inf B_ext_mem_left B_ext_pair_mem_left)
+    obtain ⟨i, Hi⟩ := exists_convert Hx (B_ext_inf B_ext_mem_left B_ext_pair_mem_left)
     exact mem_image (Hi.trans inf_le_right)
       (mem_domain_of_is_function (Hi.trans inf_le_right) Hfunction)
       (mem_codomain_of_is_function (Hi.trans inf_le_right) Hfunction)

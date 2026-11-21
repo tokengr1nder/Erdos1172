@@ -69,18 +69,14 @@ theorem checked_successor_injects_base_eq_bot (κ : Cardinal.{u})
     (Hκ : κ.IsInaccessible) (μ : Cardinal.{u}) (Hκμ : κ ≤ μ) :
     (injects_into (check (PSet.ordinalMk (Order.succ μ).ord))
       (check (PSet.ordinalMk μ.ord)) : Algebra κ) = ⊥ := by
-  have Hnonempty : (⊤ : Algebra κ) ≤
-      exists_mem (check (PSet.ordinalMk (Order.succ μ).ord)) := by
-    obtain ⟨z, Hz⟩ := PSet.exists_mem_of_nonzero
-      (Cardinal.ord_pos.mpr (Cardinal.succ_pos μ))
-    change (⊤ : Algebra κ) ≤ ⨆ x : bSet (Algebra κ),
-      x ∈ᴮ check (PSet.ordinalMk (Order.succ μ).ord)
+  have Hnonempty : (⊤ : Algebra κ) ≤ exists_mem (check (PSet.ordinalMk (Order.succ μ).ord)) := by
+    obtain ⟨z, Hz⟩ := PSet.exists_mem_of_nonzero (Cardinal.ord_pos.mpr (Cardinal.succ_pos μ))
+    change (⊤ : Algebra κ) ≤ ⨆ x : bSet (Algebra κ), x ∈ᴮ check (PSet.ordinalMk (Order.succ μ).ord)
     exact le_iSup_of_le (check z) (check_mem Hz)
   have Hsurj :
       (injects_into (check (PSet.ordinalMk (Order.succ μ).ord))
         (check (PSet.ordinalMk μ.ord)) : Algebra κ) ≤
-      surjects_onto (check (PSet.ordinalMk μ.ord))
-        (check (PSet.ordinalMk (Order.succ μ).ord)) :=
+      surjects_onto (check (PSet.ordinalMk μ.ord)) (check (PSet.ordinalMk (Order.succ μ).ord)) :=
     surjects_onto_of_injects_into' le_rfl (le_top.trans Hnonempty)
   rw [checked_successor_surjects_eq_bot κ Hκ μ Hκμ] at Hsurj
   exact bot_unique Hsurj

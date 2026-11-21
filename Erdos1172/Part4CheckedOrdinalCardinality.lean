@@ -31,15 +31,12 @@ namespace bSet.ErdosCheckedOrdinalCardinality
 variable {𝔹 : Type u} [NontrivialCompleteBooleanAlgebra 𝔹]
 
 theorem checked_ordinal_injects_cardinal (η : Ordinal.{u}) :
-    (⊤ : 𝔹) ≤ injects_into (check (PSet.ordinalMk η))
-      (check (PSet.ordinalMk η.card.ord)) := by
+    (⊤ : 𝔹) ≤ injects_into (check (PSet.ordinalMk η)) (check (PSet.ordinalMk η.card.ord)) := by
   apply ErdosGroundIndexNameBound.injects_checked_cardinal_of_index_cardinal_le
-  simpa only [check_type', PSet.ordinalMk_card] using
-    (le_rfl : η.card ≤ η.card)
+  simpa only [check_type', PSet.ordinalMk_card] using (le_rfl : η.card ≤ η.card)
 
 theorem checked_cardinal_injects_ordinal (η : Ordinal.{u}) :
-    (⊤ : 𝔹) ≤ injects_into (check (PSet.ordinalMk η.card.ord))
-      (check (PSet.ordinalMk η)) := by
+    (⊤ : 𝔹) ≤ injects_into (check (PSet.ordinalMk η.card.ord)) (check (PSet.ordinalMk η)) := by
   have Hbound :
       Cardinal.mk (check (PSet.ordinalMk η.card.ord) : bSet 𝔹).type ≤
         Cardinal.mk (PSet.ordinalMk η).Type := by

@@ -72,8 +72,7 @@ private theorem entry_ext_rows (P i y : bSet 𝔹) :
 /-- At an actual coordinate pair the existential coordinate code can be
 eliminated by internal pair equality. -/
 theorem coordinateRel_pair (P i σ w : bSet 𝔹) :
-    coordinateRel P (pair i σ) w =
-      ⨆ y, ⨆ Z, pair i (pair y Z) ∈ᴮ P ⊓ pair σ w ∈ᴮ Z := by
+    coordinateRel P (pair i σ) w = ⨆ y, ⨆ Z, pair i (pair y Z) ∈ᴮ P ⊓ pair σ w ∈ᴮ Z := by
   apply le_antisymm
   · unfold coordinateRel
     apply iSup_le
@@ -102,8 +101,7 @@ theorem coordinateRel_pair (P i σ w : bSet 𝔹) :
 
 theorem mem_coordinateHistory_iff {P q w : bSet 𝔹} {Γ : 𝔹} :
     Γ ≤ pair q w ∈ᴮ coordinateHistory P ↔
-      Γ ≤ q ∈ᴮ prod omegaOne omegaOne ∧ Γ ≤ w ∈ᴮ omegaOne ∧
-        Γ ≤ coordinateRel P q w :=
+      Γ ≤ q ∈ᴮ prod omegaOne omegaOne ∧ Γ ≤ w ∈ᴮ omegaOne ∧ Γ ≤ coordinateRel P q w :=
   mem_relationGraph_iff (coordinateRel_ext_left P) (coordinateRel_ext_right P)
 
 theorem coordinateHistory_subset {P : bSet 𝔹} {Γ : 𝔹} :
@@ -126,8 +124,7 @@ theorem coordinateHistory_witness {P i σ w : bSet 𝔹} {Γ : 𝔹}
     ∃ y Z : bSet 𝔹, Γ ≤ pair i (pair y Z) ∈ᴮ P ∧ Γ ≤ pair σ w ∈ᴮ Z := by
   obtain ⟨y, Hy⟩ := exists_convert (coordinateHistory_pair_iff.mp H).2.2.2
     (B_ext_iSup (h := fun Z => B_ext_inf (entry_ext_vertex P i Z) B_ext_const))
-  obtain ⟨Z, HZ⟩ := exists_convert Hy
-    (B_ext_inf (entry_ext_rows P i y) B_ext_mem_right)
+  obtain ⟨Z, HZ⟩ := exists_convert Hy (B_ext_inf (entry_ext_rows P i y) B_ext_mem_right)
   exact ⟨y, Z, HZ.trans inf_le_left, HZ.trans inf_le_right⟩
 
 theorem coordinateHistory_apply {P i σ w y Z : bSet 𝔹} {Γ : 𝔹}
@@ -176,8 +173,7 @@ theorem coordinateHistory_mono {P Q : bSet 𝔹} {Γ : 𝔹}
   obtain ⟨q, _, w, _, Hpq⟩ := mem_prod_iff₂.mp Hsupport
   have Hparts := mem_coordinateHistory_iff.mp (mem_congr Hpq bv_refl Hp)
   exact mem_congr (bv_symm Hpq) bv_refl (mem_coordinateHistory_iff.mpr
-    ⟨Hparts.1, Hparts.2.1,
-      coordinateRel_mono (inf_le_left.trans Hsub) Hparts.2.2⟩)
+    ⟨Hparts.1, Hparts.2.1, coordinateRel_mono (inf_le_left.trans Hsub) Hparts.2.2⟩)
 
 theorem coordinateHistory_congr_graph : B_congr (coordinateHistory (𝔹 := 𝔹)) := by
   intro P Q Γ H
@@ -193,8 +189,7 @@ private theorem coordinate_output_eq {P i j σ τ v w : bSet 𝔹} {Γ : 𝔹}
     (Hij : Γ ≤ i =ᴮ j) (Hστ : Γ ≤ σ =ᴮ τ) : Γ ≤ v =ᴮ w := by
   obtain ⟨y, Z, Hentry, HvZ⟩ := coordinateHistory_witness Hv
   obtain ⟨z, W, Hother, HwW⟩ := coordinateHistory_witness Hw
-  have HZW : Γ ≤ Z =ᴮ W := eq_of_eq_pair_right'
-    (eq_of_is_func_of_eq Hfunc Hij Hentry Hother)
+  have HZW : Γ ≤ Z =ᴮ W := eq_of_eq_pair_right' (eq_of_is_func_of_eq Hfunc Hij Hentry Hother)
   exact eq_of_is_function_of_eq (rowFunctions_apply Hrows Hentry) Hστ HvZ
     (mem_congr bv_refl (bv_symm HZW) HwW)
 
@@ -210,8 +205,7 @@ theorem coordinateHistory_is_func {P : bSet 𝔹} {Γ : 𝔹}
   apply le_iInf
   intro w
   rw [← deduction, ← deduction]
-  let Δ := (Γ ⊓ (pair q₁ v ∈ᴮ coordinateHistory P ⊓
-    pair q₂ w ∈ᴮ coordinateHistory P)) ⊓ q₁ =ᴮ q₂
+  let Δ := (Γ ⊓ (pair q₁ v ∈ᴮ coordinateHistory P ⊓ pair q₂ w ∈ᴮ coordinateHistory P)) ⊓ q₁ =ᴮ q₂
   have HΔ : Δ ≤ Γ := inf_le_left.trans inf_le_left
   have Hv : Δ ≤ pair q₁ v ∈ᴮ coordinateHistory P :=
     inf_le_left.trans (inf_le_right.trans inf_le_left)
@@ -219,8 +213,7 @@ theorem coordinateHistory_is_func {P : bSet 𝔹} {Γ : 𝔹}
     inf_le_left.trans (inf_le_right.trans inf_le_right)
   obtain ⟨i, _, σ, _, Hq₁⟩ := mem_prod_iff₂.mp (mem_coordinateHistory_iff.mp Hv).1
   obtain ⟨j, _, τ, _, Hq₂⟩ := mem_prod_iff₂.mp (mem_coordinateHistory_iff.mp Hw).1
-  have Hcoords : Δ ≤ pair i σ =ᴮ pair j τ :=
-    bv_trans (bv_symm Hq₁) (bv_trans inf_le_right Hq₂)
+  have Hcoords : Δ ≤ pair i σ =ᴮ pair j τ := bv_trans (bv_symm Hq₁) (bv_trans inf_le_right Hq₂)
   exact coordinate_output_eq (HΔ.trans Hfunc) (HΔ.trans Hrows)
     (mem_congr (pair_congr Hq₁ bv_refl) bv_refl Hv)
     (mem_congr (pair_congr Hq₂ bv_refl) bv_refl Hw)
@@ -238,17 +231,14 @@ theorem coordinateHistory_is_func'_prefix {δ P : bSet 𝔹} {Γ : 𝔹}
   rw [← deduction]
   let Δ := Γ ⊓ q ∈ᴮ prod δ omegaOne
   have HΔ : Δ ≤ Γ := inf_le_left
-  obtain ⟨i, Hi, σ, Hσ, Hq⟩ := mem_prod_iff₂.mp
-    (show Δ ≤ q ∈ᴮ prod δ omegaOne from inf_le_right)
+  obtain ⟨i, Hi, σ, Hσ, Hq⟩ := mem_prod_iff₂.mp (show Δ ≤ q ∈ᴮ prod δ omegaOne from inf_le_right)
   have Hex : Δ ≤ ⨆ e, e ∈ᴮ entrySpace ⊓ pair i e ∈ᴮ P :=
-    (le_inf (HΔ.trans ((HP.trans inf_le_right).trans (iInf_le _ i))) Hi).trans
-      bv_imp_elim
+    (le_inf (HΔ.trans ((HP.trans inf_le_right).trans (iInf_le _ i))) Hi).trans bv_imp_elim
   obtain ⟨e, He⟩ := exists_convert Hex (B_ext_inf B_ext_mem_left B_ext_pair_mem_right)
   obtain ⟨y, _, Z, _, Heq⟩ := mem_prod_iff₂.mp (He.trans inf_le_left)
   have Hentry : Δ ≤ pair i (pair y Z) ∈ᴮ P :=
     mem_congr (pair_congr bv_refl Heq) bv_refl (He.trans inf_le_right)
-  have HZ : Δ ≤ is_function omegaOne omegaOne Z :=
-    rowFunctions_apply (HΔ.trans Hrows) Hentry
+  have HZ : Δ ≤ is_function omegaOne omegaOne Z := rowFunctions_apply (HΔ.trans Hrows) Hentry
   have Hexw : Δ ≤ ⨆ w, w ∈ᴮ omegaOne ⊓ pair σ w ∈ᴮ Z :=
     (le_inf ((is_total_of_is_function HZ).trans (iInf_le _ σ)) Hσ).trans bv_imp_elim
   obtain ⟨w, Hw⟩ := exists_convert Hexw (B_ext_inf B_ext_mem_left B_ext_pair_mem_right)
@@ -291,8 +281,7 @@ theorem rowFunctions_insert {P i y Z : bSet 𝔹} {Γ : 𝔹}
   intro W
   rw [← deduction]
   let Δ := Γ ⊓ pair j (pair z W) ∈ᴮ bSet.insert1 (pair i (pair y Z)) P
-  have Hsplit : Δ ≤ pair j (pair z W) =ᴮ pair i (pair y Z) ⊔
-      pair j (pair z W) ∈ᴮ P := by
+  have Hsplit : Δ ≤ pair j (pair z W) =ᴮ pair i (pair y Z) ⊔ pair j (pair z W) ∈ᴮ P := by
     rw [← mem_insert1]
     exact inf_le_right
   apply (le_inf (le_refl Δ) Hsplit).trans

@@ -52,8 +52,7 @@ theorem homogeneousUnion_self_mono
   apply le_iInf
   intro y
   rw [← deduction]
-  let Δ := Γ ⊓ (((rangeMem D h x ⊔ rangeMem D h x) ⊓
-    (rangeMem D h y ⊔ rangeMem D h y)) ⊓ x ∈ᴮ y)
+  let Δ := Γ ⊓ (((rangeMem D h x ⊔ rangeMem D h x) ⊓ (rangeMem D h y ⊔ rangeMem D h y)) ⊓ x ∈ᴮ y)
   have HΔ : Δ ≤ Γ := inf_le_left
   have Hx : Δ ≤ rangeMem D h x := by
     have H : Δ ≤ rangeMem D h x ⊔ rangeMem D h x :=
@@ -79,8 +78,7 @@ theorem forwardCross_apply {color : Bool} {R A B f g x y : bSet 𝔹} {Γ : 𝔹
     (H : Γ ≤ forwardCross color R A B f g)
     (Hx : Γ ≤ rangeMem A f x) (Hy : Γ ≤ rangeMem B g y) :
     Γ ≤ x ∈ᴮ y ⊓ graphColor color R x y :=
-  (le_inf (H.trans ((iInf_le _ x).trans (iInf_le _ y))) (le_inf Hx Hy)).trans
-    bv_imp_elim
+  (le_inf (H.trans ((iInf_le _ x).trans (iInf_le _ y))) (le_inf Hx Hy)).trans bv_imp_elim
 
 theorem separatedRanges_of_forwardCross
     {color : Bool} {R A B f g : bSet 𝔹} {Γ : 𝔹}
@@ -126,8 +124,7 @@ theorem homogeneousUnion_of_forwardCross
   apply le_iInf
   intro y
   rw [← deduction]
-  let Δ := Γ ⊓ (((rangeMem A f x ⊔ rangeMem B g x) ⊓
-    (rangeMem A f y ⊔ rangeMem B g y)) ⊓ x ∈ᴮ y)
+  let Δ := Γ ⊓ (((rangeMem A f x ⊔ rangeMem B g x) ⊓ (rangeMem A f y ⊔ rangeMem B g y)) ⊓ x ∈ᴮ y)
   have HΔ : Δ ≤ Γ := inf_le_left
   have Hrx : Δ ≤ rangeMem A f x ⊔ rangeMem B g x :=
     inf_le_right.trans (inf_le_left.trans inf_le_left)
@@ -142,17 +139,14 @@ theorem homogeneousUnion_of_forwardCross
         ((HΘ.trans Hx).trans le_sup_left) (Hy.trans le_sup_left)
         ((HΘ.trans HΛ).trans Hxy)
     · intro Θ HΘ Hy
-      have Hforward := forwardCross_apply (((HΘ.trans HΛ).trans HΔ).trans Hcross)
-        (HΘ.trans Hx) Hy
+      have Hforward := forwardCross_apply (((HΘ.trans HΛ).trans HΔ).trans Hcross) (HΘ.trans Hx) Hy
       exact (le_graphColor_iff_oriented color R (Hforward.trans inf_le_left)).mp
         (Hforward.trans inf_le_right)
   · intro Λ HΛ Hx
     apply or_cases (HΛ.trans Hry)
     · intro Θ HΘ Hy
-      have Hback := forwardCross_apply (((HΘ.trans HΛ).trans HΔ).trans Hcross)
-        Hy (HΘ.trans Hx)
-      exact (bot_of_mem_mem' x y ((HΘ.trans HΛ).trans Hxy)
-        (Hback.trans inf_le_left)).trans bot_le
+      have Hback := forwardCross_apply (((HΘ.trans HΛ).trans HΔ).trans Hcross) Hy (HΘ.trans Hx)
+      exact (bot_of_mem_mem' x y ((HΘ.trans HΛ).trans Hxy) (Hback.trans inf_le_left)).trans bot_le
     · intro Θ HΘ Hy
       exact homogeneousUnion_apply (((HΘ.trans HΛ).trans HΔ).trans Hg)
         ((HΘ.trans Hx).trans le_sup_left) (Hy.trans le_sup_left)

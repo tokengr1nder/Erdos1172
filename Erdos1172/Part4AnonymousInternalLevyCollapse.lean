@@ -289,15 +289,13 @@ theorem levyBoundPred_of_first_mem {Γ : B} {H Λ₀ Λ₁ p y z : bSet B}
   change d ≤ ⨆ ξ' : bSet B, (ξ' ∈ᴮ Λ₀) ⊓ ⨆ i' : bSet B, (i' ∈ᴮ H) ⊓ ⨆ y'' : bSet B,
     (y'' ∈ᴮ ξ') ⊓ (z =ᴮ pair (pair ξ' i') y'')
   exact le_iSup_of_le ξ (le_inf hξ_Λ₀
-    (le_iSup_of_le i (le_inf hi_H
-      (le_iSup_of_le y' (le_inf hy'_ξ hz_eq)))))
+    (le_iSup_of_le i (le_inf hi_H (le_iSup_of_le y' (le_inf hy'_ξ hz_eq)))))
 
 private theorem domain_coord_in_first {Γ : B} {H Λ₀ p y g : bSet B}
     (hg : Γ ≤ g ∈ᴮ internalLevyCollapse H Λ₀)
     (hmem : Γ ≤ pair p y ∈ᴮ g) :
     Γ ≤ someIn Λ₀ fun ξ₀ => someIn H fun i₀ => p =ᴮ pair ξ₀ i₀ := by
-  have hbd : Γ ≤ levyBoundPred H Λ₀ (pair p y) :=
-    allIn_elim (mem_internalLevyCollapse.mp hg).2 hmem
+  have hbd : Γ ≤ levyBoundPred H Λ₀ (pair p y) := allIn_elim (mem_internalLevyCollapse.mp hg).2 hmem
   apply hbd.trans
   refine iSup_le fun ξ => ?_
   change (ξ ∈ᴮ Λ₀) ⊓ (⨆ i : bSet B, (i ∈ᴮ H) ⊓ _) ≤ _
@@ -328,8 +326,7 @@ theorem amalgamate_mem {Γ : B} {H Λ₀ Λ₁ p q : bSet B}
   obtain ⟨hq_cc, hq_bd⟩ := mem_internalLevyCollapse.mp hq
   obtain ⟨hp_sub, hp_fn, hp_cnt⟩ := countableCollapse_mem.mp hp_cc
   obtain ⟨hq_sub, hq_fn, hq_cnt⟩ := countableCollapse_mem.mp hq_cc
-  have hu_sub : Γ ≤ binary_union p q ⊆ᴮ prod (prod Λ₁ H) Λ₁ :=
-    binary_union_subset hp_sub hq_sub
+  have hu_sub : Γ ≤ binary_union p q ⊆ᴮ prod (prod Λ₁ H) Λ₁ := binary_union_subset hp_sub hq_sub
   have hu_cnt : Γ ≤ injects_into (binary_union p q) omega :=
     ErdosFusionActiveHistory.binary_union_countable hp_cnt hq_cnt
   have hu_fn : Γ ≤ is_func (binary_union p q) := by
@@ -359,8 +356,7 @@ theorem amalgamate_mem {Γ : B} {H Λ₀ Λ₁ p q : bSet B}
           bv_rw'' ((inf_le_left.trans inf_le_left).trans ha₁₂) ha₁_in
             (someIn_ext (const_congr Λ₀) fun _ => someIn_ext (const_congr H) fun _ => B_ext_bv_eq_left)
         have hbd₂ : E ≤ levyBoundPred H Λ₀ (pair a₂ y₂) :=
-          levyBoundPred_of_first_mem bv_refl
-            (allIn_elim (hE_Γ.trans hq_bd) inf_le_right) ha₂_in
+          levyBoundPred_of_first_mem bv_refl (allIn_elim (hE_Γ.trans hq_bd) inf_le_right) ha₂_in
         have hin_p : E ≤ pair a₂ y₂ ∈ᴮ p :=
           mem_of_mem_subset (hE_Γ.trans hcompat) (mem_restrictLevy_iff.mpr ⟨inf_le_right, hbd₂⟩)
         exact eq_of_is_func_of_eq (hE_Γ.trans hp_fn) ((inf_le_left.trans inf_le_left).trans ha₁₂)
@@ -663,8 +659,7 @@ theorem stageProjOrderHom_lifts {α β : Ordinal.{u}} (h : α ≤ β) :
     (hp₂_qv.trans (name_mem q)) hcompat
   obtain ⟨r, hrv, hreq⟩ := exists_canonical_refinement p₂.nonzero hu_mem
   have hr_q : r ≤ q :=
-    ⟨hrv.trans hp₂_qv,
-     subset_trans' (le_top.trans subset_binary_union_right) (subset_of_eq hreq)⟩
+    ⟨hrv.trans hp₂_qv, subset_trans' (le_top.trans subset_binary_union_right) (subset_of_eq hreq)⟩
   have hr_res : r.value ≤ name p₂ ⊆ᴮ restrictLevy (ordinalCarrier κ.ord) (ordinalCarrier α) (name r) :=
     subset_of_eq (bv_symm (bv_trans (restrictLevy_congr (bv_symm hreq)) (hrv.trans hu_res)))
   exact ⟨r, hr_q, (stageProjCone_le_of_restrict_eq h hrv hr_res).trans hp₂_c⟩
@@ -928,8 +923,7 @@ theorem condition_bounded_below_theta {θ : Cardinal.{u}}
         (le_iSup_of_le (check ((PSet.ordinalMk θ.ord).Func idx.1.1))
           (le_inf hξ_mem (le_iSup_of_le (check ((PSet.ordinalMk κ.ord).Func idx.1.2))
             (le_inf (check_mem (PSet.func_mem _ idx.1.2)) bv_refl))))
-  exact mem_congr hres_eq bv_refl
-    (restrictLevy_mem (check_Ord (PSet.Ord_mk _)) (name_mem q))
+  exact mem_congr hres_eq bv_refl (restrictLevy_mem (check_Ord (PSet.Ord_mk _)) (name_mem q))
 
 theorem internalLevyCondition_cardinal_lt {θ : Cardinal.{u}}
     (hk : κ < θ) (hκ : κ.IsInaccessible) (hθ : θ.IsInaccessible)
@@ -965,8 +959,7 @@ theorem internalLevyCondition_cardinal_lt {θ : Cardinal.{u}}
   rw [Cardinal.mk_prod, Cardinal.lift_id, Cardinal.lift_id, htype]
   exact Cardinal.mul_lt_of_lt hθ.aleph0_lt.le hA hpow
 
-theorem toOrd_lt {α : Ordinal.{u}} (i : α.ToType) : i.toOrd.val < α :=
-  i.toOrd.property
+theorem toOrd_lt {α : Ordinal.{u}} (i : α.ToType) : i.toOrd.val < α := i.toOrd.property
 
 /-- `DenseStageUnion` for the `(i.toOrd.val + 1)`-indexed stage filtration of `InternalLevyAlgebra κ θ`. -/
 theorem internalLevy_denseStageUnion {θ : Cardinal.{u}}
@@ -1134,8 +1127,7 @@ theorem internalLevy_strictCC {θ : Cardinal.{u}}
     (Cardinal.mk_image_le.trans ((Cardinal.mk_univ.le.trans (tripleSupport_card_le hκ θ.ord (q i))))).trans_lt
       (Order.lt_succ _)
   let C (cut : θ.ord.ToType) := A × ((levyTriplePSet κ cut.toOrd.val).Type → A)
-  let code (cut : θ.ord.ToType) (i : θ.ord.ToType) : C cut :=
-    ((q i).value, fun idx =>
+  let code (cut : θ.ord.ToType) (i : θ.ord.ToType) : C cut := ((q i).value, fun idx =>
       (q i).value ⊓ (check ((levyTriplePSet κ cut.toOrd.val).Func idx) ∈ᴮ name (q i)))
   have hc_lt (cut : θ.ord.ToType) : #(C cut) < θ := by
     let T_cut := (levyTriplePSet κ cut.toOrd.val).Type

@@ -120,8 +120,7 @@ theorem exists_ranked_tower {source : RegularName (Full hGCH) W2} {a : W2}
     points := ?_
     future := ?_ }, hp (states 0).start ⟨0, rfl⟩⟩
   · rintro ⟨⟨m, n⟩, hmn⟩ q hqp j y hy s hsq i x hx
-    have hyn : (sources n).holds q y :=
-      (next n (states n)).points q (hqp.trans (hbelow n)) j y hy
+    have hyn : (sources n).holds q y := (next n (states n)).points q (hqp.trans (hbelow n)) j y hy
     have hym : (sources (m + 1)).holds q y := hsource_mono (Nat.succ_le_of_lt hmn) q y hyn
     exact (next m (states m)).after_of_source q y hym s hsq i x hx
   · intro n q hqp i x hx

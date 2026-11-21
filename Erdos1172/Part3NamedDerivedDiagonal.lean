@@ -50,8 +50,7 @@ theorem exists_loss_of_all_blueSmall_general (hCH : CH) (hcc : OmegaTwoCC P) (hI
     (p0 : P) (hstat : StationaryAt D.holds p0)
     (hext : ∀ a p, p ≤ p0 → D.holds p a →
       (blueSmallName r H D J a).holds p (priorSource source a)) :
-    ∃ a : W2, ∃ p : P, p ≤ p0 ∧ D.holds p a ∧
-      StationaryAt (cutFuture H D J source a).holds p := by
+    ∃ a : W2, ∃ p : P, p ≤ p0 ∧ D.holds p a ∧ StationaryAt (cutFuture H D J source a).holds p := by
   classical
   let W (a : W2) := meet (cutFuture H D J source a) (reindex D (fun _ => a))
   by_contra hnone
@@ -81,8 +80,7 @@ theorem exists_loss_of_all_blueSmall_general (hCH : CH) (hcc : OmegaTwoCC P) (hI
   have hg : GoodCut r σ H Z b := hreflect b hbreflect (hsup p b hDb)
   have hpositive := source_not_small hg p (show Z.holds p b from ⟨hDb, hbdiag⟩)
   apply hpositive p le_rfl
-  apply smallName_mono_set (V := support H D J b (priorSource source b)) ?_
-    (hext b p hpp0 hDb)
+  apply smallName_mono_set (V := support H D J b (priorSource source b)) ?_ (hext b p hpp0 hDb)
   intro a hab q hqp hZa
   refine ⟨hab, hZa.1, ?_⟩
   intro s hsq hsmall
@@ -91,9 +89,7 @@ theorem exists_loss_of_all_blueSmall_general (hCH : CH) (hcc : OmegaTwoCC P) (hI
       (blueSection H b a (priorSource source b)) ?_ hsmall
     intro x t hts ht
     exact ⟨⟨ht.1.1, ht.1.2.trans hab⟩, ht.2, ht.1.2⟩
-  have hW : (W a).holds s b :=
-    ⟨⟨D.persistent (hsq.trans hqp) hDb, hab, hJ⟩, D.persistent hsq hZa.1⟩
-  exact Set.disjoint_left.mp (hdisjoint a)
-    ⟨s, (hsq.trans hqp).trans hpp0, hW⟩ (hbdiag a hab)
+  have hW : (W a).holds s b := ⟨⟨D.persistent (hsq.trans hqp) hDb, hab, hJ⟩, D.persistent hsq hZa.1⟩
+  exact Set.disjoint_left.mp (hdisjoint a) ⟨s, (hsq.trans hqp).trans hpp0, hW⟩ (hbdiag a hab)
 
 end Erdos1172Part3NamedDerivedDiagonal

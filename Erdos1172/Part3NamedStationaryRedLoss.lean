@@ -94,8 +94,7 @@ theorem exists_stationary_red_trace_loss (hGCH : GCH) (hP : #P ≤ ℵ_ 2)
     hGCH hP hclosed center G H hcompl hblue source
   let D := meet source (ground club)
   have hat (a : W2) (p : P) (hp : D.holds p a) :
-      GoodCut r σ H source a ∧ ∃ data : CoreData r H source a,
-        J a = traceName data.name.toClique :=
+      GoodCut r σ H source a ∧ ∃ data : CoreData r H source a, J a = traceName data.name.toClique :=
     hcuts a hp.2 (hsup p a hp.1) ⟨p, hp.1⟩
   have hbase (a : W2) (p : P) (hp : D.holds p a) (U : RegularName P W2)
       (hU : (smallName r H a).holds p U) : (J a).holds p U := by

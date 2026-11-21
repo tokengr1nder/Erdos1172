@@ -83,11 +83,9 @@ theorem active_increasing_of_birthGreedyLaw {ν seed F f : bSet 𝔹} {Γ : 𝔹
   let Δ := Γ ⊓ (((i ∈ᴮ activatedStages omegaOne ν ⊓
     j ∈ᴮ activatedStages omegaOne ν) ⊓ i ∈ᴮ j) ⊓
     (pair i x ∈ᴮ f ⊓ pair j y ∈ᴮ f))
-  have Hi := mem_activatedStages_iff.mp
-    (show Δ ≤ i ∈ᴮ activatedStages omegaOne ν from
+  have Hi := mem_activatedStages_iff.mp (show Δ ≤ i ∈ᴮ activatedStages omegaOne ν from
       inf_le_right.trans (inf_le_left.trans (inf_le_left.trans inf_le_left)))
-  have Hj := mem_activatedStages_iff.mp
-    (show Δ ≤ j ∈ᴮ activatedStages omegaOne ν from
+  have Hj := mem_activatedStages_iff.mp (show Δ ≤ j ∈ᴮ activatedStages omegaOne ν from
       inf_le_right.trans (inf_le_left.trans (inf_le_left.trans inf_le_right)))
   have Hlegal := birth_rowAdmissible (inf_le_left.trans Hf) (inf_le_left.trans Hlaw)
     Hj.2 Hj.1 (show Δ ≤ pair j y ∈ᴮ f from
@@ -143,8 +141,7 @@ theorem birth_fixedPoint_of_diagonal_closures
   have Hex : Γ ≤ ⨆ v, v ∈ᴮ omegaOne ⊓ pair x v ∈ᴮ f :=
     (le_inf ((Hf.trans inf_le_right).trans (iInf_le _ x)) Hx).trans bv_imp_elim
   obtain ⟨v, Hv⟩ := exists_convert Hex (B_ext_inf B_ext_mem_left B_ext_pair_mem_right)
-  have Hleast := leastIn_apply (birthGreedyLaw_apply Hlaw Hνx Hx (Hv.trans inf_le_right))
-    Hcandidate
+  have Hleast := leastIn_apply (birthGreedyLaw_apply Hlaw Hνx Hx (Hv.trans inf_le_right)) Hcandidate
   have Hvsub : Γ ≤ v ⊆ᴮ x :=
     (Ord.le_iff_lt_or_eq (Ord_of_mem_Ord (Hv.trans inf_le_left) omegaOne_Ord)
       (Ord_of_mem_Ord Hx omegaOne_Ord)).mpr (by simpa only [sup_comm] using Hleast)

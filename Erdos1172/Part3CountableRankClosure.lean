@@ -17,8 +17,7 @@ open Erdos1172Part3NeighborhoodCode
 abbrev Local {C : Type} (r : C ↪ W2) (a : W2) := {c : C // r c < a}
 
 theorem mk_local_le {C : Type} (r : C ↪ W2) (a : W2) : #(Local r a) ≤ ℵ_ 1 := by
-  have he : #(Local r a) ≤ #(Set.Iio a) :=
-    Cardinal.mk_le_of_injective (f := fun c : Local r a =>
+  have he : #(Local r a) ≤ #(Set.Iio a) := Cardinal.mk_le_of_injective (f := fun c : Local r a =>
       (⟨r c.val, c.property⟩ : Set.Iio a)) (by
         intro c d h
         exact Subtype.ext (r.injective (congrArg Subtype.val h)))
@@ -36,10 +35,8 @@ theorem exists_operationBound {C : Type} (hCH : CH) (r : C ↪ W2)
     refine Cardinal.mk_range_le.trans ?_
     rw [Cardinal.mk_arrow]
     simp only [Cardinal.lift_id, Cardinal.mk_nat]
-    exact (Cardinal.power_le_power_right (mk_local_le r a)).trans_eq
-      hCH.aleph_one_power_aleph_zero
-  have hsmall := hcard.trans_lt (Cardinal.aleph_lt_aleph.mpr
-    (by norm_num : (1 : Ordinal) < 2))
+    exact (Cardinal.power_le_power_right (mk_local_le r a)).trans_eq hCH.aleph_one_power_aleph_zero
+  have hsmall := hcard.trans_lt (Cardinal.aleph_lt_aleph.mpr (by norm_num : (1 : Ordinal) < 2))
   rw [← cof_W2] at hsmall
   obtain ⟨b, hb⟩ := not_isCofinal_iff.mp (fun hc => hsmall.not_ge (Order.cof_le hc))
   exact ⟨b, fun c => hb _ ⟨c, rfl⟩⟩
@@ -60,12 +57,10 @@ theorem operation_rank_lt_of_closedUnder {C : Type} (hCH : CH) (r : C ↪ W2)
   obtain ⟨b, hba, hb⟩ :=
     ErdosRadoCHAsym.exists_strict_bound_of_countable_of_IsOmegaOneSup ha
       (seed := Set.range (fun i => r (c i))) (by
-        simpa only [Cardinal.mk_nat] using
-          (Cardinal.mk_range_le (f := fun i => r (c i)))) (by
+        simpa only [Cardinal.mk_nat] using (Cardinal.mk_range_le (f := fun i => r (c i)))) (by
         rintro _ ⟨i, rfl⟩
         exact hc i)
-  exact (operationBound_spec hCH r op b
-    (fun i => ⟨c i, hb _ ⟨i, rfl⟩⟩)).trans (hclosed b hba)
+  exact (operationBound_spec hCH r op b (fun i => ⟨c i, hb _ ⟨i, rfl⟩⟩)).trans (hclosed b hba)
 
 /-- Any countable-arity operation on a ranked type is closed locally on
 a club of cuts of cofinality `omegaOne`. -/

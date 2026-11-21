@@ -78,8 +78,7 @@ actual source membership, not just at one compatible condition. -/
 theorem dense_decisions_in_pieces (E : FunctionDecisions P I V) (U : RegularName P V)
     (hcoverage : DenseCoverage E U) (D : Set (Set I)) (hDcover : ⋃₀ D = Set.univ)
     (p : P) (x : V) (hx : U.holds p x) :
-    ∀ q : P, q ≤ p → ∃ r : P, r ≤ q ∧ ∃ B ∈ D,
-      ∃ j : B, (pieceE E B).decides r j x :=
+    ∀ q : P, q ≤ p → ∃ r : P, r ≤ q ∧ ∃ B ∈ D, ∃ j : B, (pieceE E B).decides r j x :=
   fun q hqp => exists_decision_in_piece E U hcoverage D hDcover q x (U.persistent hqp hx)
 
 /-- The source is exactly the regularized union of its actual piece names. -/
@@ -91,8 +90,7 @@ theorem eq_join_pieces (E : FunctionDecisions P I V) (U : RegularName P V)
   intro p x
   constructor
   · intro hx q hqp
-    obtain ⟨r, hrq, B, hBD, j, hj⟩ :=
-      dense_decisions_in_pieces E U hcoverage D hDcover p x hx q hqp
+    obtain ⟨r, hrq, B, hBD, j, hj⟩ := dense_decisions_in_pieces E U hcoverage D hDcover p x hx q hqp
     exact ⟨r, hrq, ⟨B, hBD⟩, pieceU_holds_of_decision E B hj⟩
   · intro hx
     apply U.of_dense p x
@@ -132,8 +130,7 @@ theorem exists_named_domain_pieces (n : ℕ) (E : FunctionDecisions P I V)
       U = join (fun B : D => pieceU E B.val) ∧
       ∀ p x, U.holds p x → ∀ q : P, q ≤ p →
         ∃ r : P, r ≤ q ∧ ∃ B ∈ D, ∃ j : B, (pieceE E B).decides r j x := by
-  have hunivType : typeLT (Set.univ : Set I) = typeLT I :=
-    OrderIso.Set.univ.ordinalType_congr
+  have hunivType : typeLT (Set.univ : Set I) = typeLT I := OrderIso.Set.univ.ordinalType_congr
   obtain ⟨D, hDcount, hDcover, hDpiece⟩ :=
     exists_countable_power_decomposition n (Set.univ : Set I) (hunivType.trans_lt htype)
   refine ⟨D, hDcount, hDcover, ?_, eq_join_pieces E U hcoverage hmem D hDcover,

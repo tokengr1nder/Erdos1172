@@ -51,15 +51,12 @@ theorem imageRecPartial_insert_next
     Γ ≤ imageRecPartial θ V Φ (bSet.insert1 (pair (graphDomain θ V P) y) P) := by
   let D := graphDomain θ V P
   let Q := bSet.insert1 (pair D y) P
-  have Hprefix : Γ ≤ prefixGraph θ V Q :=
-    prefixGraph_insert_next (HP.trans inf_le_left) HD Hy
+  have Hprefix : Γ ≤ prefixGraph θ V Q := prefixGraph_insert_next (HP.trans inf_le_left) HD Hy
   have Hfunc : Γ ≤ is_func Q := Hprefix.trans (inf_le_right.trans inf_le_left)
-  have Hweak : Γ ≤ is_func' D V P :=
-    is_func'_of_is_function (imageRecPartial_function HP)
+  have Hweak : Γ ≤ is_func' D V P := is_func'_of_is_function (imageRecPartial_function HP)
   have Himage : Γ ≤ image D V P =ᴮ image D V Q :=
     prefix_image_eq_of_extension subset_insertPair Hfunc Hweak
-  have Hnew : Γ ≤ y =ᴮ Φ D (image D V Q) :=
-    bv_trans Hvalue (Hpast D Himage)
+  have Hnew : Γ ≤ y =ᴮ Φ D (image D V Q) := bv_trans Hvalue (Hpast D Himage)
   refine le_inf Hprefix ?_
   apply le_iInf
   intro i

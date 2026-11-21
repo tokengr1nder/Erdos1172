@@ -46,8 +46,7 @@ theorem exists_sequenceBound (hCH : CH) (r : ∀ n, A n ↪ W2)
     ∃ b : W2, ∀ c : LocalSequence r a, op (fun n => (c n).val) < b := by
   have hcard : #(Set.range (fun c : LocalSequence r a => op (fun n => (c n).val))) ≤ ℵ_ 1 :=
     Cardinal.mk_range_le.trans (mk_localSequence_le hCH r a)
-  have hsmall := hcard.trans_lt (Cardinal.aleph_lt_aleph.mpr
-    (by norm_num : (1 : Ordinal) < 2))
+  have hsmall := hcard.trans_lt (Cardinal.aleph_lt_aleph.mpr (by norm_num : (1 : Ordinal) < 2))
   rw [← cof_W2] at hsmall
   obtain ⟨b, hb⟩ := not_isCofinal_iff.mp (fun hc => hsmall.not_ge (Order.cof_le hc))
   exact ⟨b, fun c => hb _ ⟨c, rfl⟩⟩
@@ -79,8 +78,7 @@ theorem exists_club_partial_countable_map {B : Type} (hCH : CH) (r : ∀ n, A n 
     ∃ club : Set W2, IsClub club ∧ ∀ a ∈ club, IsOmegaOneSup a →
       ∀ c : ∀ n, A n, (∀ n, r n (c n) < a) → ∀ b, op c = some b → σ b < a := by
   obtain ⟨a0, _, _⟩ := ErdosRadoCHAsym.isStationary_isOmegaOneSup_omegaTwo IsClub.univ
-  obtain ⟨club, hclub, h⟩ := exists_club_countable_map hCH r
-    (fun c => ((op c).map σ).getD a0)
+  obtain ⟨club, hclub, h⟩ := exists_club_countable_map hCH r (fun c => ((op c).map σ).getD a0)
   refine ⟨club, hclub, ?_⟩
   intro a ha hsup c hc b hb
   simpa only [hb, Option.map_some, Option.getD_some] using h a ha hsup c hc

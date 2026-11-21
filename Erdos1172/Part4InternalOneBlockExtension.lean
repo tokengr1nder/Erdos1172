@@ -137,8 +137,7 @@ theorem commonRowCrossEdges_of_future_block
   have Hr : Δ ≤ is_injective_function omegaOne omegaTwo r :=
     (le_inf (inf_le_left.trans (HrowInj.trans ((iInf_le _ σ).trans (iInf_le _ r))))
       (le_inf Hσ Hrow)).trans bv_imp_elim
-  have Hfunc : Δ ≤ is_func Rows :=
-    inf_le_left.trans (HRows.trans (inf_le_left.trans inf_le_left))
+  have Hfunc : Δ ≤ is_func Rows := inf_le_left.trans (HRows.trans (inf_le_left.trans inf_le_left))
   have Hsection : Δ ≤ pair (pair σ y) (forwardSection (!color) R r y) ∈ᴮ
       rowSections color R Rows :=
     (rowSections_pair_iff_of_row Hfunc Hσ Hyω Hrow).mpr bv_refl
@@ -204,10 +203,8 @@ theorem exists_one_block_extension
   obtain ⟨a, L, Hfuture⟩ := exists_large_simultaneous_future HCH Habsorb
     (Hproper.trans inf_le_left) Hclosure HB HBpos Hdense HI HRows injects_into_refl
     HrowInj HrowHom Hno HnoOpp HS HSlarge
-  have Hbelow : Γ ≤ rowsBelow omegaOne Rows a :=
-    Hfuture.trans (inf_le_right.trans inf_le_left)
-  have HLS : Γ ≤ L ⊆ᴮ S :=
-    Hfuture.trans (inf_le_right.trans (inf_le_right.trans inf_le_left))
+  have Hbelow : Γ ≤ rowsBelow omegaOne Rows a := Hfuture.trans (inf_le_right.trans inf_le_left)
+  have HLS : Γ ≤ L ⊆ᴮ S := Hfuture.trans (inf_le_right.trans (inf_le_right.trans inf_le_left))
   have HLlarge : Γ ≤ injects_into omegaTwo L :=
     Hfuture.trans (inf_le_right.trans (inf_le_right.trans (inf_le_right.trans inf_le_left)))
   have Hlater : Γ ≤ ⨅ y, _root_.imp (y ∈ᴮ L) (a ∈ᴮ y) :=

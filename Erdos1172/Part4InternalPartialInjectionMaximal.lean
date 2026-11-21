@@ -26,15 +26,13 @@ open ErdosInjectionChain
 
 variable {𝔹 : Type u} [NontrivialCompleteBooleanAlgebra 𝔹]
 
-theorem empty_partialGraph {κ S : bSet 𝔹} {Γ : 𝔹} :
-    Γ ≤ partialGraph κ S ∅ := by
+theorem empty_partialGraph {κ S : bSet 𝔹} {Γ : 𝔹} : Γ ≤ partialGraph κ S ∅ := by
   refine le_inf empty_subset (le_inf ?_ (le_inf ?_ ?_))
   · exact (is_func'_empty (x := S)).trans inf_le_left
   · apply le_iInf; intro x₁; apply le_iInf; intro x₂
     apply le_iInf; intro y₁; apply le_iInf; intro y₂
     rw [← deduction]
-    exact (bot_of_mem_empty
-      (inf_le_right.trans (inf_le_left.trans inf_le_left))).trans bot_le
+    exact (bot_of_mem_empty (inf_le_right.trans (inf_le_left.trans inf_le_left))).trans bot_le
   · apply le_iInf; intro x; apply le_iInf; intro y; apply le_iInf; intro z
     rw [← deduction]
     exact (bot_of_mem_empty (inf_le_right.trans inf_le_left)).trans bot_le
@@ -45,8 +43,7 @@ theorem empty_mem_partialMaps {κ S : bSet 𝔹} {Γ : 𝔹} :
 
 theorem partialMaps_nonempty {κ S : bSet 𝔹} {Γ : 𝔹} :
     Γ ≤ (partialMaps κ S =ᴮ ∅)ᶜ :=
-  nonempty_of_exists_mem (partialMaps κ S)
-    (le_iSup_of_le (∅ : bSet 𝔹) empty_mem_partialMaps)
+  nonempty_of_exists_mem (partialMaps κ S) (le_iSup_of_le (∅ : bSet 𝔹) empty_mem_partialMaps)
 
 private theorem forall_mem_mono {C : bSet 𝔹} {P Q : bSet 𝔹 → 𝔹} {Γ : 𝔹}
     (H : Γ ≤ ⨅ f, f ∈ᴮ C ⟹ P f) (HPQ : ∀ f, P f ≤ Q f) :
@@ -84,16 +81,14 @@ theorem exists_maximal_partialMap {κ S : bSet 𝔹} {Γ : 𝔹} :
   have Hclosure : Γ ≤ ⨅ C : bSet 𝔹,
       (C ⊆ᴮ partialMaps κ S ⊓ inclusionChain C) ⟹ bv_union C ∈ᴮ partialMaps κ S := by
     apply le_iInf; intro C; rw [← deduction]
-    exact partialMaps_chain_union (inf_le_right.trans inf_le_left)
-      (inf_le_right.trans inf_le_right)
+    exact partialMaps_chain_union (inf_le_right.trans inf_le_left) (inf_le_right.trans inf_le_right)
   have Hzorn : Γ ≤ (partialMaps κ S =ᴮ ∅)ᶜ ⟹
       ((⨅ C : bSet 𝔹, (C ⊆ᴮ partialMaps κ S ⊓ inclusionChain C) ⟹
         bv_union C ∈ᴮ partialMaps κ S) ⟹
         ⨆ f : bSet 𝔹, f ∈ᴮ partialMaps κ S ⊓
           ⨅ g : bSet 𝔹, g ∈ᴮ partialMaps κ S ⟹ (f ⊆ᴮ g ⟹ f =ᴮ g)) :=
     (bSet_zorns_lemma' (Γ := Γ)).trans (iInf_le _ (partialMaps κ S))
-  exact (le_inf ((le_inf Hzorn partialMaps_nonempty).trans bv_imp_elim) Hclosure).trans
-    bv_imp_elim
+  exact (le_inf ((le_inf Hzorn partialMaps_nonempty).trans bv_imp_elim) Hclosure).trans bv_imp_elim
 
 /-- The same maximal graph stated directly in terms of its graph properties. -/
 theorem exists_maximal_partialGraph {κ S : bSet 𝔹} {Γ : 𝔹} :

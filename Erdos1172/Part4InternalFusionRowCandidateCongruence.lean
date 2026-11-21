@@ -150,8 +150,7 @@ theorem indexedIntersection_congr_family (κ D : bSet 𝔹) :
 theorem rowCandidates_congr_seed (D F h : bSet 𝔹) :
     B_congr (fun seed => rowCandidates D seed F h) := by
   intro seed other Γ H
-  exact difference_congr_both bv_refl
-    (binary_union_congr_both (difference_congr_right H) bv_refl)
+  exact difference_congr_both bv_refl (binary_union_congr_both (difference_congr_right H) bv_refl)
 
 theorem rowCandidates_congr_family (D seed h : bSet 𝔹) :
     B_congr (fun F => rowCandidates D seed F h) := by

@@ -89,8 +89,7 @@ theorem selected_tail_candidate_of_small
     (Hno : Γ ≤ (hasTwoBlock color R omegaOne bSet.omega omegaTwo)ᶜ)
     (HnoOpp : Γ ≤ (hasTwoBlock (!color) R omegaOne bSet.omega omegaTwo)ᶜ)
     (HS : Γ ≤ S ⊆ᴮ omegaTwo) (Hlarge : Γ ≤ injects_into omegaTwo S)
-    (HG : Γ ≤ is_function (bv_powerset (blockObjects color R))
-      (bv_powerset omegaTwo) G)
+    (HG : Γ ≤ is_function (bv_powerset (blockObjects color R)) (bv_powerset omegaTwo) G)
     (Hlaw : Γ ≤ tailSelectorLaw color R J E S G)
     (Hsmall : Γ ≤ injects_into Earlier omegaOne)
     (Hpair : Γ ≤ pair Earlier A ∈ᴮ G) :
@@ -119,8 +118,7 @@ theorem tail_selector_small_candidates
     (Hno : Γ ≤ (hasTwoBlock color R omegaOne bSet.omega omegaTwo)ᶜ)
     (HnoOpp : Γ ≤ (hasTwoBlock (!color) R omegaOne bSet.omega omegaTwo)ᶜ)
     (HS : Γ ≤ S ⊆ᴮ omegaTwo) (Hlarge : Γ ≤ injects_into omegaTwo S)
-    (HG : Γ ≤ is_function (bv_powerset (blockObjects color R))
-      (bv_powerset omegaTwo) G)
+    (HG : Γ ≤ is_function (bv_powerset (blockObjects color R)) (bv_powerset omegaTwo) G)
     (Hlaw : Γ ≤ tailSelectorLaw color R J E S G) :
     Γ ≤ smallTailCandidates color R J E S G := by
   apply le_iInf

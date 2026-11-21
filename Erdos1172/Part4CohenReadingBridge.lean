@@ -41,14 +41,12 @@ extends `s` gives a completed cone below `s`. -/
 theorem condition_inf_firstStageHom_le_condition {K : bSet B}
     (p s : Conditions K) {b : B}
     (Hb : b ≤ s.value)
-    (Hsub : b ≤ Erdos1172BooleanNameIteration.name s ⊆ᴮ
-      Erdos1172BooleanNameIteration.name p) :
+    (Hsub : b ≤ Erdos1172BooleanNameIteration.name s ⊆ᴮ Erdos1172BooleanNameIteration.name p) :
     condition p ⊓ firstStageHom K b ≤ condition s := by
   change (condition p ⊓ firstStageHom K b).val ≤ (condition s).val
   intro r Hr
   change r ∈ (condition p).val ∧ r ∈ (firstStageHom K b).val at Hr
-  have Hrb : r.value ≤ b :=
-    (condition_le_firstStageHom_iff K r b).mp (condition_le_iff.mpr Hr.2)
+  have Hrb : r.value ≤ b := (condition_le_firstStageHom_iff K r b).mp (condition_le_iff.mpr Hr.2)
   apply (mem_condition_iff s r).mpr
   intro t Htr
   obtain ⟨v, Hvt, Hvp⟩ := (mem_condition_iff p r).mp Hr.1 t Htr
@@ -60,8 +58,7 @@ theorem condition_inf_firstStageHom_le_condition {K : bSet B}
 completed iteration, after intersection with that condition's cone. -/
 theorem condition_inf_firstStageHom_reads_le {K : bSet B}
     (p : Conditions K) (c : Algebra K) :
-    condition p ⊓ firstStageHom K
-      (reads c (Erdos1172BooleanNameIteration.name p)) ≤ c := by
+    condition p ⊓ firstStageHom K (reads c (Erdos1172BooleanNameIteration.name p)) ≤ c := by
   unfold reads
   rw [map_iSup]
   erw [inf_iSup_eq]

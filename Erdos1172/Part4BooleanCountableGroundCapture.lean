@@ -46,14 +46,11 @@ not a ground natural that represents the whole mixed internal value. -/
 theorem positive_natural_injection_pair {D f x : bSet B} {Γ : B}
     (Hf : Γ ≤ is_injective_function D omega f)
     (Hpositive : Γ ⊓ x ∈ᴮ D ≠ ⊥) :
-    ∃ n : (omega : bSet B).type,
-      ⊥ < is_inj f ⊓ pair x ((omega : bSet B).func n) ∈ᴮ f := by
-  have Htotal : Γ ≤ is_total D omega f :=
-    is_total_of_is_function (Hf.trans inf_le_left)
+    ∃ n : (omega : bSet B).type, ⊥ < is_inj f ⊓ pair x ((omega : bSet B).func n) ∈ᴮ f := by
+  have Htotal : Γ ≤ is_total D omega f := is_total_of_is_function (Hf.trans inf_le_left)
   have Himage : Γ ⊓ x ∈ᴮ D ≤
       ⨆ y : bSet B, y ∈ᴮ omega ⊓ pair x y ∈ᴮ f :=
-    (le_inf (inf_le_left.trans (Htotal.trans (iInf_le _ x)))
-      inf_le_right).trans bv_imp_elim
+    (le_inf (inf_le_left.trans (Htotal.trans (iInf_le _ x))) inf_le_right).trans bv_imp_elim
   rw [← @bounded_exists B _ omega (fun y => pair x y ∈ᴮ f)
     (h_congr := B_ext_pair_mem_right)] at Himage
   have Hpos : ⊥ < ⨆ n : (omega : bSet B).type,
@@ -61,8 +58,7 @@ theorem positive_natural_injection_pair {D f x : bSet B} {Γ : B}
     apply (bot_lt_iff_ne_bot.mpr Hpositive).trans_le
     calc
       Γ ⊓ x ∈ᴮ D ≤ is_inj f ⊓
-          ⨆ n : (omega : bSet B).type,
-            pair x ((omega : bSet B).func n) ∈ᴮ f :=
+          ⨆ n : (omega : bSet B).type, pair x ((omega : bSet B).func n) ∈ᴮ f :=
         le_inf (inf_le_left.trans (Hf.trans inf_le_right))
           (Himage.trans (iSup_mono (fun _ => inf_le_right)))
       _ = ⨆ n : (omega : bSet B).type,
@@ -84,21 +80,17 @@ theorem possible_members_cardinal_lt {κ : Cardinal.{u}}
     ErdosSmallFiberBound.B_ext_injective_code
   have Hpositive : ∀ i : possibleMembers A D Γ,
       ∃ n : (omega : bSet B).type,
-        ⊥ < is_inj f ⊓ pair (check (A.Func i.val))
-          ((omega : bSet B).func n) ∈ᴮ f := by
+        ⊥ < is_inj f ⊓ pair (check (A.Func i.val)) ((omega : bSet B).func n) ∈ᴮ f := by
     intro i
     exact positive_natural_injection_pair Hf i.property
   obtain ⟨g, Hg⟩ := Classical.axiomOfChoice Hpositive
   by_contra Hlarge
   have Hsize : Cardinal.mk (omega : bSet B).type < κ.ord.cof := by
     change Cardinal.mk (ULift.{u} ℕ) < κ.ord.cof
-    simpa only [Cardinal.mk_uLift, Cardinal.mk_nat, Cardinal.lift_aleph0,
-      Hκ.cof_ord] using Hunc
-  obtain ⟨n, Hn⟩ := Cardinal.infinite_pigeonhole_card g κ
-    (le_of_not_gt Hlarge) Hκ.aleph0_le Hsize
+    simpa only [Cardinal.mk_uLift, Cardinal.mk_nat, Cardinal.lift_aleph0, Hκ.cof_ord] using Hunc
+  obtain ⟨n, Hn⟩ := Cardinal.infinite_pigeonhole_card g κ (le_of_not_gt Hlarge) Hκ.aleph0_le Hsize
   let w : (g ⁻¹' {n}) → B := fun i =>
-    is_inj f ⊓ pair (check (A.Func i.val.val))
-      ((omega : bSet B).func (g i.val)) ∈ᴮ f
+    is_inj f ⊓ pair (check (A.Func i.val.val)) ((omega : bSet B).func (g i.val)) ∈ᴮ f
   have Hpos : ∀ i, w i ≠ ⊥ := fun i => ne_of_gt (Hg i.val)
   have Hdisj : ∀ i j, i ≠ j → w i ⊓ w j = ⊥ := by
     intro i j Hij
@@ -125,8 +117,7 @@ theorem possible_members_cardinal_lt {κ : Cardinal.{u}}
 def groundCapture (A : PSet.{u}) (D : bSet B) (Γ : B) : PSet.{u} :=
   PSet.mk (possibleMembers A D Γ) (fun i => A.Func i.val)
 
-theorem groundCapture_subset (A : PSet.{u}) (D : bSet B) (Γ : B) :
-    groundCapture A D Γ ⊆ A := by
+theorem groundCapture_subset (A : PSet.{u}) (D : bSet B) (Γ : B) : groundCapture A D Γ ⊆ A := by
   intro i
   exact ⟨i.val, PSet.Equiv.refl _⟩
 
@@ -145,8 +136,7 @@ theorem subset_check_groundCapture (A : PSet.{u}) {D : bSet B} {Γ : B}
     (HS : Γ ≤ D ⊆ᴮ check A) :
     Γ ≤ D ⊆ᴮ check (groundCapture A D Γ) := by
   have Hlabels : Γ ≤ ⨅ x : bSet B,
-      _root_.imp (x ∈ᴮ check A)
-        (_root_.imp (x ∈ᴮ D) (x ∈ᴮ check (groundCapture A D Γ))) := by
+      _root_.imp (x ∈ᴮ check A) (_root_.imp (x ∈ᴮ D) (x ∈ᴮ check (groundCapture A D Γ))) := by
     rw [← @bounded_forall B _ (check A)
       (fun x => _root_.imp (x ∈ᴮ D) (x ∈ᴮ check (groundCapture A D Γ)))
       (h_congr := B_ext_imp (h₁ := B_ext_mem_left) (h₂ := B_ext_mem_left))]
@@ -159,8 +149,7 @@ theorem subset_check_groundCapture (A : PSet.{u}) {D : bSet B} {Γ : B}
   apply le_iInf
   intro x
   rw [← deduction]
-  have HxA : Γ ⊓ x ∈ᴮ D ≤ x ∈ᴮ check A :=
-    mem_of_mem_subset (inf_le_left.trans HS) inf_le_right
+  have HxA : Γ ⊓ x ∈ᴮ D ≤ x ∈ᴮ check A := mem_of_mem_subset (inf_le_left.trans HS) inf_le_right
   have Himp : Γ ⊓ x ∈ᴮ D ≤
       _root_.imp (x ∈ᴮ D) (x ∈ᴮ check (groundCapture A D Γ)) :=
     (le_inf (inf_le_left.trans (Hlabels.trans (iInf_le _ x))) HxA).trans bv_imp_elim
@@ -203,8 +192,7 @@ theorem firstStage_exists_countable_ground_capture (κ : Cardinal.{u})
     (Hsep : ∀ i j : A.Type, i ≠ j → ¬ PSet.Equiv (A.Func i) (A.Func j))
     (Hcount : Γ ≤ injects_into D omega) (HS : Γ ≤ D ⊆ᴮ check A) :
     ∃ A₀ : PSet.{u}, Cardinal.mk A₀.Type < κ ∧ A₀ ⊆ A ∧ Γ ≤ D ⊆ᴮ check A₀ :=
-  exists_ground_capture Hκ Hunc
-    (fun w Hpos Hdisj =>
+  exists_ground_capture Hκ Hunc (fun w Hpos Hdisj =>
       Erdos1172LevyCollapse.below_completion_disjoint_family_cardinal_lt
         κ Hκ Hunc w Hpos Hdisj) A Hsep Hcount HS
 

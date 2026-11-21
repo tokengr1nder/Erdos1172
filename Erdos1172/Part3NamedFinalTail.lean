@@ -98,8 +98,7 @@ theorem bounded_prefix_of_tail_decision
     (hordered : OrderedDecisions E) (hcover : DenseCoverage E U)
     (hsep : ∀ i : I, i ∉ Set.range e → ∀ j : J, i < e j)
     {q : P} {j0 : J} {cut : V} (hcut : (tailE E e).decides q j0 cut) :
-    ∀ p : P, p ≤ q → ∀ x : V, U.holds p x →
-      x < cut ∨ (tailU E e).holds p x := by
+    ∀ p : P, p ≤ q → ∀ x : V, U.holds p x → x < cut ∨ (tailU E e).holds p x := by
   classical
   intro p hpq x hx
   by_cases hxcut : x < cut
@@ -107,8 +106,7 @@ theorem bounded_prefix_of_tail_decision
   · right
     intro r hrp
     obtain ⟨s, hsr, i, hi⟩ := hcover r x (U.persistent hrp hx)
-    have hcut' : E.decides s (e j0) cut :=
-      E.persistent (hsr.trans (hrp.trans hpq)) hcut
+    have hcut' : E.decides s (e j0) cut := E.persistent (hsr.trans (hrp.trans hpq)) hcut
     have hirange : i ∈ Set.range e := by
       by_contra hni
       exact hxcut (hordered (hsep i hni j0) hi hcut')
@@ -124,8 +122,7 @@ theorem exists_bounded_prefix
     (hJ : Nonempty J) (hordered : OrderedDecisions E) (hcover : DenseCoverage E U)
     (hsep : ∀ i : I, i ∉ Set.range e → ∀ j : J, i < e j) (p0 : P) :
     ∃ q : P, q ≤ p0 ∧ ∃ cut : V, (tailU E e).holds q cut ∧
-      ∀ p : P, p ≤ q → ∀ x : V, U.holds p x →
-        x < cut ∨ (tailU E e).holds p x := by
+      ∀ p : P, p ≤ q → ∀ x : V, U.holds p x → x < cut ∨ (tailU E e).holds p x := by
   obtain ⟨j0⟩ := hJ
   obtain ⟨q, hqp0, cut, hcut⟩ := E.dense p0 (e j0)
   exact ⟨q, hqp0, cut, tailU_holds_of_decision E e hcut,
@@ -143,8 +140,7 @@ theorem exists_cofinal_tail_with_bounded_prefix
       DenseCoverage (tailE E e) (tailU E e) ∧
       (∀ p : P, ∀ x : V, (tailU E e).holds p x → U.holds p x) ∧
       ∃ q : P, q ≤ p0 ∧ ∃ cut : V, (tailU E e).holds q cut ∧
-        ∀ p : P, p ≤ q → ∀ x : V, U.holds p x →
-          x < cut ∨ (tailU E e).holds p x :=
+        ∀ p : P, p ≤ q → ∀ x : V, U.holds p x → x < cut ∨ (tailU E e).holds p x :=
   ⟨tailE_ordered E e hordered, tailE_cofinal E e hordered hcofinal he,
     tailU_dense_coverage E e, tailU_sub E U e hmem,
     exists_bounded_prefix E U e hJ hordered hcover hsep p0⟩

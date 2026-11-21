@@ -38,20 +38,16 @@ target index type is empty or its coefficients are not top. -/
 theorem exists_weighted_index_surjection (X : PSet.{u}) (Y : bSet 𝔹)
     (e : Y.type ↪ X.Type)
     (Hsep : ∀ i j : X.Type, i ≠ j → ¬ PSet.Equiv (X.Func i) (X.Func j)) :
-    ∃ S f : bSet 𝔹, (⊤ : 𝔹) ≤
-      (S ⊆ᴮ check X ⊓ is_func' S Y f) ⊓ is_surj S Y f := by
+    ∃ S f : bSet 𝔹, (⊤ : 𝔹) ≤ (S ⊆ᴮ check X ⊓ is_func' S Y f) ⊓ is_surj S Y f := by
   classical
-  let S : bSet 𝔹 :=
-    ⟨Y.type, fun i => check (X.Func (e i)), Y.bval⟩
-  have Hcongr : ∀ i j : S.type,
-      S.func i =ᴮ S.func j ≤ Y.func i =ᴮ Y.func j := by
+  let S : bSet 𝔹 := ⟨Y.type, fun i => check (X.Func (e i)), Y.bval⟩
+  have Hcongr : ∀ i j : S.type, S.func i =ᴮ S.func j ≤ Y.func i =ᴮ Y.func j := by
     intro i j
     by_cases hij : i = j
     · subst j
       exact bv_refl
     · change (check (X.Func (e i)) : bSet 𝔹) =ᴮ check (X.Func (e j)) ≤ _
-      rw [check_bv_eq_bot_of_not_equiv (Hsep (e i) (e j)
-        (fun heq => hij (e.injective heq)))]
+      rw [check_bv_eq_bot_of_not_equiv (Hsep (e i) (e j) (fun heq => hij (e.injective heq)))]
       exact bot_le
   let f : bSet 𝔹 := functionMk (u := S) (fun i => Y.func i) Hcongr
   have Hpair (i : Y.type) :
@@ -66,8 +62,7 @@ theorem exists_weighted_index_surjection (X : PSet.{u}) (Y : bSet 𝔹)
     intro i
     rw [← deduction]
     exact check_mem (PSet.func_mem X (e i))
-  have Hfunc : (⊤ : 𝔹) ≤ is_func f :=
-    functionMk_is_func (u := S) (fun i => Y.func i) Hcongr
+  have Hfunc : (⊤ : 𝔹) ≤ is_func f := functionMk_is_func (u := S) (fun i => Y.func i) Hcongr
   have Htotal : (⊤ : 𝔹) ≤ is_total S Y f := by
     rw [is_total_iff_is_total']
     apply le_iInf

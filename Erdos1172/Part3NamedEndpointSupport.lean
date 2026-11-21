@@ -73,8 +73,7 @@ theorem exists_set_endpoint_row_bound
     Erdos1172Part3DecisionSelection.reindex B Subtype.val
   obtain ⟨q, hqp, hvalues⟩ := restricted.exists_simultaneous hclosed p hprefix
   let chosen (i : Set.Iic j) : Set V := (hvalues i).choose
-  have hchosen (i : Set.Iic j) : B.decides q i.val (chosen i) :=
-    (hvalues i).choose_spec
+  have hchosen (i : Set.Iic j) : B.decides q i.val (chosen i) := (hvalues i).choose_spec
   have hchosenCount (i : Set.Iic j) : (chosen i).Countable :=
     (hsets q i.val (chosen i) (hchosen i)).1
   have hunion : (⋃ i : Set.Iic j, chosen i).Countable := Set.countable_iUnion hchosenCount
@@ -89,10 +88,8 @@ theorem exists_set_endpoint_row_bound
     have hi : i ≤ data.row y := hxrow ▸ data.row_mono hxy
     simpa only [hyrow] using hi
   let index : Set.Iic j := ⟨i, hij⟩
-  have hSeq : S = chosen index :=
-    B.unique hS (B.persistent (hsr.trans hrq) (hchosen index))
-  have hymem : y ∈ ⋃ i : Set.Iic j, chosen i :=
-    Set.mem_iUnion.mpr ⟨index, hSeq ▸ hyS⟩
+  have hSeq : S = chosen index := B.unique hS (B.persistent (hsr.trans hrq) (hchosen index))
+  have hymem : y ∈ ⋃ i : Set.Iic j, chosen i := Set.mem_iUnion.mpr ⟨index, hSeq ▸ hyS⟩
   exact hbound (data.code y) ⟨y, hymem, rfl⟩
 
 /-- A head name covers the actual endpoint support of condition-dependent

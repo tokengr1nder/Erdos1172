@@ -20,8 +20,7 @@ variable {S T : Type u} [Preorder S] [Preorder T] (f : S →o T) (hl : Lifts f)
 variable (hc : ∀ a b : S, f a ≤ f b → ∃ z ≤ a, z ≤ b)
 
 include hc in
-theorem booleanHom_condition (s : S) :
-    booleanHom f hl (condition (f s)) = condition s := by
+theorem booleanHom_condition (s : S) : booleanHom f hl (condition (f s)) = condition s := by
   refine le_antisymm ?_ (condition_le_iff.mpr (show f s ∈ (condition (f s)).val from mem_condition_self _))
   intro x hx
   apply (mem_condition_iff s x).mpr

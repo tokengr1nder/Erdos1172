@@ -130,16 +130,14 @@ theorem mem_range_embed_iff {a b : Cut} (hab : a ≤ b) (p : Carrier b) :
 
 theorem mk_profile_le_alephTwo {I V : Type} (hGCH : GCH)
     (hI : #I ≤ ℵ_ 2) (hV : #V ≤ ℵ_ 2) : #(Profile I V) ≤ ℵ_ 2 := by
-  let graphCode (p : Profile I V) : {s : Set (I × V) // #s ≤ ℵ₀} :=
-    ⟨graph p, graph_countable p⟩
+  let graphCode (p : Profile I V) : {s : Set (I × V) // #s ≤ ℵ₀} := ⟨graph p, graph_countable p⟩
   have hgraph : #(Profile I V) ≤ #{s : Set (I × V) // #s ≤ ℵ₀} :=
     Cardinal.mk_le_of_injective (f := graphCode)
       (fun _ _ h => graph_injective (congrArg Subtype.val h))
   have hprod : #(I × V) ≤ ℵ_ 2 := by
     rw [Cardinal.mk_prod]
     simp only [Cardinal.lift_id]
-    exact (mul_le_mul' hI hV).trans_eq
-      (Cardinal.mul_eq_self (Cardinal.aleph0_le_aleph 2))
+    exact (mul_le_mul' hI hV).trans_eq (Cardinal.mul_eq_self (Cardinal.aleph0_le_aleph 2))
   apply hgraph.trans
   apply (Cardinal.mk_bounded_set_le (I × V) ℵ₀).trans
   exact (Cardinal.power_le_power_right (max_le hprod (Cardinal.aleph0_le_aleph 2))).trans_eq

@@ -55,8 +55,7 @@ theorem union_selector_fiber_subset {A f a : bSet 𝔹} {Γ : 𝔹}
   intro x
   rw [← deduction]
   have Hx := mem_fiber_iff.mp
-    (show Γ ⊓ x ∈ᴮ fiber (bv_union A) f a ≤ x ∈ᴮ fiber (bv_union A) f a
-      from inf_le_right)
+    (show Γ ⊓ x ∈ᴮ fiber (bv_union A) f a ≤ x ∈ᴮ fiber (bv_union A) f a from inf_le_right)
   exact (le_inf
     (inf_le_left.trans (Hselect.trans ((iInf_le _ x).trans (iInf_le _ a))))
     (le_inf Hx.1 Hx.2)).trans bv_imp_elim
@@ -81,8 +80,7 @@ theorem union_not_omegaTwo_large {A : bSet 𝔹} {Γ : 𝔹}
   intro a
   let Θ := Δ ⊓ (a ∈ᴮ A ⊓ injects_into omegaTwo (fiber (bv_union A) f a))
   have Ha : Θ ≤ a ∈ᴮ omegaTwo :=
-    mem_of_mem_subset (inf_le_left.trans (inf_le_left.trans HA))
-      (inf_le_right.trans inf_le_left)
+    mem_of_mem_subset (inf_le_left.trans (inf_le_left.trans HA)) (inf_le_right.trans inf_le_left)
   have Hsub : Θ ≤ fiber (bv_union A) f a ⊆ᴮ a :=
     union_selector_fiber_subset (inf_le_left.trans (Hf.trans inf_le_right))
   have Hbad : Θ ≤ injects_into omegaTwo omegaOne :=
@@ -100,8 +98,7 @@ theorem union_mem_omegaTwo {A : bSet 𝔹} {Γ : 𝔹}
     apply le_iInf
     intro a
     rw [← deduction]
-    have Ha : Γ ⊓ a ∈ᴮ A ≤ a ∈ᴮ omegaTwo :=
-      mem_of_mem_subset (inf_le_left.trans HA) inf_le_right
+    have Ha : Γ ⊓ a ∈ᴮ A ≤ a ∈ᴮ omegaTwo := mem_of_mem_subset (inf_le_left.trans HA) inf_le_right
     exact le_inf (Ord_of_mem_Ord Ha omegaTwo_Ord) (subset_of_mem_Ord Ha omegaTwo_Ord)
   have Hcases := (ErdosInitialSegments.union_initialSegment omegaTwo_Ord Hmembers).trans
     (inf_le_right.trans inf_le_right)
@@ -127,8 +124,7 @@ theorem exists_above_omegaTwo_member {a : bSet 𝔹} {Γ : 𝔹}
     Htail omegaOne_mem_omegaTwo
   rw [mem_difference] at Hb
   exact ⟨b, le_inf (Hb.trans inf_le_left)
-    (ErdosOmegaReservoir.above_of_not_mem_succ Ha (Hb.trans inf_le_left)
-      (Hb.trans inf_le_right))⟩
+    (ErdosOmegaReservoir.above_of_not_mem_succ Ha (Hb.trans inf_le_left) (Hb.trans inf_le_right))⟩
 
 /-- Every omega-one-small internal subset has a single strict upper bound
 still inside omega-two. The empty subset is included. -/

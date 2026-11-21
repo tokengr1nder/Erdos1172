@@ -36,8 +36,7 @@ private theorem B_ext_func : B_ext (is_func : bSet 𝔹 → 𝔹) := by
   unfold is_func
   exact B_ext_iInf (h := fun _ => B_ext_iInf (h := fun _ =>
     B_ext_iInf (h := fun _ => B_ext_iInf (h := fun _ =>
-      B_ext_imp (h₁ := B_ext_inf B_ext_mem_right B_ext_mem_right)
-        (h₂ := B_ext_const)))))
+      B_ext_imp (h₁ := B_ext_inf B_ext_mem_right B_ext_mem_right) (h₂ := B_ext_const)))))
 
 private theorem mem_comprehend_value (ϕ : bSet 𝔹 → 𝔹) (Hϕ : B_ext ϕ)
     (A x : bSet 𝔹) : x ∈ᴮ comprehend ϕ A = (x ∈ᴮ A) ⊓ ϕ x := by
@@ -45,8 +44,7 @@ private theorem mem_comprehend_value (ϕ : bSet 𝔹 → 𝔹) (Hϕ : B_ext ϕ)
   · apply ((mem_comprehend_iff₂ ϕ A Hϕ).mp le_rfl).trans
     apply iSup_le
     intro y
-    have Heq : y ∈ᴮ A ⊓ (x =ᴮ y ⊓ ϕ y) ≤ x =ᴮ y :=
-      inf_le_right.trans inf_le_left
+    have Heq : y ∈ᴮ A ⊓ (x =ᴮ y ⊓ ϕ y) ≤ x =ᴮ y := inf_le_right.trans inf_le_left
     exact le_inf
       (bv_rw' (ϕ := fun z => z ∈ᴮ A) Heq
         (h_congr := B_ext_mem_left) (H_new := inf_le_left))
@@ -59,8 +57,7 @@ def partialChoices (D C R : bSet 𝔹) : bSet 𝔹 :=
   comprehend is_func (bv_powerset (R ∩ᴮ prod D C))
 
 theorem mem_partialChoices_iff {D C R f : bSet 𝔹} {Γ : 𝔹} :
-    Γ ≤ f ∈ᴮ partialChoices D C R ↔
-      Γ ≤ (f ⊆ᴮ R ∩ᴮ prod D C) ⊓ is_func f := by
+    Γ ≤ f ∈ᴮ partialChoices D C R ↔ Γ ≤ (f ⊆ᴮ R ∩ᴮ prod D C) ⊓ is_func f := by
   unfold partialChoices
   rw [mem_comprehend_value _ B_ext_func]
   constructor
@@ -71,8 +68,7 @@ theorem mem_partialChoices_iff {D C R f : bSet 𝔹} {Γ : 𝔹} :
 
 theorem empty_mem_partialChoices {D C R : bSet 𝔹} {Γ : 𝔹} :
     Γ ≤ (∅ : bSet 𝔹) ∈ᴮ partialChoices D C R :=
-  mem_partialChoices_iff.mpr
-    (le_inf empty_subset ((is_func'_empty (x := C)).trans inf_le_left))
+  mem_partialChoices_iff.mpr (le_inf empty_subset ((is_func'_empty (x := C)).trans inf_le_left))
 
 theorem partialChoices_nonempty {D C R : bSet 𝔹} {Γ : 𝔹} :
     Γ ≤ (partialChoices D C R =ᴮ ∅)ᶜ :=
@@ -84,8 +80,7 @@ theorem partialChoices_chain_union {D C R T : bSet 𝔹} {Γ : 𝔹}
     (Hchain : Γ ≤ inclusionChain T) :
     Γ ≤ bv_union T ∈ᴮ partialChoices D C R := by
   apply mem_partialChoices_iff.mpr
-  refine le_inf (union_subset_of_forall_subset ?_)
-    (is_func_union_of_chain Hchain ?_)
+  refine le_inf (union_subset_of_forall_subset ?_) (is_func_union_of_chain Hchain ?_)
   · apply le_iInf
     intro f
     rw [← deduction]
@@ -101,8 +96,7 @@ theorem partialChoices_chain_union {D C R T : bSet 𝔹} {Γ : 𝔹}
 a selection theorem for the relation. -/
 theorem exists_maximal_partialChoice {D C R : bSet 𝔹} {Γ : 𝔹} :
     Γ ≤ ⨆ f : bSet 𝔹, f ∈ᴮ partialChoices D C R ⊓
-      ⨅ g : bSet 𝔹, _root_.imp (g ∈ᴮ partialChoices D C R)
-        (_root_.imp (f ⊆ᴮ g) (f =ᴮ g)) := by
+      ⨅ g : bSet 𝔹, _root_.imp (g ∈ᴮ partialChoices D C R) (_root_.imp (f ⊆ᴮ g) (f =ᴮ g)) := by
   have Hclosure : Γ ≤ ⨅ T : bSet 𝔹,
       _root_.imp (T ⊆ᴮ partialChoices D C R ⊓ inclusionChain T)
         (bv_union T ∈ᴮ partialChoices D C R) := by
@@ -117,8 +111,7 @@ theorem exists_maximal_partialChoice {D C R : bSet 𝔹} {Γ : 𝔹} :
           _root_.imp (T ⊆ᴮ partialChoices D C R ⊓ inclusionChain T)
             (bv_union T ∈ᴮ partialChoices D C R))
         (⨆ f : bSet 𝔹, f ∈ᴮ partialChoices D C R ⊓
-          ⨅ g : bSet 𝔹, _root_.imp (g ∈ᴮ partialChoices D C R)
-            (_root_.imp (f ⊆ᴮ g) (f =ᴮ g)))) :=
+          ⨅ g : bSet 𝔹, _root_.imp (g ∈ᴮ partialChoices D C R) (_root_.imp (f ⊆ᴮ g) (f =ᴮ g)))) :=
     (bSet_zorns_lemma' (Γ := Γ)).trans (iInf_le _ (partialChoices D C R))
   exact (le_inf ((le_inf Hzorn partialChoices_nonempty).trans bv_imp_elim)
     Hclosure).trans bv_imp_elim
@@ -159,11 +152,9 @@ theorem maximal_partialChoice_covers {D C R f : bSet 𝔹} {Γ : 𝔹}
   have Hx : Δ ≤ x ∈ᴮ D := inf_le_left.trans inf_le_right
   have Hex : Δ ≤ ⨆ y : bSet 𝔹, y ∈ᴮ C ⊓ pair x y ∈ᴮ R :=
     (le_inf (HΔ.trans (Htotal.trans (iInf_le _ x))) Hx).trans bv_imp_elim
-  obtain ⟨y, Hy⟩ := exists_convert Hex
-    (B_ext_inf B_ext_mem_left B_ext_pair_mem_right)
+  obtain ⟨y, Hy⟩ := exists_convert Hex (B_ext_inf B_ext_mem_left B_ext_pair_mem_right)
   have Hpair : Δ ≤ pair x y ∈ᴮ R ∩ᴮ prod D C :=
-    mem_binary_inter_iff.mpr
-      ⟨Hy.trans inf_le_right, mem_prod Hx (Hy.trans inf_le_left)⟩
+    mem_binary_inter_iff.mpr ⟨Hy.trans inf_le_right, mem_prod Hx (Hy.trans inf_le_left)⟩
   have Hnew : Δ ≤ bSet.insert1 (pair x y) f ∈ᴮ partialChoices D C R :=
     mem_partialChoices_iff.mpr
       (le_inf (insert_subset_of_mem (HΔ.trans Hsub) Hpair)
@@ -172,8 +163,7 @@ theorem maximal_partialChoice_covers {D C R f : bSet 𝔹} {Γ : 𝔹}
     (le_inf ((le_inf
       (HΔ.trans (Hmax.trans (iInf_le _ (bSet.insert1 (pair x y) f))))
       Hnew).trans bv_imp_elim) subset_insertPair).trans bv_imp_elim
-  have Hold : Δ ≤ pair x y ∈ᴮ f :=
-    mem_congr bv_refl (bv_symm Heq) pair_mem_insertPair
+  have Hold : Δ ≤ pair x y ∈ᴮ f := mem_congr bv_refl (bv_symm Heq) pair_mem_insertPair
   exact bv_absurd _ (mem_graphDomain_of_pair (HΔ.trans Hprod) Hold) inf_le_right
 
 theorem maximal_partialChoice_function {D C R f : bSet 𝔹} {Γ : 𝔹}
@@ -213,7 +203,6 @@ the selected name still satisfies both properties under precisely Γ. -/
 theorem exists_function_subrelation {D C R : bSet 𝔹} {Γ : 𝔹}
     (Htotal : Γ ≤ is_total D C R) :
     ∃ f : bSet 𝔹, Γ ≤ is_function D C f ⊓ f ⊆ᴮ R :=
-  exists_convert (bounded_choice Htotal)
-    (B_ext_inf B_ext_is_function_right B_ext_subset_left)
+  exists_convert (bounded_choice Htotal) (B_ext_inf B_ext_is_function_right B_ext_subset_left)
 
 end bSet.ErdosRelationChoice

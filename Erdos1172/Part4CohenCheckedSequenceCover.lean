@@ -69,8 +69,7 @@ theorem exists_countable_local_cover_extension {K : bSet B}
     apply eq_top_iff.mpr
     calc
       (⊤ : Algebra K) = condition p ⊔ (condition p)ᶜ := sup_compl_eq_top.symm
-      _ ≤ ⨆ i : Option (I n), padded n i :=
-        sup_le ((Hcover n).trans (iSup_le (fun i =>
+      _ ≤ ⨆ i : Option (I n), padded n i := sup_le ((Hcover n).trans (iSup_le (fun i =>
           le_iSup_of_le (some i) le_rfl))) (le_iSup_of_le none le_rfl)
   obtain ⟨q, Hq, Hsub, Hread⟩ := exists_countable_cover_extension HK
     (ErdosCohen.mem_conditions_iff.mp (Erdos1172BooleanNameIteration.name_mem p))
@@ -82,8 +81,7 @@ theorem exists_countable_local_cover_extension {K : bSet B}
   intro n
   have Hrread : r.value ≤ ⨆ i : Option (I n),
       reads (padded n i) (Erdos1172BooleanNameIteration.name r) :=
-    bv_rw'' Heq (Hrv.trans (Hread n))
-      (B_ext_iSup (h := fun i => reads_ext (padded n i)))
+    bv_rw'' Heq (Hrv.trans (Hread n)) (B_ext_iSup (h := fun i => reads_ext (padded n i)))
   calc
     r.value ≤ r.value ⊓ (⨆ i : Option (I n),
         reads (padded n i) (Erdos1172BooleanNameIteration.name r)) :=

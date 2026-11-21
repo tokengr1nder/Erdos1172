@@ -42,8 +42,7 @@ def stoppingIndices (P top : bSet 𝔹) : bSet 𝔹 :=
   comprehend (fun i => pair i top ∈ᴮ vertexHistory P) omegaOne
 
 theorem mem_stoppingIndices_iff {P top i : bSet 𝔹} {Γ : 𝔹} :
-    Γ ≤ i ∈ᴮ stoppingIndices P top ↔
-      Γ ≤ i ∈ᴮ omegaOne ∧ Γ ≤ pair i top ∈ᴮ vertexHistory P :=
+    Γ ≤ i ∈ᴮ stoppingIndices P top ↔ Γ ≤ i ∈ᴮ omegaOne ∧ Γ ≤ pair i top ∈ᴮ vertexHistory P :=
   mem_comprehend_and B_ext_pair_mem_left
 
 theorem stoppingIndices_subset {P top : bSet 𝔹} {Γ : 𝔹} :
@@ -55,8 +54,7 @@ actual least stopping index at the same Boolean condition. -/
 theorem exists_least_stoppingIndex {P top : bSet 𝔹} {Γ : 𝔹}
     (Hfail : Γ ≤ rangeMem omegaOne (vertexHistory P) top) :
     ∃ ρ : bSet 𝔹, Γ ≤ leastIn (stoppingIndices P top) ρ := by
-  obtain ⟨i, Hi⟩ := exists_convert Hfail
-    (B_ext_inf B_ext_mem_left B_ext_pair_mem_left)
+  obtain ⟨i, Hi⟩ := exists_convert Hfail (B_ext_inf B_ext_mem_left B_ext_pair_mem_left)
   have Hstop : Γ ≤ i ∈ᴮ stoppingIndices P top :=
     mem_stoppingIndices_iff.mpr ⟨Hi.trans inf_le_left, Hi.trans inf_le_right⟩
   exact exists_least_of_nonempty omegaOne_Ord stoppingIndices_subset
@@ -74,14 +72,12 @@ theorem least_stop_pair {P top ρ : bSet 𝔹} {Γ : 𝔹}
 theorem not_stopping_before_least {P top ρ i : bSet 𝔹} {Γ : 𝔹}
     (Hleast : Γ ≤ leastIn (stoppingIndices P top) ρ) (Hiρ : Γ ≤ i ∈ᴮ ρ) :
     Γ ≤ (pair i top ∈ᴮ vertexHistory P)ᶜ := by
-  have Hi : Γ ≤ i ∈ᴮ omegaOne :=
-    mem_of_mem_Ord Hiρ (least_stop_mem_omegaOne Hleast) omegaOne_Ord
+  have Hi : Γ ≤ i ∈ᴮ omegaOne := mem_of_mem_Ord Hiρ (least_stop_mem_omegaOne Hleast) omegaOne_Ord
   rw [← imp_bot, ← deduction]
   let Δ := Γ ⊓ pair i top ∈ᴮ vertexHistory P
   have Hstop : Δ ≤ i ∈ᴮ stoppingIndices P top :=
     mem_stoppingIndices_iff.mpr ⟨inf_le_left.trans Hi, inf_le_right⟩
-  have Hcases : Δ ≤ ρ =ᴮ i ⊔ ρ ∈ᴮ i :=
-    leastIn_apply (inf_le_left.trans Hleast) Hstop
+  have Hcases : Δ ≤ ρ =ᴮ i ⊔ ρ ∈ᴮ i := leastIn_apply (inf_le_left.trans Hleast) Hstop
   apply (le_inf (le_refl Δ) Hcases).trans
   rw [inf_sup_left]
   apply sup_le
@@ -106,8 +102,7 @@ theorem prior_vertex_below_top_color
     (Hiy : Γ ≤ pair i y ∈ᴮ vertexHistory P) :
     Γ ≤ y ∈ᴮ top ⊓ graphColor color R y top := by
   have Hne := prior_vertex_ne_top Hleast Hiρ Hiy
-  exact le_inf (nonstop_stage_below_top Hlaw Hiy Hne)
-    (nonstop_stage_color_top Hlaw Hiy Hne)
+  exact le_inf (nonstop_stage_below_top Hlaw Hiy Hne) (nonstop_stage_color_top Hlaw Hiy Hne)
 
 /-- Only the strict prior vertex range is used; the sentinel at the
 stopping stage is excluded by the domain itself. -/
@@ -135,8 +130,7 @@ theorem priorVertices_subset_top
   let Δ := Γ ⊓ y ∈ᴮ priorVertices ρ P
   have Hrange : Δ ≤ ⨆ i, i ∈ᴮ ρ ⊓ pair i y ∈ᴮ vertexHistory P :=
     (mem_image_iff.mp (show Δ ≤ y ∈ᴮ priorVertices ρ P from inf_le_right)).2
-  obtain ⟨i, Hi⟩ := exists_convert Hrange
-    (B_ext_inf B_ext_mem_left B_ext_pair_mem_left)
+  obtain ⟨i, Hi⟩ := exists_convert Hrange (B_ext_inf B_ext_mem_left B_ext_pair_mem_left)
   exact (prior_vertex_below_top_color (inf_le_left.trans Hlaw)
     (inf_le_left.trans Hleast) (Hi.trans inf_le_left) (Hi.trans inf_le_right)).trans
     inf_le_left

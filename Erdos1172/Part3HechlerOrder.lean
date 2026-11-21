@@ -142,8 +142,7 @@ def track (p : Condition) (f : W1 → W1) : Condition where
 
 theorem cof_W1 : Order.cof W1 = ℵ_ 1 := by simp_all
 
-theorem exists_bound_of_countable (s : Set W1) (hs : s.Countable) :
-    ∃ b : W1, ∀ i ∈ s, i < b := by
+theorem exists_bound_of_countable (s : Set W1) (hs : s.Countable) : ∃ b : W1, ∀ i ∈ s, i < b := by
   have hcard : #s < Order.cof W1 := by
     rw [cof_W1]
     exact (Cardinal.le_aleph0_iff_set_countable.mpr hs).trans_lt

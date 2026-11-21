@@ -56,8 +56,7 @@ theorem homogeneousUnion_of_independent {color : Bool} {R A K f : bSet 𝔹} {Γ
   apply le_iInf
   intro y
   rw [← deduction]
-  let Δ := Γ ⊓ (((rangeMem K f x ⊔ rangeMem K f x) ⊓
-    (rangeMem K f y ⊔ rangeMem K f y)) ⊓ x ∈ᴮ y)
+  let Δ := Γ ⊓ (((rangeMem K f x ⊔ rangeMem K f x) ⊓ (rangeMem K f y ⊔ rangeMem K f y)) ⊓ x ∈ᴮ y)
   have HΔ : Δ ≤ Γ := inf_le_left
   have Hrx : Δ ≤ rangeMem K f x ⊔ rangeMem K f x :=
     inf_le_right.trans (inf_le_left.trans inf_le_left)
@@ -80,8 +79,7 @@ theorem prod_codomain_mono {K A S : bSet 𝔹} {Γ : 𝔹}
   rw [← deduction]
   obtain ⟨x, Hx, y, Hy, Hp⟩ := mem_prod_iff₂.mp
     (show Γ ⊓ p ∈ᴮ prod K A ≤ p ∈ᴮ prod K A from inf_le_right)
-  exact mem_prod_iff₂.mpr
-    ⟨x, Hx, y, mem_of_mem_subset (inf_le_left.trans Hsub) Hy, Hp⟩
+  exact mem_prod_iff₂.mpr ⟨x, Hx, y, mem_of_mem_subset (inf_le_left.trans Hsub) Hy, Hp⟩
 
 /-- Codomain enlargement preserves the same actual supported function graph. -/
 theorem is_function_codomain_mono {K A S f : bSet 𝔹} {Γ : 𝔹}
@@ -95,8 +93,7 @@ theorem is_function_codomain_mono {K A S f : bSet 𝔹} {Γ : 𝔹}
   have Htotal : Γ ⊓ x ∈ᴮ K ≤ ⨆ y, y ∈ᴮ A ⊓ pair x y ∈ᴮ f :=
     (le_inf (inf_le_left.trans ((is_total_of_is_function Hf).trans (iInf_le _ x)))
       inf_le_right).trans bv_imp_elim
-  obtain ⟨y, Hy⟩ := exists_convert Htotal
-    (B_ext_inf B_ext_mem_left B_ext_pair_mem_right)
+  obtain ⟨y, Hy⟩ := exists_convert Htotal (B_ext_inf B_ext_mem_left B_ext_pair_mem_right)
   exact le_iSup_of_le y
     (le_inf (mem_of_mem_subset (inf_le_left.trans Hsub) (Hy.trans inf_le_left))
       (Hy.trans inf_le_right))
@@ -104,7 +101,6 @@ theorem is_function_codomain_mono {K A S f : bSet 𝔹} {Γ : 𝔹}
 theorem is_injective_function_codomain_mono {K A S f : bSet 𝔹} {Γ : 𝔹}
     (Hsub : Γ ≤ A ⊆ᴮ S) (Hf : Γ ≤ is_injective_function K A f) :
     Γ ≤ is_injective_function K S f :=
-  le_inf (is_function_codomain_mono Hsub (Hf.trans inf_le_left))
-    (Hf.trans inf_le_right)
+  le_inf (is_function_codomain_mono Hsub (Hf.trans inf_le_left)) (Hf.trans inf_le_right)
 
 end bSet.ErdosIndependentHomogeneous

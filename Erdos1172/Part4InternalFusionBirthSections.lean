@@ -42,8 +42,7 @@ def birthSection (color : Bool) (R E b Blocks ν j : bSet 𝔹) : bSet 𝔹 :=
 theorem mem_birthSection_iff
     {color : Bool} {R E b Blocks ν j v : bSet 𝔹} {Γ : 𝔹} :
     Γ ≤ v ∈ᴮ birthSection color R E b Blocks ν j ↔
-      Γ ≤ v ∈ᴮ omegaOne ∧
-        Γ ≤ _root_.imp (ν ∈ᴮ j) (sectionRequirement color R E b Blocks j v) :=
+      Γ ≤ v ∈ᴮ omegaOne ∧ Γ ≤ _root_.imp (ν ∈ᴮ j) (sectionRequirement color R E b Blocks j v) :=
   mem_comprehend_and (B_ext_imp (h₁ := B_ext_const)
     (h₂ := sectionRequirement_ext_coordinate color R E b Blocks j))
 
@@ -58,8 +57,7 @@ theorem birthSection_congr_stage (color : Bool) (R E b Blocks ν : bSet 𝔹) :
   intro j k Γ Hjk
   have Hext (v : bSet 𝔹) : B_ext (fun t => _root_.imp (ν ∈ᴮ t)
       (sectionRequirement color R E b Blocks t v)) :=
-    B_ext_imp (h₁ := B_ext_mem_right)
-      (h₂ := sectionRequirement_ext_stage color R E b Blocks v)
+    B_ext_imp (h₁ := B_ext_mem_right) (h₂ := sectionRequirement_ext_stage color R E b Blocks v)
   apply mem_ext
   · apply le_iInf
     intro v
@@ -67,8 +65,7 @@ theorem birthSection_congr_stage (color : Bool) (R E b Blocks ν : bSet 𝔹) :
     have Hv := mem_birthSection_iff.mp
       (show Γ ⊓ v ∈ᴮ birthSection color R E b Blocks ν j ≤
         v ∈ᴮ birthSection color R E b Blocks ν j from inf_le_right)
-    exact mem_birthSection_iff.mpr ⟨Hv.1,
-      bv_rw'' (inf_le_left.trans Hjk) Hv.2 (Hext v)⟩
+    exact mem_birthSection_iff.mpr ⟨Hv.1, bv_rw'' (inf_le_left.trans Hjk) Hv.2 (Hext v)⟩
   · apply le_iInf
     intro v
     rw [← deduction]
@@ -114,8 +111,7 @@ theorem birthSection_eq_inactive
   apply mem_birthSection_iff.mpr
   refine ⟨inf_le_right, ?_⟩
   rw [← deduction]
-  exact (bv_absurd _ inf_le_right
-    (inf_le_left.trans (inf_le_left.trans Hinactive))).trans bot_le
+  exact (bv_absurd _ inf_le_right (inf_le_left.trans (inf_le_left.trans Hinactive))).trans bot_le
 
 def birthSectionFamily (color : Bool) (R E b Blocks ν : bSet 𝔹) : bSet 𝔹 :=
   relationGraph omegaOne (bv_powerset omegaOne)
@@ -131,23 +127,19 @@ theorem mem_birthSectionFamily_iff
     Γ ≤ pair j A ∈ᴮ birthSectionFamily color R E b Blocks ν ↔
       Γ ≤ j ∈ᴮ omegaOne ∧ Γ ≤ A ∈ᴮ bv_powerset omegaOne ∧
         Γ ≤ A =ᴮ birthSection color R E b Blocks ν j :=
-  mem_relationGraph_iff (family_ext_left color R E b Blocks ν)
-    (fun _ => B_ext_bv_eq_left)
+  mem_relationGraph_iff (family_ext_left color R E b Blocks ν) (fun _ => B_ext_bv_eq_left)
 
 theorem birthSectionFamily_is_function
     {color : Bool} {R E b Blocks ν : bSet 𝔹} {Γ : 𝔹} :
-    Γ ≤ is_function omegaOne (bv_powerset omegaOne)
-      (birthSectionFamily color R E b Blocks ν) := by
-  apply relationGraph_is_function (family_ext_left color R E b Blocks ν)
-    (fun _ => B_ext_bv_eq_left)
+    Γ ≤ is_function omegaOne (bv_powerset omegaOne) (birthSectionFamily color R E b Blocks ν) := by
+  apply relationGraph_is_function (family_ext_left color R E b Blocks ν) (fun _ => B_ext_bv_eq_left)
   · apply le_iInf
     intro j
     rw [← deduction]
     exact le_iSup_of_le (birthSection color R E b Blocks ν j)
       (le_inf (mem_powerset_iff.mpr birthSection_subset) bv_refl)
   · intro j k A B Δ _ _ _ _ _ HA HB Hjk
-    exact bv_trans HA (bv_trans (birthSection_congr_stage color R E b Blocks ν Hjk)
-      (bv_symm HB))
+    exact bv_trans HA (bv_trans (birthSection_congr_stage color R E b Blocks ν Hjk) (bv_symm HB))
 
 theorem birthSectionFamily_colarge_values
     {color : Bool} {R J E b Blocks ν : bSet 𝔹} {Γ : 𝔹}
@@ -177,17 +169,14 @@ theorem birthSectionFamily_colarge_values
         (h_congr := colarge_ext_common omegaOne J) (H_new := Hsection)
     · exact bv_rw' (ϕ := colarge omegaOne J) (birthSection_eq_inactive inf_le_right)
         (h_congr := colarge_ext_common omegaOne J)
-        (H_new := ErdosSeedBlock.colarge_self_of_isIdeal
-          (inf_le_left.trans (inf_le_left.trans HJ)))
+        (H_new := ErdosSeedBlock.colarge_self_of_isIdeal (inf_le_left.trans (inf_le_left.trans HJ)))
   exact bv_rw' (ϕ := colarge omegaOne J) Hdata.2.2
     (h_congr := colarge_ext_common omegaOne J) (H_new := Hmasked)
 
 private theorem admissible_of_guarded_pairs
     {δ seed F G h k v : bSet 𝔹} {Γ : 𝔹}
-    (HF : ∀ j A Δ, Δ ≤ Γ → Δ ≤ j ∈ᴮ δ →
-      Δ ≤ pair j A ∈ᴮ G → Δ ≤ pair j A ∈ᴮ F)
-    (Hh : ∀ j w Δ, Δ ≤ Γ → Δ ≤ j ∈ᴮ δ →
-      Δ ≤ pair j w ∈ᴮ k → Δ ≤ pair j w ∈ᴮ h)
+    (HF : ∀ j A Δ, Δ ≤ Γ → Δ ≤ j ∈ᴮ δ → Δ ≤ pair j A ∈ᴮ G → Δ ≤ pair j A ∈ᴮ F)
+    (Hh : ∀ j w Δ, Δ ≤ Γ → Δ ≤ j ∈ᴮ δ → Δ ≤ pair j w ∈ᴮ k → Δ ≤ pair j w ∈ᴮ h)
     (Hv : Γ ≤ rowAdmissible δ seed F h v) :
     Γ ≤ rowAdmissible δ seed G k v := by
   refine le_inf (Hv.trans inf_le_left)
@@ -240,17 +229,14 @@ theorem birth_rowCandidates_eq_fusion
     constructor
     · intro Hpair
       have Hdata := mem_birthSectionFamily_iff.mp Hpair
-      exact mem_fusionSectionFamily_iff.mpr
-        ⟨Hactive.1, Hdata.2.1, bv_trans Hdata.2.2 Heq⟩
+      exact mem_fusionSectionFamily_iff.mpr ⟨Hactive.1, Hdata.2.1, bv_trans Hdata.2.2 Heq⟩
     · intro Hpair
       have Hdata := mem_fusionSectionFamily_iff.mp Hpair
       exact mem_birthSectionFamily_iff.mpr
-        ⟨mem_of_mem_subset (HΔ.trans Hξ) Hactive.1, Hdata.2.1,
-          bv_trans Hdata.2.2 (bv_symm Heq)⟩
+        ⟨mem_of_mem_subset (HΔ.trans Hξ) Hactive.1, Hdata.2.1, bv_trans Hdata.2.2 (bv_symm Heq)⟩
   have Hrows (j v : bSet 𝔹) (Δ : 𝔹) (HΔ : Δ ≤ Γ)
       (Hj : Δ ≤ j ∈ᴮ activatedStages ξ ν) :
-      (Δ ≤ pair j v ∈ᴮ rowHistory omegaOne X ν) ↔
-        Δ ≤ pair j v ∈ᴮ rowHistory ξ X ν := by
+      (Δ ≤ pair j v ∈ᴮ rowHistory omegaOne X ν) ↔ Δ ≤ pair j v ∈ᴮ rowHistory ξ X ν := by
     have Hjξ := (mem_activatedStages_iff.mp Hj).1
     constructor
     · intro Hpair
@@ -258,8 +244,7 @@ theorem birth_rowCandidates_eq_fusion
       exact mem_rowHistory_iff.mpr ⟨Hjξ, Hdata.2.1, Hdata.2.2⟩
     · intro Hpair
       have Hdata := mem_rowHistory_iff.mp Hpair
-      exact mem_rowHistory_iff.mpr
-        ⟨mem_of_mem_subset (HΔ.trans Hξ) Hjξ, Hdata.2.1, Hdata.2.2⟩
+      exact mem_rowHistory_iff.mpr ⟨mem_of_mem_subset (HΔ.trans Hξ) Hjξ, Hdata.2.1, Hdata.2.2⟩
   apply mem_ext
   · apply le_iInf
     intro v

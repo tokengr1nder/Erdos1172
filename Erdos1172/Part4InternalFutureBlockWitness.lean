@@ -68,8 +68,7 @@ theorem futureCommonBlockRows_ext_graph (S L C : bSet 𝔹) :
 theorem futureCommonBlockRows_ext_common (S L f : bSet 𝔹) :
     B_ext (futureCommonBlockRows S L f) :=
   B_ext_inf B_ext_is_function_right (B_ext_inf B_ext_const
-    (B_ext_inf
-      (B_ext_iInf (h := fun _ => B_ext_iInf (h := fun _ => B_ext_iInf (h := fun _ =>
+    (B_ext_inf (B_ext_iInf (h := fun _ => B_ext_iInf (h := fun _ => B_ext_iInf (h := fun _ =>
         B_ext_imp (h₁ := B_ext_inf B_ext_const B_ext_mem_right) (h₂ := B_ext_const)))))
       (blockRowContainment_ext_common S f)))
 

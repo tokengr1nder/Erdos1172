@@ -59,8 +59,7 @@ theorem blueSection_fiber_same (H : SimpleGraph W2) (a b : W2) (U : RegularName 
     blueSection H a b (fiber H a U) = blueSection H a b U := by
   apply RegularName.ext
   intro p x
-  change ((U.holds p x ∧ H.Adj x a) ∧ H.Adj x a ∧ x < b) ↔
-    (U.holds p x ∧ H.Adj x a ∧ x < b)
+  change ((U.holds p x ∧ H.Adj x a) ∧ H.Adj x a ∧ x < b) ↔ (U.holds p x ∧ H.Adj x a ∧ x < b)
   tauto
 
 theorem blueSection_fiber_comm (H : SimpleGraph W2) (a b c : W2) (U : RegularName P W2) :
@@ -74,8 +73,7 @@ theorem blueSection_fiber_comm (H : SimpleGraph W2) (a b c : W2) (U : RegularNam
 theorem blueSmall_fiber (r : Code P I G ↪ W2) (H : SimpleGraph W2)
     (D : RegularName P W2) (J : W2 → RegularName P (RegularName P W2))
     (a : W2) (U : RegularName P W2) (p : P) :
-    (blueSmallName r H D J a).holds p (fiber H a U) ↔
-      (blueSmallName r H D J a).holds p U := by
+    (blueSmallName r H D J a).holds p (fiber H a U) ↔ (blueSmallName r H D J a).holds p U := by
   have heq : support H D J a (fiber H a U) = support H D J a U := by
     apply RegularName.ext
     intro q b

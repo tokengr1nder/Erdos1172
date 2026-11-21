@@ -48,19 +48,16 @@ theorem exists_large_common_basis {κ J S I F B : bSet 𝔹} {Γ : 𝔹}
   have Hbase : Δ ≤ ⨆ A0, (A0 ∈ᴮ bv_powerset κ) ⊓ pair i A0 ∈ᴮ B :=
     (le_inf (inf_le_left.trans ((is_total_of_is_function HB).trans (iInf_le _ i)))
       Hi).trans bv_imp_elim
-  obtain ⟨A0, HA0⟩ := exists_convert Hbase
-    (B_ext_inf B_ext_mem_left B_ext_pair_mem_right)
+  obtain ⟨A0, HA0⟩ := exists_convert Hbase (B_ext_inf B_ext_mem_left B_ext_pair_mem_right)
   apply le_iSup_of_le A0
-  refine le_inf
-    (positiveValues_apply (inf_le_left.trans HBpos) Hi (HA0.trans inf_le_right)) ?_
+  refine le_inf (positiveValues_apply (inf_le_left.trans HBpos) Hi (HA0.trans inf_le_right)) ?_
   apply le_iSup_of_le U
   refine le_inf (le_inf fiber_subset (inf_le_right.trans inf_le_right)) ?_
   apply le_iInf; intro x
   apply le_iInf; intro A
   rw [← deduction]
   let Λ := Δ ⊓ ((x ∈ᴮ U) ⊓ pair x A ∈ᴮ F)
-  have Hx := mem_fiber_iff.mp
-    (show Λ ≤ x ∈ᴮ fiber S g i from inf_le_right.trans inf_le_left)
+  have Hx := mem_fiber_iff.mp (show Λ ≤ x ∈ᴮ fiber S g i from inf_le_right.trans inf_le_left)
   have Hchoice : Λ ≤ basisChoice J F B x i :=
     (le_inf
       (inf_le_left.trans (inf_le_left.trans

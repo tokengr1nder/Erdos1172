@@ -75,8 +75,7 @@ theorem rowHistory_is_function {δ X σ : bSet 𝔹} {Γ : 𝔹}
     exact (le_inf (inf_le_left.trans ((HX.trans inf_le_right).trans (iInf_le _ (pair j σ))))
       (mem_prod_iff.mpr ⟨inf_le_right, inf_le_left.trans Hσ⟩)).trans bv_imp_elim
   · intro j₁ j₂ v₁ v₂ Δ HΔ _ _ _ _ H₁ H₂ Hjj
-    exact eq_of_is_func_of_eq (HΔ.trans (HX.trans inf_le_left))
-      (pair_congr Hjj bv_refl) H₁ H₂
+    exact eq_of_is_func_of_eq (HΔ.trans (HX.trans inf_le_left)) (pair_congr Hjj bv_refl) H₁ H₂
 
 def sectionTraceRel (S Y σ j A : bSet 𝔹) : 𝔹 :=
   ⨆ y, pair j y ∈ᴮ Y ⊓ pair (pair σ y) A ∈ᴮ S
@@ -101,8 +100,7 @@ theorem mem_sectionTrace_iff {δ S Y σ j A : bSet 𝔹} {Γ : 𝔹} :
     Γ ≤ pair j A ∈ᴮ sectionTrace δ S Y σ ↔
       Γ ≤ j ∈ᴮ δ ∧ Γ ≤ A ∈ᴮ bv_powerset omegaOne ∧
         Γ ≤ ⨆ y, pair j y ∈ᴮ Y ⊓ pair (pair σ y) A ∈ᴮ S :=
-  mem_relationGraph_iff (sectionTraceRel_ext_left S Y σ)
-    (sectionTraceRel_ext_right S Y σ)
+  mem_relationGraph_iff (sectionTraceRel_ext_left S Y σ) (sectionTraceRel_ext_right S Y σ)
 
 theorem sectionTrace_witness {δ S Y σ j A : bSet 𝔹} {Γ : 𝔹}
     (H : Γ ≤ pair j A ∈ᴮ sectionTrace δ S Y σ) :
@@ -151,13 +149,11 @@ theorem sectionTrace_is_function {δ S Y σ : bSet 𝔹} {Γ : 𝔹}
     have HYtotal : Δ ≤ ⨆ y, y ∈ᴮ omegaTwo ⊓ pair j y ∈ᴮ Y :=
       (le_inf (inf_le_left.trans ((HY.trans inf_le_right).trans (iInf_le _ j)))
         inf_le_right).trans bv_imp_elim
-    obtain ⟨y, Hy⟩ := exists_convert HYtotal
-      (B_ext_inf B_ext_mem_left B_ext_pair_mem_right)
+    obtain ⟨y, Hy⟩ := exists_convert HYtotal (B_ext_inf B_ext_mem_left B_ext_pair_mem_right)
     have HStotal : Δ ≤ ⨆ A, A ∈ᴮ bv_powerset omegaOne ⊓ pair (pair σ y) A ∈ᴮ S :=
       (le_inf (inf_le_left.trans ((HS.trans inf_le_right).trans (iInf_le _ (pair σ y))))
         (mem_prod_iff.mpr ⟨inf_le_left.trans Hσ, Hy.trans inf_le_left⟩)).trans bv_imp_elim
-    obtain ⟨A, HA⟩ := exists_convert HStotal
-      (B_ext_inf B_ext_mem_left B_ext_pair_mem_right)
+    obtain ⟨A, HA⟩ := exists_convert HStotal (B_ext_inf B_ext_mem_left B_ext_pair_mem_right)
     exact le_iSup_of_le A (le_inf (HA.trans inf_le_left)
       (le_iSup_of_le y (le_inf (Hy.trans inf_le_right) (HA.trans inf_le_right))))
   · intro j₁ j₂ A₁ A₂ Δ HΔ _ _ _ _ H₁ H₂ Hjj

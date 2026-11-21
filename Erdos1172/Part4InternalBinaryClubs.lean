@@ -40,17 +40,14 @@ theorem closedIn_binary_inter {κ C D : bSet 𝔹} {Γ : 𝔹}
   apply le_iInf
   intro a
   rw [← deduction]
-  let Δ := Γ ⊓ ((a ∈ᴮ κ ⊓ (a =ᴮ (∅ : bSet 𝔹))ᶜ) ⊓
-    unboundedIn a (C ∩ᴮ D))
+  let Δ := Γ ⊓ ((a ∈ᴮ κ ⊓ (a =ᴮ (∅ : bSet 𝔹))ᶜ) ⊓ unboundedIn a (C ∩ᴮ D))
   have Ha : Δ ≤ a ∈ᴮ κ := inf_le_right.trans (inf_le_left.trans inf_le_left)
-  have Hne : Δ ≤ (a =ᴮ (∅ : bSet 𝔹))ᶜ :=
-    inf_le_right.trans (inf_le_left.trans inf_le_right)
+  have Hne : Δ ≤ (a =ᴮ (∅ : bSet 𝔹))ᶜ := inf_le_right.trans (inf_le_left.trans inf_le_right)
   have HU : Δ ≤ unboundedIn a (C ∩ᴮ D) := inf_le_right.trans inf_le_right
   exact mem_binary_inter_iff.mpr
     ⟨closedIn_apply (inf_le_left.trans HC) Ha Hne
       (unboundedIn_mono binary_inter_subset_left HU),
-     closedIn_apply (inf_le_left.trans HD) Ha Hne
-      (unboundedIn_mono binary_inter_subset_right HU)⟩
+     closedIn_apply (inf_le_left.trans HD) Ha Hne (unboundedIn_mono binary_inter_subset_right HU)⟩
 
 /-- Two internal omega-two clubs have unbounded binary intersection.
 The indexed family used in the proof is an actual internal function. -/
@@ -70,8 +67,7 @@ theorem unboundedIn_binary_inter {C D : bSet 𝔹} {Γ : 𝔹}
   have HQ : Γ ≤ injects_into bSet.omega omegaOne :=
     injects_into_of_subset (subset_of_mem_Ord omega_mem_omegaOne omegaOne_Ord)
   have Hclubs : Γ ≤ ⨅ q, ⨅ E,
-      _root_.imp (q ∈ᴮ bSet.omega ⊓ pair q E ∈ᴮ sequenceGraph v)
-        (club omegaTwo E) := by
+      _root_.imp (q ∈ᴮ bSet.omega ⊓ pair q E ∈ᴮ sequenceGraph v) (club omegaTwo E) := by
     apply le_iInf
     intro q
     apply le_iInf

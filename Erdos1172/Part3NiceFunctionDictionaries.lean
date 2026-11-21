@@ -45,8 +45,7 @@ theorem groundName_injective (one : P) (hOne : ∀ p : P, p ≤ one) :
   intro f g h
   funext i
   have heq := congrArg (fun N : NiceFunctionName P I V => N.graph i) h
-  have hm : (one, f i) ∈ (groundName one hOne g).graph i :=
-    heq ▸ Set.mem_singleton _
+  have hm : (one, f i) ∈ (groundName one hOne g).graph i := heq ▸ Set.mem_singleton _
   exact congrArg Prod.snd (Set.mem_singleton_iff.mp hm)
 
 theorem mk_nice_function_name_eq (hGCH : GCH) (hP : #P ≤ ℵ_ 2)

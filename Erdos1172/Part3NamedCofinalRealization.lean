@@ -47,8 +47,7 @@ theorem exists_ground_cofinal_embedding
     simpa only [W1, Cardinal.mk_toType, Ordinal.card_omega] using hV)
   let D (j : W1) : Set P := {p |
     (∀ i : I, indexI i = j → ∃ x : V, E.decides p i x) ∧
-    (∀ cut : V, indexV cut = j →
-      ∃ i : I, ∃ x : V, E.decides p i x ∧ cut ≤ x)}
+    (∀ cut : V, indexV cut = j → ∃ i : I, ∃ x : V, E.decides p i x ∧ cut ≤ x)}
   have hD : ∀ j : W1, DenseBelow (D j) := by
     intro j p
     obtain ⟨q, hqp, hvalues⟩ : ∃ q : P, q ≤ p ∧
@@ -57,8 +56,7 @@ theorem exists_ground_cofinal_embedding
       · obtain ⟨q, hqp, x, hx⟩ := E.dense p hrequest.choose
         refine ⟨q, hqp, ?_⟩
         intro i hi
-        have heq : i = hrequest.choose :=
-          indexI.injective (hi.trans hrequest.choose_spec.symm)
+        have heq : i = hrequest.choose := indexI.injective (hi.trans hrequest.choose_spec.symm)
         subst i
         exact ⟨x, hx⟩
       · exact ⟨p, le_rfl, fun i hi => (hrequest ⟨i, hi⟩).elim⟩
@@ -69,18 +67,15 @@ theorem exists_ground_cofinal_embedding
         obtain ⟨y, hy⟩ := hvalues k hk
         exact ⟨y, E.persistent hrq hy⟩
       · intro cut hcutj
-        have heq : cut = hcut.choose :=
-          indexV.injective (hcutj.trans hcut.choose_spec.symm)
+        have heq : cut = hcut.choose := indexV.injective (hcutj.trans hcut.choose_spec.symm)
         subst cut
         exact ⟨i, x, hx, hcutx⟩
     · exact ⟨q, ⟨hvalues, fun cut hcutj => (hcut ⟨cut, hcutj⟩).elim⟩, hqp⟩
-  obtain ⟨conditions, hanti, -, hmeet⟩ :=
-    exists_antitone_dense_sequence hclosed p0 D hD
+  obtain ⟨conditions, hanti, -, hmeet⟩ := exists_antitone_dense_sequence hclosed p0 D hD
   have hvalues (i : I) : ∃ x : V, E.decides (conditions (indexI i)) i x :=
     (hmeet (indexI i)).1 i rfl
   let e (i : I) : V := (hvalues i).choose
-  have he (i : I) : E.decides (conditions (indexI i)) i (e i) :=
-    (hvalues i).choose_spec
+  have he (i : I) : E.decides (conditions (indexI i)) i (e i) := (hvalues i).choose_spec
   refine ⟨e, ?_, ?_⟩
   · intro i j hij
     exact hordered hij
@@ -100,8 +95,7 @@ theorem exists_ground_cofinal_set [WellFoundedLT I] [WellFoundedLT V]
     (hI : #I ≤ ℵ_ 1) (hV : #V ≤ ℵ_ 1)
     (hordered : OrderedDecisions E) (hcofinal : CofinalDecisions E) :
     ∃ A : Set V, IsCofinal A ∧ typeLT A = typeLT I := by
-  obtain ⟨e, hstrict, hcof⟩ :=
-    exists_ground_cofinal_embedding E hclosed p0 hI hV hordered hcofinal
+  obtain ⟨e, hstrict, hcof⟩ := exists_ground_cofinal_embedding E hclosed p0 hI hV hordered hcofinal
   exact ⟨Set.range e, hcof, Ordinal.typeLT_range_of_strictMono e hstrict⟩
 
 end Erdos1172Part3NamedCofinalRealization

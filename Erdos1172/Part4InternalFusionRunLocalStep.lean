@@ -143,8 +143,7 @@ theorem selector_input_mem_closedHull_of_prefix
     (Hhull : Γ ≤ closedHullData color R F B P)
     (Hobjects : Γ ≤ ⨅ i, ⨅ A, _root_.imp (i ∈ᴮ ξ ⊓ pair i A ∈ᴮ blockHistory T)
       (A =ᴮ (∅ : bSet 𝔹) ⊔ A ∈ᴮ B))
-    (Hprevious : Γ ≤ ⨅ i, ⨅ U, _root_.imp (i ∈ᴮ ξ ⊓ pair i U ∈ᴮ activeFamily T)
-      (U ⊆ᴮ P)) :
+    (Hprevious : Γ ≤ ⨅ i, ⨅ U, _root_.imp (i ∈ᴮ ξ ⊓ pair i U ∈ᴮ activeFamily T) (U ⊆ᴮ P)) :
     Γ ≤ pair (earlierHistory color R ξ (blockHistory T)) (nextActive color R E top ξ T) ∈ᴮ
       choicePoolDomain B P :=
   mem_choicePoolDomain_iff.mpr
@@ -166,11 +165,9 @@ theorem nextBlock_in_closedHull_of_prefix
     (Hhull : Γ ≤ closedHullData color R F B P)
     (Hobjects : Γ ≤ ⨅ i, ⨅ A, _root_.imp (i ∈ᴮ ξ ⊓ pair i A ∈ᴮ blockHistory T)
       (A =ᴮ (∅ : bSet 𝔹) ⊔ A ∈ᴮ B))
-    (Hprevious : Γ ≤ ⨅ i, ⨅ U, _root_.imp (i ∈ᴮ ξ ⊓ pair i U ∈ᴮ activeFamily T)
-      (U ⊆ᴮ P)) :
+    (Hprevious : Γ ≤ ⨅ i, ⨅ U, _root_.imp (i ∈ᴮ ξ ⊓ pair i U ∈ᴮ activeFamily T) (U ⊆ᴮ P)) :
     Γ ≤ nextBlock color R E F top ξ T ⊆ᴮ P ⊓
-      (nextBlock color R E F top ξ T =ᴮ (∅ : bSet 𝔹) ⊔
-        nextBlock color R E F top ξ T ∈ᴮ B) := by
+      (nextBlock color R E F top ξ T =ᴮ (∅ : bSet 𝔹) ⊔ nextBlock color R E F top ξ T ∈ᴮ B) := by
   have Hinput := mem_choicePoolDomain_iff.mp
     (selector_input_mem_closedHull_of_prefix (top := top)
       HE HElaw Hξ HT Hvalues Hhull Hobjects Hprevious)

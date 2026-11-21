@@ -72,15 +72,13 @@ theorem checked_sequence_reading_cover (A : PSet.{u})
         (f =ᴮ mapNames omegaOneFirstStageHom g) := by
   classical
   let V : omegaOneAlgebra B := ⨆ g : bSet B,
-    omegaOneFirstStageHom (is_function omega (check A) g) ⊓
-      (f =ᴮ mapNames omegaOneFirstStageHom g)
+    omegaOneFirstStageHom (is_function omega (check A) g) ⊓ (f =ᴮ mapNames omegaOneFirstStageHom g)
   change Γ ≤ V
   by_contra Hnot
   have Hpositive : Γ ⊓ Vᶜ ≠ ⊥ := by
     intro Hzero
     apply Hnot
-    have H : Γ ≤ (Vᶜ)ᶜ :=
-      le_compl_iff_disjoint_right.mpr (disjoint_iff_inf_le.mpr Hzero.le)
+    have H : Γ ≤ (Vᶜ)ᶜ := le_compl_iff_disjoint_right.mpr (disjoint_iff_inf_le.mpr Hzero.le)
     simpa only [compl_compl] using H
   obtain ⟨p, Hp⟩ := exists_condition_le Hpositive
   obtain ⟨r, Hrp, g, Hg, Heq⟩ := exists_checked_sequence_reading p A f
@@ -88,7 +86,6 @@ theorem checked_sequence_reading_cover (A : PSet.{u})
   have HrV : condition r ≤ V := le_iSup_of_le g
     (le_inf ((condition_le_firstStageHom_iff ErdosOmegaTwo.omegaOne r _).mpr Hg) Heq)
   have HrnotV : condition r ≤ Vᶜ := (condition_mono Hrp).trans (Hp.trans inf_le_right)
-  exact condition_ne_bot r
-    (bot_unique ((le_inf HrV HrnotV).trans inf_compl_eq_bot.le))
+  exact condition_ne_bot r (bot_unique ((le_inf HrV HrnotV).trans inf_compl_eq_bot.le))
 
 end Erdos1172CohenIteration

@@ -60,13 +60,11 @@ theorem conditions_subset_countableSubsets {K : bSet B} {Γ : B}
   apply le_iInf
   intro p
   rw [← deduction]
-  have Hp : Γ ⊓ p ∈ᴮ conditions K ≤ condition K p :=
-    mem_conditions_iff.mp inf_le_right
+  have Hp : Γ ⊓ p ∈ᴮ conditions K ≤ condition K p := mem_conditions_iff.mp inf_le_right
   exact mem_countableSubsets_iff.mpr
     ⟨Hp.trans inf_le_left, condition_countable (inf_le_left.trans HK) Hp⟩
 
-theorem two_injects_omegaOne {Γ : B} :
-    Γ ≤ injects_into (two : bSet B) omegaOne := by
+theorem two_injects_omegaOne {Γ : B} : Γ ≤ injects_into (two : bSet B) omegaOne := by
   apply injects_into_of_subset
   exact subset_trans' (of_nat_subset_omega (n := 2))
     (subset_of_mem_transitive (omegaOne_Ord.trans inf_le_right) omega_mem_omegaOne)
@@ -81,8 +79,7 @@ theorem condition_support_injects_omegaOne {Γ : B} (HCH : Γ ≤ (CH : B)) :
 theorem conditions_injects_omegaOne {Γ : B} (HCH : Γ ≤ (CH : B)) :
     Γ ≤ injects_into (conditions (omegaOne : bSet B)) omegaOne :=
   injects_into_trans
-    (injects_into_of_subset (conditions_subset_countableSubsets
-      (le_top.trans omegaOne_property)))
+    (injects_into_of_subset (conditions_subset_countableSubsets (le_top.trans omegaOne_property)))
     (countableSubsets_injects_omegaOne HCH (condition_support_injects_omegaOne HCH))
 
 /-- The empty condition is present even though arbitrary condition labels
@@ -101,8 +98,7 @@ open bSet bSet.ErdosCohen bSet.ErdosOmegaTwo
 /-- Only first-stage CH and the first-stage checked-kappa equality are used. -/
 theorem firstStage_conditions_injects_checked_upper (κ : Cardinal.{u})
     (Hκ : κ.IsInaccessible) :
-    (⊤ : FirstAlgebra κ) ≤ injects_into (conditions omegaOne)
-      (check (PSet.ordinalMk κ.ord)) :=
+    (⊤ : FirstAlgebra κ) ≤ injects_into (conditions omegaOne) (check (PSet.ordinalMk κ.ord)) :=
   bv_rw'' (bv_symm (firstStage_checked_upper_eq_omegaOne κ Hκ.isRegular Hκ.aleph0_lt))
     (conditions_injects_omegaOne (Erdos1172LevyCollapse.below_forces_CH κ Hκ))
     B_ext_injects_into_right

@@ -105,8 +105,7 @@ theorem localizedName_recovers {A : PSet.{u}} {x : bSet B} {Γ : B}
 
 /-- This is genuine complete generation, with no density-cardinality claim. -/
 theorem nameAlgebra_le_iff (A : PSet.{u}) (x : bSet B) (S : CompleteSubalgebra B) :
-    nameAlgebra A x ≤ S ↔
-      ∀ i : A.Type, ((check (A.Func i) : bSet B) ∈ᴮ x) ∈ S := by
+    nameAlgebra A x ≤ S ↔ ∀ i : A.Type, ((check (A.Func i) : bSet B) ∈ᴮ x) ∈ S := by
   change generated (membershipGenerators A x) ≤ S ↔ _
   rw [generated_le_iff]
   exact Set.range_subset_iff

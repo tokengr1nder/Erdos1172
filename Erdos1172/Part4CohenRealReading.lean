@@ -63,19 +63,15 @@ theorem map_realName (e : CompleteLatticeHom B C) (b : ℕ → B) :
     mapNames e (realName b) = realName (fun n => e (b n)) := by
   simp only [realName, mapNames_mk, of_nat, map_check]
 
-private theorem agreement_forward {a b Γ : C}
-    (H : Γ ≤ (a ⊓ b) ⊔ (aᶜ ⊓ bᶜ)) : Γ ⊓ a ≤ b := by
+private theorem agreement_forward {a b Γ : C} (H : Γ ≤ (a ⊓ b) ⊔ (aᶜ ⊓ bᶜ)) : Γ ⊓ a ≤ b := by
   rw [deduction]
   change Γ ≤ aᶜ ⊔ b
-  exact H.trans (sup_le (inf_le_right.trans le_sup_right)
-    (inf_le_left.trans le_sup_left))
+  exact H.trans (sup_le (inf_le_right.trans le_sup_right) (inf_le_left.trans le_sup_left))
 
-private theorem agreement_reverse {a b Γ : C}
-    (H : Γ ≤ (a ⊓ b) ⊔ (aᶜ ⊓ bᶜ)) : Γ ⊓ b ≤ a := by
+private theorem agreement_reverse {a b Γ : C} (H : Γ ≤ (a ⊓ b) ⊔ (aᶜ ⊓ bᶜ)) : Γ ⊓ b ≤ a := by
   rw [deduction]
   change Γ ≤ bᶜ ⊔ a
-  exact H.trans (sup_le (inf_le_left.trans le_sup_right)
-    (inf_le_right.trans le_sup_left))
+  exact H.trans (sup_le (inf_le_left.trans le_sup_right) (inf_le_right.trans le_sup_left))
 
 /-- Local binary agreement of all natural membership coefficients recovers
 the entire arbitrary subset name at precisely the same condition. -/
@@ -83,8 +79,7 @@ theorem eq_map_realName_of_binary_agreement (e : CompleteLatticeHom B C)
     {x : bSet C} {Γ : C} {b : ℕ → B}
     (Hx : Γ ≤ x ⊆ᴮ omega)
     (Hcoeff : ∀ n : ℕ, Γ ≤
-      (((of_nat n : bSet C) ∈ᴮ x) ⊓ e (b n)) ⊔
-        (((of_nat n : bSet C) ∈ᴮ x)ᶜ ⊓ (e (b n))ᶜ)) :
+      (((of_nat n : bSet C) ∈ᴮ x) ⊓ e (b n)) ⊔ (((of_nat n : bSet C) ∈ᴮ x)ᶜ ⊓ (e (b n))ᶜ)) :
     Γ ≤ x =ᴮ mapNames e (realName b) := by
   rw [map_realName, realName_eq_indicator]
   apply bv_trans (eq_membership_indicator_of_subset Hx)
@@ -102,12 +97,10 @@ names. The witnesses form a Boolean cover; no single global witness is claimed. 
 theorem real_reading_cover {x : bSet (omegaOneAlgebra B)} {Γ : omegaOneAlgebra B}
     (Hx : Γ ≤ x ⊆ᴮ omega) :
     Γ ≤ ⨆ y : bSet B,
-      omegaOneFirstStageHom (y ⊆ᴮ omega) ⊓
-        (x =ᴮ mapNames omegaOneFirstStageHom y) := by
+      omegaOneFirstStageHom (y ⊆ᴮ omega) ⊓ (x =ᴮ mapNames omegaOneFirstStageHom y) := by
   let c : ℕ → omegaOneAlgebra B := fun n => (of_nat n : bSet (omegaOneAlgebra B)) ∈ᴮ x
   let agreement : (ℕ → B) → omegaOneAlgebra B := fun b =>
-    ⨅ n : ℕ, (c n ⊓ omegaOneFirstStageHom (b n)) ⊔
-      ((c n)ᶜ ⊓ (omegaOneFirstStageHom (b n))ᶜ)
+    ⨅ n : ℕ, (c n ⊓ omegaOneFirstStageHom (b n)) ⊔ ((c n)ᶜ ⊓ (omegaOneFirstStageHom (b n))ᶜ)
   have Hcover : (⨆ b : ℕ → B, agreement b) = ⊤ :=
     iSup_iInf_relative_binary_reading_eq_top ErdosOmegaTwo.omegaOne_property c
   have Hpieces : Γ = ⨆ b : ℕ → B, Γ ⊓ agreement b := by
@@ -116,13 +109,11 @@ theorem real_reading_cover {x : bSet (omegaOneAlgebra B)} {Γ : omegaOneAlgebra 
   apply iSup_le
   intro b
   have Hcoeff (n : ℕ) : Γ ⊓ agreement b ≤
-      (c n ⊓ omegaOneFirstStageHom (b n)) ⊔
-        ((c n)ᶜ ⊓ (omegaOneFirstStageHom (b n))ᶜ) :=
+      (c n ⊓ omegaOneFirstStageHom (b n)) ⊔ ((c n)ᶜ ⊓ (omegaOneFirstStageHom (b n))ᶜ) :=
     inf_le_right.trans (iInf_le _ n)
   have Heq : Γ ⊓ agreement b ≤
       x =ᴮ mapNames omegaOneFirstStageHom (realName b) :=
-    eq_map_realName_of_binary_agreement omegaOneFirstStageHom
-      (inf_le_left.trans Hx) Hcoeff
+    eq_map_realName_of_binary_agreement omegaOneFirstStageHom (inf_le_left.trans Hx) Hcoeff
   apply le_iSup_of_le (realName b)
   refine le_inf ?_ Heq
   rw [realName_subset_value, map_top]

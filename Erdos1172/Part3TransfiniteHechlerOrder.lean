@@ -196,7 +196,6 @@ instance (hGCH : GCH) (a : Cut) : Inhabited (Stage hGCH a) := ⟨empty a⟩
 theorem le_iff (hGCH : GCH) {a : Cut} (q p : Stage hGCH a) :
     q ≤ p ↔ StrongerWith (fun b _ => stage hGCH b) q p := stage_le_iff hGCH a q p
 
-theorem mk_stage_le (hGCH : GCH) (a : Cut) : #(Stage hGCH a) ≤ ℵ_ 2 :=
-  mk_carrier_le hGCH a
+theorem mk_stage_le (hGCH : GCH) (a : Cut) : #(Stage hGCH a) ≤ ℵ_ 2 := mk_carrier_le hGCH a
 
 end Erdos1172Part3TransfiniteHechlerOrder

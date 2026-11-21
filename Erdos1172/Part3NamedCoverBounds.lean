@@ -39,10 +39,8 @@ theorem exists_common_strict_bound
     (hclosed : CountablyClosed P) (F : J → FunctionDecisions P W1 W1)
     (hJ : #J ≤ ℵ₀) :
     ∃ H : FunctionDecisions P W1 W1,
-      ∀ p i bound, H.decides p i bound →
-        ∀ j : J, BoundedAt (F j) p i bound := by
-  let R (p : P) (i bound : W1) : Prop :=
-    ∀ j : J, BoundedAt (F j) p i bound
+      ∀ p i bound, H.decides p i bound → ∀ j : J, BoundedAt (F j) p i bound := by
+  let R (p : P) (i bound : W1) : Prop := ∀ j : J, BoundedAt (F j) p i bound
   have hpersistent : ∀ {p q i bound}, q ≤ p → R p i bound → R q i bound := by
     intro p q i bound hqp hR j
     exact boundedAt_mono (hR j) hqp

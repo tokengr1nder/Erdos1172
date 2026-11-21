@@ -67,8 +67,7 @@ theorem initialProjection_entries (h : κ ≤ θ) (p : BelowCondition θ) (i : �
 
 private theorem exists_override {I J : Type u} {A : J → Type u} (j : I ↪ J)
     (f : ∀ i, Erdos1172Collapse.Condition (A (j i))) (p : ProductCondition A) (s : Finset I) :
-    ∃ r : ProductCondition A, (∀ i ∈ s, r (j i) = f i) ∧
-      ∀ k, (∀ i ∈ s, j i ≠ k) → r k = p k := by
+    ∃ r : ProductCondition A, (∀ i ∈ s, r (j i) = f i) ∧ ∀ k, (∀ i ∈ s, j i ≠ k) → r k = p k := by
   classical
   induction s using Finset.induction_on with
   | empty => exact ⟨p, by simp, fun _ _ => rfl⟩
@@ -118,8 +117,7 @@ theorem initialProjection_surjective (h : κ ≤ θ) : Function.Surjective (init
     apply DFinsupp.ext
     intro i
     rfl
-  obtain ⟨r, _, hr⟩ := initialProjection_exactLifts h (⊤ : BelowCondition θ) q
-    (ht.symm ▸ le_top)
+  obtain ⟨r, _, hr⟩ := initialProjection_exactLifts h (⊤ : BelowCondition θ) q (ht.symm ▸ le_top)
   exact ⟨r, hr⟩
 
 def initialCollapseHom (h : κ ≤ θ) :

@@ -86,8 +86,7 @@ theorem mem_imageRecMaps_iff {θ V P : bSet 𝔹}
 theorem mem_imageRecMaps {θ V P : bSet 𝔹}
     {Φ : bSet 𝔹 → bSet 𝔹 → bSet 𝔹} (Hpast : ∀ i, B_congr (Φ i)) :
     P ∈ᴮ imageRecMaps θ V Φ = imageRecPartial θ V Φ P :=
-  le_antisymm ((mem_imageRecMaps_iff Hpast).mp le_rfl)
-    ((mem_imageRecMaps_iff Hpast).mpr le_rfl)
+  le_antisymm ((mem_imageRecMaps_iff Hpast).mp le_rfl) ((mem_imageRecMaps_iff Hpast).mpr le_rfl)
 
 theorem imageRecPartial_function {θ V P : bSet 𝔹}
     {Φ : bSet 𝔹 → bSet 𝔹 → bSet 𝔹} {Γ : 𝔹}
@@ -169,8 +168,7 @@ theorem imageRecPartial_union_of_chain {θ V C : bSet 𝔹}
     rw [← deduction]
     exact ((le_inf (inf_le_left.trans (Hfamily.trans (iInf_le _ P))) inf_le_right).trans
       bv_imp_elim).trans inf_le_left
-  have Hprefix : Γ ≤ prefixGraph θ V (bv_union C) :=
-    prefixGraph_union_of_chain Hchain HprefixFamily
+  have Hprefix : Γ ≤ prefixGraph θ V (bv_union C) := prefixGraph_union_of_chain Hchain HprefixFamily
   exact le_inf Hprefix (imageRecLaw_union Hpast
     (Hprefix.trans (inf_le_right.trans inf_le_left)) Hfamily)
 
@@ -184,7 +182,6 @@ theorem imageRecMaps_chain_union {θ V C : bSet 𝔹}
   apply le_iInf
   intro P
   rw [← deduction]
-  exact (mem_imageRecMaps_iff Hpast).mp
-    (mem_of_mem_subset (inf_le_left.trans Hsub) inf_le_right)
+  exact (mem_imageRecMaps_iff Hpast).mp (mem_of_mem_subset (inf_le_left.trans Hsub) inf_le_right)
 
 end bSet.ErdosBoundedImageRecursion

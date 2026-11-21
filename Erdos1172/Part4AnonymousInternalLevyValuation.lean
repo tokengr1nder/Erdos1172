@@ -99,18 +99,15 @@ theorem levyTruthOpen_bot_disjoint (α : Ordinal.{u}) (g : bSet (anonymousAlgebr
 
 theorem levyTruthOpen_inf_eq (α : Ordinal.{u}) (b₁ b₂ : InternalLevyStage κ α)
     (g : bSet (anonymousAlgebra κ)) :
-    (g ∈ᴮ levyTruthOpen α (b₁ ⊓ b₂)) =
-      (g ∈ᴮ levyTruthOpen α b₁) ⊓ (g ∈ᴮ levyTruthOpen α b₂) := by
+    (g ∈ᴮ levyTruthOpen α (b₁ ⊓ b₂)) = (g ∈ᴮ levyTruthOpen α b₁) ⊓ (g ∈ᴮ levyTruthOpen α b₂) := by
   apply le_antisymm
   · obtain ⟨hg_P, hr⟩ := mem_levyTruthOpen_iff.mp (le_refl (g ∈ᴮ levyTruthOpen α (b₁ ⊓ b₂)))
-    exact le_inf
-      (mem_levyTruthOpen_iff.mpr ⟨hg_P, hr.trans (iSup_le fun ⟨p, hp⟩ =>
+    exact le_inf (mem_levyTruthOpen_iff.mpr ⟨hg_P, hr.trans (iSup_le fun ⟨p, hp⟩ =>
         le_iSup_of_le ⟨p, hp.trans inf_le_left⟩ le_rfl)⟩)
       (mem_levyTruthOpen_iff.mpr ⟨hg_P, hr.trans (iSup_le fun ⟨p, hp⟩ =>
         le_iSup_of_le ⟨p, hp.trans inf_le_right⟩ le_rfl)⟩)
   · let D := (g ∈ᴮ levyTruthOpen α b₁) ⊓ (g ∈ᴮ levyTruthOpen α b₂)
-    have hg_P : D ≤ g ∈ᴮ internalLevyPoset κ α :=
-      (mem_levyTruthOpen_iff.mp (inf_le_left : D ≤ _)).1
+    have hg_P : D ≤ g ∈ᴮ internalLevyPoset κ α := (mem_levyTruthOpen_iff.mp (inf_le_left : D ≤ _)).1
     refine mem_levyTruthOpen_iff.mpr ⟨hg_P, ?_⟩
     have hr₁ : D ≤ levyReads α b₁ g := (mem_levyTruthOpen_iff.mp (inf_le_left : D ≤ _)).2
     have hr₂ : D ≤ levyReads α b₂ g := (mem_levyTruthOpen_iff.mp (inf_le_right : D ≤ _)).2
@@ -199,8 +196,7 @@ theorem exists_supported_dense_test_extension {W₁ : Type u} [NontrivialComplet
       Γ ≤ q₀ ⊆ᴮ z := by
   obtain ⟨ν, F_D, hF_D⟩ := hD
   let P_A := internalLevyPoset κ α
-  let env (i : I) : Bool → bSet (anonymousAlgebra κ) :=
-    fun bl => if bl then D i else P_A
+  let env (i : I) : Bool → bSet (anonymousAlgebra κ) := fun bl => if bl then D i else P_A
   have henv : Preparation.SupportedEnv U a env :=
     ⟨ν, fun S bl => if bl then F_D S else P_A,
       hF_D.mono fun i hi => funext fun bl => by cases bl <;> simp [env, hi]⟩
@@ -216,12 +212,10 @@ theorem exists_supported_dense_test_extension {W₁ : Type u} [NontrivialComplet
     funext bl; cases bl <;> rfl
   rw [henv_W, suppDenseFormula_eval] at hφ_W
   simp_rw [← subset_iff_allIn_mem] at hφ_W
-  have hex_W : Γ ≤ ⨆ r : bSet W₁, (r ∈ᴮ D_W) ⊓ (q₀ ⊆ᴮ r) :=
-    allIn_elim (le_top.trans hφ_W) hq₀
+  have hex_W : Γ ≤ ⨆ r : bSet W₁, (r ∈ᴮ D_W) ⊓ (q₀ ⊆ᴮ r) := allIn_elim (le_top.trans hφ_W) hq₀
   obtain ⟨z, hz⟩ := exists_convert hex_W (B_ext_inf B_ext_mem_left B_ext_subset_right)
   have hDP_VA : (⊤ : Erdos1172BooleanUltrapower.Algebra U (anonymousAlgebra κ)) ≤
-      Preparation.boundedAnonName U a D ⊆ᴮ
-        Preparation.boundedAnonName U a (fun _ => P_A) := by
+      Preparation.boundedAnonName U a D ⊆ᴮ Preparation.boundedAnonName U a (fun _ => P_A) := by
     rw [← Preparation.boundedAnonName_subset U a hk hf hn ht hκ D (fun _ => P_A)
       ⟨ν, F_D, hF_D⟩ (Preparation.Supported.const P_A),
       value_eq_of_eventuallyEq U (g := fun _ => ⊤) (Eventually.of_forall fun i => top_unique (hD_sub i)),
@@ -313,8 +307,7 @@ theorem internalLevyAlgebra_cardinal_le (hk : κ < θ) (hκ : κ.IsInaccessible)
   choose ν_of hν_of using fun b : F =>
     strict_upper_bound_theta'' hθ.isRegular (hSub_lt b) (fun s : Sub b => e_D s.val.val)
   let Code := Σ ν : θ.ord.ToType, Set (Set.Iio ν)
-  let encode (b : F) : Code :=
-    ⟨ν_of b, {z : Set.Iio (ν_of b) | ∃ s : Sub b, e_D s.val.val = z.val}⟩
+  let encode (b : F) : Code := ⟨ν_of b, {z : Set.Iio (ν_of b) | ∃ s : Sub b, e_D s.val.val = z.val}⟩
   have hmem_iff (b : F) (d : D) :
       (∃ hx : e_D d < (encode b).1, (⟨e_D d, hx⟩ : Set.Iio (encode b).1) ∈ (encode b).2) ↔
         ∃ s : Sub b, s.val.val = d := by
@@ -580,8 +573,7 @@ def infOpenFormula : InterpretedMaster.Formula (Fin 4) :=
 omit [CountableInterFilter (U : Filter I)] [Nonempty θ.ord.ToType] [CardinalInterFilter (U : Filter I) κ] in
 private theorem infOpenFormula_eval {B : Type u} [NontrivialCompleteBooleanAlgebra B]
     (P O₁₂ O₁ O₂ : bSet B) :
-    infOpenFormula.eval ![P, O₁₂, O₁, O₂] =
-      allIn P (fun z =>
+    infOpenFormula.eval ![P, O₁₂, O₁, O₂] = allIn P (fun z =>
         _root_.imp (z ∈ᴮ O₁₂) ((z ∈ᴮ O₁) ⊓ (z ∈ᴮ O₂)) ⊓
           _root_.imp ((z ∈ᴮ O₁) ⊓ (z ∈ᴮ O₂)) (z ∈ᴮ O₁₂)) :=
   rfl
@@ -686,8 +678,7 @@ def regFormula : InterpretedMaster.Formula (Fin 4) :=
 omit [CountableInterFilter (U : Filter I)] [Nonempty θ.ord.ToType] [CardinalInterFilter (U : Filter I) κ] in
 private theorem regFormula_eval {B : Type u} [NontrivialCompleteBooleanAlgebra B]
     (D S R O : bSet B) :
-    regFormula.eval ![D, S, R, O] =
-      allIn D (fun g => someIn S (fun x => edge R x g) ⊔ (g ∈ᴮ O)) :=
+    regFormula.eval ![D, S, R, O] = allIn D (fun g => someIn S (fun x => edge R x g) ⊔ (g ∈ᴮ O)) :=
   rfl
 
 def fibFormula : InterpretedMaster.Formula (Fin 4) :=
@@ -905,10 +896,8 @@ private theorem exists_valuationGoodStep
     mapNames j₀ (Preparation.boundedAnonName (κ := κ) U a (fun i => levyTruthOpen α (Y (seed_idx i))))
   have hIio_lt : #(Set.Iio β) < θ :=
     (Cardinal.mk_Iio_lt β (by simp)).trans_eq (Cardinal.mk_ord_toType θ)
-  have hprev_sub_m₀ (γ : Set.Iio β) : (⊤ : R) ≤ m₀ ⊆ᴮ (prev γ).p :=
-    (ih γ).2.2.choose
-  have hprev_mono_p (γ₁ γ₂ : Set.Iio β) (hle : γ₁ ≤ γ₂) :
-      (⊤ : R) ≤ (prev γ₁).p ⊆ᴮ (prev γ₂).p := by
+  have hprev_sub_m₀ (γ : Set.Iio β) : (⊤ : R) ≤ m₀ ⊆ᴮ (prev γ).p := (ih γ).2.2.choose
+  have hprev_mono_p (γ₁ γ₂ : Set.Iio β) (hle : γ₁ ≤ γ₂) : (⊤ : R) ≤ (prev γ₁).p ⊆ᴮ (prev γ₂).p := by
     rcases hle.lt_or_eq with hlt | rfl
     · exact (ih γ₂).2.2.choose_spec.1 ⟨γ₁.val, hlt⟩
     · exact subset_self
@@ -952,8 +941,7 @@ private theorem exists_valuationGoodStep
       (fun l : Set.Iio β => (prev l).α) hα_β hprev_α_le (fun l : Set.Iio β => (prev l).G)
       hprev_mono_G hprev_master γ
   obtain ⟨p_mid, hp_mid, hsub_in_mid, q_mid, hq_mid_P, hq_mid_eq⟩ :=
-    code_small_ground_func_into_stage U a hk hκ hθ hf hn ht hm₀ hp_in hsub_m₀_in
-      j₀ hj₀_sub α_β G_in
+    code_small_ground_func_into_stage U a hk hκ hθ hf hn ht hm₀ hp_in hsub_m₀_in j₀ hj₀_sub α_β G_in
   let hsub_m₀_mid : (⊤ : R) ≤ m₀ ⊆ᴮ p_mid := subset_trans' hsub_m₀_in hsub_in_mid
   have extendCompress (D_fn : K → bSet A)
       (hsub_D : ∀ i, (⊤ : A) ≤ D_fn (seed_idx i) ⊆ᴮ internalLevyPoset κ α_β)
@@ -1053,8 +1041,7 @@ theorem exists_normal_valuation_into_ambientLevy
   let K := κ.ord.ToType
   let u_src := ambientLevySourceHom κ θ
   let m₀ := sourceCohenMaster u_src
-  obtain ⟨hm₀, j₀, hj₀_base, hj₀_sub⟩ :=
-    exists_ambient_stageOne_lift U a hk hκ hθ hf hn ht
+  obtain ⟨hm₀, j₀, hj₀_base, hj₀_sub⟩ := exists_ambient_stageOne_lift U a hk hκ hθ hf hn ht
   let W₁ := LocalizedSourceCohen R m₀ hm₀
   let j_R := localizedFirstStageHom hm₀
   let seed := criticalOrdinalPoint U a hf hn ht hk
@@ -1078,8 +1065,7 @@ theorem exists_normal_valuation_into_ambientLevy
     rw [Cardinal.mk_sum, Cardinal.lift_id, Cardinal.lift_id]
     have h1 : #(K → F) ≤ θ := small_func_cardinal_le hθ hK_lt hF_le
     have h2 : #(K → K → F) ≤ θ :=
-      (Cardinal.mk_congr (Equiv.curry K K F).symm).le.trans
-        (small_func_cardinal_le hθ hKK_lt hF_le)
+      (Cardinal.mk_congr (Equiv.curry K K F).symm).le.trans (small_func_cardinal_le hθ hKK_lt hF_le)
     exact (add_le_add h1 h2).trans_eq (Cardinal.add_eq_self hθ.aleph0_lt.le)
   obtain ⟨emb_task⟩ : Nonempty (Task ↪ θ.ord.ToType) :=
     (Cardinal.le_def Task θ.ord.ToType).mp (hTask_le.trans_eq (Cardinal.mk_ord_toType θ).symm)
@@ -1137,14 +1123,12 @@ theorem exists_normal_valuation_into_ambientLevy
       rw [dif_pos hex]
       exact hex.choose_spec
   -- Monotonicity helpers across arbitrary `β₁ ≤ β₂`.
-  have hrun_sub_m₀ (β : θ.ord.ToType) : (⊤ : R) ≤ m₀ ⊆ᴮ (run β).p :=
-    (hrun_good β).2.2.choose
+  have hrun_sub_m₀ (β : θ.ord.ToType) : (⊤ : R) ≤ m₀ ⊆ᴮ (run β).p := (hrun_good β).2.2.choose
   have hrun_mono_α {β₁ β₂ : θ.ord.ToType} (hle : β₁ ≤ β₂) : (run β₁).α ≤ (run β₂).α := by
     rcases hle.lt_or_eq with hlt | rfl
     · exact (hrun_good β₂).2.1 ⟨β₁, hlt⟩
     · exact le_rfl
-  have hrun_mono_p {β₁ β₂ : θ.ord.ToType} (hle : β₁ ≤ β₂) :
-      (⊤ : R) ≤ (run β₁).p ⊆ᴮ (run β₂).p := by
+  have hrun_mono_p {β₁ β₂ : θ.ord.ToType} (hle : β₁ ≤ β₂) : (⊤ : R) ≤ (run β₁).p ⊆ᴮ (run β₂).p := by
     rcases hle.lt_or_eq with hlt | rfl
     · exact (hrun_good β₂).2.2.choose_spec.1 ⟨β₁, hlt⟩
     · exact subset_self
@@ -1161,8 +1145,7 @@ theorem exists_normal_valuation_into_ambientLevy
   have hrow_decides_at (X : K → F) {γ : θ.ord.ToType} (hγ : emb_task (Sum.inl X) ≤ γ)
       (Y : K → InternalLevyStage κ (run γ).α)
       (hY : ∀ k, stageStepHom (κ := κ) (run γ).hα.le (Y k) = X k) :
-      coneAt γ ⊓ (mapNames j_R (run γ).G.toBSet ∈ᴮ O_lift (run γ).α Y) =
-        coneAt γ ⊓ j_R (μ_fn X) ∧
+      coneAt γ ⊓ (mapNames j_R (run γ).G.toBSet ∈ᴮ O_lift (run γ).α Y) = coneAt γ ⊓ j_R (μ_fn X) ∧
       coneAt γ ⊓ (mapNames j_R (run γ).G.toBSet ∈ᴮ O_lift (run γ).α (fun k => (Y k)ᶜ)) =
         coneAt γ ⊓ (j_R (μ_fn X))ᶜ := by
     let β₀ := emb_task (Sum.inl X)
@@ -1340,8 +1323,7 @@ theorem exists_normal_valuation_into_ambientLevy
       simp only [Cardinal.mk_sum, Cardinal.mk_punit, Cardinal.lift_id]
       exact Cardinal.add_lt_of_lt hθ.aleph0_lt.le
         (Cardinal.one_lt_aleph0.trans hθ.aleph0_lt)
-        (Cardinal.add_lt_of_lt hθ.aleph0_lt.le
-          (Cardinal.one_lt_aleph0.trans hθ.aleph0_lt) hK_lt)
+        (Cardinal.add_lt_of_lt hθ.aleph0_lt.le (Cardinal.one_lt_aleph0.trans hθ.aleph0_lt) hK_lt)
     obtain ⟨γ, hγ_gt⟩ := strict_upper_bound_theta'' hθ.isRegular hfam_lt idx_fam
     have hH_γ : β_H ≤ γ := (hγ_gt (Sum.inl PUnit.unit)).le
     have hdiag_γ : β_diag ≤ γ := (hγ_gt (Sum.inr (Sum.inl PUnit.unit))).le
@@ -1464,8 +1446,7 @@ theorem gchPart4Theory_is_consistent_of_hugeWithTarget
     {κ θ : Cardinal.{0}} (hHuge : IsHugeWithTarget κ θ)
     (tail : ∀ μ : Cardinal.{0}, θ ≤ μ → (2 : Cardinal.{0}) ^ μ = Order.succ μ) :
     Erdos1172Part4InternalGCHTheory.gchPart4Theory.is_consistent := by
-  obtain ⟨I, U, a, hcnt, hcard, hk, hf, hn, ht⟩ :=
-    isHugeWithTarget_iff_exists_fine_measure.mp hHuge
+  obtain ⟨I, U, a, hcnt, hcard, hk, hf, hn, ht⟩ := isHugeWithTarget_iff_exists_fine_measure.mp hHuge
   have : CountableInterFilter (U : Filter I) := hcnt
   have : CardinalInterFilter (U : Filter I) κ := hcard
   exact gchPart4Theory_is_consistent_minimal U a hk hf hn ht tail

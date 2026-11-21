@@ -223,8 +223,7 @@ private theorem lowerAux_surjective {s₁ : CompleteLatticeHom A₀ B₁} {s₂ 
   | mk K X w =>
     rintro ⟨v, hv, idx, hvalid⟩
     have pos : f v ≠ ⊥ := fun h0 => hv (hinj (h0.trans (BotHomClass.map_bot f).symm))
-    have hval : f v ≤ s₂ (w idx) :=
-      (OrderHomClass.mono f hvalid).trans_eq (hf (w idx))
+    have hval : f v ≤ s₂ (w idx) := (OrderHomClass.mono f hvalid).trans_eq (hf (w idx))
     let r : Condition (mapNames s₂ (.mk K X w)) := ⟨f v, pos, idx, hval⟩
     refine ⟨r, ?_⟩
     have heq : lowerProjection f (f v) = v :=
@@ -316,8 +315,7 @@ private theorem exists_auxStageHomGen_condition_le
     obtain ⟨t, htv, hts⟩ := lowerAux_exactLifts f hf (.mk K X w) v s hs_v
     have ht_p₀ : lowerAuxOrderHom f hf (.mk K X w) t ≤ p₀ := hts.le.trans hs_p₀
     let it : K := t.index
-    have ht_val : t.value ≤ p.value :=
-      ((lowerProjection_le_iff f).mp ht_p₀.1).trans hx₀_le
+    have ht_val : t.value ≤ p.value := ((lowerProjection_le_iff f).mp ht_p₀.1).trans hx₀_le
     have hsub_eq :
         f (mapNames s₁ (X ip) ⊆ᴮ mapNames s₁ (X it)) =
           (mapNames s₂ (X ip) ⊆ᴮ mapNames s₂ (X it)) := by
@@ -487,8 +485,7 @@ theorem ambientInternalLevy_strictCC {θ : Cardinal.{u}}
     have hz_y : z ≤ p y.val := ⟨hry, by change s' ≤ (p y.val).second; rw [y.property]; exact hs'_s₀⟩
     have hz_both : condition z ≤ iso (w (emb x.val)) ⊓ iso (w (emb y.val)) :=
       le_inf ((condition_mono hz_x).trans (hp x.val)) ((condition_mono hz_y).trans (hp y.val))
-    have hxy_ne : emb x.val ≠ emb y.val :=
-      fun he => hne (Subtype.ext (emb.injective he))
+    have hxy_ne : emb x.val ≠ emb y.val := fun he => hne (Subtype.ext (emb.injective he))
     have hiso_bot : iso (w (emb x.val)) ⊓ iso (w (emb y.val)) = ⊥ := by
       have h1 := hdisj (emb x.val) (emb y.val) hxy_ne
       apply le_antisymm ?_ bot_le
@@ -616,8 +613,7 @@ theorem ambientInternalLevy_regularCollapsingStages {θ : Cardinal.{u}}
     change #(P_α.Type × A) ≤ μ
     rw [Cardinal.mk_prod, Cardinal.lift_id, Cardinal.lift_id]
     exact (mul_le_mul' hP_le (hA_le.trans hlam_μ)).trans_eq (Cardinal.mul_eq_self hu.le)
-  have hshort_le : #{s : Set X // #s ≤ lam} ≤ μ :=
-    short_subsets_le hu.le hpow hX_le
+  have hshort_le : #{s : Set X // #s ≤ lam} ≤ μ := short_subsets_le hu.le hpow hX_le
   let StackSet : Set (Condition (mapNames (sourceHom (internalLevyPoset κ α)) T.forcing)) :=
     Set.range (Joint.stack (internalLevyPoset κ α) T.forcing)
   have hStack_le : #StackSet ≤ μ := by

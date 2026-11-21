@@ -38,8 +38,7 @@ guards themselves are unchanged. -/
 theorem futureCandidates_antitone_histories
     {color : Bool} {δ R S Y X Z Y' X' Z' top : bSet 𝔹} {Γ : 𝔹}
     (HY : Γ ≤ Y ⊆ᴮ Y') (HX : Γ ≤ X ⊆ᴮ X') (HZ : Γ ≤ Z ⊆ᴮ Z') :
-    Γ ≤ futureCandidates color δ R S Y' X' Z' top ⊆ᴮ
-      futureCandidates color δ R S Y X Z top := by
+    Γ ≤ futureCandidates color δ R S Y' X' Z' top ⊆ᴮ futureCandidates color δ R S Y X Z top := by
   rw [subset_unfold']
   apply le_iInf
   intro y
@@ -57,8 +56,7 @@ theorem futureCandidates_antitone_histories
     rw [← deduction]
     exact futureCandidate_above_previous (inf_le_left.trans Hy)
       (inf_le_right.trans inf_le_left)
-      (mem_of_mem_subset ((inf_le_left.trans HΔ).trans HY)
-        (inf_le_right.trans inf_le_right))
+      (mem_of_mem_subset ((inf_le_left.trans HΔ).trans HY) (inf_le_right.trans inf_le_right))
   · apply le_iInf
     intro j
     apply le_iInf
@@ -98,8 +96,7 @@ theorem futureCandidates_eq_of_extension
     (HY : Γ ≤ is_func' δ omegaTwo Y)
     (HX : Γ ≤ is_func' (prod δ omegaOne) omegaOne X)
     (HZ : Γ ≤ is_func' δ omegaOne Z) (Hδ : Γ ≤ δ ⊆ᴮ omegaOne) :
-    Γ ≤ futureCandidates color δ R S Y X Z top =ᴮ
-      futureCandidates color δ R S Y' X' Z' top := by
+    Γ ≤ futureCandidates color δ R S Y X Z top =ᴮ futureCandidates color δ R S Y' X' Z' top := by
   rw [eq_iff_subset_subset]
   refine le_inf ?_ (futureCandidates_antitone_histories HsubY HsubX HsubZ)
   rw [subset_unfold']
@@ -121,8 +118,7 @@ theorem futureCandidates_eq_of_extension
     have Hjv := prefix_pair_of_extension (Hbase.trans HsubY)
       (Hbase.trans HfuncY) (Hbase.trans HY)
       (inf_le_right.trans inf_le_left) (inf_le_right.trans inf_le_right)
-    exact futureCandidate_above_previous (inf_le_left.trans Hy)
-      (inf_le_right.trans inf_le_left) Hjv
+    exact futureCandidate_above_previous (inf_le_left.trans Hy) (inf_le_right.trans inf_le_left) Hjv
   · apply le_iInf
     intro j
     apply le_iInf
@@ -132,8 +128,7 @@ theorem futureCandidates_eq_of_extension
     apply le_iInf
     intro A
     rw [← deduction]
-    let Λ := Δ ⊓ ((j ∈ᴮ δ ⊓ σ ∈ᴮ j) ⊓
-      (pair (pair j σ) w ∈ᴮ X' ⊓ pair (pair σ y) A ∈ᴮ S))
+    let Λ := Δ ⊓ ((j ∈ᴮ δ ⊓ σ ∈ᴮ j) ⊓ (pair (pair j σ) w ∈ᴮ X' ⊓ pair (pair σ y) A ∈ᴮ S))
     have Hbase : Λ ≤ Γ := inf_le_left.trans HΔ
     have Hj : Λ ≤ j ∈ᴮ δ := inf_le_right.trans (inf_le_left.trans inf_le_left)
     have Hσj : Λ ≤ σ ∈ᴮ j := inf_le_right.trans (inf_le_left.trans inf_le_right)
@@ -164,12 +159,9 @@ theorem futureCandidates_eq_of_extension
 
 theorem futureRequirements_ext_stage (color : Bool) (R S Y X Z top y : bSet 𝔹) :
     B_ext (fun δ => futureRequirements color δ R S Y X Z top y) :=
-  B_ext_inf
-    (B_ext_iInf (h := fun _ => B_ext_iInf (h := fun _ =>
+  B_ext_inf (B_ext_iInf (h := fun _ => B_ext_iInf (h := fun _ =>
       B_ext_imp (h₁ := B_ext_inf B_ext_mem_right B_ext_const) (h₂ := B_ext_const))))
-    (B_ext_inf B_ext_const
-      (B_ext_inf
-        (B_ext_iInf (h := fun _ => B_ext_iInf (h := fun _ =>
+    (B_ext_inf B_ext_const (B_ext_inf (B_ext_iInf (h := fun _ => B_ext_iInf (h := fun _ =>
           B_ext_iInf (h := fun _ => B_ext_iInf (h := fun _ =>
             B_ext_imp
               (h₁ := B_ext_inf (B_ext_inf B_ext_mem_right B_ext_const) B_ext_const)
@@ -180,17 +172,14 @@ theorem futureRequirements_ext_stage (color : Bool) (R S Y X Z top y : bSet 𝔹
 
 theorem futureRequirements_ext_vertices (color : Bool) (δ R S X Z top y : bSet 𝔹) :
     B_ext (fun Y => futureRequirements color δ R S Y X Z top y) :=
-  B_ext_inf
-    (B_ext_iInf (h := fun _ => B_ext_iInf (h := fun _ =>
+  B_ext_inf (B_ext_iInf (h := fun _ => B_ext_iInf (h := fun _ =>
       B_ext_imp (h₁ := B_ext_inf B_ext_const B_ext_mem_right) (h₂ := B_ext_const))))
     B_ext_const
 
 theorem futureRequirements_ext_history (color : Bool) (δ R S Y Z top y : bSet 𝔹) :
     B_ext (fun X => futureRequirements color δ R S Y X Z top y) :=
   B_ext_inf B_ext_const
-    (B_ext_inf B_ext_const
-      (B_ext_inf
-        (B_ext_iInf (h := fun _ => B_ext_iInf (h := fun _ =>
+    (B_ext_inf B_ext_const (B_ext_inf (B_ext_iInf (h := fun _ => B_ext_iInf (h := fun _ =>
           B_ext_iInf (h := fun _ => B_ext_iInf (h := fun _ =>
             B_ext_imp
               (h₁ := B_ext_inf B_ext_const (B_ext_inf B_ext_mem_right B_ext_const))
@@ -208,16 +197,14 @@ private theorem congr_comprehend_parameter
     intro y
     rw [← deduction]
     have Hy := (mem_comprehend_and (Hvalue a)).mp
-      (show Γ ⊓ y ∈ᴮ comprehend (P a) top ≤
-        y ∈ᴮ comprehend (P a) top from inf_le_right)
+      (show Γ ⊓ y ∈ᴮ comprehend (P a) top ≤ y ∈ᴮ comprehend (P a) top from inf_le_right)
     exact (mem_comprehend_and (Hvalue b)).mpr ⟨Hy.1,
       bv_rw'' (ϕ := fun z => P z y) (inf_le_left.trans Hab) Hy.2 (Hparameter y)⟩
   · apply le_iInf
     intro y
     rw [← deduction]
     have Hy := (mem_comprehend_and (Hvalue b)).mp
-      (show Γ ⊓ y ∈ᴮ comprehend (P b) top ≤
-        y ∈ᴮ comprehend (P b) top from inf_le_right)
+      (show Γ ⊓ y ∈ᴮ comprehend (P b) top ≤ y ∈ᴮ comprehend (P b) top from inf_le_right)
     exact (mem_comprehend_and (Hvalue a)).mpr ⟨Hy.1,
       bv_rw'' (ϕ := fun z => P z y) (inf_le_left.trans (bv_symm Hab)) Hy.2
         (Hparameter y)⟩

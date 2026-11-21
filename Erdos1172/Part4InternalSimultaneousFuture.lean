@@ -53,23 +53,18 @@ theorem exists_large_simultaneous_future_of_small_unions
     (HS : Γ ≤ S ⊆ᴮ omegaTwo) (HSlarge : Γ ≤ injects_into omegaTwo S) :
     ∃ a L : bSet 𝔹, Γ ≤ a ∈ᴮ omegaTwo ⊓ (rowsBelow Q Rows a ⊓
       (L ⊆ᴮ S ⊓ (injects_into omegaTwo L ⊓
-        ((⨅ y, _root_.imp (y ∈ᴮ L) (a ∈ᴮ y)) ⊓
-          oppositeSectionsColarge color R J Q Rows L)))) := by
+        ((⨅ y, _root_.imp (y ∈ᴮ L) (a ∈ᴮ y)) ⊓ oppositeSectionsColarge color R J Q Rows L)))) := by
   obtain ⟨a, L, Htrim⟩ :=
     ErdosLargeFutureTrimming.exists_large_future_avoiding_small_sets
       HCH unionRowValues_subset HAsmall HEsmall HS HSlarge
   have Ha : Γ ≤ a ∈ᴮ omegaTwo := Htrim.trans inf_le_left
-  have HAa : Γ ≤ unionRowValues Q Rows ⊆ᴮ a :=
-    Htrim.trans (inf_le_right.trans inf_le_left)
-  have HLS : Γ ≤ L ⊆ᴮ S :=
-    Htrim.trans (inf_le_right.trans (inf_le_right.trans inf_le_left))
+  have HAa : Γ ≤ unionRowValues Q Rows ⊆ᴮ a := Htrim.trans (inf_le_right.trans inf_le_left)
+  have HLS : Γ ≤ L ⊆ᴮ S := Htrim.trans (inf_le_right.trans (inf_le_right.trans inf_le_left))
   have HLlarge : Γ ≤ injects_into omegaTwo L :=
-    Htrim.trans (inf_le_right.trans (inf_le_right.trans
-      (inf_le_right.trans inf_le_left)))
+    Htrim.trans (inf_le_right.trans (inf_le_right.trans (inf_le_right.trans inf_le_left)))
   have Hlater : Γ ≤ ⨅ y, _root_.imp (y ∈ᴮ L)
       (a ∈ᴮ y ⊓ (y ∈ᴮ unionRowExceptions color R J Q Rows)ᶜ) :=
-    Htrim.trans (inf_le_right.trans (inf_le_right.trans
-      (inf_le_right.trans inf_le_right)))
+    Htrim.trans (inf_le_right.trans (inf_le_right.trans (inf_le_right.trans inf_le_right)))
   have Hbelow : Γ ≤ rowsBelow Q Rows a := by
     apply le_iInf
     intro q
@@ -100,11 +95,9 @@ theorem exists_large_simultaneous_future_of_small_unions
     rw [← deduction]
     let Δ := Γ ⊓ ((q ∈ᴮ Q ⊓ pair q r ∈ᴮ Rows) ⊓ y ∈ᴮ L)
     have Hq : Δ ≤ q ∈ᴮ Q := inf_le_right.trans (inf_le_left.trans inf_le_left)
-    have Hqr : Δ ≤ pair q r ∈ᴮ Rows :=
-      inf_le_right.trans (inf_le_left.trans inf_le_right)
+    have Hqr : Δ ≤ pair q r ∈ᴮ Rows := inf_le_right.trans (inf_le_left.trans inf_le_right)
     have Hy : Δ ≤ y ∈ᴮ L := inf_le_right.trans inf_le_right
-    have Hyω : Δ ≤ y ∈ᴮ omegaTwo :=
-      mem_of_mem_subset (inf_le_left.trans (subset_trans' HLS HS)) Hy
+    have Hyω : Δ ≤ y ∈ᴮ omegaTwo := mem_of_mem_subset (inf_le_left.trans (subset_trans' HLS HS)) Hy
     have Hydata : Δ ≤ a ∈ᴮ y ⊓ (y ∈ᴮ unionRowExceptions color R J Q Rows)ᶜ :=
       (le_inf (inf_le_left.trans (Hlater.trans (iInf_le _ y))) Hy).trans bv_imp_elim
     have Hr : Δ ≤ is_injective_function omegaOne omegaTwo r :=
@@ -157,8 +150,7 @@ theorem exists_large_simultaneous_future
     (HS : Γ ≤ S ⊆ᴮ omegaTwo) (HSlarge : Γ ≤ injects_into omegaTwo S) :
     ∃ a L : bSet 𝔹, Γ ≤ a ∈ᴮ omegaTwo ⊓ (rowsBelow Q Rows a ⊓
       (L ⊆ᴮ S ⊓ (injects_into omegaTwo L ⊓
-        ((⨅ y, _root_.imp (y ∈ᴮ L) (a ∈ᴮ y)) ⊓
-          oppositeSectionsColarge color R J Q Rows L)))) :=
+        ((⨅ y, _root_.imp (y ∈ᴮ L) (a ∈ᴮ y)) ⊓ oppositeSectionsColarge color R J Q Rows L)))) :=
   exists_large_simultaneous_future_of_small_unions HCH HJ HRows HrowInj
     (unionRowValues_injects_omegaOne HCH HRows HQ HrowInj)
     (unionRowExceptions_injects_omegaOne HCH HRows HQ Habsorb HJ Hclosure

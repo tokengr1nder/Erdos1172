@@ -39,8 +39,7 @@ structure CompleteRestriction where
 
 variable {P Q}
 
-theorem CompleteRestriction.embed_injective (r : CompleteRestriction P Q) :
-    Injective r.embed := by
+theorem CompleteRestriction.embed_injective (r : CompleteRestriction P Q) : Injective r.embed := by
   intro q t h
   have h' := congrArg r.restrict h
   simpa only [r.restrict_embed] using h'
@@ -183,8 +182,7 @@ theorem restrictClique_after_iff (r : CompleteRestriction P Q)
       ((restrictClique_decides_iff r N hs q i x).mpr hx)
   · intro h q hqp i x hx
     obtain ⟨s, hsp, hsbase⟩ := r.lift p q hqp
-    have hx' : (restrictClique r N hs).toClique.decides (r.restrict s) i x :=
-      hsbase.symm ▸ hx
+    have hx' : (restrictClique r N hs).toClique.decides (r.restrict s) i x := hsbase.symm ▸ hx
     exact h s hsp i x ((restrictClique_decides_iff r N hs s i x).mp hx')
 
 end Erdos1172Part3CompleteRestriction

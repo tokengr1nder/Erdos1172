@@ -29,8 +29,7 @@ private theorem cof_omega_succ (n : Ordinal.{0}) :
     Order.cof (ω_ (n + 1)).ToType = ℵ_ (n + 1) := by simp_all
 
 /-- The points which are `ω₂`-suprema form a stationary subset of `ω₃`. -/
-theorem isStationary_isOmegaTwoSup_omegaThree :
-    IsStationary {top : W3 | IsOmegaTwoSup top} := by
+theorem isStationary_isOmegaTwoSup_omegaThree : IsStationary {top : W3 | IsOmegaTwoSup top} := by
   let _ : Nonempty W2 := by
     change Nonempty ((ω_ 2 : Ordinal.{0}).ToType); rw [← Cardinal.ord_aleph]
     exact Cardinal.nonempty_ord_toType (Cardinal.aleph0_pos.trans_le (Cardinal.aleph0_le_aleph 2)).ne'

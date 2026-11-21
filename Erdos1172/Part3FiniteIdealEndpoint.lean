@@ -74,8 +74,7 @@ theorem clique_add_two {K : SimpleGraph W2} {s : Set W2} {δ : Ordinal}
   have hit : typeLT (insert p s : Set W2) = δ + 1 := by
     change typeLT (Set.insert p s : Set W2) = δ + 1
     rw [Ordinal.typeLT_insert_of_forall_lt hp, hstype]
-  obtain ⟨t, ht, htt⟩ := K.exists_clique_type_add_one_of_common_later hi hit
-    (x := q) (by
+  obtain ⟨t, ht, htt⟩ := K.exists_clique_type_add_one_of_common_later hi hit (x := q) (by
       intro x hx
       rcases Set.mem_insert_iff.mp hx with rfl | hx
       · exact hpq
@@ -97,8 +96,7 @@ theorem endpoint_of_uniform_future
     (future : Set W2) (hcard : #future = ℵ_ 2)
     (hlater : future ⊆ Set.Ioi a)
     (huniform : ∀ y ∈ future, {x | K.Adj x y} ∈ U) :
-    OrdinalRamsey.HasCliqueOfType K (δ + 2) ∨
-      OrdinalRamsey.HasCliqueOfType L ε := by
+    OrdinalRamsey.HasCliqueOfType K (δ + 2) ∨ OrdinalRamsey.HasCliqueOfType L ε := by
   classical
   by_cases hpair : ∃ p ∈ future, ∃ q ∈ future, p < q ∧ K.Adj p q
   · obtain ⟨p, hp, q, hq, hpq, hpqK⟩ := hpair
@@ -132,8 +130,7 @@ theorem targets_of_mixed_positive_ideal
     (hrows : ¬J.small rows) (hbefore : rows ⊆ Set.Iio a)
     (hred : ∀ s ⊆ rows, ¬J.small s → ∃ c ⊆ s, red.IsClique c ∧ typeLT c = δ)
     (hblue : ∀ s ⊆ rows, ¬J.small s → ∃ c ⊆ s, blue.IsClique c ∧ typeLT c = β) :
-    OrdinalRamsey.HasCliqueOfType red (δ + 2) ∨
-      OrdinalRamsey.HasCliqueOfType blue (β + 2) := by
+    OrdinalRamsey.HasCliqueOfType red (δ + 2) ∨ OrdinalRamsey.HasCliqueOfType blue (β + 2) := by
   classical
   obtain ⟨U, hUrows, hUpositive⟩ := J.exists_positive_ultrafilter rows hrows
   let color : Set.Ioi a → Bool := fun y => decide ({x | red.Adj x y} ∈ U)
@@ -145,8 +142,7 @@ theorem targets_of_mixed_positive_ideal
         convert Cardinal.isRegular_aleph_add_one 1 using 1 <;> norm_num
       rw [hreg.cof_ord]
       simpa only [Cardinal.mk_fintype, Fintype.card_bool, Nat.cast_ofNat] using
-        (Cardinal.natCast_lt_aleph0 : (2 : Cardinal) < ℵ₀).trans_le
-          (Cardinal.aleph0_le_aleph 2))
+        (Cardinal.natCast_lt_aleph0 : (2 : Cardinal) < ℵ₀).trans_le (Cardinal.aleph0_le_aleph 2))
   let future : Set W2 := Subtype.val '' (color ⁻¹' {b})
   have hfuture : #future = ℵ_ 2 := (Cardinal.mk_image_eq Subtype.val_injective).trans
     (hb.trans htail)

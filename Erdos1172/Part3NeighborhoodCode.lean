@@ -61,8 +61,7 @@ theorem mk_LocalCode_le (r : Code ↪ W2) (a : W2) : #(LocalCode r a) ≤ ℵ_ 1
     Cardinal.mk_Iio_lt a (Cardinal.ord_cardinalMk (α := W2))
 
 theorem exists_unionBound (hCH : CH) (r : Code ↪ W2) (a : W2) :
-    ∃ b : W2, ∀ c : ℕ → LocalCode r a,
-      r (SmallUnionCode.union (fun i => (c i).val)) < b := by
+    ∃ b : W2, ∀ c : ℕ → LocalCode r a, r (SmallUnionCode.union (fun i => (c i).val)) < b := by
   have hcard : #(Set.range (fun c : ℕ → LocalCode r a =>
       r (SmallUnionCode.union (fun i => (c i).val)))) ≤ ℵ_ 1 := by
     refine Cardinal.mk_range_le.trans ?_

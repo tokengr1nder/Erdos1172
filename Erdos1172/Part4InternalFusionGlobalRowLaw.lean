@@ -82,8 +82,7 @@ theorem fusion_full_candidates_eq_prefix
     Γ ≤ fusionRowCandidates edgeColor R E b top ξ ν
       (blockHistory (taggedPrefix ξ omegaOne entrySpace Run))
       (coordinateHistory (taggedPrefix ξ omegaOne entrySpace Run)) =ᴮ
-      fusionRowCandidates edgeColor R E b top ξ ν
-        (fullBlocks Run) (fullCoordinates Run) := by
+      fusionRowCandidates edgeColor R E b top ξ ν (fullBlocks Run) (fullCoordinates Run) := by
   apply fusionRowCandidates_eq_of_history_coherence
     (is_func'_of_is_function (fusion_prefix_coordinates_function HRun Hlaw Hξ))
     (is_func'_subset_of_is_func'
@@ -146,8 +145,7 @@ theorem fusion_full_row_least
   have Hactive : Γ ≤ ν ∈ᴮ successfulRows color R ξ (blockHistory T) :=
     mem_successfulRows_iff.mpr ⟨Hνξ, mem_congr (bv_symm Hbeq) bv_refl Hb⟩
   obtain ⟨A, Z, U, Hentry, Hνv⟩ := coordinateHistory_witness Hcoord
-  have Hstored := ((mem_taggedPrefix_pair_iff HRun
-    (fusion_run_tagging HRun Hlaw)).mp Hentry).2
+  have Hstored := ((mem_taggedPrefix_pair_iff HRun (fusion_run_tagging HRun Hlaw)).mp Hentry).2
   have Hleast : Γ ≤ leastIn
       (fusionRowCandidates (!color) R E (blockValue (blockHistory T) ν)
         top ξ ν (blockHistory T) (coordinateHistory T)) v :=

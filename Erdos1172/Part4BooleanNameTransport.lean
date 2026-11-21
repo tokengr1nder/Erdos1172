@@ -65,14 +65,12 @@ theorem map_subset (e : CompleteLatticeHom B C) (x y : bSet B) :
   | mk ι X w =>
     simp only [mapNames, bSet.subset, map_iInf, map_imp, map_mem]
 
-theorem map_check (e : CompleteLatticeHom B C) (A : PSet.{u}) :
-    mapNames e (check A) = check A := by
+theorem map_check (e : CompleteLatticeHom B C) (A : PSet.{u}) : mapNames e (check A) = check A := by
   induction A with
   | mk ι X ih =>
     simp only [check, mapNames, map_top, ih]
 
-theorem mapNames_id (x : bSet B) :
-    mapNames (CompleteLatticeHom.id B) x = x := by
+theorem mapNames_id (x : bSet B) : mapNames (CompleteLatticeHom.id B) x = x := by
   induction x with
   | mk ι X w ih =>
     simp only [mapNames, CompleteLatticeHom.id_apply, ih]

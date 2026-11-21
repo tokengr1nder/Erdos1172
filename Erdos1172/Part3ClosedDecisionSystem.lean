@@ -125,8 +125,7 @@ theorem CliqueDecisions.exists_clique_map
       exact ⟨v, hv⟩
     · exact ⟨p, fun i hi => (h ⟨i, hi⟩).elim, le_rfl⟩
   obtain ⟨conditions, hanti, _, hconditions⟩ := exists_antitone_dense_sequence hclosed p0 D hD
-  have hdec (i : I) : ∃ v, sys.decides (conditions (index i)) i v :=
-    hconditions (index i) i rfl
+  have hdec (i : I) : ∃ v, sys.decides (conditions (index i)) i v := hconditions (index i) i rfl
   let f (i : I) : V := (hdec i).choose
   have hf (i : I) : sys.decides (conditions (index i)) i (f i) := (hdec i).choose_spec
   have common (i j : I) : ∃ p, sys.decides p i (f i) ∧ sys.decides p j (f j) := by

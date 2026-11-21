@@ -81,11 +81,9 @@ theorem commonRows_blockRowContainment (S P : bSet 𝔹) {Γ : 𝔹} :
   rw [← deduction]
   let Δ := Γ ⊓ ((pair σ A ∈ᴮ commonRows S P ⊓
     rangeMem omegaOne (vertexHistory P) y) ⊓ pair (pair σ y) B ∈ᴮ S)
-  have HC : Δ ≤ pair σ A ∈ᴮ commonRows S P :=
-    inf_le_right.trans (inf_le_left.trans inf_le_left)
+  have HC : Δ ≤ pair σ A ∈ᴮ commonRows S P := inf_le_right.trans (inf_le_left.trans inf_le_left)
   exact subset_trans' (subset_of_eq (commonRows_apply HC))
-    (commonRow_subset_range_section
-      (show Δ ≤ rangeMem omegaOne (vertexHistory P) y from
+    (commonRow_subset_range_section (show Δ ≤ rangeMem omegaOne (vertexHistory P) y from
         inf_le_right.trans (inf_le_left.trans inf_le_right))
       (show Δ ≤ pair (pair σ y) B ∈ᴮ S from inf_le_right.trans inf_le_right))
 
@@ -98,8 +96,7 @@ theorem commonBlockRows_of_run
     (Htop : Γ ≤ top ∈ᴮ omegaTwo) (Hrows : Γ ≤ normalRowAvailability S) :
     Γ ≤ commonBlockRows S (vertexHistory P) (commonRows S P) :=
   le_inf (commonRows_is_function S P) (le_inf Hrows
-    (le_inf (run_commonRows_colarge_values HP Hlaw HS Htop)
-      (commonRows_blockRowContainment S P)))
+    (le_inf (run_commonRows_colarge_values HP Hlaw HS Htop) (commonRows_blockRowContainment S P)))
 
 /-- The successful graph is the original decoded graph, and the common
 rows are the original canonical family, not independently supplied masks. -/

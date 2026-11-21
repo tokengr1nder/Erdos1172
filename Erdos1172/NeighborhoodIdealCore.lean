@@ -83,8 +83,7 @@ theorem nonneighbors_small (ha : GoodCut r G H a) (b : Bool) {x : W3}
 theorem exists_core (ha : GoodCut r G H a) (b : Bool)
     (s : Set W3) (hs : ¬Small r G H a s) (hsBelow : s ⊆ Set.Iio a)
     (hsColor : ∀ x ∈ s, (colorGraph G H b).Adj x a) :
-    ∃ core : Set W3, core ⊆ s ∧ (colorGraph G H b).IsClique core ∧
-      typeLT core = ω_ 2 :=
+    ∃ core : Set W3, core ⊆ s ∧ (colorGraph G H b).IsClique core ∧ typeLT core = ω_ 2 :=
   exists_core_of_small ha.isOmegaTwoSup small_mono (union_small ha) (iUnion_small ha)
     (bounded_interval_small ha) (colorGraph G H b) (nonneighbors_small ha b) s hs hsBelow hsColor
 

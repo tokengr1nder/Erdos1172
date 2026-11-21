@@ -52,15 +52,12 @@ theorem active_coordinate_mem_section_of_run
       · have Hseed : Γ ⊓ y =ᴮ top ≤ pair (pair σ top) A ∈ᴮ S :=
           mem_congr (pair_congr (pair_congr bv_refl inf_le_right) bv_refl)
             bv_refl (inf_le_left.trans Hsection)
-        exact coordinate_mem_seed_of_run (inf_le_left.trans Hlaw)
-          (inf_le_left.trans Hcoord) Hseed
+        exact coordinate_mem_seed_of_run (inf_le_left.trans Hlaw) (inf_le_left.trans Hcoord) Hseed
       · let Δ := Γ ⊓ (y =ᴮ top)ᶜ
         have HΔ : Δ ≤ Γ := inf_le_left
         have Hne : Δ ≤ (y =ᴮ top)ᶜ := inf_le_right
-        have Hi : Δ ≤ i ∈ᴮ omegaOne :=
-          HΔ.trans (coordinateHistory_pair_iff.mp Hcoord).1
-        have Hj : Δ ≤ j ∈ᴮ omegaOne :=
-          HΔ.trans (mem_vertexHistory_iff.mp Hvertex).1
+        have Hi : Δ ≤ i ∈ᴮ omegaOne := HΔ.trans (coordinateHistory_pair_iff.mp Hcoord).1
+        have Hj : Δ ≤ j ∈ᴮ omegaOne := HΔ.trans (mem_vertexHistory_iff.mp Hvertex).1
         have Hcases := epsilon_trichotomy_of_Ord Hj Hi omegaOne_Ord
         apply (le_inf (le_refl Δ) Hcases).trans
         rw [inf_sup_left, inf_sup_left]

@@ -60,8 +60,7 @@ theorem emptyEntry_ext : B_ext (emptyEntry (𝔹 := 𝔹)) :=
   B_ext_iSup (h := fun _ => B_ext_iSup (h := fun _ =>
     B_ext_iSup (h := fun _ => B_ext_mem_right)))
 
-theorem successfulRun_ext : B_ext (successfulRun (𝔹 := 𝔹)) :=
-  B_ext_neg (h := emptyEntry_ext)
+theorem successfulRun_ext : B_ext (successfulRun (𝔹 := 𝔹)) := B_ext_neg (h := emptyEntry_ext)
 
 theorem nextEntry_congr_top (color : Bool) (R E F ξ T : bSet 𝔹) :
     B_congr (fun top => nextEntry color R E F top ξ T) := by
@@ -91,8 +90,7 @@ theorem fusionRunLaw_ext_graph (color : Bool) (R E F top : bSet 𝔹) :
 
 theorem successfulRunData_ext_top (color : Bool) (R E F Run : bSet 𝔹) :
     B_ext (fun top => successfulRunData color R E F top Run) :=
-  B_ext_inf B_ext_const
-    (B_ext_inf (fusionRunLaw_ext_top color R E F Run) B_ext_const)
+  B_ext_inf B_ext_const (B_ext_inf (fusionRunLaw_ext_top color R E F Run) B_ext_const)
 
 theorem successfulRunData_ext_graph (color : Bool) (R E F top : bSet 𝔹) :
     B_ext (successfulRunData color R E F top) :=
@@ -111,8 +109,7 @@ theorem successfulRun_nonempty
     pair_congr inf_le_right bv_refl
   have Hempty : Γ ⊓ A =ᴮ (∅ : bSet 𝔹) ≤ emptyEntry Run :=
     le_iSup_of_le ξ (le_iSup_of_le Z (le_iSup_of_le U
-      (mem_congr (pair_congr bv_refl (pair_congr bv_refl HA)) bv_refl
-        (inf_le_left.trans Hentry))))
+      (mem_congr (pair_congr bv_refl (pair_congr bv_refl HA)) bv_refl (inf_le_left.trans Hentry))))
   exact bv_absurd _ Hempty (inf_le_left.trans Hsuccess)
 
 /-- Success upgrades the actual candidate-or-empty law to genuine whole
@@ -210,8 +207,7 @@ theorem successful_fusion_run_value
     let Ξ := Δ ⊓ top ∈ᴮ Y
     have HΞ : Ξ ≤ Γ := inf_le_left.trans HΔ
     have Htop : Ξ ≤ top ∈ᴮ Y := inf_le_right
-    have HnoSuccess : Ξ ≤ (hasSuccessfulRun color R E F Y)ᶜ :=
-      inf_le_left.trans inf_le_right
+    have HnoSuccess : Ξ ≤ (hasSuccessfulRun color R E F Y)ᶜ := inf_le_left.trans inf_le_right
     obtain ⟨Run, HRunData⟩ := exists_total_fusion_run color R E F top (Γ := Ξ)
     have HRun := HRunData.trans inf_le_left
     have Hlaw := HRunData.trans inf_le_right
@@ -239,8 +235,7 @@ theorem exists_successful_fusion_run_of_value
     {color : Bool} {R E F Y : bSet 𝔹} {Γ : 𝔹}
     (H : Γ ≤ hasSuccessfulRun color R E F Y) :
     ∃ top Run : bSet 𝔹, Γ ≤ top ∈ᴮ Y ⊓
-      (is_function omegaOne runSpace Run ⊓
-        (runLaw color R E F top Run ⊓ successfulRun Run)) := by
+      (is_function omegaOne runSpace Run ⊓ (runLaw color R E F top Run ⊓ successfulRun Run)) := by
   obtain ⟨top, Htop⟩ := exists_convert H
     (B_ext_inf B_ext_mem_left
       (B_ext_iSup (h := fun Run => successfulRunData_ext_top color R E F Run)))
@@ -272,8 +267,7 @@ theorem exists_successful_fusion_run
     (HS : Γ ≤ S ⊆ᴮ omegaTwo) (HY : Γ ≤ Y ⊆ᴮ S)
     (HYlarge : Γ ≤ injects_into omegaTwo Y) :
     ∃ top Run : bSet 𝔹, Γ ≤ top ∈ᴮ Y ⊓
-      (is_function omegaOne runSpace Run ⊓
-        (runLaw color R E F top Run ⊓ successfulRun Run)) :=
+      (is_function omegaOne runSpace Run ⊓ (runLaw color R E F top Run ⊓ successfulRun Run)) :=
   exists_successful_fusion_run_of_value
     (successful_fusion_run_value HCH HJ Habsorb Hclosure Hdiag HD HDpos Hdense HI
       HE HElaw HF HFlaw Hhull Hseeds Hno HnoOpp HS HY HYlarge)

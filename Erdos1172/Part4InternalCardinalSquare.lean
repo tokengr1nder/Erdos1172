@@ -22,8 +22,7 @@ variable {𝔹 : Type u} [NontrivialCompleteBooleanAlgebra 𝔹]
 /-- Internal CH supplies the omega-one square bound for the concrete Hartogs name.
 The route uses all internal subsets of omega, not checked ground-model subsets. -/
 theorem omegaOne_square_injects {Γ : 𝔹} (HCH : Γ ≤ (CH : 𝔹)) :
-    Γ ≤ injects_into
-      (prod ErdosOmegaTwo.omegaOne ErdosOmegaTwo.omegaOne)
+    Γ ≤ injects_into (prod ErdosOmegaTwo.omegaOne ErdosOmegaTwo.omegaOne)
       ErdosOmegaTwo.omegaOne := by
   exact injects_into_trans
     (ErdosProductInjection.injects_into_prod_self

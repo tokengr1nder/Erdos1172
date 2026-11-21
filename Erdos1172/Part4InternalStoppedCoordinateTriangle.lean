@@ -55,8 +55,7 @@ def graphProjection (A f : bSet 𝔹) : bSet 𝔹 :=
   relationGraph f A firstCoordinate
 
 private theorem mem_graphProjection_iff {A f e a : bSet 𝔹} {Γ : 𝔹} :
-    Γ ≤ pair e a ∈ᴮ graphProjection A f ↔
-      Γ ≤ e ∈ᴮ f ∧ Γ ≤ a ∈ᴮ A ∧ Γ ≤ firstCoordinate e a :=
+    Γ ≤ pair e a ∈ᴮ graphProjection A f ↔ Γ ≤ e ∈ᴮ f ∧ Γ ≤ a ∈ᴮ A ∧ Γ ≤ firstCoordinate e a :=
   mem_relationGraph_iff firstCoordinate_ext_left firstCoordinate_ext_right
 
 private theorem graphProjection_is_function {A B f : bSet 𝔹} {Γ : 𝔹}
@@ -86,21 +85,17 @@ private theorem graphProjection_is_inj {A f : bSet 𝔹} {Γ : 𝔹}
   apply le_iInf
   intro a₂
   rw [← deduction]
-  let Δ := Γ ⊓ (pair e₁ a₁ ∈ᴮ graphProjection A f ⊓
-    pair e₂ a₂ ∈ᴮ graphProjection A f ⊓ a₁ =ᴮ a₂)
-  have H₁ := mem_graphProjection_iff.mp
-    (show Δ ≤ pair e₁ a₁ ∈ᴮ graphProjection A f from
+  let Δ := Γ ⊓ (pair e₁ a₁ ∈ᴮ graphProjection A f ⊓ pair e₂ a₂ ∈ᴮ graphProjection A f ⊓ a₁ =ᴮ a₂)
+  have H₁ := mem_graphProjection_iff.mp (show Δ ≤ pair e₁ a₁ ∈ᴮ graphProjection A f from
       inf_le_right.trans (inf_le_left.trans inf_le_left))
-  have H₂ := mem_graphProjection_iff.mp
-    (show Δ ≤ pair e₂ a₂ ∈ᴮ graphProjection A f from
+  have H₂ := mem_graphProjection_iff.mp (show Δ ≤ pair e₂ a₂ ∈ᴮ graphProjection A f from
       inf_le_right.trans (inf_le_left.trans inf_le_right))
   obtain ⟨b₁, Hb₁⟩ := firstCoordinate_exists H₁.2.2
   obtain ⟨b₂, Hb₂⟩ := firstCoordinate_exists H₂.2.2
   have Hbeq : Δ ≤ b₁ =ᴮ b₂ :=
     eq_of_is_func_of_eq (inf_le_left.trans Hfunc) (inf_le_right.trans inf_le_right)
       (mem_congr Hb₁ bv_refl H₁.1) (mem_congr Hb₂ bv_refl H₂.1)
-  exact bv_trans Hb₁
-    (bv_trans (pair_congr (inf_le_right.trans inf_le_right) Hbeq) (bv_symm Hb₂))
+  exact bv_trans Hb₁ (bv_trans (pair_congr (inf_le_right.trans inf_le_right) Hbeq) (bv_symm Hb₂))
 
 /-- A supported functional relation injects into its domain by the first
 coordinate. Totality and injectivity of the original relation are not needed. -/
@@ -123,8 +118,7 @@ theorem triangleDomain_subset_square {ρ : bSet 𝔹} {Γ : 𝔹} :
 
 theorem mem_triangleDomain_iff {ρ ξ σ : bSet 𝔹} {Γ : 𝔹}
     (Hρ : Γ ≤ Ord ρ) :
-    Γ ≤ pair ξ σ ∈ᴮ triangleDomain ρ ↔
-      Γ ≤ ξ ∈ᴮ succ ρ ∧ Γ ≤ σ ∈ᴮ ξ := by
+    Γ ≤ pair ξ σ ∈ᴮ triangleDomain ρ ↔ Γ ≤ ξ ∈ᴮ succ ρ ∧ Γ ≤ σ ∈ᴮ ξ := by
   unfold triangleDomain
   rw [mem_relationGraph_iff (fun _ => B_ext_mem_right) (fun _ => B_ext_mem_left)]
   constructor
@@ -144,8 +138,7 @@ theorem triangleDomain_subset_omegaOne_square {ρ : bSet 𝔹} {Γ : 𝔹}
   have Hprod : Δ ≤ q ∈ᴮ prod (succ ρ) (succ ρ) :=
     mem_of_mem_subset triangleDomain_subset_square inf_le_right
   obtain ⟨ξ, Hξ, σ, Hσ, Hq⟩ := mem_prod_iff₂.mp Hprod
-  have Hsub : Δ ≤ succ ρ ⊆ᴮ omegaOne :=
-    Ord.succ_le_of_lt omegaOne_Ord (inf_le_left.trans Hρ)
+  have Hsub : Δ ≤ succ ρ ⊆ᴮ omegaOne := Ord.succ_le_of_lt omegaOne_Ord (inf_le_left.trans Hρ)
   exact mem_congr (bv_symm Hq) bv_refl
     (mem_prod (mem_of_mem_subset Hsub Hξ) (mem_of_mem_subset Hsub Hσ))
 
@@ -162,8 +155,7 @@ def stoppedCoordinateTriangle (ρ P : bSet 𝔹) : bSet 𝔹 :=
 
 theorem mem_stoppedCoordinateTriangle_iff {ρ P q v : bSet 𝔹} {Γ : 𝔹} :
     Γ ≤ pair q v ∈ᴮ stoppedCoordinateTriangle ρ P ↔
-      Γ ≤ q ∈ᴮ triangleDomain ρ ∧ Γ ≤ v ∈ᴮ omegaOne ∧
-        Γ ≤ pair q v ∈ᴮ coordinateHistory P :=
+      Γ ≤ q ∈ᴮ triangleDomain ρ ∧ Γ ≤ v ∈ᴮ omegaOne ∧ Γ ≤ pair q v ∈ᴮ coordinateHistory P :=
   mem_relationGraph_iff (fun _ => B_ext_pair_mem_left) (fun _ => B_ext_pair_mem_right)
 
 /-- Exact triple membership retains the failed row `ξ = ρ`; the first
@@ -171,8 +163,7 @@ guard is membership in the successor, not membership in `ρ`. -/
 theorem stoppedCoordinateTriangle_pair_iff {ρ P ξ σ v : bSet 𝔹} {Γ : 𝔹}
     (Hρ : Γ ≤ Ord ρ) :
     Γ ≤ pair (pair ξ σ) v ∈ᴮ stoppedCoordinateTriangle ρ P ↔
-      Γ ≤ ξ ∈ᴮ succ ρ ∧ Γ ≤ σ ∈ᴮ ξ ∧
-        Γ ≤ pair (pair ξ σ) v ∈ᴮ coordinateHistory P := by
+      Γ ≤ ξ ∈ᴮ succ ρ ∧ Γ ≤ σ ∈ᴮ ξ ∧ Γ ≤ pair (pair ξ σ) v ∈ᴮ coordinateHistory P := by
   rw [mem_stoppedCoordinateTriangle_iff, mem_triangleDomain_iff Hρ]
   constructor
   · rintro ⟨⟨Hξ, Hσ⟩, _, Hv⟩

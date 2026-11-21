@@ -66,11 +66,9 @@ theorem exists_avoiding_fiber_club_family {R : bSet 𝔹} {Γ : 𝔹}
   rw [← deduction]
   have HiSmall : Γ ⊓ i ∈ᴮ omegaTwo ≤
       ErdosIdeal.fiber omegaTwo R i ∈ᴮ nonstationaryIdeal :=
-    (le_inf (inf_le_left.trans (Hfibers.trans (iInf_le _ i))) inf_le_right).trans
-      bv_imp_elim
+    (le_inf (inf_le_left.trans (Hfibers.trans (iInf_le _ i))) inf_le_right).trans bv_imp_elim
   obtain ⟨C, HC⟩ := exists_avoiding_club HiSmall
-  exact le_iSup_of_le C
-    (le_inf (mem_powerset_iff.mpr (club_subset (HC.trans inf_le_left))) HC)
+  exact le_iSup_of_le C (le_inf (mem_powerset_iff.mpr (club_subset (HC.trans inf_le_left))) HC)
 
 /-- Any coherent avoiding family has a diagonal intersection disjoint
 from the diagonal union. Only totality of the family is needed here;
@@ -85,8 +83,7 @@ theorem diagonalUnion_avoids_diagonalClub {R F : bSet 𝔹} {Γ : 𝔹}
   intro x
   rw [← deduction]
   let Δ := Γ ⊓ x ∈ᴮ diagonalUnion omegaTwo R
-  have Hx : Δ ≤ x ∈ᴮ omegaTwo ⊓
-      ⨆ i, (i ∈ᴮ omegaTwo ⊓ i ∈ᴮ x) ⊓ pair x i ∈ᴮ R := by
+  have Hx : Δ ≤ x ∈ᴮ omegaTwo ⊓ ⨆ i, (i ∈ᴮ omegaTwo ⊓ i ∈ᴮ x) ⊓ pair x i ∈ᴮ R := by
     rw [← mem_diagonalUnion]
     exact inf_le_right
   obtain ⟨i, Hi⟩ := exists_convert (Hx.trans inf_le_right)
@@ -94,8 +91,7 @@ theorem diagonalUnion_avoids_diagonalClub {R F : bSet 𝔹} {Γ : 𝔹}
   have Htotal : Δ ≤ ⨆ C, C ∈ᴮ bv_powerset omegaTwo ⊓ pair i C ∈ᴮ F :=
     (le_inf (inf_le_left.trans ((HF.trans inf_le_right).trans (iInf_le _ i)))
       (Hi.trans (inf_le_left.trans inf_le_left))).trans bv_imp_elim
-  obtain ⟨C, HC⟩ := exists_convert Htotal
-    (B_ext_inf B_ext_mem_left B_ext_pair_mem_right)
+  obtain ⟨C, HC⟩ := exists_convert Htotal (B_ext_inf B_ext_mem_left B_ext_pair_mem_right)
   have HavoidC : Δ ≤ ErdosIdeal.fiber omegaTwo R i ⊆ᴮ difference omegaTwo C :=
     (le_inf (inf_le_left.trans (Havoid.trans ((iInf_le _ i).trans (iInf_le _ C))))
       (le_inf (Hi.trans (inf_le_left.trans inf_le_left)) (HC.trans inf_le_right))).trans
@@ -124,8 +120,7 @@ theorem diagonalUnion_mem_nonstationaryIdeal {R : bSet 𝔹} {Γ : 𝔹}
     Γ ≤ diagonalUnion omegaTwo R ∈ᴮ nonstationaryIdeal := by
   obtain ⟨F, HF⟩ := exists_avoiding_fiber_club_family Hfibers
   have Hfunction := is_func'_of_is_function (HF.trans inf_le_left)
-  have Hclubs : Γ ≤ ⨅ i, ⨅ C,
-      _root_.imp (i ∈ᴮ omegaTwo ⊓ pair i C ∈ᴮ F) (club omegaTwo C) := by
+  have Hclubs : Γ ≤ ⨅ i, ⨅ C, _root_.imp (i ∈ᴮ omegaTwo ⊓ pair i C ∈ᴮ F) (club omegaTwo C) := by
     apply le_iInf
     intro i
     apply le_iInf

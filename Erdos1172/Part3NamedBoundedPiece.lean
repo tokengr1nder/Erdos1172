@@ -132,8 +132,7 @@ theorem exists_below_pure_enumeration (k : ℕ) (U : RegularName P V)
     ∃ G : FunctionDecisions P (Index k) (Set.Iio y),
       OrderedDecisions G ∧ CofinalDecisions G ∧ DenseCoverage G (belowName U y) ∧
         ∀ p j x, G.decides p j x → (belowName U y).holds p x := by
-  have hEbound : ∀ p i x, E.decides p i x → x < y :=
-    fun p i x hx => hbound p x (hmem p i x hx)
+  have hEbound : ∀ p i x, E.decides p i x → x < y := fun p i x hx => hbound p x (hmem p i x hx)
   let EB : FunctionDecisions P I (Set.Iio y) := belowE E y hEbound
   have htypes : typeLT (Index k) = typeLT I := (typeLT_index k).trans htype.symm
   obtain ⟨e⟩ := Ordinal.type_eq.mp htypes
@@ -141,8 +140,7 @@ theorem exists_below_pure_enumeration (k : ℕ) (U : RegularName P V)
   exact ⟨domainIso EB iso,
     domainIso_ordered EB iso (belowE_ordered E y hEbound hordered),
     domainIso_cofinal EB iso (belowE_cofinal E y hEbound U hcoverage hcofinal),
-    domainIso_denseCoverage EB iso (belowName U y)
-      (belowE_denseCoverage E y hEbound U hcoverage),
+    domainIso_denseCoverage EB iso (belowName U y) (belowE_denseCoverage E y hEbound U hcoverage),
     domainIso_actual EB iso (belowName U y) (belowE_actual E y hEbound U hmem)⟩
 
 /-- An actual finite-supported cover certificate maps to its set image
@@ -170,8 +168,7 @@ theorem exists_named_cover_of_bounded_pure_piece
         (coverName F (fun f => (Subtype.val : Set.Iio y → V) '' C.family f)).holds p x := by
   obtain ⟨G, hGorder, hGcofinal, hGcoverage, hGmem⟩ :=
     exists_below_pure_enumeration k U E htype hordered hcoverage hmem y hbound hcofinal
-  obtain ⟨F, hF⟩ := C.named_covers P hclosed (belowName U y) G
-    hGorder hGcofinal hGcoverage hGmem
+  obtain ⟨F, hF⟩ := C.named_covers P hclosed (belowName U y) G hGorder hGcofinal hGcoverage hGmem
   refine ⟨F, ?_⟩
   intro p x hx
   exact coverName_image_holds F C.family (Subtype.val : Set.Iio y → V)

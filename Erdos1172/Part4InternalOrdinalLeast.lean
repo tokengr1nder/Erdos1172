@@ -41,8 +41,7 @@ theorem leastIn_ext_value (C : bSet 𝔹) : B_ext (leastIn C) :=
     B_ext_imp (h₁ := B_ext_const)
       (h₂ := B_ext_sup (h₁ := B_ext_bv_eq_left) (h₂ := B_ext_mem_left))))
 
-theorem leastIn_mem {C x : bSet 𝔹} {Γ : 𝔹}
-    (H : Γ ≤ leastIn C x) : Γ ≤ x ∈ᴮ C := H.trans inf_le_left
+theorem leastIn_mem {C x : bSet 𝔹} {Γ : 𝔹} (H : Γ ≤ leastIn C x) : Γ ≤ x ∈ᴮ C := H.trans inf_le_left
 
 theorem leastIn_apply {C x z : bSet 𝔹} {Γ : 𝔹}
     (H : Γ ≤ leastIn C x) (Hz : Γ ≤ z ∈ᴮ C) :
@@ -69,8 +68,7 @@ theorem leastIn_unique {C x y : bSet 𝔹} {Γ : 𝔹}
 theorem leastIn_unique_of_eq {C D x y : bSet 𝔹} {Γ : 𝔹}
     (HCD : Γ ≤ C =ᴮ D) (Hx : Γ ≤ leastIn C x) (Hy : Γ ≤ leastIn D y) :
     Γ ≤ x =ᴮ y :=
-  leastIn_unique
-    (bv_rw'' (ϕ := fun A => leastIn A x) HCD Hx (leastIn_ext_set x)) Hy
+  leastIn_unique (bv_rw'' (ϕ := fun A => leastIn A x) HCD Hx (leastIn_ext_set x)) Hy
 
 /-- Every internally nonempty subset of an arbitrary internal ordinal has
 one actual least-member name at the same Boolean condition. -/
@@ -87,8 +85,7 @@ theorem exists_least_of_nonempty {κ C : bSet 𝔹} {Γ : 𝔹}
   intro z
   rw [← deduction]
   let Δ := Γ ⊓ z ∈ᴮ C
-  have Hxκ : Δ ≤ x ∈ᴮ κ :=
-    inf_le_left.trans (mem_of_mem_subset HC (Hx.trans inf_le_left))
+  have Hxκ : Δ ≤ x ∈ᴮ κ := inf_le_left.trans (mem_of_mem_subset HC (Hx.trans inf_le_left))
   have Hzκ : Δ ≤ z ∈ᴮ κ := mem_of_mem_subset (inf_le_left.trans HC) inf_le_right
   have Hnotzx : Δ ≤ (z ∈ᴮ x)ᶜ :=
     (le_inf (inf_le_left.trans (Hx.trans (inf_le_right.trans (iInf_le _ z))))
@@ -97,7 +94,6 @@ theorem exists_least_of_nonempty {κ C : bSet 𝔹} {Γ : 𝔹}
     epsilon_trichotomy_of_Ord Hxκ Hzκ (inf_le_left.trans Hκ)
   apply (le_inf (le_refl Δ) Htri).trans
   rw [inf_sup_left]
-  exact sup_le inf_le_right
-    ((bv_absurd _ inf_le_right (inf_le_left.trans Hnotzx)).trans bot_le)
+  exact sup_le inf_le_right ((bv_absurd _ inf_le_right (inf_le_left.trans Hnotzx)).trans bot_le)
 
 end bSet.ErdosOrdinalLeast

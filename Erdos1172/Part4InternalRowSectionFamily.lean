@@ -108,18 +108,15 @@ theorem rowSections_pair_iff {color : Bool} {R Rows σ y A : bSet 𝔹} {Γ : �
 theorem rowSections_witness {color : Bool} {R Rows σ y A : bSet 𝔹} {Γ : 𝔹}
     (H : Γ ≤ pair (pair σ y) A ∈ᴮ rowSections color R Rows) :
     ∃ r : bSet 𝔹, Γ ≤ pair σ r ∈ᴮ Rows ⊓ A =ᴮ forwardSection (!color) R r y :=
-  exists_convert (rowSections_pair_iff.mp H).2.2.2
-    (rowSectionValue_ext_row color R Rows σ y A)
+  exists_convert (rowSections_pair_iff.mp H).2.2.2 (rowSectionValue_ext_row color R Rows σ y A)
 
 theorem rowSections_value_of_pair {color : Bool} {R Rows σ r y A : bSet 𝔹} {Γ : 𝔹}
     (Hfunc : Γ ≤ is_func Rows) (Hrow : Γ ≤ pair σ r ∈ᴮ Rows)
     (Hsection : Γ ≤ pair (pair σ y) A ∈ᴮ rowSections color R Rows) :
     Γ ≤ A =ᴮ forwardSection (!color) R r y := by
   obtain ⟨r', Hr'⟩ := rowSections_witness Hsection
-  have Heq : Γ ≤ r' =ᴮ r :=
-    eq_of_is_func_of_eq Hfunc bv_refl (Hr'.trans inf_le_left) Hrow
-  exact bv_trans (Hr'.trans inf_le_right)
-    (forwardSection_row_congr (!color) R y Heq)
+  have Heq : Γ ≤ r' =ᴮ r := eq_of_is_func_of_eq Hfunc bv_refl (Hr'.trans inf_le_left) Hrow
+  exact bv_trans (Hr'.trans inf_le_right) (forwardSection_row_congr (!color) R y Heq)
 
 theorem rowSections_pair_iff_of_row
     {color : Bool} {R Rows σ r y A : bSet 𝔹} {Γ : 𝔹}
@@ -138,8 +135,7 @@ theorem rowSections_pair_iff_of_row
 themselves be injective or even functions to construct their section sets. -/
 theorem rowSections_is_function {color : Bool} {R Rows : bSet 𝔹} {Γ : 𝔹}
     (HRows : Γ ≤ is_function omegaOne (bv_powerset (prod omegaOne omegaTwo)) Rows) :
-    Γ ≤ is_function (prod omegaOne omegaTwo) (bv_powerset omegaOne)
-      (rowSections color R Rows) := by
+    Γ ≤ is_function (prod omegaOne omegaTwo) (bv_powerset omegaOne) (rowSections color R Rows) := by
   apply relationGraph_is_function (P := rowSectionRel color R Rows)
     (rowSectionRel_ext_index color R Rows) (rowSectionRel_ext_value color R Rows)
   · apply le_iInf
@@ -159,8 +155,7 @@ theorem rowSections_is_function {color : Bool} {R Rows : bSet 𝔹} {Γ : 𝔹}
   · intro q₁ q₂ A B Δ HΔ Hq₁ Hq₂ _ _ Hrel₁ Hrel₂ Hq
     obtain ⟨σ, _, y, _, Hqσ⟩ := mem_prod_iff₂.mp Hq₁
     obtain ⟨τ, _, z, _, Hqτ⟩ := mem_prod_iff₂.mp Hq₂
-    have Heq : Δ ≤ pair σ y =ᴮ pair τ z :=
-      bv_trans (bv_symm Hqσ) (bv_trans Hq Hqτ)
+    have Heq : Δ ≤ pair σ y =ᴮ pair τ z := bv_trans (bv_symm Hqσ) (bv_trans Hq Hqτ)
     have HA : Δ ≤ ⨆ r, pair σ r ∈ᴮ Rows ⊓ A =ᴮ forwardSection (!color) R r y := by
       rw [← rowSectionRel_pair]
       exact bv_rw'' (ϕ := fun q => rowSectionRel color R Rows q A) Hqσ Hrel₁
@@ -176,8 +171,7 @@ theorem rowSections_is_function {color : Bool} {R Rows : bSet 𝔹} {Γ : 𝔹}
     have Hsections : Δ ≤ forwardSection (!color) R r y =ᴮ forwardSection (!color) R s z :=
       bv_trans (forwardSection_row_congr (!color) R y Hrs)
         (forwardSection_congr (!color) R s (eq_of_eq_pair_right' Heq))
-    exact bv_trans (Hr.trans inf_le_right)
-      (bv_trans Hsections (bv_symm (Hs.trans inf_le_right)))
+    exact bv_trans (Hr.trans inf_le_right) (bv_trans Hsections (bv_symm (Hs.trans inf_le_right)))
 
 /-- The simultaneous future supplies exactly the small complement needed
 for the constructed value, and no assertion about vertices outside `L`. -/

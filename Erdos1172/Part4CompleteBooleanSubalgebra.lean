@@ -52,13 +52,9 @@ instance completeSubalgebraSetLike : SetLike (CompleteSubalgebra B) B where
 instance completeSubalgebraPartialOrder : PartialOrder (CompleteSubalgebra B) :=
   .ofSetLike (CompleteSubalgebra B) B
 
-@[ext] theorem ext {A C : CompleteSubalgebra B}
-    (h : ∀ b, b ∈ A ↔ b ∈ C) : A = C :=
-  SetLike.ext h
+@[ext] theorem ext {A C : CompleteSubalgebra B} (h : ∀ b, b ∈ A ↔ b ∈ C) : A = C := SetLike.ext h
 
-theorem compl_mem {A : CompleteSubalgebra B} {b : B}
-    (hb : b ∈ A) : bᶜ ∈ A :=
-  A.compl_mem' hb
+theorem compl_mem {A : CompleteSubalgebra B} {b : B} (hb : b ∈ A) : bᶜ ∈ A := A.compl_mem' hb
 
 theorem sSup_mem {A : CompleteSubalgebra B} {S : Set B}
     (hS : S ⊆ A) : sSup S ∈ A :=
@@ -100,8 +96,7 @@ def inclusion (A : CompleteSubalgebra B) : CompleteLatticeHom A B where
   map_sSup' _ := rfl
   map_sInf' _ := rfl
 
-@[simp] theorem inclusion_apply (A : CompleteSubalgebra B) (a : A) :
-    inclusion A a = (a : B) := rfl
+@[simp] theorem inclusion_apply (A : CompleteSubalgebra B) (a : A) : inclusion A a = (a : B) := rfl
 
 theorem inclusion_injective (A : CompleteSubalgebra B) :
     Function.Injective (inclusion A) :=
@@ -131,8 +126,7 @@ def sInter (F : Set (CompleteSubalgebra B)) : CompleteSubalgebra B where
 def generated (S : Set B) : CompleteSubalgebra B :=
   sInter {A | S ⊆ (A : Set B)}
 
-theorem subset_generated {S : Set B} : S ⊆ generated S :=
-  fun _ hb _A hA => hA hb
+theorem subset_generated {S : Set B} : S ⊆ generated S := fun _ hb _A hA => hA hb
 
 theorem generated_le {S : Set B} {A : CompleteSubalgebra B}
     (hS : S ⊆ A) : generated S ≤ A :=

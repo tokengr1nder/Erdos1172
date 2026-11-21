@@ -41,8 +41,7 @@ open OrdinalRamsey (HasCliqueOfType)
 
 abbrev RedCoreIndex := W1 ×ₗ OmegaSuccessor
 
-theorem mk_redCoreIndex_le : #RedCoreIndex ≤ ℵ_ 1 :=
-  mk_product_le mk_omegaSuccessor_le
+theorem mk_redCoreIndex_le : #RedCoreIndex ≤ ℵ_ 1 := mk_product_le mk_omegaSuccessor_le
 
 theorem typeLT_redCoreIndex : typeLT RedCoreIndex = (ω_ 1 : Ordinal.{0}) ^ (ω + 2) := by
   change Ordinal.type (Prod.Lex ((· < ·) : W1 → W1 → Prop)

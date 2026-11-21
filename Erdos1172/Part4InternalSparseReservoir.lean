@@ -44,8 +44,7 @@ theorem B_ext_hasLargeNeighborhood (color : Bool) (R : bSet 𝔹) :
 large subreservoirs with no vertex having a large neighborhood. -/
 theorem not_richNeighborhoods_value (color : Bool) (R S : bSet 𝔹) :
     (richNeighborhoods color R S)ᶜ =
-      ⨆ X, (X ⊆ᴮ S ⊓ injects_into omegaTwo X) ⊓
-        (hasLargeNeighborhood color R X)ᶜ := by
+      ⨆ X, (X ⊆ᴮ S ⊓ injects_into omegaTwo X) ⊓ (hasLargeNeighborhood color R X)ᶜ := by
   simp only [richNeighborhoods, compl_iInf, _root_.imp, compl_sup, compl_compl,
     hasLargeNeighborhood]
 
@@ -91,8 +90,7 @@ theorem exists_sparse_reservoir {color : Bool} {R S : bSet 𝔹} {Γ : 𝔹}
   have Hfailure := Hnot
   rw [not_richNeighborhoods_value] at Hfailure
   have Hext : B_ext (fun X : bSet 𝔹 =>
-      (X ⊆ᴮ S ⊓ injects_into omegaTwo X) ⊓
-        (hasLargeNeighborhood color R X)ᶜ) :=
+      (X ⊆ᴮ S ⊓ injects_into omegaTwo X) ⊓ (hasLargeNeighborhood color R X)ᶜ) :=
     B_ext_inf (B_ext_inf B_ext_subset_left B_ext_injects_into_right)
       (B_ext_neg (h := B_ext_hasLargeNeighborhood color R))
   obtain ⟨X, HX⟩ := exists_convert Hfailure Hext
@@ -119,8 +117,7 @@ theorem omega_clique_or_sparse_reservoir {color : Bool} {R S : bSet 𝔹} {Γ : 
       (increasingOn bSet.omega f ⊓ homogeneousUnion color R bSet.omega bSet.omega f f)) ⊔
       sparseReservoirValue color R S := by
   calc
-    Γ = (Γ ⊓ richNeighborhoods color R S) ⊔
-        (Γ ⊓ (richNeighborhoods color R S)ᶜ) := by
+    Γ = (Γ ⊓ richNeighborhoods color R S) ⊔ (Γ ⊓ (richNeighborhoods color R S)ᶜ) := by
       rw [← inf_sup_left, sup_compl_eq_top, inf_top_eq]
     _ ≤ _ := by
       apply sup_le

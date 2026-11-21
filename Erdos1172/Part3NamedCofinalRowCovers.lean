@@ -66,8 +66,7 @@ directions, hence preserves actual regularized cover membership. -/
 theorem coverName_flatten_iff {q : P} (r : Set.Iic q)
     (F : FunctionDecisions (Set.Iic r) W1 W1) (C : (W1 → W1) → Set X)
     (p : Set.Iic r.val) (x : X) :
-    (coverName (flattenDecisions r F) C).holds p x ↔
-      (coverName F C).holds (nestCone r p) x := by
+    (coverName (flattenDecisions r F) C).holds p x ↔ (coverName F C).holds (nestCone r p) x := by
   constructor
   · intro hx s hsp
     obtain ⟨t, hts, ht⟩ := hx (flattenCone r s) hsp

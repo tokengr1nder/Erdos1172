@@ -24,8 +24,7 @@ def leastNoninjectingOrdinal (κ x : bSet 𝔹) : 𝔹 :=
 
 lemma zero_injects {Γ : 𝔹} : Γ ≤ injects_into (0 : bSet 𝔹) κ := by
   apply injects_into_of_subset
-  exact bv_rw' (H := zero_eq_empty) (H_new := empty_subset)
-    (h_congr := B_ext_subset_left)
+  exact bv_rw' (H := zero_eq_empty) (H_new := empty_subset) (h_congr := B_ext_subset_left)
 
 noncomputable def hartogs' : bSet 𝔹 :=
   comprehend
@@ -192,11 +191,9 @@ lemma induced_rel_empty_of_eq_zero {η f : bSet 𝔹} {Γ : 𝔹}
   have H_mem' : Γ' ≤ pr ∈ᴮ induced_epsilon_rel η κ f := inf_le_right
   have H_func' : Γ' ≤ is_function η κ f := le_trans inf_le_left H_func
   obtain ⟨a, _b, _, _, _, Hab⟩ := eq_pair_of_mem_induced_epsilon_rel H_mem'
-  have Ha_img : Γ' ≤ a ∈ᴮ image η κ f :=
-    induced_epsilon_rel_sub_image_left H_func' Hab
+  have Ha_img : Γ' ≤ a ∈ᴮ image η κ f := induced_epsilon_rel_sub_image_left H_func' Hab
   rw [mem_image_iff] at Ha_img
-  have H_eq_empty : Γ' ≤ η =ᴮ ∅ :=
-    eq_zero_iff_eq_empty.mp (le_trans inf_le_left H_eq_zero)
+  have H_eq_empty : Γ' ≤ η =ᴮ ∅ := eq_zero_iff_eq_empty.mp (le_trans inf_le_left H_eq_zero)
   have H_notz : Γ' ≤ ⨅ z, (z ∈ᴮ η)ᶜ := empty_iff_forall_not_mem.mp H_eq_empty
   apply bv_absurd (⨆ z, z ∈ᴮ η ⊓ pair z a ∈ᴮ f) Ha_img.2
   rw [compl_iSup]
@@ -273,8 +270,7 @@ lemma nonempty_induced_rel_iff_not_zero_and_not_one {η f : bSet 𝔹} {Γ : �
     (Γ ≤ (η =ᴮ 0)ᶜ ∧ Γ ≤ (η =ᴮ 1)ᶜ) := by
   constructor
   · intro H
-    exact ⟨not_zero_of_induced_rel_nonempty H_inj H,
-           not_one_of_induced_rel_nonempty H_inj H⟩
+    exact ⟨not_zero_of_induced_rel_nonempty H_inj H, not_one_of_induced_rel_nonempty H_inj H⟩
   · intro ⟨H₁, H₂⟩
     rw [nonempty_iff_exists_mem]
     -- Get 1 ∈ η (since η ≥ 2 ordinal-wise)
@@ -587,10 +583,8 @@ lemma hartogs_spec {Γ : 𝔹} : Γ ≤ leastNoninjectingOrdinal κ (hartogs (κ
   refine le_inf (hartogs_not_le_omega Hone) (le_inf (hartogs_Ord Hone) ?_)
   apply le_iInf; intro y; rw [← deduction, ← deduction]
   -- ctx := Γ ⊓ Ord y ⊓ (injects_into y κ)ᶜ, Goal: ctx ≤ (hartogs (κ := κ)) ⊆ y
-  have H_Ord_y : Γ ⊓ Ord y ⊓ (injects_into y κ)ᶜ ≤ Ord y :=
-    inf_le_left.trans inf_le_right
-  have H_no_inj_y : Γ ⊓ Ord y ⊓ (injects_into y κ)ᶜ ≤ (injects_into y κ)ᶜ :=
-    inf_le_right
+  have H_Ord_y : Γ ⊓ Ord y ⊓ (injects_into y κ)ᶜ ≤ Ord y := inf_le_left.trans inf_le_right
+  have H_no_inj_y : Γ ⊓ Ord y ⊓ (injects_into y κ)ᶜ ≤ (injects_into y κ)ᶜ := inf_le_right
   -- Show y ∉ (hartogs (κ := κ)) (if y ∈ (hartogs (κ := κ)) then injects_into y κ, contradiction)
   have H_not_mem_hartogs : Γ ⊓ Ord y ⊓ (injects_into y κ)ᶜ ≤ (y ∈ᴮ (hartogs (κ := κ)))ᶜ := by
     apply (le_compl_iff_disjoint_right.mpr (disjoint_iff_inf_le.mpr _))

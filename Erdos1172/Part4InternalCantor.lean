@@ -28,8 +28,7 @@ private theorem diagonal_predicate_ext (f : bSet 𝔹) :
     (h₂ := B_ext_neg (h := B_ext_mem_left)))
 
 theorem mem_diagonal (X f x : bSet 𝔹) :
-    x ∈ᴮ diagonal X f =
-      (x ∈ᴮ X) ⊓ ⨅ y, _root_.imp (pair x y ∈ᴮ f) (x ∈ᴮ y)ᶜ := by
+    x ∈ᴮ diagonal X f = (x ∈ᴮ X) ⊓ ⨅ y, _root_.imp (pair x y ∈ᴮ f) (x ∈ᴮ y)ᶜ := by
   unfold diagonal
   apply le_antisymm
   · apply ((mem_comprehend_iff₂ _ X (diagonal_predicate_ext f)).mp le_rfl).trans
@@ -41,8 +40,7 @@ theorem mem_diagonal (X f x : bSet 𝔹) :
     exact le_inf
       (bv_rw' (ϕ := fun w => w ∈ᴮ X) Heq
         (h_congr := B_ext_mem_left) (H_new := inf_le_left))
-      (bv_rw' Heq (h_congr := diagonal_predicate_ext f)
-        (H_new := inf_le_right.trans inf_le_right))
+      (bv_rw' Heq (h_congr := diagonal_predicate_ext f) (H_new := inf_le_right.trans inf_le_right))
   · apply (mem_comprehend_iff₂ _ X (diagonal_predicate_ext f)).mpr
     exact le_iSup_of_le x (le_inf inf_le_left (le_inf bv_refl inf_le_right))
 
@@ -57,16 +55,13 @@ theorem bot_of_partial_surjection_powerset {X S f : bSet 𝔹} {Γ : 𝔹}
     (HS : Γ ≤ S ⊆ᴮ X) (Hf : Γ ≤ is_func f)
     (Hsurj : Γ ≤ is_surj S (bv_powerset X) f) : Γ ≤ ⊥ := by
   let D := diagonal X f
-  have HD : Γ ≤ D ∈ᴮ bv_powerset X :=
-    bv_powerset_spec.mp diagonal_subset
+  have HD : Γ ≤ D ∈ᴮ bv_powerset X := bv_powerset_spec.mp diagonal_subset
   have Hpre : Γ ≤ ⨆ a, (a ∈ᴮ S) ⊓ pair a D ∈ᴮ f :=
     (le_inf (Hsurj.trans (iInf_le _ D)) HD).trans bv_imp_elim
-  obtain ⟨a, Ha⟩ := exists_convert Hpre
-    (B_ext_inf B_ext_mem_left B_ext_pair_mem_left)
+  obtain ⟨a, Ha⟩ := exists_convert Hpre (B_ext_inf B_ext_mem_left B_ext_pair_mem_left)
   have Hnot : Γ ≤ (a ∈ᴮ D)ᶜ := by
     rw [← imp_bot, ← deduction]
-    have Hdiag : Γ ⊓ a ∈ᴮ D ≤
-        ⨅ y, _root_.imp (pair a y ∈ᴮ f) (a ∈ᴮ y)ᶜ := by
+    have Hdiag : Γ ⊓ a ∈ᴮ D ≤ ⨅ y, _root_.imp (pair a y ∈ᴮ f) (a ∈ᴮ y)ᶜ := by
       have Hmem : Γ ⊓ a ∈ᴮ D ≤ a ∈ᴮ diagonal X f := inf_le_right
       exact Hmem.trans ((mem_diagonal X f a).le.trans inf_le_right)
     exact bv_absurd _ inf_le_right
@@ -88,8 +83,7 @@ theorem bot_of_partial_surjection_powerset {X S f : bSet 𝔹} {Γ : 𝔹}
   exact bv_absurd _ Hyes Hnot
 
 /-- Cantor's theorem, with the partial-surjection orientation made explicit. -/
-theorem not_larger_than_powerset {X : bSet 𝔹} {Γ : 𝔹} :
-    Γ ≤ (larger_than X (bv_powerset X))ᶜ := by
+theorem not_larger_than_powerset {X : bSet 𝔹} {Γ : 𝔹} : Γ ≤ (larger_than X (bv_powerset X))ᶜ := by
   rw [← imp_bot, ← deduction]
   unfold larger_than
   rw [inf_iSup_eq]
@@ -103,8 +97,7 @@ theorem not_larger_than_powerset {X : bSet 𝔹} {Γ : 𝔹} :
     (is_func_of_is_func' (inf_le_right.trans (inf_le_left.trans inf_le_right)))
     (inf_le_right.trans inf_le_right)
 
-theorem powerset_not_injects {X : bSet 𝔹} {Γ : 𝔹} :
-    Γ ≤ (injects_into (bv_powerset X) X)ᶜ := by
+theorem powerset_not_injects {X : bSet 𝔹} {Γ : 𝔹} : Γ ≤ (injects_into (bv_powerset X) X)ᶜ := by
   rw [← imp_bot, ← deduction]
   exact bv_absurd _ (ErdosCHHartogs.larger_than_of_injects_into inf_le_right)
     not_larger_than_powerset
@@ -113,8 +106,7 @@ theorem powerset_not_injects {X : bSet 𝔹} {Γ : 𝔹} :
 theorem omegaOne_injects_powerset_omega {Γ : 𝔹} :
     Γ ≤ injects_into ErdosOmegaTwo.omegaOne (bv_powerset (bSet.omega : bSet 𝔹)) := by
   apply (le_inf
-    (ErdosPartialInjection.omegaOne_cardinal_dichotomy
-      (S := bv_powerset bSet.omega) (Γ := Γ))
+    (ErdosPartialInjection.omegaOne_cardinal_dichotomy (S := bv_powerset bSet.omega) (Γ := Γ))
     (powerset_not_injects (X := bSet.omega) (Γ := Γ))).trans
   rw [inf_sup_right]
   apply sup_le

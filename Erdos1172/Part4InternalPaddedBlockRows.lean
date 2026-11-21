@@ -55,8 +55,7 @@ theorem rowCandidate_ext_row (Earlier h E σ : bSet 𝔹) :
 theorem rowCandidate_witness {Earlier h E σ r : bSet 𝔹} {Γ : 𝔹}
     (H : Γ ≤ rowCandidate Earlier h E σ r) :
     ∃ A : bSet 𝔹, Γ ≤ A ∈ᴮ Earlier ⊓ (pair A σ ∈ᴮ h ⊓ pair A r ∈ᴮ E) :=
-  exists_convert H (B_ext_inf B_ext_mem_left
-    (B_ext_inf B_ext_pair_mem_left B_ext_pair_mem_left))
+  exists_convert H (B_ext_inf B_ext_mem_left (B_ext_inf B_ext_pair_mem_left B_ext_pair_mem_left))
 
 theorem rowCandidate_unique {color : Bool} {R Earlier h E σ r s : bSet 𝔹} {Γ : 𝔹}
     (Hh : Γ ≤ is_inj h)
@@ -176,8 +175,7 @@ theorem exists_padded_row_for_object
     (Hcoverage : Γ ≤ paddedRowCoverage Earlier E Rows) (HA : Γ ≤ A ∈ᴮ Earlier) :
     ∃ σ r : bSet 𝔹, Γ ≤ σ ∈ᴮ omegaOne ∧ Γ ≤ pair A r ∈ᴮ E ∧
       Γ ≤ pair σ r ∈ᴮ Rows ∧ Γ ≤ blockEnumerationData color R A r := by
-  obtain ⟨r, HAr, Hdata⟩ := exists_selected_enumeration HE HElaw
-    (mem_of_mem_subset HEarlier HA)
+  obtain ⟨r, HAr, Hdata⟩ := exists_selected_enumeration HE HElaw (mem_of_mem_subset HEarlier HA)
   obtain ⟨σ, Hσ⟩ := paddedRowCoverage_witness Hcoverage HA HAr
   exact ⟨σ, r, Hσ.trans inf_le_left, HAr, Hσ.trans inf_le_right, Hdata⟩
 

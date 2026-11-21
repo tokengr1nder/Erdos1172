@@ -37,14 +37,12 @@ theorem kappa_pos : 0 < kappa := Ordinal.omega_pos 1
 theorem alephZero_lt_alephOne : (ℵ₀ : Cardinal.{0}) < ℵ_ 1 :=
   Cardinal.aleph0_lt_aleph.mpr (by norm_num)
 
-theorem cof_le_alephZero_of_lt_kappa {a : Ordinal.{0}} (ha : a < kappa) :
-    a.cof ≤ ℵ₀ := by
+theorem cof_le_alephZero_of_lt_kappa {a : Ordinal.{0}} (ha : a < kappa) : a.cof ≤ ℵ₀ := by
   have hcard : a.card < ℵ_ 1 := Cardinal.lt_omega_iff_card_lt.mp ha
   exact (Ordinal.cof_le_card a).trans (Cardinal.lt_aleph_one_iff.mp hcard)
 
 theorem cof_omegaPower : omegaPower.cof = ℵ₀ := by
-  have hk : (1 : Ordinal.{0}) < kappa :=
-    Ordinal.one_lt_omega0.trans_le (Ordinal.omega0_le_omega 1)
+  have hk : (1 : Ordinal.{0}) < kappa := Ordinal.one_lt_omega0.trans_le (Ordinal.omega0_le_omega 1)
   exact (Ordinal.cof_map_of_isNormal (Ordinal.isNormal_opow hk)
     Ordinal.isSuccLimit_omega0).trans Ordinal.cof_omega0
 
@@ -72,8 +70,7 @@ theorem cof_omegaPower_mul_le_alephZero {q : Ordinal.{0}} (hq : q < kappa) :
 strictly below the exponent of the original finite bound. -/
 theorem exists_final_power_of_lt_finite_power (N : ℕ) {a : Ordinal.{0}}
     (ha : a < kappa ^ ((N + 1 : ℕ) : Ordinal)) (hcof : a.cof = ℵ_ 1) :
-    ∃ cut : Ordinal.{0}, ∃ n : ℕ, n < N ∧
-      a = cut + kappa ^ ((n + 1 : ℕ) : Ordinal) := by
+    ∃ cut : Ordinal.{0}, ∃ n : ℕ, n < N ∧ a = cut + kappa ^ ((n + 1 : ℕ) : Ordinal) := by
   induction N generalizing a with
   | zero =>
       have hak : a < kappa := by
@@ -130,8 +127,7 @@ theorem omegaPower_remainder_ne_zero {a : Ordinal.{0}}
 is a bounded initial part followed by one finite pure-power tail. -/
 theorem exists_final_power_tail {a : Ordinal.{0}}
     (ha : a < kappa ^ (ω + 1)) (hcof : a.cof = ℵ_ 1) :
-    ∃ cut : Ordinal.{0}, ∃ n : ℕ,
-      a = cut + kappa ^ ((n + 1 : ℕ) : Ordinal) := by
+    ∃ cut : Ordinal.{0}, ∃ n : ℕ, a = cut + kappa ^ ((n + 1 : ℕ) : Ordinal) := by
   let q : Ordinal.{0} := a / omegaPower
   let remainder : Ordinal.{0} := a % omegaPower
   have hpower : omegaPower ≠ 0 := (Ordinal.opow_pos _ kappa_pos).ne'
@@ -145,8 +141,7 @@ theorem exists_final_power_tail {a : Ordinal.{0}}
     (Ordinal.lt_opow_of_isSuccLimit kappa_pos.ne' Ordinal.isSuccLimit_omega0).mp hrem
   obtain ⟨N, rfl⟩ := Ordinal.lt_omega0.mp hexponent
   have hfinite' : remainder < kappa ^ ((N + 1 : ℕ) : Ordinal) :=
-    hfinite.trans_le (Ordinal.opow_le_opow_right kappa_pos
-      (by exact_mod_cast Nat.le_succ N))
+    hfinite.trans_le (Ordinal.opow_le_opow_right kappa_pos (by exact_mod_cast Nat.le_succ N))
   obtain ⟨cut, n, -, htail⟩ := exists_final_power_of_lt_finite_power N hfinite' hremCof
   refine ⟨omegaPower * q + cut, n, ?_⟩
   rw [← hsplit, htail, add_assoc]

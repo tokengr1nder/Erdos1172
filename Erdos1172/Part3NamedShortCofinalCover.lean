@@ -91,10 +91,8 @@ theorem exists_cofinal_profile_cover
     (L : ∀ n : ℕ, OptionalNamedCofinalCovers n V)
     (hcard : #V ≤ ℵ_ 1) (htype : typeLT V = (ω_ 1 : Ordinal.{0}) ^ (ω + 1))
     (U : RegularName P V) (p0 : P) (hclosed : CountablyClosed P)
-    (hcofinal : ∀ p : P, p ≤ p0 → ∀ cut : V,
-      ∃ q : P, q ≤ p ∧ ∃ x : V, U.holds q x ∧ cut ≤ x)
-    (hno : ¬Erdos1172Part3RegularGreedyEnumeration.HasOrderedEmbeddingBelow
-      (I := V) U p0) :
+    (hcofinal : ∀ p : P, p ≤ p0 → ∀ cut : V, ∃ q : P, q ≤ p ∧ ∃ x : V, U.holds q x ∧ cut ≤ x)
+    (hno : ¬Erdos1172Part3RegularGreedyEnumeration.HasOrderedEmbeddingBelow (I := V) U p0) :
     ∃ r : P, r ≤ p0 ∧ ∃ e : V × ℕ,
       ∃ F : FunctionDecisions (Set.Iic r) W1 W1,
         ∀ p : Set.Iic r, ∀ x : V, U.holds p.val x →

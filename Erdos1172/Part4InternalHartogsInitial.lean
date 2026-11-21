@@ -61,8 +61,7 @@ lemma hartogs_initial {κ : bSet 𝔹}
     inf_le_left.trans inf_le_right
   have Hsmall := injects_into_of_injection_into
     ((mem_hartogs_iff Hone (Ord_of_mem_hartogs Hmem)).mp Hmem)
-  exact bv_absurd _ (injects_into_trans inf_le_right Hsmall)
-    (hartogs_not_le_omega Hone)
+  exact bv_absurd _ (injects_into_trans inf_le_right Hsmall) (hartogs_not_le_omega Hone)
 
 /-- For an ordinal base, the Hartogs name is strictly above that base. -/
 lemma base_mem_hartogs {κ : bSet 𝔹}

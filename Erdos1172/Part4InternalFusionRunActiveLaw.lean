@@ -76,8 +76,7 @@ theorem fusion_run_active_subset
     apply le_iInf
     intro x
     rw [← deduction]
-    exact mem_bv_union_iff.mpr (le_iSup_of_le U
-      (le_inf (inf_le_left.trans Himage) inf_le_right))
+    exact mem_bv_union_iff.mpr (le_iSup_of_le U (le_inf (inf_le_left.trans Himage) inf_le_right))
   have HV : Γ ≤ V =ᴮ nextActive color R E top j T :=
     eq_of_eq_pair_right' (eq_of_eq_pair_right' (fusion_run_entry_eq Hlaw Hj))
   exact subset_trans' Hsub (subset_trans'

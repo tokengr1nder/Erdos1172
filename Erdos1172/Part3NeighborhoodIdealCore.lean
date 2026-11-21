@@ -41,8 +41,7 @@ theorem exists_extension (ha : GoodCut r G H a) (b : Bool)
     (s : Set W2) (hs : ¬Small r G H a s) (hsBelow : s ⊆ Set.Iio a)
     (hsColor : ∀ x ∈ s, (colorGraph G H b).Adj x a)
     (selected : Set W2) (hselected : selected ⊆ s) (hcard : #selected < ℵ_ 1) :
-    ∃ y ∈ s, (∀ x ∈ selected, x < y) ∧
-      ∀ x ∈ selected, (colorGraph G H b).Adj x y := by
+    ∃ y ∈ s, (∀ x ∈ selected, x < y) ∧ ∀ x ∈ selected, (colorGraph G H b).Adj x y := by
   obtain ⟨cutoff, hcutoff, hbound⟩ :=
     ErdosRadoCHAsym.exists_strict_bound_of_countable_of_IsOmegaOneSup ha.isOmegaOneSup
       (Cardinal.lt_aleph_one_iff.mp hcard) (fun x hx => hsBelow (hselected hx))
@@ -64,8 +63,7 @@ theorem exists_maximal_clique_subset (K : SimpleGraph W2) (s : Set W2) :
 theorem exists_core (ha : GoodCut r G H a) (b : Bool)
     (s : Set W2) (hs : ¬Small r G H a s) (hsBelow : s ⊆ Set.Iio a)
     (hsColor : ∀ x ∈ s, (colorGraph G H b).Adj x a) :
-    ∃ core : Set W2, core ⊆ s ∧ (colorGraph G H b).IsClique core ∧
-      typeLT core = ω_ 1 := by
+    ∃ core : Set W2, core ⊆ s ∧ (colorGraph G H b).IsClique core ∧ typeLT core = ω_ 1 := by
   obtain ⟨c, hc⟩ := exists_maximal_clique_subset (colorGraph G H b) s
   have hcard : ℵ_ 1 ≤ #c := by
     by_contra h

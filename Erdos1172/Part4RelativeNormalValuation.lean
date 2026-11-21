@@ -21,8 +21,7 @@ variable (e : CompleteLatticeHom B C) (μ : BoundedLatticeHom (W → B) C)
 variable (scalar : ∀ b : B, μ (fun _ => b) = e b)
 
 include scalar in
-theorem localized (b : B) (a : W → B) :
-    e b ⊓ μ a = μ (fun x => b ⊓ a x) := by
+theorem localized (b : B) (a : W → B) : e b ⊓ μ a = μ (fun x => b ⊓ a x) := by
   rw [← scalar b]
   exact (map_inf μ (fun _ => b) a).symm
 
@@ -65,8 +64,7 @@ include scalar dense normal in
 /-- Relative density uses the conditions of the quotient together with
 arbitrary source Boolean conditions. Mixing on source antichains keeps
 one representative per quotient condition. -/
-theorem range_iSup {J : Type u} (A : J → W → B) :
-    ∃ X, μ X = ⨆ j, μ (A j) := by
+theorem range_iSup {J : Type u} (A : J → W → B) : ∃ X, μ X = ⨆ j, μ (A j) := by
   classical
   let allow (i : I) (j : J) := sSup {b : B | d i ⊓ e b ≤ μ (A j)}
   have below (i : I) (j : J) : d i ⊓ e (allow i j) ≤ μ (A j) := by

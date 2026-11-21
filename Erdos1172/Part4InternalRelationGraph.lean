@@ -45,8 +45,7 @@ theorem mem_relationGraph_iff {A B : bSet 𝔹}
     {P : bSet 𝔹 → bSet 𝔹 → 𝔹}
     (hL : ∀ b, B_ext (fun a => P a b)) (hR : ∀ a, B_ext (P a))
     {a b : bSet 𝔹} {Γ : 𝔹} :
-    Γ ≤ pair a b ∈ᴮ relationGraph A B P ↔
-      Γ ≤ a ∈ᴮ A ∧ Γ ≤ b ∈ᴮ B ∧ Γ ≤ P a b := by
+    Γ ≤ pair a b ∈ᴮ relationGraph A B P ↔ Γ ≤ a ∈ᴮ A ∧ Γ ≤ b ∈ᴮ B ∧ Γ ≤ P a b := by
   have hExt : B_ext (fun z : bSet 𝔹 =>
       ⨆ a', ⨆ b', z =ᴮ pair a' b' ⊓ P a' b') :=
     B_ext_iSup (h := fun _ => B_ext_iSup (h := fun _ =>
@@ -65,8 +64,7 @@ theorem mem_relationGraph_iff {A B : bSet 𝔹}
         (eq_of_eq_pair_right' inf_le_left)
         (h_congr := hR a') (H_new := inf_le_right))
   · rintro ⟨Ha, Hb, HP⟩
-    exact ⟨mem_prod_iff.mpr ⟨Ha, Hb⟩,
-      le_iSup_of_le a (le_iSup_of_le b (le_inf bv_refl HP))⟩
+    exact ⟨mem_prod_iff.mpr ⟨Ha, Hb⟩, le_iSup_of_le a (le_iSup_of_le b (le_inf bv_refl HP))⟩
 
 theorem relationGraph_subset {A B : bSet 𝔹}
     {P : bSet 𝔹 → bSet 𝔹 → 𝔹} {Γ : 𝔹} :
@@ -88,14 +86,11 @@ theorem relationGraph_is_function {A B : bSet 𝔹}
     rw [← deduction, ← deduction]
     let Δ := (Γ ⊓ (pair a₁ b₁ ∈ᴮ relationGraph A B P ⊓
       pair a₂ b₂ ∈ᴮ relationGraph A B P)) ⊓ a₁ =ᴮ a₂
-    have H₁ := (mem_relationGraph_iff hL hR).mp
-      (show Δ ≤ pair a₁ b₁ ∈ᴮ relationGraph A B P from
+    have H₁ := (mem_relationGraph_iff hL hR).mp (show Δ ≤ pair a₁ b₁ ∈ᴮ relationGraph A B P from
         inf_le_left.trans (inf_le_right.trans inf_le_left))
-    have H₂ := (mem_relationGraph_iff hL hR).mp
-      (show Δ ≤ pair a₂ b₂ ∈ᴮ relationGraph A B P from
+    have H₂ := (mem_relationGraph_iff hL hR).mp (show Δ ≤ pair a₂ b₂ ∈ᴮ relationGraph A B P from
         inf_le_left.trans (inf_le_right.trans inf_le_right))
-    exact Hunique (inf_le_left.trans inf_le_left)
-      H₁.1 H₂.1 H₁.2.1 H₂.2.1 H₁.2.2 H₂.2.2 inf_le_right
+    exact Hunique (inf_le_left.trans inf_le_left) H₁.1 H₂.1 H₁.2.1 H₂.2.1 H₁.2.2 H₂.2.2 inf_le_right
   · apply le_iInf; intro a; rw [← deduction]
     have H := (le_inf (inf_le_left.trans (Htotal.trans (iInf_le _ a)))
       (show Γ ⊓ a ∈ᴮ A ≤ a ∈ᴮ A from inf_le_right)).trans bv_imp_elim

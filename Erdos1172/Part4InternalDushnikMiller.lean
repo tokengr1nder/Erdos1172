@@ -45,13 +45,11 @@ theorem omega_clique_or_large_independent {color : Bool} {R S : bSet 𝔹} {Γ :
   rw [inf_sup_left]
   apply sup_le
   · exact inf_le_right.trans le_sup_left
-  · change Γ ⊓ (⨆ X, (X ⊆ᴮ S ⊓ injects_into omegaTwo X) ⊓
-      sparseNeighborhoods color R X) ≤ _
+  · change Γ ⊓ (⨆ X, (X ⊆ᴮ S ⊓ injects_into omegaTwo X) ⊓ sparseNeighborhoods color R X) ≤ _
     rw [inf_iSup_eq]
     apply iSup_le
     intro X
-    let Δ := Γ ⊓ ((X ⊆ᴮ S ⊓ injects_into omegaTwo X) ⊓
-      sparseNeighborhoods color R X)
+    let Δ := Γ ⊓ ((X ⊆ᴮ S ⊓ injects_into omegaTwo X) ⊓ sparseNeighborhoods color R X)
     have HXS : Δ ≤ X ⊆ᴮ S := inf_le_right.trans (inf_le_left.trans inf_le_left)
     have HA := ErdosSparseLarge.large_independent_value
       (inf_le_left.trans HCH)
@@ -66,7 +64,6 @@ theorem omega_clique_or_large_independent {color : Bool} {R S : bSet 𝔹} {Γ :
     apply le_iSup_of_le A
     refine le_inf (le_inf ?_ (inf_le_right.trans (inf_le_left.trans inf_le_right)))
       (inf_le_right.trans inf_le_right)
-    exact subset_trans' (inf_le_right.trans (inf_le_left.trans inf_le_left))
-      (inf_le_left.trans HXS)
+    exact subset_trans' (inf_le_right.trans (inf_le_left.trans inf_le_left)) (inf_le_left.trans HXS)
 
 end bSet.ErdosInternalDushnikMiller

@@ -74,8 +74,7 @@ theorem reads_inf_eq_bot {K q : bSet B} {c d : Algebra K}
   · let s : Conditions K := Erdos1172BooleanNameIteration.shrink p.val b Hb
       (inf_le_left.trans inf_le_left)
     have Hsp : s ≤ p.val :=
-      Erdos1172BooleanNameIteration.shrink_le p.val b Hb
-        (inf_le_left.trans inf_le_left)
+      Erdos1172BooleanNameIteration.shrink_le p.val b Hb (inf_le_left.trans inf_le_left)
     have Hsr : s ≤ r.val := by
       refine ⟨inf_le_right.trans inf_le_left, ?_⟩
       change b ≤ Erdos1172BooleanNameIteration.name r.val ⊆ᴮ
@@ -83,8 +82,7 @@ theorem reads_inf_eq_bot {K q : bSet B} {c d : Algebra K}
       exact subset_of_eq (bv_trans (bv_symm (inf_le_right.trans inf_le_right))
         (inf_le_left.trans inf_le_right))
     have Hs : condition s ≤ c ⊓ d :=
-      le_inf ((condition_mono Hsp).trans p.property)
-        ((condition_mono Hsr).trans r.property)
+      le_inf ((condition_mono Hsp).trans p.property) ((condition_mono Hsr).trans r.property)
     exact False.elim (condition_ne_bot s (bot_unique (Hs.trans Hcd.le)))
 
 theorem reads_inf_compl_eq_bot {K : bSet B} (c : Algebra K) (q : bSet B) :
@@ -98,8 +96,7 @@ private theorem exists_deciding_condition {K : bSet B}
     ∃ r : Conditions K, r ≤ p ∧ (condition r ≤ c ∨ condition r ≤ cᶜ) := by
   classical
   by_cases Hzero : condition p ⊓ c = ⊥
-  · exact ⟨p, le_rfl, Or.inr
-      (le_compl_iff_disjoint_right.mpr (disjoint_iff_inf_le.mpr Hzero.le))⟩
+  · exact ⟨p, le_rfl, Or.inr (le_compl_iff_disjoint_right.mpr (disjoint_iff_inf_le.mpr Hzero.le))⟩
   · obtain ⟨q, Hq⟩ := exists_condition_le Hzero
     have Hqp : q ∈ ((condition p).val : LowerSet (Conditions K)) :=
       condition_le_iff.mp (Hq.trans inf_le_left)
@@ -110,22 +107,18 @@ private theorem exists_deciding_condition {K : bSet B}
 extension, so their Boolean existential covers the entire original context. -/
 theorem deciding_name_extension_cover {K q : bSet B} {Γ : B}
     (Hq : Γ ≤ q ∈ᴮ ErdosCohen.conditions K) (c : Algebra K) :
-    Γ ≤ ⨆ r : bSet B, r ∈ᴮ ErdosCohen.conditions K ⊓
-      (q ⊆ᴮ r ⊓ (reads c r ⊔ reads cᶜ r)) := by
+    Γ ≤ ⨆ r : bSet B, r ∈ᴮ ErdosCohen.conditions K ⊓ (q ⊆ᴮ r ⊓ (reads c r ⊔ reads cᶜ r)) := by
   classical
-  let V : B := ⨆ r : bSet B, r ∈ᴮ ErdosCohen.conditions K ⊓
-    (q ⊆ᴮ r ⊓ (reads c r ⊔ reads cᶜ r))
+  let V : B := ⨆ r : bSet B, r ∈ᴮ ErdosCohen.conditions K ⊓ (q ⊆ᴮ r ⊓ (reads c r ⊔ reads cᶜ r))
   change Γ ≤ V
   by_contra Hnot
   have Hpositive : Γ ⊓ Vᶜ ≠ ⊥ := by
     intro Hzero
     apply Hnot
-    have H : Γ ≤ (Vᶜ)ᶜ :=
-      le_compl_iff_disjoint_right.mpr (disjoint_iff_inf_le.mpr Hzero.le)
+    have H : Γ ≤ (Vᶜ)ᶜ := le_compl_iff_disjoint_right.mpr (disjoint_iff_inf_le.mpr Hzero.le)
     simpa only [compl_compl] using H
   obtain ⟨p, Hpb, Hpeq⟩ :=
-    Erdos1172BooleanNameIteration.exists_canonical_refinement Hpositive
-      (inf_le_left.trans Hq)
+    Erdos1172BooleanNameIteration.exists_canonical_refinement Hpositive (inf_le_left.trans Hq)
   obtain ⟨r, Hrp, Hdecision⟩ := exists_deciding_condition p c
   have Hsub : r.value ≤ q ⊆ᴮ Erdos1172BooleanNameIteration.name r :=
     subset_trans' (subset_of_eq (Hrp.1.trans Hpeq)) Hrp.2
@@ -145,8 +138,7 @@ theorem deciding_name_extension_cover {K q : bSet B} {Γ : B}
 The result is a Boolean disjunction of readings, not an external branch. -/
 theorem exists_deciding_name_extension {K q : bSet B} {Γ : B}
     (Hq : Γ ≤ q ∈ᴮ ErdosCohen.conditions K) (c : Algebra K) :
-    ∃ r : bSet B, Γ ≤ r ∈ᴮ ErdosCohen.conditions K ∧
-      Γ ≤ q ⊆ᴮ r ∧ Γ ≤ reads c r ⊔ reads cᶜ r := by
+    ∃ r : bSet B, Γ ≤ r ∈ᴮ ErdosCohen.conditions K ∧ Γ ≤ q ⊆ᴮ r ∧ Γ ≤ reads c r ⊔ reads cᶜ r := by
   obtain ⟨r, Hr⟩ := exists_convert (deciding_name_extension_cover Hq c)
     (B_ext_inf B_ext_mem_left (B_ext_inf B_ext_subset_right
       (B_ext_sup (h₁ := reads_ext c) (h₂ := reads_ext cᶜ))))
@@ -155,8 +147,7 @@ theorem exists_deciding_name_extension {K q : bSet B} {Γ : B}
 
 theorem exists_deciding_condition_extension {K q : bSet B} {Γ : B}
     (Hq : Γ ≤ ErdosCohen.condition K q) (c : Algebra K) :
-    ∃ r : bSet B, Γ ≤ ErdosCohen.condition K r ∧
-      Γ ≤ q ⊆ᴮ r ∧ Γ ≤ reads c r ⊔ reads cᶜ r := by
+    ∃ r : bSet B, Γ ≤ ErdosCohen.condition K r ∧ Γ ≤ q ⊆ᴮ r ∧ Γ ≤ reads c r ⊔ reads cᶜ r := by
   obtain ⟨r, Hr, Hsub, Hread⟩ :=
     exists_deciding_name_extension (ErdosCohen.mem_conditions_iff.mpr Hq) c
   exact ⟨r, ErdosCohen.mem_conditions_iff.mp Hr, Hsub, Hread⟩

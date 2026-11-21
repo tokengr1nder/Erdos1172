@@ -40,8 +40,7 @@ theorem exists_shorter_cofinal_enumeration (U : RegularName P V) (p0 : P)
     (hclosed : CountablyClosed P) (hI : #I ≤ ℵ_ 1)
     (hItype : typeLT I = (ω_ 1 : Ordinal.{0}) ^ (ω + 1))
     (hVcof : Order.cof V = ℵ_ 1)
-    (hcofinal : ∀ p : P, p ≤ p0 → ∀ cut : V,
-      ∃ q : P, q ≤ p ∧ ∃ x : V, U.holds q x ∧ cut ≤ x)
+    (hcofinal : ∀ p : P, p ≤ p0 → ∀ cut : V, ∃ q : P, q ≤ p ∧ ∃ x : V, U.holds q x ∧ cut ≤ x)
     (hno : ¬HasOrderedEmbeddingBelow (I := I) U p0) :
     ∃ q : P, q ≤ p0 ∧ ∃ i : I,
       ∃ E : FunctionDecisions (Set.Iic q) (Set.Iio i) V,
@@ -51,8 +50,7 @@ theorem exists_shorter_cofinal_enumeration (U : RegularName P V) (p0 : P)
           ∃ r : Set.Iic q, r ≤ p ∧ ∃ j : Set.Iio i, E.decides r j x) ∧
         ∃ ζ : Ordinal.{0}, ∃ n : ℕ,
           typeLT (Set.Iio i) = ζ + (ω_ 1 : Ordinal.{0}) ^ ((n + 1 : ℕ) : Ordinal) := by
-  obtain ⟨q, hqp0, i, E, horder, hactual, hcover⟩ :=
-    exists_shorter_enumeration U p0 hno
+  obtain ⟨q, hqp0, i, E, horder, hactual, hcover⟩ := exists_shorter_enumeration U p0 hno
   have hord : OrderedDecisions E := fun {p j k x y} hjk hx hy => horder p j k x y hjk hx hy
   have hcof : CofinalDecisions E := by
     intro p cut

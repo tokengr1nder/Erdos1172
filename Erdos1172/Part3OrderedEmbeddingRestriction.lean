@@ -80,8 +80,7 @@ theorem coverName_liftCone_iff (r : CompleteRestriction P Q) (p0 : P) (q0 : Q)
     have hle : r.restrict u.val ≤ r.restrict t.val := r.restrict.monotone hut
     simpa only [t, hs] using hle
   · intro hp q hqp
-    obtain ⟨s, hsq, hs⟩ := hp (coneMap r p0 q0 h0 q)
-      ((coneMap r p0 q0 h0).monotone hqp)
+    obtain ⟨s, hsq, hs⟩ := hp (coneMap r p0 q0 h0 q) ((coneMap r p0 q0 h0).monotone hqp)
     obtain ⟨t, htq, ht⟩ := r.lift q.val s.val hsq
     let u : Set.Iic p0 := ⟨t, htq.trans q.property⟩
     have heq : coneMap r p0 q0 h0 u = s := Subtype.ext ht

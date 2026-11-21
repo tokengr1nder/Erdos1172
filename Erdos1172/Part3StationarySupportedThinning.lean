@@ -74,8 +74,7 @@ theorem exists_stationary_clique_from_supported_losses
     fun {q i j x y} hij hx hy => hselectorOrder q i j x y hij hx hy
   let previous : CliqueDecisions (Set.Iic p) V W2 G := onCone p (liftClique core)
   let clique : CliqueDecisions (Set.Iic p) V W2 G := compose selector previous hordered
-  let future (q : Set.Iic p) (a : W2) : Prop :=
-    ProfileMembers U F bound profile q.val a
+  let future (q : Set.Iic p) (a : W2) : Prop := ProfileMembers U F bound profile q.val a
   have hfuture : Persistent future :=
     fun {_ _ _} hqp ha => profileMembers_persistent U hU F bound profile hqp ha
   have hstationary : StationaryAt future
@@ -84,16 +83,14 @@ theorem exists_stationary_clique_from_supported_losses
     apply (hp q.val q.property).mono
     rintro a ⟨r, hrq, ha⟩
     exact ⟨⟨r, hrq.trans q.property⟩, hrq, ha⟩
-  have hcross : ∀ q a, future q a → ∀ j x, clique.decides q j x →
-      x < a ∧ G.Adj x a := by
+  have hcross : ∀ q a, future q a → ∀ j x, clique.decides q j x → x < a ∧ G.Adj x a := by
     intro q a ha j x hx
     obtain ⟨i, hi, hxi⟩ := (compose_decides_iff selector previous hordered q j x).mp hx
     change core.decides q.val.base i x at hxi
     have haU : U q.val.base a := ha.1.1
     refine ⟨hafter q.val.base a haU i x hxi, ?_⟩
     by_contra hbad
-    have hbaseCover : (coverName (F a) C).holds q.val.base i :=
-      hloss q.val.base a haU i x hxi hbad
+    have hbaseCover : (coverName (F a) C).holds q.val.base i := hloss q.val.base a haU i x hxi hbad
     have hliftCover : (coverName (liftFunction (F a)) C).holds q.val i :=
       (coverName_liftFunction_iff (F a) C q.val i).mpr hbaseCover
     have hupperCover : (coverName H C).holds q.val i :=

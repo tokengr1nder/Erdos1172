@@ -63,8 +63,7 @@ noncomputable def stage (U : RegularName P V) : I → FunctionDecisions P Unit (
 noncomputable def residueAt (U : RegularName P V) (i : I) : RegularName P V :=
   meet U (all (fun j : Set.Iio i => aboveRegular (stage U j.val)))
 
-theorem stage_eq (U : RegularName P V) (i : I) :
-    stage U i = leastMember (residueAt U i) := by
+theorem stage_eq (U : RegularName P V) (i : I) : stage U i = leastMember (residueAt U i) := by
   rw [stage, WellFoundedLT.fix_eq]
   rfl
 
@@ -173,8 +172,7 @@ source there with dense equality witnesses. No closure hypothesis is used. -/
 theorem exists_shorter_enumeration (U : RegularName P V) (p0 : P)
     (hno : ¬HasOrderedEmbeddingBelow (I := I) U p0) :
     ∃ q : P, q ≤ p0 ∧ ∃ i : I, ∃ E : FunctionDecisions (Set.Iic q) (Set.Iio i) V,
-      (∀ p : Set.Iic q, ∀ j k x y,
-        j < k → E.decides p j x → E.decides p k y → x < y) ∧
+      (∀ p : Set.Iic q, ∀ j k x y, j < k → E.decides p j x → E.decides p k y → x < y) ∧
       (∀ p : Set.Iic q, ∀ j x, E.decides p j x → U.holds p.val x) ∧
       ∀ p : Set.Iic q, ∀ x : V, U.holds p.val x →
         ∃ r : Set.Iic q, r ≤ p ∧ ∃ j : Set.Iio i, E.decides r j x := by
@@ -189,8 +187,7 @@ theorem exists_shorter_enumeration (U : RegularName P V) (p0 : P)
     have hj : j.val ∈ stops := ⟨p, hpq.trans hqp0, hn⟩
     have hij : i ≤ j.val := wellFounded_lt.min_le (s := stops) hj
     exact j.property.not_ge hij
-  let E : FunctionDecisions (Set.Iic q) (Set.Iio i) V :=
-    someOnCone U q Subtype.val hnever
+  let E : FunctionDecisions (Set.Iic q) (Set.Iio i) V := someOnCone U q Subtype.val hnever
   refine ⟨q, hqp0, i, E, ?_, ?_, ?_⟩
   · intro p j k x y hjk hx hy
     change (stage U j.val).decides p.val () (some x) at hx

@@ -54,8 +54,7 @@ private theorem enumRel_ext_value (T j e n : bSet 𝔹) :
     (B_ext_inf B_ext_const B_ext_pair_mem_right))
 
 theorem mem_enumGraph_iff {T j e n r : bSet 𝔹} {Γ : 𝔹} :
-    Γ ≤ pair n r ∈ᴮ enumGraph T j e ↔
-      Γ ≤ n ∈ᴮ bSet.omega ∧ Γ ≤ r ∈ᴮ Pω ∧ Γ ≤ enumRel T j e n r :=
+    Γ ≤ pair n r ∈ᴮ enumGraph T j e ↔ Γ ≤ n ∈ᴮ bSet.omega ∧ Γ ≤ r ∈ᴮ Pω ∧ Γ ≤ enumRel T j e n r :=
   mem_relationGraph_iff (enumRel_ext_index T j e) (enumRel_ext_value T j e)
 
 theorem enumGraph_witness {T j e n r : bSet 𝔹} {Γ : 𝔹}
@@ -84,8 +83,7 @@ theorem enumGraph_mono {T U j k e : bSet 𝔹} {Γ : 𝔹}
   rw [← deduction]
   let Δ := Γ ⊓ z ∈ᴮ enumGraph T j e
   obtain ⟨n, Hn, r, Hr, Hz⟩ := mem_prod_iff₂.mp
-    (mem_of_mem_subset enumGraph_subset
-      (show Δ ≤ z ∈ᴮ enumGraph T j e from inf_le_right))
+    (mem_of_mem_subset enumGraph_subset (show Δ ≤ z ∈ᴮ enumGraph T j e from inf_le_right))
   have Hpair : Δ ≤ pair n r ∈ᴮ enumGraph T j e := mem_congr Hz bv_refl inf_le_right
   obtain ⟨x, Hx⟩ := enumGraph_witness Hpair
   have Hnew : Δ ≤ pair n r ∈ᴮ enumGraph U k e := enumGraph_mem Hn Hr
@@ -94,14 +92,12 @@ theorem enumGraph_mono {T U j k e : bSet 𝔹} {Γ : 𝔹}
     (Hx.trans (inf_le_right.trans inf_le_right))
   exact mem_congr (bv_symm Hz) bv_refl Hnew
 
-theorem enumGraph_congr_set (j e : bSet 𝔹) :
-    B_congr (fun T => enumGraph T j e) := by
+theorem enumGraph_congr_set (j e : bSet 𝔹) : B_congr (fun T => enumGraph T j e) := by
   intro T U Γ H
   exact subset_ext (enumGraph_mono (subset_of_eq H) subset_self)
     (enumGraph_mono (subset_of_eq (bv_symm H)) subset_self)
 
-theorem enumGraph_congr_index (T e : bSet 𝔹) :
-    B_congr (fun j => enumGraph T j e) := by
+theorem enumGraph_congr_index (T e : bSet 𝔹) : B_congr (fun j => enumGraph T j e) := by
   intro j k Γ H
   exact subset_ext (enumGraph_mono subset_self (subset_of_eq H))
     (enumGraph_mono subset_self (subset_of_eq (bv_symm H)))
@@ -120,14 +116,11 @@ theorem enumGraph_is_func {T j e : bSet 𝔹} {Γ : 𝔹}
   apply le_iInf
   intro r₂
   rw [← deduction, ← deduction]
-  let Δ := (Γ ⊓ (pair n₁ r₁ ∈ᴮ enumGraph T j e ⊓ pair n₂ r₂ ∈ᴮ enumGraph T j e)) ⊓
-    n₁ =ᴮ n₂
+  let Δ := (Γ ⊓ (pair n₁ r₁ ∈ᴮ enumGraph T j e ⊓ pair n₂ r₂ ∈ᴮ enumGraph T j e)) ⊓ n₁ =ᴮ n₂
   have HΔ : Δ ≤ Γ := inf_le_left.trans inf_le_left
-  obtain ⟨x₁, Hx₁⟩ := enumGraph_witness
-    (show Δ ≤ pair n₁ r₁ ∈ᴮ enumGraph T j e from
+  obtain ⟨x₁, Hx₁⟩ := enumGraph_witness (show Δ ≤ pair n₁ r₁ ∈ᴮ enumGraph T j e from
       inf_le_left.trans (inf_le_right.trans inf_le_left))
-  obtain ⟨x₂, Hx₂⟩ := enumGraph_witness
-    (show Δ ≤ pair n₂ r₂ ∈ᴮ enumGraph T j e from
+  obtain ⟨x₂, Hx₂⟩ := enumGraph_witness (show Δ ≤ pair n₂ r₂ ∈ᴮ enumGraph T j e from
       inf_le_left.trans (inf_le_right.trans inf_le_right))
   have Hx : Δ ≤ x₁ =ᴮ x₂ := eq_of_is_inj_of_eq (HΔ.trans Hj) inf_le_right
     (Hx₁.trans (inf_le_right.trans inf_le_left)) (Hx₂.trans (inf_le_right.trans inf_le_left))
@@ -167,8 +160,7 @@ theorem subset_of_enumGraph_subset {A T U j k e : bSet 𝔹} {Γ : 𝔹}
   have Hpair : Δ ≤ pair n r ∈ᴮ enumGraph T j e :=
     enumGraph_mem (Hn.trans inf_le_left) (Hr.trans inf_le_left) inf_le_right
       (Hn.trans inf_le_right) (Hr.trans inf_le_right)
-  obtain ⟨z, Hz⟩ := enumGraph_witness
-    (mem_of_mem_subset (inf_le_left.trans Hgraph) Hpair)
+  obtain ⟨z, Hz⟩ := enumGraph_witness (mem_of_mem_subset (inf_le_left.trans Hgraph) Hpair)
   have Hxz : Δ ≤ x =ᴮ z := eq_of_is_inj_of_eq
     (inf_le_left.trans (He.trans inf_le_right)) bv_refl (Hr.trans inf_le_right)
     (Hz.trans (inf_le_right.trans inf_le_right))

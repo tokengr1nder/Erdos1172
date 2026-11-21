@@ -61,8 +61,7 @@ theorem nonstop_stage_above_previous
     (Hji : Γ ≤ j ∈ᴮ i) (Hprevious : Γ ≤ pair j v ∈ᴮ vertexHistory P) :
     Γ ≤ v ∈ᴮ y ⊓ graphColor color R v y := by
   obtain ⟨Z, Hentry⟩ := vertexHistory_witness Hcurrent
-  exact futureCandidate_above_previous (nonstop_entry_mem_future Hlaw Hentry Hne)
-    Hji Hprevious
+  exact futureCandidate_above_previous (nonstop_entry_mem_future Hlaw Hentry Hne) Hji Hprevious
 
 theorem nonstop_stage_color_top
     {color : Bool} {R S top P i y : bSet 𝔹} {Γ : 𝔹}

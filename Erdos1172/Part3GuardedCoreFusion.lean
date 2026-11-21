@@ -83,8 +83,7 @@ theorem exists_guarded_core_with_fallback (hclosed : CountablyClosed P)
         hclosed ha true U index i q (hpositive q hT) selected hcount
         (fun x hx => (hselected x hx).1) (fun x hx => (hselected x hx).2.1)
       have hTs : T.holds s () := T.persistent hsq hT
-      refine ⟨s, hsq.trans hqp, y,
-        ⟨hya, hcolor s hTs y hUy, Or.inl ⟨hTs, hUy⟩⟩, ?_, hcross⟩
+      refine ⟨s, hsq.trans hqp, y, ⟨hya, hcolor s hTs y hUy, Or.inl ⟨hTs, hUy⟩⟩, ?_, hcross⟩
       intro c hc t hts hTt hct
       exact hcontrol c hc t hts hct
     · have hselectedFallback : ∀ x ∈ selected, x ∈ Set.range f := by

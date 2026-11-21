@@ -98,19 +98,16 @@ theorem exists_stationary_uniform_profile
       ∃ p : Condition P, p ≤ p0 ∧ StationaryAt (ProfileMembers U F bound profile) p := by
   classical
   obtain ⟨bound, p, hpp0, hp⟩ :=
-    Erdos1172Part3NamedStationaryTail.exists_stationary_uniform_tail
-      center hCH p0 U hU hs F
+    Erdos1172Part3NamedStationaryTail.exists_stationary_uniform_tail center hCH p0 U hU hs F
   have witness (a : possible (TailMembers U F bound) p) :
       ∃ profile : Set.Iic bound → W1, ∃ q : Condition P,
         q ≤ p ∧ ProfileMembers U F bound profile q a.val := by
     obtain ⟨q, hqp, hq⟩ := a.property
-    obtain ⟨r, hrq, profile, hprofile⟩ :=
-      exists_prefix_deciding_extension hclosed q (F a.val) bound
+    obtain ⟨r, hrq, profile, hprofile⟩ := exists_prefix_deciding_extension hclosed q (F a.val) bound
     exact ⟨profile, r, hrq.trans hqp,
       Erdos1172Part3NamedStationaryTail.tailMembers_persistent U hU F bound hrq hq,
       hprofile⟩
-  let chosen (a : possible (TailMembers U F bound) p) : Set.Iic bound → W1 :=
-    (witness a).choose
+  let chosen (a : possible (TailMembers U F bound) p) : Set.Iic bound → W1 := (witness a).choose
   obtain ⟨profile, hfiber⟩ :=
     Erdos1172Part3CenteredStationaryLoss.exists_stationary_fiber_of_small
       (profileSpace_card_lt hCH bound) (hp p le_rfl) chosen
@@ -185,7 +182,6 @@ theorem upper_cover_holds_of_profileMember {X : Type}
     {p : Condition P} {a : W2} (ha : ProfileMembers U F bound profile p a)
     {x : X} (hx : (coverName (liftFunction (F a)) C).holds p x) :
     (coverName (upperFunction hclosed bound profile) C).holds p x :=
-  coverName_mono_of_pointwiseBelow
-    (pointwiseBelow_of_profileMember hclosed U F bound profile ha) hx
+  coverName_mono_of_pointwiseBelow (pointwiseBelow_of_profileMember hclosed U F bound profile ha) hx
 
 end Erdos1172Part3NamedCoverProfile

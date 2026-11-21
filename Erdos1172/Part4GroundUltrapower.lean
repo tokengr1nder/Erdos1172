@@ -49,8 +49,7 @@ theorem memRel_wf : WellFounded (memRel U) := by
   have hd (n : ℕ) : ∀ᶠ i in U, g (n + 1) i ∈ g n i :=
     (memRel_rep U _ _).mp (by rw [hg, hg]; exact hf n)
   obtain ⟨i, hi⟩ := (eventually_countable_forall.mpr hd).exists
-  exact (wellFounded_iff_isEmpty_descending_chain.mp ZFSet.mem_wf).false
-    ⟨fun n => g n i, hi⟩
+  exact (wellFounded_iff_isEmpty_descending_chain.mp ZFSet.mem_wf).false ⟨fun n => g n i, hi⟩
 
 instance predecessorSmall (x : Ground U) : Small.{u} {y : Ground U // memRel U y x} := by
   classical

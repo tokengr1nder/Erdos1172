@@ -43,7 +43,6 @@ theorem row_trace_from_cone (p0 : P) (core : CliqueDecisions (Set.Iic p0) W1 W2 
   obtain ⟨s, hsq, bound, hs⟩ := hsmall ⟨q, hqp.trans p.property⟩ hqp
   refine ⟨s.val, hsq, bound, ?_⟩
   intro t hts i hi x hx hUx
-  exact hs ⟨t, hts.trans s.property⟩ hts i hi x
-    (hbelow ⟨t, hts.trans s.property⟩ i x hx) hUx
+  exact hs ⟨t, hts.trans s.property⟩ hts i hi x (hbelow ⟨t, hts.trans s.property⟩ i x hx) hUx
 
 end Erdos1172Part3GlobalNamedSquareLoss

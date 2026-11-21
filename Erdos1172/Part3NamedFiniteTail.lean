@@ -43,8 +43,7 @@ theorem exists_finite_tail_embedding {K : Type} [LinearOrder K] [WellFoundedLT K
   letI : WellFoundedLT (ζ.ToType ⊕ₗ Index n) := hwf_lex
   have hsum : typeLT (ζ.ToType ⊕ₗ Index n) = typeLT K := by
     calc
-      typeLT (ζ.ToType ⊕ₗ Index n) = typeLT ζ.ToType + typeLT (Index n) :=
-        Ordinal.type_sum_lex _ _
+      typeLT (ζ.ToType ⊕ₗ Index n) = typeLT ζ.ToType + typeLT (Index n) := Ordinal.type_sum_lex _ _
       _ = _ := by rw [Ordinal.type_toType, typeLT_index, htype]
   obtain ⟨iso⟩ := Ordinal.type_eq.mp hsum
   let e : Index n ↪o K := OrderEmbedding.ofStrictMono
@@ -58,8 +57,7 @@ theorem exists_finite_tail_embedding {K : Type} [LinearOrder K] [WellFoundedLT K
       cases s with
       | inl a =>
           let j := Erdos1172Part3CofinalFiniteCuts.basePoint n
-          exact ⟨e j, Set.mem_range_self j,
-            (iso.map_rel_iff.mpr (Sum.Lex.inl_lt_inr a j)).le⟩
+          exact ⟨e j, Set.mem_range_self j, (iso.map_rel_iff.mpr (Sum.Lex.inl_lt_inr a j)).le⟩
       | inr j => exact ⟨e j, Set.mem_range_self j, le_rfl⟩
   · intro i hi j
     obtain ⟨s, rfl⟩ := iso.surjective i
@@ -79,8 +77,7 @@ theorem exists_cofinal_finite_tail (U : RegularName P V) (p0 : P)
     (hclosed : CountablyClosed P) (hI : #I ≤ ℵ_ 1)
     (hItype : typeLT I = (ω_ 1 : Ordinal.{0}) ^ (ω + 1))
     (hVcof : Order.cof V = ℵ_ 1)
-    (hcofinal : ∀ p : P, p ≤ p0 → ∀ cut : V,
-      ∃ q : P, q ≤ p ∧ ∃ x : V, U.holds q x ∧ cut ≤ x)
+    (hcofinal : ∀ p : P, p ≤ p0 → ∀ cut : V, ∃ q : P, q ≤ p ∧ ∃ x : V, U.holds q x ∧ cut ≤ x)
     (hno : ¬Erdos1172Part3RegularGreedyEnumeration.HasOrderedEmbeddingBelow (I := I) U p0) :
     ∃ q : P, q ≤ p0 ∧ ∃ n : ℕ,
       ∃ E : FunctionDecisions (Set.Iic q) (Index n) V,
@@ -94,8 +91,7 @@ theorem exists_cofinal_finite_tail (U : RegularName P V) (p0 : P)
     Erdos1172Part3NamedShortEnumeration.exists_shorter_cofinal_enumeration
       U p0 hclosed hI hItype hVcof hcofinal hno
   obtain ⟨e, hecof, hsep⟩ := exists_finite_tail_embedding ζ n htype
-  let source : RegularName (Set.Iic q) V :=
-    Erdos1172Part3RegularConeRestriction.onCone q U
+  let source : RegularName (Set.Iic q) V := Erdos1172Part3RegularConeRestriction.onCone q U
   obtain ⟨hord, hcofinalTail, hcoverage, hsub, r, -, cut, hcut, hbound⟩ :=
     exists_cofinal_tail_with_bounded_prefix E source e
       ⟨Erdos1172Part3CofinalFiniteCuts.basePoint n⟩ horder hcover hmem hcof hecof hsep

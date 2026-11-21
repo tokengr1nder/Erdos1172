@@ -43,8 +43,7 @@ theorem realize_binaryTermFormula (v : DVec (bSet β) n)
   erw [realize_lift1 v (termValue v second) first]
   rw [boolean_realize_cast_bounded_formula (S := V β) (f := f)]
   have Htrunc (a b : bSet β) {m : ℕ} (w : DVec (bSet β) m) {h : 2 ≤ m + 2} :
-      DVec.trunc 2 h (DVec.cons a (DVec.cons b w)) =
-        DVec.cons a (DVec.cons b DVec.nil) := by
+      DVec.trunc 2 h (DVec.cons a (DVec.cons b w)) = DVec.cons a (DVec.cons b DVec.nil) := by
     simp only [DVec.trunc, DVec.trunc_0_n]
   exact congrArg (fun w : DVec (V β) 2 =>
     boolean_realize_bounded_formula (S := V β) w f DVec.nil)

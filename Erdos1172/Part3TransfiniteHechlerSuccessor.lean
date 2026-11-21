@@ -62,8 +62,7 @@ theorem encodedData_toStep (hGCH : GCH) (i : W2) (p : Earlier hGCH (next i)) :
   apply Prod.ext
   · rfl
   · apply Subtype.ext
-    change (nameEquiv hGCH i).symm '' (nameEquiv hGCH i '' (sideAt p i).val) =
-      (sideAt p i).val
+    change (nameEquiv hGCH i).symm '' (nameEquiv hGCH i '' (sideAt p i).val) = (sideAt p i).val
     simp
 
 noncomputable def fromStep (hGCH : GCH) (i : W2) (p : Condition (Earlier hGCH i)) :
@@ -124,8 +123,7 @@ theorem fromStep_toStep (hGCH : GCH) (i : W2) (p : Earlier hGCH (next i)) :
     · rw [value_truncate, if_neg (by simpa only [WithTop.coe_lt_coe] using hjlt)]
       apply (value_none_of_not_lt p ?_).symm
       intro h
-      exact hji (le_antisymm ((lt_next_iff i j).mp (WithTop.coe_lt_coe.mp h))
-        (le_of_not_gt hjlt))
+      exact hji (le_antisymm ((lt_next_iff i j).mp (WithTop.coe_lt_coe.mp h)) (le_of_not_gt hjlt))
 
 theorem condition_ext {P : Type} [Preorder P] {p q : Condition P}
     (hb : p.base = q.base) (hs : p.stem = q.stem) (ht : p.side = q.side) : p = q := by

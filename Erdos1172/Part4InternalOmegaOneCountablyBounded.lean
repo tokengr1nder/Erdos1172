@@ -50,8 +50,7 @@ theorem union_countable_of_subset {A : bSet 𝔹} {Γ : 𝔹}
   apply le_iInf
   intro a
   rw [← deduction]
-  exact omegaOne_member_injects
-    (mem_of_mem_subset (inf_le_left.trans HA) inf_le_right)
+  exact omegaOne_member_injects (mem_of_mem_subset (inf_le_left.trans HA) inf_le_right)
 
 theorem union_Ord_of_subset {A : bSet 𝔹} {Γ : 𝔹}
     (HA : Γ ≤ A ⊆ᴮ omegaOne) : Γ ≤ Ord (bv_union A) := by
@@ -59,8 +58,7 @@ theorem union_Ord_of_subset {A : bSet 𝔹} {Γ : 𝔹}
   apply le_iInf
   intro a
   rw [← deduction]
-  have Ha : Γ ⊓ a ∈ᴮ A ≤ a ∈ᴮ omegaOne :=
-    mem_of_mem_subset (inf_le_left.trans HA) inf_le_right
+  have Ha : Γ ⊓ a ∈ᴮ A ≤ a ∈ᴮ omegaOne := mem_of_mem_subset (inf_le_left.trans HA) inf_le_right
   exact le_inf (Ord_of_mem_Ord Ha omegaOne_Ord) (subset_of_mem_Ord Ha omegaOne_Ord)
 
 /-- Taking a successor gives a strict bound, even if the family has a maximum
@@ -77,8 +75,7 @@ theorem subset_succ_union {A : bSet 𝔹} {Γ : 𝔹}
   apply le_iInf
   intro a
   rw [← deduction]
-  have Ha : Γ ⊓ a ∈ᴮ A ≤ a ∈ᴮ omegaOne :=
-    mem_of_mem_subset (inf_le_left.trans HA) inf_le_right
+  have Ha : Γ ⊓ a ∈ᴮ A ≤ a ∈ᴮ omegaOne := mem_of_mem_subset (inf_le_left.trans HA) inf_le_right
   have Hsub : Γ ⊓ a ∈ᴮ A ≤ a ⊆ᴮ bv_union A :=
     (le_inf (le_top.trans ((bv_union_spec'' A).trans (iInf_le _ a)))
       (show Γ ⊓ a ∈ᴮ A ≤ a ∈ᴮ A from inf_le_right)).trans bv_imp_elim

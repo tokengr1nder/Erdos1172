@@ -46,8 +46,7 @@ theorem index_mem_of_value_mem {κ f i j x y : bSet 𝔹} {Γ : 𝔹}
     · have Heq : Γ ⊓ i =ᴮ j ≤ x =ᴮ y :=
         eq_of_is_func_of_eq (inf_le_left.trans Hfunc) inf_le_right
           (inf_le_left.trans Hix) (inf_le_left.trans Hjy)
-      exact (bot_of_mem_self'
-        (mem_congr Heq bv_refl (inf_le_left.trans Hxy))).trans bot_le
+      exact (bot_of_mem_self' (mem_congr Heq bv_refl (inf_le_left.trans Hxy))).trans bot_le
     · exact inf_le_right
   · have Hyx : Γ ⊓ j ∈ᴮ i ≤ y ∈ᴮ x :=
       increasingOn_apply (inf_le_left.trans Hinc) (inf_le_left.trans Hj)
@@ -88,8 +87,7 @@ theorem tailRange_witness {f σ v x : bSet 𝔹} {Γ : 𝔹}
     ∃ i : bSet 𝔹, Γ ≤ i ∈ᴮ omegaOne ∧ Γ ≤ σ ∈ᴮ i ∧ Γ ≤ pair i x ∈ᴮ f := by
   have Hparts := mem_tailRange_iff.mp Hx
   have Him := mem_image_iff.mp Hparts.1
-  obtain ⟨i, Hi⟩ := exists_convert Him.2
-    (B_ext_inf B_ext_mem_left B_ext_pair_mem_left)
+  obtain ⟨i, Hi⟩ := exists_convert Him.2 (B_ext_inf B_ext_mem_left B_ext_pair_mem_left)
   have Hvx : Γ ≤ v ∈ᴮ x := value_above_of_not_mem_singleton_past
     (value_mem_codomain Hf Hσ Hσv) Him.1 Hparts.2
   exact ⟨i, Hi.trans inf_le_left,

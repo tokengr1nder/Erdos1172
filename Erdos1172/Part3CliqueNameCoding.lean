@@ -23,8 +23,7 @@ variable {P I V : Type} [Preorder P]
 
 /-- The small-name count also permits omegaTwo-valued decisions; it
 does not count arbitrary predicates on all conditions. -/
-theorem mk_nice_function_name_le (hGCH : GCH)
-    (hP : #P ≤ ℵ_ 2) (hI : #I ≤ ℵ_ 1) (hV : #V ≤ ℵ_ 2) :
+theorem mk_nice_function_name_le (hGCH : GCH) (hP : #P ≤ ℵ_ 2) (hI : #I ≤ ℵ_ 1) (hV : #V ≤ ℵ_ 2) :
     #(NiceFunctionName P I V) ≤ ℵ_ 2 := by
   let Code := {s : Set (P × V) // #s ≤ ℵ_ 1}
   have hprod : #(P × V) ≤ ℵ_ 2 := by

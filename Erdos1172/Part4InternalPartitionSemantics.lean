@@ -69,16 +69,13 @@ theorem value_mem_codomain {A κ f i x : bSet 𝔹} {Γ : 𝔹}
     (Hx : Γ ≤ pair i x ∈ᴮ f) : Γ ≤ x ∈ᴮ κ := by
   have Htotal : Γ ≤ ⨆ y, y ∈ᴮ κ ⊓ pair i y ∈ᴮ f :=
     (le_inf ((Hf.trans inf_le_right).trans (iInf_le _ i)) Hi).trans bv_imp_elim
-  obtain ⟨y, Hy⟩ := exists_convert Htotal
-    (B_ext_inf B_ext_mem_left B_ext_pair_mem_right)
-  have Hxy : Γ ≤ x =ᴮ y :=
-    eq_of_is_func'_of_eq Hf bv_refl Hx (Hy.trans inf_le_right)
+  obtain ⟨y, Hy⟩ := exists_convert Htotal (B_ext_inf B_ext_mem_left B_ext_pair_mem_right)
+  have Hxy : Γ ≤ x =ᴮ y := eq_of_is_func'_of_eq Hf bv_refl Hx (Hy.trans inf_le_right)
   exact mem_congr (bv_symm Hxy) bv_refl (Hy.trans inf_le_left)
 
 theorem rangeMem_le_codomain {A κ f x : bSet 𝔹} {Γ : 𝔹}
     (Hf : Γ ≤ is_func' A κ f) (Hx : Γ ≤ rangeMem A f x) : Γ ≤ x ∈ᴮ κ := by
-  obtain ⟨i, Hi⟩ := exists_convert Hx
-    (B_ext_inf B_ext_mem_left B_ext_pair_mem_left)
+  obtain ⟨i, Hi⟩ := exists_convert Hx (B_ext_inf B_ext_mem_left B_ext_pair_mem_left)
   exact value_mem_codomain Hf (Hi.trans inf_le_left) (Hi.trans inf_le_right)
 
 theorem unionRange_le_codomain {A B κ f g x : bSet 𝔹} {Γ : 𝔹}

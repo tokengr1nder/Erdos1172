@@ -67,8 +67,7 @@ theorem membershipCode_one {L x : bSet 𝔹} {Γ : 𝔹}
 theorem codesMembership_apply {S L f x i : bSet 𝔹} {Γ : 𝔹}
     (H : Γ ≤ codesMembership S L f) (Hx : Γ ≤ x ∈ᴮ S)
     (Hxi : Γ ≤ pair x i ∈ᴮ f) : Γ ≤ membershipCode L x i :=
-  (le_inf (H.trans ((iInf_le _ x).trans (iInf_le _ i)))
-    (le_inf Hx Hxi)).trans bv_imp_elim
+  (le_inf (H.trans ((iInf_le _ x).trans (iInf_le _ i))) (le_inf Hx Hxi)).trans bv_imp_elim
 
 /-- Bounded internal choice constructs one actual membership selector. -/
 theorem exists_membership_selector (S L : bSet 𝔹) {Γ : 𝔹} :
@@ -84,8 +83,7 @@ theorem exists_membership_selector (S L : bSet 𝔹) {Γ : 𝔹} :
       rw [← inf_sup_left, sup_compl_eq_top, inf_top_eq]
     _ ≤ ⨆ i, i ∈ᴮ omegaOne ⊓ membershipCode L x i := by
       apply sup_le
-      · exact le_iSup_of_le 0
-          (le_inf zero_mem_omegaOne (membershipCode_zero inf_le_right))
+      · exact le_iSup_of_le 0 (le_inf zero_mem_omegaOne (membershipCode_zero inf_le_right))
       · exact le_iSup_of_le 1
           (le_inf (le_top.trans one_mem_omegaOne) (membershipCode_one inf_le_right))
 
@@ -96,8 +94,7 @@ theorem fiber_subset_of_zero {S L f i : bSet 𝔹} {Γ : 𝔹}
   apply le_iInf
   intro x
   rw [← deduction]
-  have Hx := mem_fiber_iff.mp
-    (show Γ ⊓ x ∈ᴮ fiber S f i ≤ x ∈ᴮ fiber S f i from inf_le_right)
+  have Hx := mem_fiber_iff.mp (show Γ ⊓ x ∈ᴮ fiber S f i ≤ x ∈ᴮ fiber S f i from inf_le_right)
   have Hc := codesMembership_apply (inf_le_left.trans Hcode) Hx.1 Hx.2
   exact (le_inf (Hc.trans inf_le_left) (inf_le_left.trans Hi)).trans bv_imp_elim
 
@@ -108,8 +105,7 @@ theorem fiber_subset_difference_of_not_zero {S L f i : bSet 𝔹} {Γ : 𝔹}
   apply le_iInf
   intro x
   rw [← deduction, mem_difference]
-  have Hx := mem_fiber_iff.mp
-    (show Γ ⊓ x ∈ᴮ fiber S f i ≤ x ∈ᴮ fiber S f i from inf_le_right)
+  have Hx := mem_fiber_iff.mp (show Γ ⊓ x ∈ᴮ fiber S f i ≤ x ∈ᴮ fiber S f i from inf_le_right)
   have Hc := codesMembership_apply (inf_le_left.trans Hcode) Hx.1 Hx.2
   refine le_inf Hx.1 ?_
   rw [← imp_bot, ← deduction]
@@ -130,10 +126,8 @@ theorem omegaTwo_injects_difference {S L : bSet 𝔹} {Γ : 𝔹}
   apply iSup_le
   intro i
   let Δ := Γ ⊓ (i ∈ᴮ omegaOne ⊓ injects_into omegaTwo (fiber S f i))
-  have Hlarge : Δ ≤ injects_into omegaTwo (fiber S f i) :=
-    inf_le_right.trans inf_le_right
-  have Hcode : Δ ≤ codesMembership S L f :=
-    inf_le_left.trans (Hf.trans inf_le_right)
+  have Hlarge : Δ ≤ injects_into omegaTwo (fiber S f i) := inf_le_right.trans inf_le_right
+  have Hcode : Δ ≤ codesMembership S L f := inf_le_left.trans (Hf.trans inf_le_right)
   have Hnonzero : Δ ≤ (i =ᴮ 0)ᶜ := by
     rw [← imp_bot, ← deduction]
     have Hsub : Δ ⊓ (i =ᴮ 0) ≤ fiber S f i ⊆ᴮ L :=

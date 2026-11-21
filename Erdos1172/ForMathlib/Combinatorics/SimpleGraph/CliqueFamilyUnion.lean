@@ -25,8 +25,7 @@ theorem typeLT_range_of_strictMono
     typeLT (Set.range f) = typeLT I := by
   have heq : typeLT (Set.univ : Set I) =
       typeLT (f '' (Set.univ : Set I)) :=
-    ((hf.strictMonoOn (Set.univ : Set I)).orderIso
-      f (Set.univ : Set I)).ordinalType_congr
+    ((hf.strictMonoOn (Set.univ : Set I)).orderIso f (Set.univ : Set I)).ordinalType_congr
   rw [Set.image_univ] at heq
   calc
     typeLT (Set.range f) = typeLT (Set.univ : Set I) := heq.symm

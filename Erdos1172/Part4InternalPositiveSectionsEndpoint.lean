@@ -44,8 +44,7 @@ theorem is_func'_codomain_mono {K U V f : bSet 𝔹} {Γ : 𝔹}
   have Htotal : Γ ⊓ i ∈ᴮ K ≤ ⨆ x, x ∈ᴮ U ⊓ pair i x ∈ᴮ f :=
     (le_inf (inf_le_left.trans ((Hf.trans inf_le_right).trans (iInf_le _ i)))
       inf_le_right).trans bv_imp_elim
-  obtain ⟨x, Hx⟩ := exists_convert Htotal
-    (B_ext_inf B_ext_mem_left B_ext_pair_mem_right)
+  obtain ⟨x, Hx⟩ := exists_convert Htotal (B_ext_inf B_ext_mem_left B_ext_pair_mem_right)
   exact le_iSup_of_le x (le_inf
     (mem_of_mem_subset (inf_le_left.trans HUV) (Hx.trans inf_le_left))
     (Hx.trans inf_le_right))
@@ -91,8 +90,7 @@ theorem target_of_large_positive_sections
     (Hr : Γ ≤ is_injective_function omegaOne omegaTwo r)
     (Hrow : Γ ≤ homogeneousUnion color R omegaOne omegaOne r r)
     (HS : Γ ≤ S ⊆ᴮ omegaTwo) (Hlarge : Γ ≤ injects_into omegaTwo S)
-    (Hpositive : Γ ≤ ⨅ y, _root_.imp (y ∈ᴮ S)
-      (positive omegaOne J (forwardSection color R r y))) :
+    (Hpositive : Γ ≤ ⨅ y, _root_.imp (y ∈ᴮ S) (positive omegaOne J (forwardSection color R r y))) :
     Γ ≤ hasTwoBlock color R omegaOne bSet.omega omegaTwo ⊔
       hasTwoBlock (!color) R omegaOne bSet.omega omegaTwo := by
   obtain ⟨F, HF⟩ := exists_forwardSection_family color R r S (Γ := Γ)
@@ -114,8 +112,7 @@ theorem target_of_large_positive_sections
     positiveCountableIntersections omegaOne J F U)
   have HΔ : Δ ≤ Γ := inf_le_left
   have HUS : Δ ≤ U ⊆ᴮ S := inf_le_right.trans (inf_le_left.trans inf_le_left)
-  have HUlarge : Δ ≤ injects_into omegaTwo U :=
-    inf_le_right.trans (inf_le_left.trans inf_le_right)
+  have HUlarge : Δ ≤ injects_into omegaTwo U := inf_le_right.trans (inf_le_left.trans inf_le_right)
   have HUcenter : Δ ≤ positiveCountableIntersections omegaOne J F U :=
     inf_le_right.trans inf_le_right
   have HUtwo : Δ ≤ U ⊆ᴮ omegaTwo := subset_trans' HUS (HΔ.trans HS)
@@ -126,14 +123,12 @@ theorem target_of_large_positive_sections
   rw [inf_sup_left]
   apply sup_le
   · change Δ ⊓ (⨆ g, is_injective_function bSet.omega U g ⊓
-      (increasingOn bSet.omega g ⊓
-        homogeneousUnion color R bSet.omega bSet.omega g g)) ≤ _
+      (increasingOn bSet.omega g ⊓ homogeneousUnion color R bSet.omega bSet.omega g g)) ≤ _
     rw [inf_iSup_eq]
     apply iSup_le
     intro g
     let Θ := Δ ⊓ (is_injective_function bSet.omega U g ⊓
-      (increasingOn bSet.omega g ⊓
-        homogeneousUnion color R bSet.omega bSet.omega g g))
+      (increasingOn bSet.omega g ⊓ homogeneousUnion color R bSet.omega bSet.omega g g))
     have HΘ : Θ ≤ Γ := inf_le_left.trans HΔ
     have Htarget : Θ ≤ hasTwoBlock color R omegaOne bSet.omega omegaTwo :=
       ErdosCenteredAttachment.hasTwoBlock_of_centered_sections_and_clique
@@ -144,7 +139,6 @@ theorem target_of_large_positive_sections
         (inf_le_right.trans (inf_le_right.trans inf_le_left))
         (inf_le_right.trans (inf_le_right.trans inf_le_right))
     exact Htarget.trans le_sup_left
-  · exact (hasTwoBlock_codomain_mono (inf_le_left.trans HUtwo) inf_le_right).trans
-      le_sup_right
+  · exact (hasTwoBlock_codomain_mono (inf_le_left.trans HUtwo) inf_le_right).trans le_sup_right
 
 end bSet.ErdosPositiveSectionsEndpoint

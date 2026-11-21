@@ -125,8 +125,7 @@ theorem blockHistory_image_coherent {j ξ : bSet 𝔹}
     Γ ≤ image j (bv_powerset omegaTwo) (blockHistory (taggedPrefix ξ omegaOne entrySpace Run))
       =ᴮ image j (bv_powerset omegaTwo) (blockHistory (taggedPrefix j omegaOne entrySpace Run)) :=
   image_eq_of_guarded_pair_iff (fun _ _ _ HΔ Hi =>
-    blockHistory_pair_coherent (HΔ.trans HRun) (HΔ.trans Hlaw)
-      (HΔ.trans Hjξ) (HΔ.trans Hξ) Hi)
+    blockHistory_pair_coherent (HΔ.trans HRun) (HΔ.trans Hlaw) (HΔ.trans Hjξ) (HΔ.trans Hξ) Hi)
 
 /-- The exact whole-object history computed from a longer decoded graph
 agrees with the history originally used at the smaller stage. -/

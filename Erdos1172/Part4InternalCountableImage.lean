@@ -45,8 +45,7 @@ theorem larger_than_of_injects_into_of_larger_than {X K Y : bSet 𝔹} {Γ : �
     have Hnot : (larger_than K Y)ᶜ ⊓ Γ ≤ (larger_than X Y)ᶜ :=
       bSet_lt_of_le_of_lt (inf_le_right.trans HX) inf_le_left
     exact bv_absurd _ (inf_le_right.trans HY) Hnot
-  have Hresult : Γ ≤ ((larger_than K Y)ᶜ)ᶜ :=
-    le_neg_of_inf_eq_bot (bot_unique Hbad)
+  have Hresult : Γ ≤ ((larger_than K Y)ᶜ)ᶜ := le_neg_of_inf_eq_bot (bot_unique Hbad)
   simpa only [compl_compl] using Hresult
 
 /-- Any functional image preserves an arbitrary internal ordinal bound. -/

@@ -31,8 +31,7 @@ def inclusionChain (C : bSet 𝔹) : 𝔹 :=
 theorem inclusionChain_apply {C f g : bSet 𝔹} {Γ : 𝔹}
     (Hchain : Γ ≤ inclusionChain C) (Hf : Γ ≤ f ∈ᴮ C) (Hg : Γ ≤ g ∈ᴮ C) :
     Γ ≤ f ⊆ᴮ g ⊔ g ⊆ᴮ f :=
-  (le_inf (Hchain.trans ((iInf_le _ f).trans (iInf_le _ g)))
-    (le_inf Hf Hg)).trans bv_imp_elim
+  (le_inf (Hchain.trans ((iInf_le _ f).trans (iInf_le _ g))) (le_inf Hf Hg)).trans bv_imp_elim
 
 /-- Any two elements of the union occur together in one member of the chain. -/
 theorem exists_common_member_of_mem_union {C a b : bSet 𝔹} {Γ : 𝔹}
@@ -65,10 +64,8 @@ theorem is_func_union_of_chain {C : bSet 𝔹} {Γ : 𝔹}
   rw [← deduction, ← deduction]
   let Δ := (Γ ⊓ (pair w₁ v₁ ∈ᴮ bv_union C ⊓ pair w₂ v₂ ∈ᴮ bv_union C)) ⊓ w₁ =ᴮ w₂
   have Hbase : Δ ≤ Γ := inf_le_left.trans inf_le_left
-  have H₁ : Δ ≤ pair w₁ v₁ ∈ᴮ bv_union C :=
-    inf_le_left.trans (inf_le_right.trans inf_le_left)
-  have H₂ : Δ ≤ pair w₂ v₂ ∈ᴮ bv_union C :=
-    inf_le_left.trans (inf_le_right.trans inf_le_right)
+  have H₁ : Δ ≤ pair w₁ v₁ ∈ᴮ bv_union C := inf_le_left.trans (inf_le_right.trans inf_le_left)
+  have H₂ : Δ ≤ pair w₂ v₂ ∈ᴮ bv_union C := inf_le_left.trans (inf_le_right.trans inf_le_right)
   obtain ⟨f, Hf⟩ := exists_convert
     (exists_common_member_of_mem_union (Hbase.trans Hchain) H₁ H₂)
     (B_ext_inf (B_ext_inf B_ext_mem_left B_ext_mem_right) B_ext_mem_right)
@@ -88,10 +85,8 @@ theorem is_inj_union_of_chain {C : bSet 𝔹} {Γ : 𝔹}
   rw [← deduction]
   let Δ := Γ ⊓ (pair w₁ v₁ ∈ᴮ bv_union C ⊓ pair w₂ v₂ ∈ᴮ bv_union C ⊓ v₁ =ᴮ v₂)
   have Hbase : Δ ≤ Γ := inf_le_left
-  have H₁ : Δ ≤ pair w₁ v₁ ∈ᴮ bv_union C :=
-    inf_le_right.trans (inf_le_left.trans inf_le_left)
-  have H₂ : Δ ≤ pair w₂ v₂ ∈ᴮ bv_union C :=
-    inf_le_right.trans (inf_le_left.trans inf_le_right)
+  have H₁ : Δ ≤ pair w₁ v₁ ∈ᴮ bv_union C := inf_le_right.trans (inf_le_left.trans inf_le_left)
+  have H₂ : Δ ≤ pair w₂ v₂ ∈ᴮ bv_union C := inf_le_right.trans (inf_le_left.trans inf_le_right)
   obtain ⟨f, Hf⟩ := exists_convert
     (exists_common_member_of_mem_union (Hbase.trans Hchain) H₁ H₂)
     (B_ext_inf (B_ext_inf B_ext_mem_left B_ext_mem_right) B_ext_mem_right)

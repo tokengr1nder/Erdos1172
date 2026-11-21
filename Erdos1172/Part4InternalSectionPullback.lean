@@ -51,8 +51,7 @@ theorem pulledSectionRel_ext_value (e S q : bSet 𝔹) :
       B_ext_inf B_ext_const B_ext_pair_mem_right))))
 
 theorem pulledSectionRel_pair (e S σ t A : bSet 𝔹) :
-    pulledSectionRel e S (pair σ t) A =
-      ⨆ y, pair t y ∈ᴮ e ⊓ pair (pair σ y) A ∈ᴮ S := by
+    pulledSectionRel e S (pair σ t) A = ⨆ y, pair t y ∈ᴮ e ⊓ pair (pair σ y) A ∈ᴮ S := by
   apply le_antisymm
   · unfold pulledSectionRel
     apply iSup_le
@@ -85,8 +84,7 @@ theorem mem_sectionPullback_iff {e S q A : bSet 𝔹} {Γ : 𝔹} :
 theorem sectionPullback_pair_iff {e S σ t A : bSet 𝔹} {Γ : 𝔹} :
     Γ ≤ pair (pair σ t) A ∈ᴮ sectionPullback e S ↔
       Γ ≤ σ ∈ᴮ omegaOne ∧ Γ ≤ t ∈ᴮ omegaTwo ∧
-        Γ ≤ A ∈ᴮ bv_powerset omegaOne ∧
-          Γ ≤ ⨆ y, pair t y ∈ᴮ e ⊓ pair (pair σ y) A ∈ᴮ S := by
+        Γ ≤ A ∈ᴮ bv_powerset omegaOne ∧ Γ ≤ ⨆ y, pair t y ∈ᴮ e ⊓ pair (pair σ y) A ∈ᴮ S := by
   rw [mem_sectionPullback_iff, pulledSectionRel_pair]
   constructor
   · rintro ⟨Hpair, HA, Hrel⟩
@@ -117,15 +115,12 @@ theorem sectionPullback_pair_iff_of_value {L e S σ t y A : bSet 𝔹} {Γ : �
     (He : Γ ≤ is_function omegaTwo L e)
     (HS : Γ ≤ is_func' (prod omegaOne L) (bv_powerset omegaOne) S)
     (Hσ : Γ ≤ σ ∈ᴮ omegaOne) (Hty : Γ ≤ pair t y ∈ᴮ e) :
-    (Γ ≤ pair (pair σ t) A ∈ᴮ sectionPullback e S) ↔
-      Γ ≤ pair (pair σ y) A ∈ᴮ S := by
+    (Γ ≤ pair (pair σ t) A ∈ᴮ sectionPullback e S) ↔ Γ ≤ pair (pair σ y) A ∈ᴮ S := by
   constructor
   · intro H
     obtain ⟨z, Hz⟩ := sectionPullback_witness H
-    have Hzy : Γ ≤ z =ᴮ y :=
-      eq_of_is_function_of_eq He bv_refl (Hz.trans inf_le_left) Hty
-    exact mem_congr (pair_congr (pair_congr bv_refl Hzy) bv_refl) bv_refl
-      (Hz.trans inf_le_right)
+    have Hzy : Γ ≤ z =ᴮ y := eq_of_is_function_of_eq He bv_refl (Hz.trans inf_le_left) Hty
+    exact mem_congr (pair_congr (pair_congr bv_refl Hzy) bv_refl) bv_refl (Hz.trans inf_le_right)
   · intro H
     have Ht := mem_domain_of_is_function Hty He
     have Hy := mem_codomain_of_is_function Hty He

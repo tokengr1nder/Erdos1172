@@ -46,8 +46,7 @@ def blockEnumerationData (color : Bool) (R A f : bSet 𝔹) : 𝔹 :=
 
 theorem blockEnumerationData_ext_object (color : Bool) (R f : bSet 𝔹) :
     B_ext (fun A => blockEnumerationData color R A f) :=
-  B_ext_inf B_ext_const (B_ext_inf B_ext_const
-    (B_ext_inf B_ext_const B_ext_bv_eq_right))
+  B_ext_inf B_ext_const (B_ext_inf B_ext_const (B_ext_inf B_ext_const B_ext_bv_eq_right))
 
 theorem blockEnumerationData_ext_graph (color : Bool) (R A : bSet 𝔹) :
     B_ext (blockEnumerationData color R A) :=
@@ -66,8 +65,7 @@ theorem mem_blockObjects_iff {color : Bool} {R A : bSet 𝔹} {Γ : 𝔹} :
     Γ ≤ A ∈ᴮ blockObjects color R ↔
       Γ ≤ A ⊆ᴮ omegaTwo ∧ Γ ≤ ⨆ f, blockEnumerationData color R A f := by
   unfold blockObjects
-  rw [mem_comprehend_and
-    (B_ext_iSup (h := fun f => blockEnumerationData_ext_object color R f))]
+  rw [mem_comprehend_and (B_ext_iSup (h := fun f => blockEnumerationData_ext_object color R f))]
   constructor
   · rintro ⟨HA, Hdata⟩
     exact ⟨mem_powerset_iff.mp HA, Hdata⟩

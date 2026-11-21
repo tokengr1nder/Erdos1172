@@ -52,8 +52,7 @@ theorem exists_large_constant_label
     (B_ext_inf B_ext_mem_left
       (B_ext_term (ϕ := fun T => injects_into omegaTwo T) (t := fiber S f)
         B_ext_injects_into_right (fiber_congr S f)))
-  refine ⟨k, fiber S f k, Hk.trans inf_le_left, fiber_subset,
-    Hk.trans inf_le_right, ?_⟩
+  refine ⟨k, fiber S f k, Hk.trans inf_le_left, fiber_subset, Hk.trans inf_le_right, ?_⟩
   apply le_iInf
   intro top
   rw [← deduction]

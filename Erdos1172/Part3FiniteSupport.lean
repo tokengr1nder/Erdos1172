@@ -22,8 +22,7 @@ def FinitelySupported {I X : Type} (C : (I → W1) → Set X) : Prop :=
   ∀ f : I → W1, ∀ x ∈ C f, ∃ s : Finset I,
     ∀ g : I → W1, (∀ i ∈ s, f i ≤ g i) → x ∈ C g
 
-theorem constant_supported {I X : Type} (A : Set X) :
-    FinitelySupported (fun _ : I → W1 => A) := by
+theorem constant_supported {I X : Type} (A : Set X) : FinitelySupported (fun _ : I → W1 => A) := by
   intro f x hx
   exact ⟨∅, fun _ _ => hx⟩
 

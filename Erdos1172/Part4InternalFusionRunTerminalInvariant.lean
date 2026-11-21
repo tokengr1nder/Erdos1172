@@ -131,8 +131,7 @@ theorem fusion_terminal_invariant_step
   apply le_iInf
   intro i
   rw [← deduction]
-  let Δ := Γ ⊓ (i ∈ᴮ omegaOne ⊓
-    allGood (terminalActiveState color R top) (image i runSpace Run))
+  let Δ := Γ ⊓ (i ∈ᴮ omegaOne ⊓ allGood (terminalActiveState color R top) (image i runSpace Run))
   have HΔ : Δ ≤ Γ := inf_le_left
   have Hi : Δ ≤ i ∈ᴮ omegaOne := inf_le_right.trans inf_le_left
   have Hgood : Δ ≤ allGood (terminalActiveState color R top)

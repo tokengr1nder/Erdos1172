@@ -63,8 +63,7 @@ include M hX reg small dense in
 same support in the smaller algebra. This is a statement about the actual
 lower projection of each piece, including mixed old-stage conditions. -/
 theorem exists_full_support_antichain (p : B) :
-    ∃ v : X → B, (∀ x, v x ≤ p) ∧ (∀ x, π (v x) = π p) ∧
-      ∀ x y, x ≠ y → v x ⊓ v y = ⊥ := by
+    ∃ v : X → B, (∀ x, v x ≤ p) ∧ (∀ x, π (v x) = π p) ∧ ∀ x y, x ≠ y → v x ⊓ v y = ⊥ := by
   classical
   let S := {a : A // Good (X := X) e p a}
   have cover : (⨆ a : S, a.val) = π p := by

@@ -49,8 +49,7 @@ theorem exists_countable_deciding_extension {K q : bSet B} {Γ : B}
   classical
   let State := {r : bSet B // Γ ≤ ErdosCohen.condition K r}
   have Hextend (n : ℕ) (s : State) :
-      ∃ t : State, Γ ≤ s.val ⊆ᴮ t.val ∧
-        Γ ≤ reads (c n) t.val ⊔ reads (c n)ᶜ t.val := by
+      ∃ t : State, Γ ≤ s.val ⊆ᴮ t.val ∧ Γ ≤ reads (c n) t.val ⊔ reads (c n)ᶜ t.val := by
     obtain ⟨r, Hr, Hsub, Hread⟩ := exists_deciding_condition_extension s.property (c n)
     exact ⟨⟨r, Hr⟩, Hsub, Hread⟩
   choose next hnext using Hextend

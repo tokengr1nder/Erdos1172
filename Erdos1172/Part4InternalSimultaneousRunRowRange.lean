@@ -43,11 +43,9 @@ theorem mem_simultaneousCandidates_iff_full_rowCandidates
     (HX : Γ ≤ is_func' (prod omegaOne omegaOne) omegaOne X)
     (Hσ : Γ ≤ σ ∈ᴮ omegaOne) (Hseed : Γ ≤ pair (pair σ top) seed ∈ᴮ S) :
     (Γ ≤ v ∈ᴮ simultaneousCandidates i S Y X top σ) ↔
-      Γ ≤ v ∈ᴮ rowCandidates i seed (sectionTrace omegaOne S Y σ)
-        (rowHistory omegaOne X σ) := by
+      Γ ≤ v ∈ᴮ rowCandidates i seed (sectionTrace omegaOne S Y σ) (rowHistory omegaOne X σ) := by
   have Hhistory : Γ ≤ is_func' i omegaOne (rowHistory omegaOne X σ) :=
-    is_func'_subset_of_is_func'
-      ((rowHistory_is_function HX Hσ).trans inf_le_left) Hi
+    is_func'_subset_of_is_func' ((rowHistory_is_function HX Hσ).trans inf_le_left) Hi
   rw [mem_rowCandidates_iff Hhistory]
   constructor
   · intro Hv
@@ -151,8 +149,7 @@ theorem run_row_is_function {color : Bool} {R S top P σ : bSet 𝔹} {Γ : 𝔹
     (HP : Γ ≤ is_function omegaOne entrySpace P)
     (Hlaw : Γ ≤ runLaw color R S top P) (Hσ : Γ ≤ σ ∈ᴮ omegaOne) :
     Γ ≤ is_function omegaOne omegaOne (rowHistory omegaOne (coordinateHistory P) σ) :=
-  rowHistory_is_function
-    (is_func'_of_is_function (coordinateHistory_is_function_of_run HP Hlaw)) Hσ
+  rowHistory_is_function (is_func'_of_is_function (coordinateHistory_is_function_of_run HP Hlaw)) Hσ
 
 theorem run_row_greedyLaw {color : Bool} {R S top P σ seed : bSet 𝔹} {Γ : 𝔹}
     (HP : Γ ≤ is_function omegaOne entrySpace P)

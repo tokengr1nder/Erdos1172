@@ -42,28 +42,21 @@ theorem typeLT_insert_of_forall_lt
             | inl a =>
               cases b with
               | inl b =>
-                change (a : V) ≤ b ↔
-                  (Sum.inlₗ a : s ⊕ₗ PUnit.{u + 1}) ≤ Sum.inlₗ b
-                exact (Sum.Lex.inl_le_inl_iff
-                  (α := s) (β := PUnit.{u + 1})).symm
+                change (a : V) ≤ b ↔ (Sum.inlₗ a : s ⊕ₗ PUnit.{u + 1}) ≤ Sum.inlₗ b
+                exact (Sum.Lex.inl_le_inl_iff (α := s) (β := PUnit.{u + 1})).symm
               | inr b =>
-                change (a : V) ≤ x ↔
-                  (Sum.inlₗ a : s ⊕ₗ PUnit.{u + 1}) ≤ Sum.inrₗ b
+                change (a : V) ≤ x ↔ (Sum.inlₗ a : s ⊕ₗ PUnit.{u + 1}) ≤ Sum.inrₗ b
                 exact iff_of_true (hx a a.property).le (Sum.Lex.inl_le_inr a b)
             | inr a =>
               cases b with
               | inl b =>
-                change x ≤ (b : V) ↔
-                  (Sum.inrₗ a : s ⊕ₗ PUnit.{u + 1}) ≤ Sum.inlₗ b
-                exact iff_of_false (not_le_of_gt (hx b b.property))
-                  Sum.Lex.not_inr_le_inl
+                change x ≤ (b : V) ↔ (Sum.inrₗ a : s ⊕ₗ PUnit.{u + 1}) ≤ Sum.inlₗ b
+                exact iff_of_false (not_le_of_gt (hx b b.property)) Sum.Lex.not_inr_le_inl
               | inr b =>
-                change x ≤ x ↔
-                  (Sum.inrₗ a : s ⊕ₗ PUnit.{u + 1}) ≤ Sum.inrₗ b
+                change x ≤ x ↔ (Sum.inrₗ a : s ⊕ₗ PUnit.{u + 1}) ≤ Sum.inrₗ b
                 exact iff_of_true le_rfl le_rfl }
   have he := e.ordinalType_congr
-  have hpunit : typeLT PUnit.{u + 1} = 1 :=
-    type_eq_one_of_unique _
+  have hpunit : typeLT PUnit.{u + 1} = 1 := type_eq_one_of_unique _
   have hsum : typeLT (s ⊕ₗ PUnit.{u + 1}) =
       typeLT s + typeLT PUnit.{u + 1} :=
     type_sum_lex (· < ·) (· < ·)

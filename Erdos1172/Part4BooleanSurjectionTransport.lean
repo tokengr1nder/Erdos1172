@@ -47,12 +47,10 @@ theorem is_surj_eq_bounded (X Y f : bSet B) :
   unfold is_surj
   rw [show (⨅ v : bSet B, _root_.imp (v ∈ᴮ Y)
         (⨆ w : bSet B, w ∈ᴮ X ⊓ pair w v ∈ᴮ f)) =
-      (⨅ i : Y.type, _root_.imp (Y.bval i)
-        (⨆ w : bSet B, w ∈ᴮ X ⊓ pair w (Y.func i) ∈ᴮ f)) from
+      (⨅ i : Y.type, _root_.imp (Y.bval i) (⨆ w : bSet B, w ∈ᴮ X ⊓ pair w (Y.func i) ∈ᴮ f)) from
     (@bounded_forall B _ Y
       (fun v => ⨆ w : bSet B, w ∈ᴮ X ⊓ pair w v ∈ᴮ f)
-      (h_congr := B_ext_iSup
-        (h := fun _ => B_ext_inf B_ext_const B_ext_pair_mem_right))).symm]
+      (h_congr := B_ext_iSup (h := fun _ => B_ext_inf B_ext_const B_ext_pair_mem_right))).symm]
   congr 1
   ext i
   congr 1
@@ -61,8 +59,7 @@ theorem is_surj_eq_bounded (X Y f : bSet B) :
 
 /-- Exact bounded transport does not require graph support or functionality. -/
 theorem map_is_surj (e : CompleteLatticeHom B C) (X Y f : bSet B) :
-    e (is_surj X Y f) =
-      is_surj (mapNames e X) (mapNames e Y) (mapNames e f) := by
+    e (is_surj X Y f) = is_surj (mapNames e X) (mapNames e Y) (mapNames e f) := by
   cases X with
   | mk ι X w =>
     cases Y with
@@ -86,8 +83,7 @@ theorem map_larger_than_of_partial_surjection (e : CompleteLatticeHom B C)
     e Γ ≤ larger_than (mapNames e X) (mapNames e Y) := by
   let g := function_of_func' Hfunc
   have Hg : Γ ≤ is_function S Y g := function_of_func'_is_function Hfunc
-  have Hgsurj : Γ ≤ is_surj S Y g :=
-    function_of_func'_surj_of_surj Hfunc Hsurj
+  have Hgsurj : Γ ≤ is_surj S Y g := function_of_func'_surj_of_surj Hfunc Hsurj
   unfold larger_than
   apply le_iSup_of_le (mapNames e S)
   apply le_iSup_of_le (mapNames e g)
@@ -100,8 +96,7 @@ theorem map_larger_than_of_partial_surjection (e : CompleteLatticeHom B C)
 partial-surjection names not arising by hereditary transport. -/
 theorem map_larger_than (e : CompleteLatticeHom B C) (X Y : bSet B) :
     e (larger_than X Y) ≤ larger_than (mapNames e X) (mapNames e Y) := by
-  change e (⨆ S : bSet B, ⨆ f : bSet B,
-      (S ⊆ᴮ X ⊓ is_func' S Y f) ⊓ is_surj S Y f) ≤ _
+  change e (⨆ S : bSet B, ⨆ f : bSet B, (S ⊆ᴮ X ⊓ is_func' S Y f) ⊓ is_surj S Y f) ≤ _
   rw [map_iSup]
   apply iSup_le
   intro S

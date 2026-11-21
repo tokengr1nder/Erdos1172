@@ -32,8 +32,7 @@ variable {V : Type u} [LinearOrder V] [WellFoundedLT V]
 complement inside the original subset. The right summand may be zero. -/
 theorem exists_final_tail (A : Set V) (ζ γ : Ordinal.{u})
     (htype : typeLT A = ζ + γ) :
-    ∃ B : Set V, B ⊆ A ∧ typeLT B = γ ∧
-      ∀ a ∈ A \ B, ∀ b ∈ B, a < b := by
+    ∃ B : Set V, B ⊆ A ∧ typeLT B = γ ∧ ∀ a ∈ A \ B, ∀ b ∈ B, a < b := by
   classical
   have hwf_lex : WellFounded (fun a b : ζ.ToType ⊕ₗ γ.ToType => a < b) := by
     refine Subrelation.wf (r := InvImage (Sum.Lex (· < ·) (· < ·)) ofLex) (fun h => h) ?_
@@ -61,8 +60,7 @@ theorem exists_final_tail (A : Set V) (ζ γ : Ordinal.{u})
     | _ x =>
       cases x with
       | inl i =>
-        have hlt : (e (Sum.inlₗ i)).val < f j :=
-          e.map_rel_iff.mpr (Sum.Lex.inl_lt_inr i j)
+        have hlt : (e (Sum.inlₗ i)).val < f j := e.map_rel_iff.mpr (Sum.Lex.inl_lt_inr i j)
         simpa only [hx] using hlt
       | inr i =>
         exact False.elim (ha.2 ⟨i, congrArg (fun z : A => z.val) hx⟩)
@@ -90,8 +88,7 @@ theorem exists_bounded_final_tail (A : Set V) (ζ γ : Ordinal.{u})
     rw [hBtype]
     exact ne_of_gt hγ
   obtain ⟨b⟩ : Nonempty B := Ordinal.type_ne_zero_iff_nonempty.mp hBzero
-  exact ⟨B, hBA, hBtype, hsep, b.val, b.property,
-    fun a ha => hsep a ha b.val b.property⟩
+  exact ⟨B, hBA, hBtype, hsep, b.val, b.property, fun a ha => hsep a ha b.val b.property⟩
 
 /-- Transfer an exact nonzero ordinal tail to a cofinal subset while
 keeping a bounded discarded prefix and the full final-segment separation. -/
@@ -100,8 +97,7 @@ theorem exists_cofinal_final_tail (A : Set V) (hA : IsCofinal A)
     ∃ B : Set V, B ⊆ A ∧ typeLT B = γ ∧ IsCofinal B ∧
       (∀ a ∈ A \ B, ∀ b ∈ B, a < b) ∧
       ∃ cut ∈ B, A \ B ⊆ Set.Iio cut := by
-  obtain ⟨B, hBA, hBtype, hsep, cut, hcut, hbound⟩ :=
-    exists_bounded_final_tail A ζ γ hγ htype
+  obtain ⟨B, hBA, hBtype, hsep, cut, hcut, hbound⟩ := exists_bounded_final_tail A ζ γ hγ htype
   exact ⟨B, hBA, hBtype,
     isCofinal_of_nonempty_final_tail A B hA ⟨cut, hcut⟩ hsep,
     hsep, cut, hcut, hbound⟩

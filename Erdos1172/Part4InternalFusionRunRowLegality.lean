@@ -43,8 +43,7 @@ open ErdosFusionRunPoolInvariant ErdosFusionPrefixCoherence
 theorem successfulRow_mem_pool
     {color : Bool} {R ξ Blocks B ν : bSet 𝔹} {Γ : 𝔹}
     (HBlocks : Γ ≤ is_function ξ (bv_powerset omegaTwo) Blocks)
-    (Hobjects : Γ ≤ ⨅ i, ⨅ A, _root_.imp (i ∈ᴮ ξ ⊓ pair i A ∈ᴮ Blocks)
-      (A =ᴮ (∅ : bSet 𝔹) ⊔ A ∈ᴮ B))
+    (Hobjects : Γ ≤ ⨅ i, ⨅ A, _root_.imp (i ∈ᴮ ξ ⊓ pair i A ∈ᴮ Blocks) (A =ᴮ (∅ : bSet 𝔹) ⊔ A ∈ᴮ B))
     (Hactive : Γ ≤ ν ∈ᴮ successfulRows color R ξ Blocks) :
     Γ ≤ blockValue Blocks ν ∈ᴮ B := by
   have Hparts := mem_successfulRows_iff.mp Hactive
@@ -64,8 +63,7 @@ theorem currentChoices_least_of_stored_candidates
     (Hξ : Γ ≤ ξ ∈ᴮ omegaOne)
     (HBlocks : Γ ≤ is_function ξ (bv_powerset omegaTwo) Blocks)
     (HX : Γ ≤ is_func' (prod ξ omegaOne) omegaOne X)
-    (Hobjects : Γ ≤ ⨅ i, ⨅ A, _root_.imp (i ∈ᴮ ξ ⊓ pair i A ∈ᴮ Blocks)
-      (A =ᴮ (∅ : bSet 𝔹) ⊔ A ∈ᴮ B))
+    (Hobjects : Γ ≤ ⨅ i, ⨅ A, _root_.imp (i ∈ᴮ ξ ⊓ pair i A ∈ᴮ Blocks) (A =ᴮ (∅ : bSet 𝔹) ⊔ A ∈ᴮ B))
     (Hstored : Γ ≤ storedBlockCandidates color R J E S ξ Blocks)
     (Hactive : Γ ≤ ν ∈ᴮ successfulRows color R ξ Blocks)
     (Hchoice : Γ ≤ pair ν v ∈ᴮ currentChoices color R E top ξ Blocks X) :

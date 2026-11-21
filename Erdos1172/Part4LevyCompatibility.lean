@@ -35,8 +35,7 @@ variable {I : Type u} {A : I → Type v}
 def Compatible (p q : ProductCondition A) : Prop :=
   ∃ r : ProductCondition A, r ≤ p ∧ r ≤ q
 
-theorem compatible_refl (p : ProductCondition A) : Compatible p p :=
-  ⟨p, le_rfl, le_rfl⟩
+theorem compatible_refl (p : ProductCondition A) : Compatible p p := ⟨p, le_rfl, le_rfl⟩
 
 /-- Choose the stronger coordinate when comparable. This is finitely
 supported even without a compatibility hypothesis. -/
@@ -111,14 +110,12 @@ theorem compatible_of_erase_of_coordinate {p q : ProductCondition A} (i : I)
     by_cases hji : j = i
     · subst j
       simpa only [DFinsupp.coe_update, Function.update_self] using hap
-    · simpa only [DFinsupp.coe_update, Function.update_of_ne hji,
-        DFinsupp.erase_ne hji] using hrp j
+    · simpa only [DFinsupp.coe_update, Function.update_of_ne hji, DFinsupp.erase_ne hji] using hrp j
   · intro j
     by_cases hji : j = i
     · subst j
       simpa only [DFinsupp.coe_update, Function.update_self] using haq
-    · simpa only [DFinsupp.coe_update, Function.update_of_ne hji,
-        DFinsupp.erase_ne hji] using hrq j
+    · simpa only [DFinsupp.coe_update, Function.update_of_ne hji, DFinsupp.erase_ne hji] using hrq j
 
 /-- The common-coordinate-value form needed for finite-support induction. -/
 theorem compatible_of_erase_eq {p q : ProductCondition A} (i : I)
@@ -131,7 +128,6 @@ has strictly fewer than κ possible finite conditions. -/
 theorem belowFactor_cardinal_lt (κ : Cardinal.{u}) (hκ : Cardinal.aleph0 < κ)
     (i : κ.ord.ToType) :
     Cardinal.mk (Erdos1172Collapse.Condition (Set.Iio i)) < κ :=
-  Erdos1172Collapse.cardinal_le.trans_lt
-    (max_lt_iff.mpr ⟨hκ, belowAlphabet_cardinal_lt κ i⟩)
+  Erdos1172Collapse.cardinal_le.trans_lt (max_lt_iff.mpr ⟨hκ, belowAlphabet_cardinal_lt κ i⟩)
 
 end Erdos1172LevyCollapse

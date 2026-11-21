@@ -73,8 +73,7 @@ theorem support_mem_of_graph (conditionSupport : P → Set W2)
 theorem exists_support_bound (conditionSupport : P → Set W2)
     (hsmall : ∀ p, (conditionSupport p).Countable)
     (N : NiceFunctionName P I V) (hI : #I ≤ ℵ_ 1) :
-    ∃ bound : W2, ∀ i p v, (p, v) ∈ N.graph i →
-      ∀ a ∈ conditionSupport p, a < bound := by
+    ∃ bound : W2, ∀ i p v, (p, v) ∈ N.graph i → ∀ a ∈ conditionSupport p, a < bound := by
   obtain ⟨bound, hb⟩ := Erdos1172Part3CoreObjectCode.exists_objectBound
     ⟨nameSupport conditionSupport N, nameSupport_card_le conditionSupport hsmall N hI⟩
   exact ⟨bound, fun i p v hp a ha => hb a (support_mem_of_graph conditionSupport N hp ha)⟩
@@ -85,8 +84,7 @@ theorem exists_supported_restriction
     (conditionSupport : P → Set W2) (hsmall : ∀ p, (conditionSupport p).Countable)
     (Stage : W2 → Type) [∀ a, Preorder (Stage a)]
     (restriction : ∀ a, CompleteRestriction P (Stage a))
-    (hlocal : ∀ a p, (∀ b ∈ conditionSupport p, b < a) →
-      p ∈ Set.range (restriction a).embed)
+    (hlocal : ∀ a p, (∀ b ∈ conditionSupport p, b < a) → p ∈ Set.range (restriction a).embed)
     (N : NiceCliqueName P I V G) (hI : #I ≤ ℵ_ 1) :
     ∃ bound : W2, ∀ a : W2, bound ≤ a →
       ∃ M : NiceCliqueName (Stage a) I V G,
@@ -105,8 +103,7 @@ theorem exists_club_supported_names
     (conditionSupport : P → Set W2) (hsmall : ∀ p, (conditionSupport p).Countable)
     (Stage : W2 → Type) [∀ a, Preorder (Stage a)]
     (restriction : ∀ a, CompleteRestriction P (Stage a))
-    (hlocal : ∀ a p, (∀ b ∈ conditionSupport p, b < a) →
-      p ∈ Set.range (restriction a).embed)
+    (hlocal : ∀ a p, (∀ b ∈ conditionSupport p, b < a) → p ∈ Set.range (restriction a).embed)
     (hI : #I ≤ ℵ_ 1) (rank : NiceCliqueName P I V G ↪ W2) :
     ∃ club : Set W2, IsClub club ∧ ∀ a ∈ club,
       ∀ N : NiceCliqueName P I V G, rank N < a → Supported (restriction a) N.function := by
@@ -114,8 +111,7 @@ theorem exists_club_supported_names
   choose bound hb using fun N : NiceCliqueName P I V G =>
     exists_support_bound conditionSupport hsmall N.function hI
   refine ⟨{a | ∀ N, rank N < a → bound N < a},
-    ClubClosure.isClub_rankClosed rank bound
-      Erdos1172Part3NeighborhoodCode.alephZero_lt_cof_W2, ?_⟩
+    ClubClosure.isClub_rankClosed rank bound Erdos1172Part3NeighborhoodCode.alephZero_lt_cof_W2, ?_⟩
   intro a ha N hN i p v hp
   exact hlocal a p (fun b hbp => (hb N i p v hp b hbp).trans (ha N hN))
 

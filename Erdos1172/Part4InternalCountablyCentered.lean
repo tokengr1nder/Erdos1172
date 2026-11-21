@@ -54,22 +54,18 @@ noncomputable def countablyCentered (κ J S F : bSet 𝔹) : 𝔹 :=
 theorem indexedCommon_apply {F T C x A : bSet 𝔹} {Γ : 𝔹}
     (H : Γ ≤ indexedCommon F T C) (Hx : Γ ≤ x ∈ᴮ T)
     (Hpair : Γ ≤ pair x A ∈ᴮ F) : Γ ≤ C ⊆ᴮ A :=
-  (le_inf (H.trans ((iInf_le _ x).trans (iInf_le _ A)))
-    (le_inf Hx Hpair)).trans bv_imp_elim
+  (le_inf (H.trans ((iInf_le _ x).trans (iInf_le _ A))) (le_inf Hx Hpair)).trans bv_imp_elim
 
 /-- Shared small losses pass from the indexed family to its actual value
 image. No countability or functionality is needed for this implication. -/
 theorem commonLoss_image_small {J F U A₀ T Y : bSet 𝔹} {Γ : 𝔹}
     (Hloss : Γ ≤ commonLoss J F U A₀) (HT : Γ ≤ T ⊆ᴮ U) :
-    Γ ≤ ⨅ A : bSet 𝔹,
-      _root_.imp (A ∈ᴮ image T Y F) (difference A₀ A ∈ᴮ J) := by
+    Γ ≤ ⨅ A : bSet 𝔹, _root_.imp (A ∈ᴮ image T Y F) (difference A₀ A ∈ᴮ J) := by
   apply le_iInf
   intro A
   rw [← deduction]
-  have Hex := (mem_image_iff.mp
-    (show Γ ⊓ A ∈ᴮ image T Y F ≤ A ∈ᴮ image T Y F from inf_le_right)).2
-  obtain ⟨x, Hx⟩ := exists_convert Hex
-    (B_ext_inf B_ext_mem_left B_ext_pair_mem_left)
+  have Hex := (mem_image_iff.mp (show Γ ⊓ A ∈ᴮ image T Y F ≤ A ∈ᴮ image T Y F from inf_le_right)).2
+  obtain ⟨x, Hx⟩ := exists_convert Hex (B_ext_inf B_ext_mem_left B_ext_pair_mem_left)
   have HU : Γ ⊓ A ∈ᴮ image T Y F ≤ x ∈ᴮ U :=
     mem_of_mem_subset (inf_le_left.trans HT) (Hx.trans inf_le_left)
   exact (le_inf
@@ -80,21 +76,18 @@ theorem commonLoss_image_small {J F U A₀ T Y : bSet 𝔹} {Γ : 𝔹}
 values; the actual function support supplies the codomain guard. -/
 theorem indexedCommon_of_image_common {S Y F T C : bSet 𝔹} {Γ : 𝔹}
     (HF : Γ ≤ is_function S Y F)
-    (Hcommon : Γ ≤ ⨅ A : bSet 𝔹,
-      _root_.imp (A ∈ᴮ image T Y F) (C ⊆ᴮ A)) :
+    (Hcommon : Γ ≤ ⨅ A : bSet 𝔹, _root_.imp (A ∈ᴮ image T Y F) (C ⊆ᴮ A)) :
     Γ ≤ indexedCommon F T C := by
   apply le_iInf
   intro x
   apply le_iInf
   intro A
   rw [← deduction]
-  have Hpair : Γ ⊓ (x ∈ᴮ T ⊓ pair x A ∈ᴮ F) ≤ pair x A ∈ᴮ F :=
-    inf_le_right.trans inf_le_right
+  have Hpair : Γ ⊓ (x ∈ᴮ T ⊓ pair x A ∈ᴮ F) ≤ pair x A ∈ᴮ F := inf_le_right.trans inf_le_right
   have Hmem : Γ ⊓ (x ∈ᴮ T ⊓ pair x A ∈ᴮ F) ≤ A ∈ᴮ image T Y F :=
     mem_image Hpair (inf_le_right.trans inf_le_left)
       (mem_codomain_of_is_function Hpair (inf_le_left.trans HF))
-  exact (le_inf (inf_le_left.trans (Hcommon.trans (iInf_le _ A))) Hmem).trans
-    bv_imp_elim
+  exact (le_inf (inf_le_left.trans (Hcommon.trans (iInf_le _ A))) Hmem).trans bv_imp_elim
 
 /-- The concrete remainder of the countable loss family is a positive
 common subset of any internally countable family of selected indices. -/

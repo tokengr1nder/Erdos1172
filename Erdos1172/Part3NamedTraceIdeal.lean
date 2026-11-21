@@ -110,7 +110,6 @@ theorem traceName_of_base_small (ha : GoodCut r σ H source a)
     (hU : (smallName r H a).holds p U) : (traceName core).holds p U := by
   intro q hqp
   obtain ⟨s, hsq, hs⟩ := hU q hqp
-  exact ⟨s, hsq, bound_of_base_witness ha core p0 hbelow hconv s
-    ((hsq.trans hqp).trans hpp0) U hs⟩
+  exact ⟨s, hsq, bound_of_base_witness ha core p0 hbelow hconv s ((hsq.trans hqp).trans hpp0) U hs⟩
 
 end Erdos1172Part3NamedTraceIdeal

@@ -126,8 +126,7 @@ lemma mem_mem_rel_iff {x y z : bSet 𝔹} {Γ} :
   have H_sub_x : Γ ≤ mem_rel x ⊆ᴮ prod x x := subset.mk_subset
   have H_prod_eq : Γ ≤ prod x x =ᴮ prod y y := prod_congr H_eq H_eq
   have H_sub_y : Γ ≤ mem_rel y ⊆ᴮ prod x x :=
-    poset_yoneda_inv Γ subst_congr_subset_right
-      (le_inf subset.mk_subset (bv_symm H_prod_eq))
+    poset_yoneda_inv Γ subst_congr_subset_right (le_inf subset.mk_subset (bv_symm H_prod_eq))
   apply prod_ext H_sub_x H_sub_y
   apply le_iInf; intro v; rw [← deduction]
   apply le_iInf; intro w; rw [← deduction]
@@ -458,8 +457,7 @@ lemma eq_pair_of_mem_induced_epsilon_rel {η x f pr : bSet 𝔹} {Γ}
     (H_mem : Γ ≤ pr ∈ᴮ induced_epsilon_rel η x f) :
     ∃ a b : bSet 𝔹, Γ ≤ a ∈ᴮ x ∧ Γ ≤ b ∈ᴮ x ∧ Γ ≤ pr =ᴮ pair a b ∧
     Γ ≤ pair a b ∈ᴮ induced_epsilon_rel η x f := by
-  have hmem : Γ ≤ pr ∈ᴮ prod x x :=
-    mem_of_mem_subset subset.mk_subset H_mem
+  have hmem : Γ ≤ pr ∈ᴮ prod x x := mem_of_mem_subset subset.mk_subset H_mem
   obtain ⟨v, Hv, w, Hw, H_eq⟩ := mem_prod_iff₂.mp hmem
   exact ⟨v, w, Hv, Hw, H_eq,
     bv_rw' (bv_symm H_eq) (ϕ := fun z => z ∈ᴮ induced_epsilon_rel η x f)
@@ -470,8 +468,7 @@ lemma mem_induced_epsilon_rel_iff {η x f a b : bSet 𝔹} {Γ}
     (_H_func : Γ ≤ is_function η x f) :
     Γ ≤ pair a b ∈ᴮ (induced_epsilon_rel η x f) ↔
     (Γ ≤ a ∈ᴮ x) ∧ (Γ ≤ b ∈ᴮ x) ∧
-    (Γ ≤ ⨆ a', a' ∈ᴮ η ⊓ ⨆ b', b' ∈ᴮ η ⊓
-      (pair a' a ∈ᴮ f ⊓ pair b' b ∈ᴮ f ⊓ a' ∈ᴮ b')) := by
+    (Γ ≤ ⨆ a', a' ∈ᴮ η ⊓ ⨆ b', b' ∈ᴮ η ⊓ (pair a' a ∈ᴮ f ⊓ pair b' b ∈ᴮ f ⊓ a' ∈ᴮ b')) := by
   -- induced_epsilon_rel η x f = image (mem_rel η) (prod x x) (prod_map_self η x f)
   -- mem_image_iff: pair a b ∈ image S Y F ↔ pair a b ∈ Y ∧ ∃ z, z ∈ S ∧ pair z (pair a b) ∈ F
   -- unfold induced_epsilon_rel to allow mem_image_iff
@@ -636,8 +633,7 @@ lemma image_eq_of_eq_induced_epsilon_rel_aux
   apply le_iInf; intro z; rw [← deduction]
   -- ctx: Γ ⊓ z ∈ image η κ f
   -- Get z' ∈ η s.t. pair z' z ∈ f
-  have H_func : Γ ⊓ z ∈ᴮ image η κ f ≤ is_function η κ f :=
-    inf_le_left.trans (bv_and_left Hη_inj)
+  have H_func : Γ ⊓ z ∈ᴮ image η κ f ≤ is_function η κ f := inf_le_left.trans (bv_and_left Hη_inj)
   have Hz_mem : Γ ⊓ z ∈ᴮ image η κ f ≤ z ∈ᴮ image η κ f := inf_le_right
   rw [mem_image_iff] at Hz_mem
   obtain ⟨Hz_omega, Hz_sup⟩ := Hz_mem
@@ -761,8 +757,7 @@ lemma eq_of_eq_induced_epsilon_rel
   -- (rewrite image(ρ) to image(η) in g_inverse's domain type)
   have Hg_inv_rw : Γ ≤ is_injective_function (image η κ f) ρ
       (injective_function_inverse Hρ_inj) :=
-    bv_rw' (H := H_img_eq) (h_congr := B_ext_is_injective_function_left)
-      (H_new := Hg_inv)
+    bv_rw' (H := H_img_eq) (h_congr := B_ext_is_injective_function_left) (H_new := Hg_inv)
   -- Step 2: Let h = comp(f_factor, g_inverse_rw)
   apply le_iSup_of_le (injective_function_comp Hf_factor Hg_inv_rw)
   -- Step 3: Show eps_iso η ρ h = is_function ⊓ strong_eps_hom ⊓ is_surj
@@ -812,10 +807,8 @@ lemma eq_of_eq_induced_epsilon_rel
     · -- Forward: z₁ ∈ z₂ → w₁ ∈ w₂
       intro Hz₁z₂
       -- pair v₁ v₂ ∈ induced_epsilon_rel η ω f (since z₁∈η, z₂∈η, pair z₁v₁∈f, pair z₂v₂∈f, z₁∈z₂)
-      have Hv₁_omega : Γ' ≤ v₁ ∈ᴮ κ :=
-        mem_of_mem_subset (H_le.trans image_subset) Hv₁_img
-      have Hv₂_omega : Γ' ≤ v₂ ∈ᴮ κ :=
-        mem_of_mem_subset (H_le.trans image_subset) Hv₂_img
+      have Hv₁_omega : Γ' ≤ v₁ ∈ᴮ κ := mem_of_mem_subset (H_le.trans image_subset) Hv₁_img
+      have Hv₂_omega : Γ' ≤ v₂ ∈ᴮ κ := mem_of_mem_subset (H_le.trans image_subset) Hv₂_img
       have Hpair_v₁v₂_ind_η : Γ' ≤ pair v₁ v₂ ∈ᴮ induced_epsilon_rel η κ f := by
         rw [mem_induced_epsilon_rel_iff (H_le.trans (bv_and_left Hη_inj))]
         exact ⟨Hv₁_omega, Hv₂_omega,
@@ -840,11 +833,9 @@ lemma eq_of_eq_induced_epsilon_rel
                  (le_inf Hw₂_ρ (le_inf (le_inf Hpair_w₁v₁_g Hpair_w₂v₂_g) Hw₁w₂))))⟩
       -- pair v₁ v₂ ∈ induced_epsilon_rel η ω f (via H_eq symm)
       have Hpair_v₁v₂_ind_η : Γ' ≤ pair v₁ v₂ ∈ᴮ induced_epsilon_rel η κ f :=
-        bv_rw' (H := H_le.trans H_eq) (h_congr := B_ext_mem_right)
-          (H_new := Hpair_v₁v₂_ind_ρ)
+        bv_rw' (H := H_le.trans H_eq) (h_congr := B_ext_mem_right) (H_new := Hpair_v₁v₂_ind_ρ)
       -- From pair v₁ v₂ ∈ ind_η with pair z₁ v₁ ∈ f and pair z₂ v₂ ∈ f: z₁ ∈ z₂
-      exact mem_of_mem_induced_epsilon_rel (H_le.trans Hη_inj) Hv₁_f Hv₂_f
-        Hpair_v₁v₂_ind_η
+      exact mem_of_mem_induced_epsilon_rel (H_le.trans Hη_inj) Hv₁_f Hv₂_f Hpair_v₁v₂_ind_η
   · -- is_surj η ρ h
     -- h = comp(f_factor, g_inv_rw)
     -- f_factor is surjective onto image(η) (surj_image)

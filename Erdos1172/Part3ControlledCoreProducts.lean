@@ -147,8 +147,7 @@ theorem exists_controlled_block_sequence (hclosed : CountablyClosed P)
     (p0 : P) (hp0 : source.holds p0 a) :
     ∃ F : FunctionDecisions (Set.Iic p0) W1 (NiceCliqueName P I W2 G),
       (∀ p i N, F.decides p i N → BlockAt σ source a p.val N ∧ BlockControl H index i p.val N) ∧
-      ∀ p i j N M, i < j → F.decides p i N → F.decides p j M →
-        (joinedName N M).holds p.val () := by
+      ∀ p i j N M, i < j → F.decides p i N → F.decides p j M → (joinedName N M).holds p.val () := by
   let R (p : Set.Iic p0) (N : NiceCliqueName P I W2 G) := BlockAt σ source a p.val N
   let K (i : W1) (p : Set.Iic p0) (N : NiceCliqueName P I W2 G) := BlockControl H index i p.val N
   let J (p : Set.Iic p0) (N M : NiceCliqueName P I W2 G) := (joinedName N M).holds p.val ()
@@ -181,13 +180,11 @@ theorem exists_cone_convergent_product (hclosed : CountablyClosed P)
   refine ⟨flatten blocks F hj, ?_, ?_⟩
   · rintro p z x ⟨N, hN, hx⟩
     have h := (hF p (ofLex z).1 N hN).1
-    exact ⟨h.2.2.1 p.val le_rfl (ofLex z).2 x hx,
-      h.2.2.2 p.val le_rfl (ofLex z).2 x hx⟩
+    exact ⟨h.2.2.1 p.val le_rfl (ofLex z).2 x hx, h.2.2.2 p.val le_rfl (ofLex z).2 x hx⟩
   · intro c hc
     refine ⟨index ⟨c, hc⟩, ?_⟩
     rintro p hca z hz x ⟨N, hN, hx⟩
-    exact (hF p (ofLex z).1 N hN).2 ⟨c, hc⟩ hz p.val le_rfl hca
-      p.val le_rfl (ofLex z).2 x hx
+    exact (hF p (ofLex z).1 N hN).2 ⟨c, hc⟩ hz p.val le_rfl hca p.val le_rfl (ofLex z).2 x hx
 
 theorem exists_nice_convergent_product (hclosed : CountablyClosed P) (hcc : OmegaTwoCC P)
     (hI : #I ≤ ℵ_ 1) (ha : GoodCoreCut r σ H source a) (p0 : P) (hp0 : source.holds p0 a) :

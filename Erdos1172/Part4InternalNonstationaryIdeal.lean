@@ -67,8 +67,7 @@ theorem exists_avoiding_club {A : bSet 𝔹} {Γ : 𝔹}
     ∃ C : bSet 𝔹, Γ ≤ club omegaTwo C ⊓ A ⊆ᴮ difference omegaTwo C :=
   exists_convert (mem_nonstationaryIdeal_iff.mp HA).2 (avoidingClub_ext A)
 
-theorem nonstationaryIdeal_downward {Γ : 𝔹} :
-    Γ ≤ downwardClosed (nonstationaryIdeal : bSet 𝔹) := by
+theorem nonstationaryIdeal_downward {Γ : 𝔹} : Γ ≤ downwardClosed (nonstationaryIdeal : bSet 𝔹) := by
   apply le_iInf
   intro A
   apply le_iInf

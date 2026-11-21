@@ -37,8 +37,7 @@ open ErdosOmegaTwo ErdosRelationGraph ErdosRowCandidates
 theorem simultaneousCandidates_antitone_histories
     {δ S Y X Y' X' top σ : bSet 𝔹} {Γ : 𝔹}
     (HY : Γ ≤ Y ⊆ᴮ Y') (HX : Γ ≤ X ⊆ᴮ X') :
-    Γ ≤ simultaneousCandidates δ S Y' X' top σ ⊆ᴮ
-      simultaneousCandidates δ S Y X top σ := by
+    Γ ≤ simultaneousCandidates δ S Y' X' top σ ⊆ᴮ simultaneousCandidates δ S Y X top σ := by
   rw [subset_unfold']
   apply le_iInf
   intro v
@@ -68,8 +67,7 @@ theorem simultaneousCandidates_antitone_histories
     rw [← deduction]
     exact simultaneousCandidate_above_previous (inf_le_left.trans Hv)
       (inf_le_right.trans inf_le_left)
-      (mem_of_mem_subset ((inf_le_left.trans HΔ).trans HX)
-        (inf_le_right.trans inf_le_right))
+      (mem_of_mem_subset ((inf_le_left.trans HΔ).trans HX) (inf_le_right.trans inf_le_right))
 
 /-- Total old histories and functional extensions have the same exact
 candidate set. The row guard places every accessed row coordinate in the
@@ -81,8 +79,7 @@ theorem simultaneousCandidates_eq_of_extension
     (HY : Γ ≤ is_func' δ omegaTwo Y)
     (HX : Γ ≤ is_func' (prod δ omegaOne) omegaOne X)
     (Hσ : Γ ≤ σ ∈ᴮ omegaOne) :
-    Γ ≤ simultaneousCandidates δ S Y X top σ =ᴮ
-      simultaneousCandidates δ S Y' X' top σ := by
+    Γ ≤ simultaneousCandidates δ S Y X top σ =ᴮ simultaneousCandidates δ S Y' X' top σ := by
   rw [eq_iff_subset_subset]
   refine le_inf ?_ (simultaneousCandidates_antitone_histories HsubY HsubX)
   rw [subset_unfold']
@@ -117,8 +114,7 @@ theorem simultaneousCandidates_eq_of_extension
     apply le_iInf
     intro w
     rw [← deduction]
-    have Hbase : Δ ⊓ (j ∈ᴮ δ ⊓ pair (pair j σ) w ∈ᴮ X') ≤ Γ :=
-      inf_le_left.trans HΔ
+    have Hbase : Δ ⊓ (j ∈ᴮ δ ⊓ pair (pair j σ) w ∈ᴮ X') ≤ Γ := inf_le_left.trans HΔ
     have Hjσ : Δ ⊓ (j ∈ᴮ δ ⊓ pair (pair j σ) w ∈ᴮ X') ≤
         pair j σ ∈ᴮ prod δ omegaOne :=
       mem_prod (inf_le_right.trans inf_le_left) (Hbase.trans Hσ)
@@ -168,16 +164,14 @@ private theorem congr_comprehend_parameter
     intro v
     rw [← deduction]
     have Hv := (mem_comprehend_and (Hvalue a)).mp
-      (show Γ ⊓ v ∈ᴮ comprehend (P a) omegaOne ≤
-        v ∈ᴮ comprehend (P a) omegaOne from inf_le_right)
+      (show Γ ⊓ v ∈ᴮ comprehend (P a) omegaOne ≤ v ∈ᴮ comprehend (P a) omegaOne from inf_le_right)
     exact (mem_comprehend_and (Hvalue b)).mpr ⟨Hv.1,
       bv_rw'' (ϕ := fun z => P z v) (inf_le_left.trans Hab) Hv.2 (Hparameter v)⟩
   · apply le_iInf
     intro v
     rw [← deduction]
     have Hv := (mem_comprehend_and (Hvalue b)).mp
-      (show Γ ⊓ v ∈ᴮ comprehend (P b) omegaOne ≤
-        v ∈ᴮ comprehend (P b) omegaOne from inf_le_right)
+      (show Γ ⊓ v ∈ᴮ comprehend (P b) omegaOne ≤ v ∈ᴮ comprehend (P b) omegaOne from inf_le_right)
     exact (mem_comprehend_and (Hvalue a)).mpr ⟨Hv.1,
       bv_rw'' (ϕ := fun z => P z v) (inf_le_left.trans (bv_symm Hab)) Hv.2
         (Hparameter v)⟩

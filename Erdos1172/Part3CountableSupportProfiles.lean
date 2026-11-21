@@ -76,16 +76,14 @@ theorem graph_injective : Injective (graph (I := I) (V := V)) := by
 
 theorem mk_Profile_le (hCH : CH) (hI : #I ≤ ℵ_ 1) (hV : #V ≤ ℵ_ 1) :
     #(Profile I V) ≤ ℵ_ 1 := by
-  let graphCode (p : Profile I V) : {s : Set (I × V) // #s ≤ ℵ₀} :=
-    ⟨graph p, graph_countable p⟩
+  let graphCode (p : Profile I V) : {s : Set (I × V) // #s ≤ ℵ₀} := ⟨graph p, graph_countable p⟩
   have hgraph : #(Profile I V) ≤ #{s : Set (I × V) // #s ≤ ℵ₀} :=
     Cardinal.mk_le_of_injective (f := graphCode)
       (fun _ _ h => graph_injective (congrArg Subtype.val h))
   have hprod : #(I × V) ≤ ℵ_ 1 := by
     rw [Cardinal.mk_prod]
     simp only [Cardinal.lift_id]
-    exact (mul_le_mul' hI hV).trans_eq
-      (Cardinal.mul_eq_self (Cardinal.aleph0_le_aleph 1))
+    exact (mul_le_mul' hI hV).trans_eq (Cardinal.mul_eq_self (Cardinal.aleph0_le_aleph 1))
   apply hgraph.trans
   apply (Cardinal.mk_bounded_set_le (I × V) ℵ₀).trans
   exact (Cardinal.power_le_power_right (max_le hprod (Cardinal.aleph0_le_aleph 1))).trans_eq

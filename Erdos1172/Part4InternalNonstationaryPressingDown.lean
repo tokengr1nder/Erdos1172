@@ -52,8 +52,7 @@ theorem stationary_injects_omegaTwo {S : bSet 𝔹} {Γ : 𝔹}
 constructed nonstationary ideal, without assuming stationarity separately. -/
 theorem stationary_of_meets_clubs {S : bSet 𝔹} {Γ : 𝔹}
     (HS : Γ ≤ S ⊆ᴮ omegaTwo)
-    (Hmeets : Γ ≤ ⨅ C, _root_.imp (club omegaTwo C)
-      (⨆ x, x ∈ᴮ S ⊓ x ∈ᴮ C)) :
+    (Hmeets : Γ ≤ ⨅ C, _root_.imp (club omegaTwo C) (⨆ x, x ∈ᴮ S ⊓ x ∈ᴮ C)) :
     Γ ≤ positive omegaTwo nonstationaryIdeal S := by
   refine le_inf HS ?_
   rw [← imp_bot, ← deduction]

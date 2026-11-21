@@ -54,8 +54,7 @@ theorem exists_small_universal_test (hcc : OmegaTwoCC P) (U : RegularName P X) :
   let value (q : B) : X := q.property.2.choose
   have hvalue (q : B) : (neg U).holds q.val (value q) := q.property.2.choose_spec
   refine ⟨Set.range value, ?_, ?_⟩
-  · exact Cardinal.mk_range_le.trans
-      ((Cardinal.mk_subtype_mono (fun q hq => hq.1)).trans hAsmall)
+  · exact Cardinal.mk_range_le.trans ((Cardinal.mk_subtype_mono (fun q hq => hq.1)).trans hAsmall)
   · intro p hp x
     by_contra hx
     obtain ⟨q, hqp, hq⟩ := (not_holds_iff_exists_neg U p x).mp hx
@@ -63,14 +62,12 @@ theorem exists_small_universal_test (hcc : OmegaTwoCC P) (U : RegularName P X) :
     rcases hAD htA with htall | htbad
     · exact hq s hsq (U.persistent hst (htall x))
     · let tB : B := ⟨t, htA, htbad⟩
-      exact hvalue tB s hst
-        (U.persistent (hsq.trans hqp) (hp (value tB) ⟨tB, rfl⟩))
+      exact hvalue tB s hst (U.persistent (hsq.trans hqp) (hp (value tB) ⟨tB, rfl⟩))
 
 /-- The test set has a strict ordinal bound independent of the condition. -/
 theorem exists_uniform_reflection_bound (hcc : OmegaTwoCC P)
     (U : RegularName P W2) :
-    ∃ b : W2, ∀ a : W2, b < a → ∀ p : P,
-      (∀ x < a, U.holds p x) → ∀ x : W2, U.holds p x := by
+    ∃ b : W2, ∀ a : W2, b < a → ∀ p : P, (∀ x < a, U.holds p x) → ∀ x : W2, U.holds p x := by
   obtain ⟨tests, hsmall, htests⟩ := exists_small_universal_test hcc U
   obtain ⟨b, hb⟩ := Erdos1172Part3CoreObjectCode.exists_objectBound ⟨tests, hsmall⟩
   exact ⟨b, fun a hba p hp => htests p (fun x hx => hp x ((hb x hx).trans hba))⟩

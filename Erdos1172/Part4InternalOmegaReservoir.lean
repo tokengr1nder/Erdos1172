@@ -46,8 +46,7 @@ theorem above_of_not_mem_succ {a y : bSet 𝔹} {Γ : 𝔹}
   rw [inf_sup_left]
   apply sup_le
   · have Hsucc : y ∈ᴮ succ a = y =ᴮ a ⊔ y ∈ᴮ a := mem_insert1
-    exact (bv_absurd _ (inf_le_right.trans Hsucc.ge)
-      (inf_le_left.trans Hnot)).trans bot_le
+    exact (bv_absurd _ (inf_le_right.trans Hsucc.ge) (inf_le_left.trans Hnot)).trans bot_le
   · exact inf_le_right
 
 /-- One genuine recursive step, retaining full largeness and placing the
@@ -61,13 +60,11 @@ theorem exists_reservoir_step {color : Bool} {R S X : bSet 𝔹} {Γ : 𝔹}
       ∀ y : bSet 𝔹, Γ ≤ y ∈ᴮ Y → Γ ≤ x ∈ᴮ y ⊓ graphColor color R x y := by
   obtain ⟨x, Hx⟩ := exists_large_neighborhood (richNeighborhoods_apply Hrich HXS HX)
   have HxX : Γ ≤ x ∈ᴮ X := Hx.1
-  have HxTwo : Γ ≤ x ∈ᴮ omegaTwo :=
-    mem_of_mem_subset HS (mem_of_mem_subset HXS HxX)
+  have HxTwo : Γ ≤ x ∈ᴮ omegaTwo := mem_of_mem_subset HS (mem_of_mem_subset HXS HxX)
   let Y := difference (neighborhood color R X x) (succ x)
   have HYX : Γ ≤ Y ⊆ᴮ X := subset_trans' difference_subset neighborhood_subset
   have HYlarge : Γ ≤ injects_into omegaTwo Y :=
-    ErdosLargeDifference.omegaTwo_injects_difference_succ HCH
-      Hx.2 HxTwo
+    ErdosLargeDifference.omegaTwo_injects_difference_succ HCH Hx.2 HxTwo
   refine ⟨x, Y, HxX, HYX, HYlarge, ?_⟩
   intro y Hy
   have HY : Γ ≤ y ∈ᴮ neighborhood color R X x ⊓ (y ∈ᴮ succ x)ᶜ := by
@@ -92,8 +89,7 @@ theorem exists_increasing_colored_sequence {color : Bool} {R S : bSet 𝔹} {Γ 
   let State := {X : bSet 𝔹 // (Γ ≤ X ⊆ᴮ S) ∧ (Γ ≤ injects_into omegaTwo X)}
   have hstep : ∀ q : State, ∃ p : bSet 𝔹 × State,
       (Γ ≤ p.1 ∈ᴮ q.val) ∧ (Γ ≤ p.2.val ⊆ᴮ q.val) ∧
-      ∀ y : bSet 𝔹, Γ ≤ y ∈ᴮ p.2.val →
-        Γ ≤ p.1 ∈ᴮ y ⊓ graphColor color R p.1 y := by
+      ∀ y : bSet 𝔹, Γ ≤ y ∈ᴮ p.2.val → Γ ≤ p.1 ∈ᴮ y ⊓ graphColor color R p.1 y := by
     intro q
     obtain ⟨x, Y, Hx, HY, HYL, Hpair⟩ :=
       exists_reservoir_step HCH HS Hrich q.property.1 q.property.2
@@ -103,8 +99,7 @@ theorem exists_increasing_colored_sequence {color : Bool} {R S : bSet 𝔹} {Γ 
   let states : ℕ → State := Nat.rec initial (fun _ q => (next q).2)
   let v : ℕ → bSet 𝔹 := fun n => (next (states n)).1
   have Hv (n : ℕ) : Γ ≤ v n ∈ᴮ (states n).val := (hnext (states n)).1
-  have Hdown (n : ℕ) : Γ ≤ (states (n + 1)).val ⊆ᴮ (states n).val :=
-    (hnext (states n)).2.1
+  have Hdown (n : ℕ) : Γ ≤ (states (n + 1)).val ⊆ᴮ (states n).val := (hnext (states n)).2.1
   have HdownAll : ∀ n m : ℕ, m ≤ n → Γ ≤ (states n).val ⊆ᴮ (states m).val := by
     intro n
     induction n with
@@ -121,8 +116,7 @@ theorem exists_increasing_colored_sequence {color : Bool} {R S : bSet 𝔹} {Γ 
       · exact subset_trans' (Hdown n) (ih m (by omega))
   refine ⟨v, fun n => mem_of_mem_subset (states n).property.1 (Hv n), ?_⟩
   intro m n hmn
-  exact (hnext (states m)).2.2 (v n)
-    (mem_of_mem_subset (HdownAll n (m + 1) (by omega)) (Hv n))
+  exact (hnext (states m)).2.2 (v n) (mem_of_mem_subset (HdownAll n (m + 1) (by omega)) (Hv n))
 
 /-- An actual internal increasing injection with homogeneous range is
 constructed, including its behavior on arbitrary mixed natural names. -/
@@ -133,8 +127,7 @@ theorem exists_internal_omega_clique {color : Bool} {R S : bSet 𝔹} {Γ : 𝔹
     ∃ f : bSet 𝔹, Γ ≤ is_injective_function bSet.omega S f ⊓
       (increasingOn bSet.omega f ⊓ homogeneousUnion color R bSet.omega bSet.omega f f) := by
   obtain ⟨v, Hv, Hpair⟩ := exists_increasing_colored_sequence HCH HS Hlarge Hrich
-  have Hinc : ∀ m n, m < n → Γ ≤ v m ∈ᴮ v n :=
-    fun m n h => (Hpair m n h).trans inf_le_left
+  have Hinc : ∀ m n, m < n → Γ ≤ v m ∈ᴮ v n := fun m n h => (Hpair m n h).trans inf_le_left
   have Hcolor : ∀ m n, m < n → Γ ≤ graphColor color R (v m) (v n) :=
     fun m n h => (Hpair m n h).trans inf_le_right
   exact ⟨ErdosOmegaSequence.sequenceGraph v,

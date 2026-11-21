@@ -40,8 +40,7 @@ private theorem insert_cases {p q f : bSet 𝔹} {Γ v : 𝔹}
     (Hp : Γ ≤ p ∈ᴮ bSet.insert1 q f)
     (Hnew : ∀ {Δ : 𝔹}, Δ ≤ Γ → Δ ≤ p =ᴮ q → Δ ≤ v)
     (Hold : ∀ {Δ : 𝔹}, Δ ≤ Γ → Δ ≤ p ∈ᴮ f → Δ ≤ v) : Γ ≤ v := by
-  have Hsplit : Γ ≤ p =ᴮ q ⊔ p ∈ᴮ f :=
-    Hp.trans (mem_insert1_value (x := p) (y := q) (A := f)).le
+  have Hsplit : Γ ≤ p =ᴮ q ⊔ p ∈ᴮ f := Hp.trans (mem_insert1_value (x := p) (y := q) (A := f)).le
   exact (le_inf le_rfl Hsplit).trans
     (bv_or_elim_right (Hnew inf_le_left inf_le_right) (Hold inf_le_left inf_le_right))
 
@@ -62,11 +61,9 @@ theorem increasingOn_insert_next {θ A f y : bSet 𝔹} {Γ : 𝔹}
   rw [← deduction]
   let D := graphDomain θ A f
   let g := bSet.insert1 (pair D y) f
-  let Δ := Γ ⊓ (((i ∈ᴮ θ ⊓ j ∈ᴮ θ) ⊓ i ∈ᴮ j) ⊓
-    (pair i x ∈ᴮ g ⊓ pair j z ∈ᴮ g))
+  let Δ := Γ ⊓ (((i ∈ᴮ θ ⊓ j ∈ᴮ θ) ⊓ i ∈ᴮ j) ⊓ (pair i x ∈ᴮ g ⊓ pair j z ∈ᴮ g))
   have HΔ : Δ ≤ Γ := inf_le_left
-  have Hdom : Δ ≤ (i ∈ᴮ θ ⊓ j ∈ᴮ θ) ⊓ i ∈ᴮ j :=
-    inf_le_right.trans inf_le_left
+  have Hdom : Δ ≤ (i ∈ᴮ θ ⊓ j ∈ᴮ θ) ⊓ i ∈ᴮ j := inf_le_right.trans inf_le_left
   have Hi : Δ ≤ i ∈ᴮ θ := Hdom.trans (inf_le_left.trans inf_le_left)
   have Hj : Δ ≤ j ∈ᴮ θ := Hdom.trans (inf_le_left.trans inf_le_right)
   have Hij : Δ ≤ i ∈ᴮ j := Hdom.trans inf_le_right
@@ -82,17 +79,14 @@ theorem increasingOn_insert_next {θ A f y : bSet 𝔹} {Γ : 𝔹}
       exact (bot_of_mem_self' HDD).trans bot_le
     · intro Θ HΘ Hold₂
       have HjD : Θ ≤ j ∈ᴮ D :=
-        mem_graphDomain_of_pair (((HΘ.trans HΛ).trans HΔ).trans
-          (Hf.trans inf_le_left)) Hold₂
+        mem_graphDomain_of_pair (((HΘ.trans HΛ).trans HΔ).trans (Hf.trans inf_le_left)) Hold₂
       have HDj : Θ ≤ D ∈ᴮ j :=
-        mem_congr (HΘ.trans (eq_of_eq_pair_left' Hnew₁)) bv_refl
-          ((HΘ.trans HΛ).trans Hij)
+        mem_congr (HΘ.trans (eq_of_eq_pair_left' Hnew₁)) bv_refl ((HΘ.trans HΛ).trans Hij)
       exact (bot_of_mem_mem' D j HDj HjD).trans bot_le
   · intro Λ HΛ Hold₁
     apply insert_cases (HΛ.trans Hjz)
     · intro Θ HΘ Hnew₂
-      have Hrange : Θ ≤ rangeMem θ f x :=
-        rangeMem_of_pair ((HΘ.trans HΛ).trans Hi) (HΘ.trans Hold₁)
+      have Hrange : Θ ≤ rangeMem θ f x := rangeMem_of_pair ((HΘ.trans HΛ).trans Hi) (HΘ.trans Hold₁)
       have Hxy : Θ ≤ x ∈ᴮ y :=
         (le_inf (((HΘ.trans HΛ).trans HΔ).trans
           (Habove.trans (iInf_le _ x))) Hrange).trans bv_imp_elim
@@ -106,8 +100,7 @@ theorem increasingOn_insert_next {θ A f y : bSet 𝔹} {Γ : 𝔹}
 The proof applies to arbitrary names, including locally equal graph pairs. -/
 theorem rangeInitial_insert_next {θ A f y : bSet 𝔹} {Γ : 𝔹}
     (Hrange : Γ ≤ rangeInitial θ A f)
-    (Hleast : Γ ≤ ⨅ z : bSet 𝔹,
-      _root_.imp (z ∈ᴮ A ⊓ z ∈ᴮ y) (rangeMem θ f z)) :
+    (Hleast : Γ ≤ ⨅ z : bSet 𝔹, _root_.imp (z ∈ᴮ A ⊓ z ∈ᴮ y) (rangeMem θ f z)) :
     Γ ≤ rangeInitial θ A (bSet.insert1 (pair (graphDomain θ A f) y) f) := by
   apply le_iInf
   intro x
@@ -120,22 +113,18 @@ theorem rangeInitial_insert_next {θ A f y : bSet 𝔹} {Γ : 𝔹}
   have Hx : Δ ≤ rangeMem θ g x := inf_le_right.trans (inf_le_left.trans inf_le_left)
   have HzA : Δ ≤ z ∈ᴮ A := inf_le_right.trans (inf_le_left.trans inf_le_right)
   have Hzx : Δ ≤ z ∈ᴮ x := inf_le_right.trans inf_le_right
-  obtain ⟨i, Hi⟩ := exists_convert Hx
-    (B_ext_inf B_ext_mem_left B_ext_pair_mem_left)
+  obtain ⟨i, Hi⟩ := exists_convert Hx (B_ext_inf B_ext_mem_left B_ext_pair_mem_left)
   apply insert_cases (Hi.trans inf_le_right)
   · intro Θ HΘ Hnew
-    have Hzy : Θ ≤ z ∈ᴮ y :=
-      mem_congr bv_refl (eq_of_eq_pair_right' Hnew) (HΘ.trans Hzx)
+    have Hzy : Θ ≤ z ∈ᴮ y := mem_congr bv_refl (eq_of_eq_pair_right' Hnew) (HΘ.trans Hzx)
     have Hzrange : Θ ≤ rangeMem θ f z :=
       (le_inf ((HΘ.trans HΔ).trans (Hleast.trans (iInf_le _ z)))
         (le_inf (HΘ.trans HzA) Hzy)).trans bv_imp_elim
     exact rangeMem_mono subset_insertPair Hzrange
   · intro Θ HΘ Hold
-    have Hxrange : Θ ≤ rangeMem θ f x :=
-      rangeMem_of_pair (HΘ.trans (Hi.trans inf_le_left)) Hold
+    have Hxrange : Θ ≤ rangeMem θ f x := rangeMem_of_pair (HΘ.trans (Hi.trans inf_le_left)) Hold
     exact rangeMem_mono subset_insertPair
-      (rangeInitial_apply ((HΘ.trans HΔ).trans Hrange) Hxrange
-        (HΘ.trans HzA) (HΘ.trans Hzx))
+      (rangeInitial_apply ((HΘ.trans HΔ).trans Hrange) Hxrange (HΘ.trans HzA) (HΘ.trans Hzx))
 
 /-- Adjoin the least unused range value at the current ordinal domain.
 The extended graph remains an increasing initial-range partial injection. -/
@@ -144,10 +133,8 @@ theorem increasingPartial_insert_next {θ A f y : bSet 𝔹} {Γ : 𝔹}
     (HDmem : Γ ≤ graphDomain θ A f ∈ᴮ θ) (Hy : Γ ≤ y ∈ᴮ A)
     (Hfresh : Γ ≤ (rangeMem θ f y)ᶜ)
     (Habove : Γ ≤ ⨅ x : bSet 𝔹, _root_.imp (rangeMem θ f x) (x ∈ᴮ y))
-    (Hleast : Γ ≤ ⨅ z : bSet 𝔹,
-      _root_.imp (z ∈ᴮ A ⊓ z ∈ᴮ y) (rangeMem θ f z)) :
-    Γ ≤ increasingPartial θ A
-      (bSet.insert1 (pair (graphDomain θ A f) y) f) := by
+    (Hleast : Γ ≤ ⨅ z : bSet 𝔹, _root_.imp (z ∈ᴮ A ⊓ z ∈ᴮ y) (rangeMem θ f z)) :
+    Γ ≤ increasingPartial θ A (bSet.insert1 (pair (graphDomain θ A f) y) f) := by
   let D := graphDomain θ A f
   have Hpartial : Γ ≤ partialGraph θ A f := Hf.trans inf_le_left
   have HDOrd : Γ ≤ Ord D := partialGraph_domain_Ord Hθ Hpartial
@@ -164,8 +151,7 @@ theorem increasingPartial_insert_next {θ A f y : bSet 𝔹} {Γ : 𝔹}
       (bSet.insert1 (pair D y) f) :=
     is_injective_function_insertPair Hfunction Hnotself Hy HfreshImage
   have Hnew : Γ ≤ partialGraph θ A (bSet.insert1 (pair D y) f) :=
-    partialGraph_of_ordinal_function (Ord_succ HDOrd)
-      (Ord.succ_le_of_lt Hθ HDmem) Hextended
+    partialGraph_of_ordinal_function (Ord_succ HDOrd) (Ord.succ_le_of_lt Hθ HDmem) Hextended
   exact le_inf Hnew
     (le_inf (increasingOn_insert_next Hpartial
       (Hf.trans (inf_le_right.trans inf_le_left)) Habove)

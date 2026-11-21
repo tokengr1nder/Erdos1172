@@ -54,8 +54,7 @@ theorem firstStageHom_injective {K : bSet B}
     (ErdosCohen.emptyLabel K) (ErdosCohen.emptyLabel_bval_eq_top Hzero)).comp
       Erdos1172PositiveBoolean.completionHom_injective
 
-theorem firstStageHom_compl (K : bSet B) (b : B) :
-    firstStageHom K bᶜ = (firstStageHom K b)ᶜ := by
+theorem firstStageHom_compl (K : bSet B) (b : B) : firstStageHom K bᶜ = (firstStageHom K b)ᶜ := by
   change Erdos1172BooleanNameIteration.firstStageHom (ErdosCohen.conditions K)
     (Erdos1172PositiveBoolean.element bᶜ) =
     (Erdos1172BooleanNameIteration.firstStageHom (ErdosCohen.conditions K)

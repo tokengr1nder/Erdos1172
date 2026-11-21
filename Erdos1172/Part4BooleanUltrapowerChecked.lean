@@ -41,8 +41,7 @@ private theorem checked_pick {x : bSet B} {A F : PSet.{u}} (hx : x = check A) (h
 
 private theorem child_checked (X : I → bSet B) (A : I → PSet.{u})
     (hx : ∀ᶠ i in U, X i = check (A i)) (a : Children U X) :
-    ∃ F : I → PSet.{u}, (∀ᶠ i in U, child U X a i = check (F i)) ∧
-      ∀ᶠ i in U, F i ∈ A i := by
+    ∃ F : I → PSet.{u}, (∀ᶠ i in U, child U X a i = check (F i)) ∧ ∀ᶠ i in U, F i ∈ A i := by
   classical
   let P (i : I) (F : PSet.{u}) := child U X a i = check F ∧ F ∈ A i
   have H : ∀ᶠ i in U, ∃ F, P i F := by

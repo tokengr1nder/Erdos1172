@@ -90,8 +90,7 @@ theorem finalObjects_eq_coordinate_union {color : Bool} {R Run : bSet 𝔹} {Γ 
       (show Δ ≤ x ∈ᴮ bv_union
         (image omegaOne (bv_powerset (blockObjects color R)) (objectFamily HRun)) from
         inf_le_right)
-    obtain ⟨P, Hpair⟩ := objectFamily_witness HRun
-      (Hx.trans (inf_le_left.trans inf_le_right))
+    obtain ⟨P, Hpair⟩ := objectFamily_witness HRun (Hx.trans (inf_le_left.trans inf_le_right))
     exact mem_of_mem_subset (state_objects_subset_final (inf_le_left.trans HRun) Hpair)
       (Hx.trans inf_le_right)
 
@@ -119,8 +118,7 @@ theorem finalPoints_eq_coordinate_union {color : Bool} {R Run : bSet 𝔹} {Γ :
     obtain ⟨i, P, Hx⟩ := exists_indexed_union_witness
       (show Δ ≤ x ∈ᴮ bv_union
         (image omegaOne (bv_powerset omegaTwo) (pointFamily HRun)) from inf_le_right)
-    obtain ⟨B, Hpair⟩ := pointFamily_witness HRun
-      (Hx.trans (inf_le_left.trans inf_le_right))
+    obtain ⟨B, Hpair⟩ := pointFamily_witness HRun (Hx.trans (inf_le_left.trans inf_le_right))
     exact mem_of_mem_subset (state_points_subset_final (inf_le_left.trans HRun) Hpair)
       (Hx.trans inf_le_right)
 
@@ -128,8 +126,7 @@ theorem exists_object_history_stage
     {color : Bool} {R F Run T : bSet 𝔹} {Γ : 𝔹}
     (HB : Γ ≤ countablyBounded omegaOne)
     (HRun : Γ ≤ is_function omegaOne (stateSpace color R) Run)
-    (Hrec : Γ ≤ imageRecLaw (stateSpace color R)
-      (fun _ U => poolUpdate color R F U) Run)
+    (Hrec : Γ ≤ imageRecLaw (stateSpace color R) (fun _ U => poolUpdate color R F U) Run)
     (HT : Γ ≤ T ⊆ᴮ finalObjects color R Run) (Hcount : Γ ≤ injects_into T bSet.omega) :
     ∃ i B : bSet 𝔹, Γ ≤ i ∈ᴮ omegaOne ⊓ (pair i B ∈ᴮ objectFamily HRun ⊓ T ⊆ᴮ B) :=
   exists_family_value_containing_countable HB (objectFamily_is_function HRun)
@@ -141,8 +138,7 @@ theorem exists_point_history_stage
     {color : Bool} {R F Run T : bSet 𝔹} {Γ : 𝔹}
     (HB : Γ ≤ countablyBounded omegaOne)
     (HRun : Γ ≤ is_function omegaOne (stateSpace color R) Run)
-    (Hrec : Γ ≤ imageRecLaw (stateSpace color R)
-      (fun _ U => poolUpdate color R F U) Run)
+    (Hrec : Γ ≤ imageRecLaw (stateSpace color R) (fun _ U => poolUpdate color R F U) Run)
     (HT : Γ ≤ T ⊆ᴮ finalPoints color R Run) (Hcount : Γ ≤ injects_into T bSet.omega) :
     ∃ i P : bSet 𝔹, Γ ≤ i ∈ᴮ omegaOne ⊓ (pair i P ∈ᴮ pointFamily HRun ⊓ T ⊆ᴮ P) :=
   exists_family_value_containing_countable HB (pointFamily_is_function HRun)
@@ -201,8 +197,7 @@ theorem exists_joint_history_stage
     {color : Bool} {R F Run Earlier Active : bSet 𝔹} {Γ : 𝔹}
     (HB : Γ ≤ countablyBounded omegaOne)
     (HRun : Γ ≤ is_function omegaOne (stateSpace color R) Run)
-    (Hrec : Γ ≤ imageRecLaw (stateSpace color R)
-      (fun _ T => poolUpdate color R F T) Run)
+    (Hrec : Γ ≤ imageRecLaw (stateSpace color R) (fun _ T => poolUpdate color R F T) Run)
     (HEarlier : Γ ≤ Earlier ∈ᴮ countableSubsets (finalObjects color R Run))
     (HActive : Γ ≤ Active ∈ᴮ countableSubsets (finalPoints color R Run)) :
     ∃ i B P : bSet 𝔹, Γ ≤ i ∈ᴮ omegaOne ∧ Γ ≤ pair i (pair B P) ∈ᴮ Run ∧
@@ -230,8 +225,7 @@ theorem selected_output_in_final_pools
     {color : Bool} {R J E S F Run Earlier Active A : bSet 𝔹} {Γ : 𝔹}
     (HB : Γ ≤ countablyBounded omegaOne)
     (HRun : Γ ≤ is_function omegaOne (stateSpace color R) Run)
-    (Hrec : Γ ≤ imageRecLaw (stateSpace color R)
-      (fun _ T => poolUpdate color R F T) Run)
+    (Hrec : Γ ≤ imageRecLaw (stateSpace color R) (fun _ T => poolUpdate color R F T) Run)
     (HF : Γ ≤ is_function (choicePoolDomain (blockObjects color R) omegaTwo)
       (bv_powerset omegaTwo) F)
     (Hlaw : Γ ≤ blockSelectorLaw color R J E S F)
@@ -240,8 +234,7 @@ theorem selected_output_in_final_pools
     (Hselected : Γ ≤ pair (pair Earlier Active) A ∈ᴮ F) :
     Γ ≤ (A ⊆ᴮ finalPoints color R Run) ⊓
       _root_.imp ((A =ᴮ (∅ : bSet 𝔹))ᶜ) (A ∈ᴮ finalObjects color R Run) := by
-  obtain ⟨i, B, P, Hi, Hstate, HEB, HAP⟩ :=
-    exists_joint_history_stage HB HRun Hrec HEarlier HActive
+  obtain ⟨i, B, P, Hi, Hstate, HEB, HAP⟩ := exists_joint_history_stage HB HRun Hrec HEarlier HActive
   obtain ⟨j, Hj⟩ := exists_above_of_countablyBounded HB Hi
   obtain ⟨C, Q, Hjstate⟩ := exists_pool_state HRun (Hj.trans inf_le_left)
   let T := image j (stateSpace color R) Run
@@ -249,10 +242,8 @@ theorem selected_output_in_final_pools
   let P₀ := priorPoints color R T
   have Hpast : Γ ≤ pair B P ∈ᴮ T :=
     mem_image Hstate (Hj.trans inf_le_right) (mem_codomain_of_is_function Hstate HRun)
-  have HEB₀ : Γ ≤ Earlier ⊆ᴮ B₀ :=
-    subset_trans' HEB (left_subset_aggregate image_subset Hpast)
-  have HAP₀ : Γ ≤ Active ⊆ᴮ P₀ :=
-    subset_trans' HAP (right_subset_aggregate image_subset Hpast)
+  have HEB₀ : Γ ≤ Earlier ⊆ᴮ B₀ := subset_trans' HEB (left_subset_aggregate image_subset Hpast)
+  have HAP₀ : Γ ≤ Active ⊆ᴮ P₀ := subset_trans' HAP (right_subset_aggregate image_subset Hpast)
   have HEcount : Γ ≤ Earlier ∈ᴮ countableSubsets B₀ :=
     mem_countableSubsets_iff.mpr ⟨HEB₀, (mem_countableSubsets_iff.mp HEarlier).2⟩
   have HAcount : Γ ≤ Active ∈ᴮ countableSubsets P₀ :=
@@ -285,8 +276,7 @@ theorem final_pools_small {color : Bool} {R J E S F Run : bSet 𝔹} {Γ : 𝔹}
       (bv_powerset omegaTwo) F)
     (Hlaw : Γ ≤ blockSelectorLaw color R J E S F)
     (HRun : Γ ≤ is_function omegaOne (stateSpace color R) Run)
-    (Hrec : Γ ≤ imageRecLaw (stateSpace color R)
-      (fun _ T => poolUpdate color R F T) Run) :
+    (Hrec : Γ ≤ imageRecLaw (stateSpace color R) (fun _ T => poolUpdate color R F T) Run) :
     Γ ≤ injects_into (finalObjects color R Run) omegaOne ⊓
       injects_into (finalPoints color R Run) omegaOne :=
   pool_final_aggregates_small HCH HF Hlaw HRun Hrec

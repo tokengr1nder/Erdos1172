@@ -29,8 +29,7 @@ variable {𝔹 : Type u} [NontrivialCompleteBooleanAlgebra 𝔹]
 must cover the entire codomain: otherwise adjoining one fresh pair extends it. -/
 theorem maximal_range_covers_of_domain_mem {κ S f : bSet 𝔹} {Γ : 𝔹}
     (Hκ : Γ ≤ Ord κ) (Hf : Γ ≤ partialGraph κ S f)
-    (Hmax : Γ ≤ ⨅ g, _root_.imp (partialGraph κ S g)
-      (_root_.imp (f ⊆ᴮ g) (f =ᴮ g)))
+    (Hmax : Γ ≤ ⨅ g, _root_.imp (partialGraph κ S g) (_root_.imp (f ⊆ᴮ g) (f =ᴮ g)))
     (Hproper : Γ ≤ graphDomain κ S f ∈ᴮ κ) :
     Γ ≤ S ⊆ᴮ image (graphDomain κ S f) S f := by
   let A := graphDomain κ S f
@@ -60,8 +59,7 @@ theorem maximal_range_covers_of_domain_mem {κ S f : bSet 𝔹} {Γ : 𝔹}
       bv_imp_elim
   have Hpair : Δ ≤ pair A y ∈ᴮ f :=
     mem_congr bv_refl (bv_symm Heq) ErdosInjectionExtension.pair_mem_insertPair
-  exact bot_of_mem_self'
-    (mem_domain_of_is_function Hpair (HΔ.trans (Hfunc.trans inf_le_left)))
+  exact bot_of_mem_self' (mem_domain_of_is_function Hpair (HΔ.trans (Hfunc.trans inf_le_left)))
 
 theorem injection_back_of_range_covers {A S f : bSet 𝔹} {Γ : 𝔹}
     (Hf : Γ ≤ is_injective_function A S f)
@@ -69,8 +67,7 @@ theorem injection_back_of_range_covers {A S f : bSet 𝔹} {Γ : 𝔹}
   have Hinv : Γ ≤ injection_into (image A S f) A :=
     le_iSup_of_le (injective_function_inverse Hf)
       (injective_function_inverse_is_injective_function (H_inj := Hf))
-  exact injects_into_trans (injects_into_of_subset Hcover)
-    (injects_into_of_injection_into Hinv)
+  exact injects_into_trans (injects_into_of_subset Hcover) (injects_into_of_injection_into Hinv)
 
 /-- Every internal set either contains an injection of the prescribed
 ordinal or injects into one of its strict predecessors. -/
@@ -91,15 +88,13 @@ theorem ordinal_cardinal_dichotomy {κ S : bSet 𝔹} {Γ : 𝔹}
   have HA : Δ ≤ Ord A := partialGraph_domain_Ord (inf_le_left.trans Hκ) Hf
   have Hfunc : Δ ≤ is_injective_function A S f := partialGraph_function Hf
   have Hcase : Δ ≤ A =ᴮ κ ⊔ A ∈ᴮ κ :=
-    ErdosInitialSegments.eq_or_mem_of_ordinal_subset HA (inf_le_left.trans Hκ)
-      graphDomain_subset
+    ErdosInitialSegments.eq_or_mem_of_ordinal_subset HA (inf_le_left.trans Hκ) graphDomain_subset
   apply (le_inf (le_refl Δ) Hcase).trans
   rw [inf_sup_left]
   apply sup_le
   · apply le_sup_of_le_left
     have Hinj : Δ ⊓ A =ᴮ κ ≤ injects_into A S :=
-      injects_into_of_injection_into
-        (le_iSup_of_le f (inf_le_left.trans Hfunc))
+      injects_into_of_injection_into (le_iSup_of_le f (inf_le_left.trans Hfunc))
     exact bv_rw'' (ϕ := fun X => injects_into X S) inf_le_right Hinj
       B_ext_injects_into_left
   · apply le_sup_of_le_right
@@ -113,29 +108,24 @@ theorem ordinal_cardinal_dichotomy {κ S : bSet 𝔹} {Γ : 𝔹}
 /-- The first Hartogs name gives the countable versus omega-one alternative. -/
 theorem omegaOne_cardinal_dichotomy {S : bSet 𝔹} {Γ : 𝔹} :
     Γ ≤ injects_into S bSet.omega ⊔ injects_into ErdosOmegaTwo.omegaOne S := by
-  apply (ordinal_cardinal_dichotomy (S := S)
-    (ErdosOmegaTwo.omegaOne_Ord (Γ := Γ))).trans
+  apply (ordinal_cardinal_dichotomy (S := S) (ErdosOmegaTwo.omegaOne_Ord (Γ := Γ))).trans
   apply sup_le
   · exact le_sup_right
   · apply iSup_le
     intro A
     apply le_sup_of_le_left
-    exact injects_into_trans inf_le_right
-      (ErdosOmegaTwo.omegaOne_member_injects inf_le_left)
+    exact injects_into_trans inf_le_right (ErdosOmegaTwo.omegaOne_member_injects inf_le_left)
 
 /-- The actual Hartogs omega-two name compares with every internal set:
 the set is at most omega-one sized, or contains a full omega-two injection. -/
 theorem omegaTwo_cardinal_dichotomy {S : bSet 𝔹} {Γ : 𝔹} :
-    Γ ≤ injects_into S ErdosOmegaTwo.omegaOne ⊔
-      injects_into ErdosOmegaTwo.omegaTwo S := by
-  apply (ordinal_cardinal_dichotomy (S := S)
-    (ErdosOmegaTwo.omegaTwo_Ord (Γ := Γ))).trans
+    Γ ≤ injects_into S ErdosOmegaTwo.omegaOne ⊔ injects_into ErdosOmegaTwo.omegaTwo S := by
+  apply (ordinal_cardinal_dichotomy (S := S) (ErdosOmegaTwo.omegaTwo_Ord (Γ := Γ))).trans
   apply sup_le
   · exact le_sup_right
   · apply iSup_le
     intro A
     apply le_sup_of_le_left
-    exact injects_into_trans inf_le_right
-      (ErdosOmegaTwo.omegaTwo_member_injects inf_le_left)
+    exact injects_into_trans inf_le_right (ErdosOmegaTwo.omegaTwo_member_injects inf_le_left)
 
 end bSet.ErdosPartialInjection

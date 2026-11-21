@@ -25,8 +25,7 @@ namespace Erdos1172BooleanUltrapower
 
 variable {I B : Type u} [NontrivialCompleteBooleanAlgebra B] (U : Ultrafilter I)
 
-theorem value_imp (f g : I → B) :
-    value U (fun i => f i ⟹ g i) = (value U f ⟹ value U g) := by
+theorem value_imp (f g : I → B) : value U (fun i => f i ⟹ g i) = (value U f ⟹ value U g) := by
   unfold imp
   rw [value_sup, value_compl]
 

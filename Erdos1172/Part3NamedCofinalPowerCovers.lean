@@ -107,7 +107,6 @@ theorem exists_namedCofinalCovers (n : ℕ) :
       obtain ⟨f, hf⟩ := Erdos1172Part3CoverProfileTools.decode_surjective p
       exact ⟨f, by simpa only [family, hf] using hp⟩
     · intro P instP hclosed U E hordered hcofinal hcoverage hmem
-      exact exists_named_cover_of_lower data L seed U E hclosed
-        hordered hcofinal hcoverage hmem
+      exact exists_named_cover_of_lower data L seed U E hclosed hordered hcofinal hcoverage hmem
 
 end Erdos1172Part3NamedCofinalPowerCovers

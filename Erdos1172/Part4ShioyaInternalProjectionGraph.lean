@@ -23,8 +23,7 @@ local notation "N" => bSet B
 abbrev inc (F x y : N) : B := pair x y ∈ᴮ F
 
 /-- A subguard formulation of Boolean implication. -/
-theorem projection_imp {Γ h k : B} :
-    Γ ≤ h ⟹ k ↔ ∀ Δ ≤ Γ, Δ ≤ h → Δ ≤ k := by
+theorem projection_imp {Γ h k : B} : Γ ≤ h ⟹ k ↔ ∀ Δ ≤ Γ, Δ ≤ h → Δ ≤ k := by
   rw [← deduction]
   exact ⟨fun H _ a b => (le_inf a b).trans H,fun H => H _ inf_le_left inf_le_right⟩
 

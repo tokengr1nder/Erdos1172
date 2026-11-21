@@ -70,8 +70,7 @@ theorem isClub_diagonalInter_ord
     obtain ⟨x, hxd, hax⟩ := hex
     let tail : Set V := d ∩ Set.Ioi a
     have htail_sub : tail ⊆ C a := fun y hy ↦ hd hy.1 a hy.2
-    have htail_lub : IsLUB tail top :=
-      ⟨fun y hy ↦ htop.1 hy.1, fun b hb ↦ htop.2 fun y hy ↦
+    have htail_lub : IsLUB tail top := ⟨fun y hy ↦ htop.1 hy.1, fun b hb ↦ htop.2 fun y hy ↦
         if hay : a < y then hb ⟨hy, hay⟩
         else (le_of_not_gt hay).trans (hax.le.trans (hb ⟨hxd, hax⟩))⟩
     exact (hC a).isLUB_mem htail_sub ⟨x, hxd, hax⟩ htail_lub
@@ -85,8 +84,7 @@ theorem isClub_diagonalInter_ord
         simpa [V, Ordinal.cof_toType, hk.cof_ord] using Order.cof_le hseq
       exact huncountable.not_ge (hle.trans (by simpa using Cardinal.mk_range_le_lift (f := seq)))
     let limit : V := sSup (Set.range seq)
-    have limit_lub : IsLUB (Set.range seq) limit :=
-      isLUB_csSup (Set.range_nonempty seq) seq_bdd
+    have limit_lub : IsLUB (Set.range seq) limit := isLUB_csSup (Set.range_nonempty seq) seq_bdd
     refine ⟨limit, fun a ha ↦ ?_, limit_lub.1 ⟨0, rfl⟩⟩
     have hex : ∃ n, a < seq n := by
       by_contra! h

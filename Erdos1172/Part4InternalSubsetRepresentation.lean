@@ -41,8 +41,7 @@ lemma eq_membership_indicator_of_subset {x v : bSet 𝔹} {Γ : 𝔹}
     rw [← deduction]
     rw [mem_unfold (v := set_of_indicator (u := v) (fun i => v.func i ∈ᴮ x))]
     have hmem_v : Γ ⊓ z ∈ᴮ x ≤ z ∈ᴮ v := by
-      have hspec : Γ ≤ z ∈ᴮ x ⟹ z ∈ᴮ v :=
-        le_trans H (by rw [subset_unfold']; exact iInf_le _ z)
+      have hspec : Γ ≤ z ∈ᴮ x ⟹ z ∈ᴮ v := le_trans H (by rw [subset_unfold']; exact iInf_le _ z)
       exact le_trans (le_inf (le_trans inf_le_left hspec) inf_le_right) bv_imp_elim
     calc
       Γ ⊓ z ∈ᴮ x ≤ (Γ ⊓ z ∈ᴮ x) ⊓ (z ∈ᴮ v) := le_inf le_rfl hmem_v
@@ -68,8 +67,7 @@ lemma eq_membership_indicator_of_subset {x v : bSet 𝔹} {Γ : 𝔹}
     apply iSup_le
     intro i
     calc
-      Γ ⊓ (v.func i ∈ᴮ x ⊓ z =ᴮ v.func i) ≤
-          v.func i ∈ᴮ x ⊓ z =ᴮ v.func i := inf_le_right
+      Γ ⊓ (v.func i ∈ᴮ x ⊓ z =ᴮ v.func i) ≤ v.func i ∈ᴮ x ⊓ z =ᴮ v.func i := inf_le_right
       _ ≤ v.func i =ᴮ z ⊓ v.func i ∈ᴮ x :=
         le_inf (inf_le_right.trans (le_of_eq bv_eq_symm)) inf_le_left
       _ ≤ z ∈ᴮ x := subst_congr_mem_left

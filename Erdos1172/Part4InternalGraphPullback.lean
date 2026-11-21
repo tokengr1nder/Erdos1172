@@ -53,8 +53,7 @@ def pullbackRelation (κ R e : bSet 𝔹) : bSet 𝔹 :=
   relationGraph κ κ (pullbackEdge R e)
 
 theorem mem_pullbackRelation {κ R e i j : bSet 𝔹} {Γ : 𝔹} :
-    Γ ≤ pair i j ∈ᴮ pullbackRelation κ R e ↔
-      Γ ≤ i ∈ᴮ κ ∧ Γ ≤ j ∈ᴮ κ ∧ Γ ≤ pullbackEdge R e i j :=
+    Γ ≤ pair i j ∈ᴮ pullbackRelation κ R e ↔ Γ ≤ i ∈ᴮ κ ∧ Γ ≤ j ∈ᴮ κ ∧ Γ ≤ pullbackEdge R e i j :=
   mem_relationGraph_iff (pullbackEdge_ext_left R e) (pullbackEdge_ext_right R e)
 
 /-- Functionality identifies all possible internal output witnesses. -/
@@ -66,8 +65,7 @@ theorem mem_pullbackRelation_iff {κ R e i j x y : bSet 𝔹} {Γ : 𝔹}
   · intro H
     have Hedges := (mem_pullbackRelation.mp H).2.2
     apply (le_inf le_rfl Hedges).trans
-    change Γ ⊓ (⨆ x', ⨆ y',
-      (pair i x' ∈ᴮ e ⊓ pair j y' ∈ᴮ e) ⊓ pair x' y' ∈ᴮ R) ≤ _
+    change Γ ⊓ (⨆ x', ⨆ y', (pair i x' ∈ᴮ e ⊓ pair j y' ∈ᴮ e) ⊓ pair x' y' ∈ᴮ R) ≤ _
     rw [inf_iSup_eq]
     apply iSup_le
     intro x'
@@ -100,8 +98,7 @@ theorem orientedColor_pullback_iff (color : Bool)
   cases color with
   | true => exact mem_pullbackRelation_iff Hfunc Hi Hj Hix Hjy
   | false =>
-      change Γ ≤ (pair i j ∈ᴮ pullbackRelation κ R e)ᶜ ↔
-        Γ ≤ (pair x y ∈ᴮ R)ᶜ
+      change Γ ≤ (pair i j ∈ᴮ pullbackRelation κ R e)ᶜ ↔ Γ ≤ (pair x y ∈ᴮ R)ᶜ
       constructor
       · intro H
         rw [← imp_bot, ← deduction]
@@ -138,8 +135,7 @@ theorem increasingOn_mem_iff {κ e i j x y : bSet 𝔹} {Γ : 𝔹}
       · have Heq : Γ ⊓ i =ᴮ j ≤ x =ᴮ y := eq_of_is_func_of_eq
           (inf_le_left.trans Hfunc) inf_le_right
           (inf_le_left.trans Hix) (inf_le_left.trans Hjy)
-        exact (bot_of_mem_self' (mem_congr Heq bv_refl
-          (inf_le_left.trans Hxy))).trans bot_le
+        exact (bot_of_mem_self' (mem_congr Heq bv_refl (inf_le_left.trans Hxy))).trans bot_le
       · exact inf_le_right
     · have Hyx : Γ ⊓ j ∈ᴮ i ≤ y ∈ᴮ x := increasingOn_apply
         (inf_le_left.trans Hinc) (inf_le_left.trans Hj) (inf_le_left.trans Hi)

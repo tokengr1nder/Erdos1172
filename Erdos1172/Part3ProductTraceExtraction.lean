@@ -70,8 +70,7 @@ theorem exists_product_subsequence_data (T : TraceScheme I G) (hT : Extracts T)
       (insert i (Prod.fst '' selected)) ((hcount.image Prod.fst).insert i)
     obtain ⟨s, hsp, oldRow, hrow, hs⟩ := exists_positive_row
       (T.forOrder P) core q U hq p.val p.property bound
-    obtain ⟨t, hts, inner, hmember, htransfer⟩ :=
-      hT hclosed (rowCore core oldRow) s U (hs s le_rfl)
+    obtain ⟨t, hts, inner, hmember, htransfer⟩ := hT hclosed (rowCore core oldRow) s U (hs s le_rfl)
     obtain ⟨global, hglobal, _⟩ :=
       Erdos1172Part3CliqueConeExtension.exists_global_clique_from_cone hclosed t inner hI
     let N : RowLabel P I G := (oldRow, global)

@@ -55,8 +55,7 @@ theorem union_countable {T : bSet 𝔹} {Γ : 𝔹}
     intro A
     rw [← deduction]
     have Hcount : Γ ⊓ A ∈ᴮ T ≤ injects_into A bSet.omega :=
-      (le_inf (inf_le_left.trans (Hmembers.trans (iInf_le _ A))) inf_le_right).trans
-        bv_imp_elim
+      (le_inf (inf_le_left.trans (Hmembers.trans (iInf_le _ A))) inf_le_right).trans bv_imp_elim
     have Hsub : Γ ⊓ A ∈ᴮ T ≤ fiber (bv_union T) f A ⊆ᴮ A :=
       union_selector_fiber_subset (inf_le_left.trans (Hf.trans inf_le_right))
     exact injects_into_trans (injects_into_of_subset Hsub) Hcount
@@ -74,8 +73,7 @@ def countableValues (Q F : bSet 𝔹) : 𝔹 :=
 theorem countableValues_apply {Q F q A : bSet 𝔹} {Γ : 𝔹}
     (H : Γ ≤ countableValues Q F) (Hq : Γ ≤ q ∈ᴮ Q)
     (HA : Γ ≤ pair q A ∈ᴮ F) : Γ ≤ injects_into A bSet.omega :=
-  (le_inf (H.trans ((iInf_le _ q).trans (iInf_le _ A))) (le_inf Hq HA)).trans
-    bv_imp_elim
+  (le_inf (H.trans ((iInf_le _ q).trans (iInf_le _ A))) (le_inf Hq HA)).trans bv_imp_elim
 
 /-- Every member of the actual bounded image inherits countability.
 Functionality is not needed for this value-law transfer. -/
@@ -88,8 +86,7 @@ theorem countableValues_image {Q K F : bSet 𝔹} {Γ : 𝔹}
   obtain ⟨q, Hq⟩ := exists_convert ((mem_image_iff.mp
     (show Γ ⊓ A ∈ᴮ image Q K F ≤ A ∈ᴮ image Q K F from inf_le_right)).2)
     (B_ext_inf B_ext_mem_left B_ext_pair_mem_left)
-  exact countableValues_apply (inf_le_left.trans H)
-    (Hq.trans inf_le_left) (Hq.trans inf_le_right)
+  exact countableValues_apply (inf_le_left.trans H) (Hq.trans inf_le_left) (Hq.trans inf_le_right)
 
 /-- Union of a countable internal indexed family of countable values.
 Weak total functionality suffices, so a full history graph may be used

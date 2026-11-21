@@ -61,8 +61,7 @@ def stationaryEndpoints : bSet 𝔹 :=
   comprehend countablyBounded omegaTwo
 
 theorem mem_stationaryEndpoints_iff {L : bSet 𝔹} {Γ : 𝔹} :
-    Γ ≤ L ∈ᴮ stationaryEndpoints ↔
-      Γ ≤ L ∈ᴮ omegaTwo ∧ Γ ≤ countablyBounded L :=
+    Γ ≤ L ∈ᴮ stationaryEndpoints ↔ Γ ≤ L ∈ᴮ omegaTwo ∧ Γ ≤ countablyBounded L :=
   ErdosRelationGraph.mem_comprehend_and countablyBounded_ext
 
 theorem stationaryEndpoints_subset {Γ : 𝔹} :

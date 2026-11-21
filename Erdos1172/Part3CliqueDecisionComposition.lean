@@ -58,8 +58,7 @@ def compose (E : FunctionDecisions P J I) (core : CliqueDecisions P I X G)
 theorem compose_decides_iff (E : FunctionDecisions P J I)
     (core : CliqueDecisions P I X G) (hordered : OrderedDecisions E)
     (p : P) (j : J) (x : X) :
-    (compose E core hordered).decides p j x ↔
-      ∃ i, E.decides p j i ∧ core.decides p i x := Iff.rfl
+    (compose E core hordered).decides p j x ↔ ∃ i, E.decides p j i ∧ core.decides p i x := Iff.rfl
 
 /-- Generic cone restriction. Existing iterated-Hechler base lifting
 is supplied by `Erdos1172Part3IteratedHechlerPreservation.liftClique`. -/

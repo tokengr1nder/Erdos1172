@@ -77,8 +77,7 @@ theorem relationGraph_domain_congr (B : bSet 𝔹)
 theorem blockValue_congr_graph (ν : bSet 𝔹) : B_congr (fun Blocks => blockValue Blocks ν) :=
   graphValue_congr_graph _ _
 
-theorem rowValue_congr_blocks (E ν : bSet 𝔹) :
-    B_congr (fun Blocks => rowValue E Blocks ν) := by
+theorem rowValue_congr_blocks (E ν : bSet 𝔹) : B_congr (fun Blocks => rowValue E Blocks ν) := by
   intro Blocks Other Γ H
   exact graphValue_congr_input _ _ (blockValue_congr_graph ν H)
 
@@ -94,8 +93,7 @@ theorem currentPoint_congr_indices (E Blocks ν : bSet 𝔹) :
 
 theorem successfulRows_congr_stage (color : Bool) (R Blocks : bSet 𝔹) :
     B_congr (fun ξ => successfulRows color R ξ Blocks) :=
-  B_congr_comprehend (H_congr :=
-    B_ext_term _ _ B_ext_mem_left (blockValue_congr Blocks))
+  B_congr_comprehend (H_congr := B_ext_term _ _ B_ext_mem_left (blockValue_congr Blocks))
 
 theorem successfulRows_congr_blocks (color : Bool) (R ξ : bSet 𝔹) :
     B_congr (successfulRows color R ξ) :=

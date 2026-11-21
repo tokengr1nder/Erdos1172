@@ -54,8 +54,7 @@ theorem exists_stationary_clique_from_ordered_losses
     (hcard : #V ≤ ℵ_ 1) (htype : typeLT V = (ω_ 1 : Ordinal.{0}) ^ (ω + 1))
     (future : RegularName P W2) (hs : IsStationary (possible future.holds p0.base))
     (hafter : ∀ p a, future.holds p a → ∀ i x, core.decides p i x → x < a)
-    (hloss : ∀ p a, future.holds p a →
-      (trace core).holds p (ground {x : W2 | H.Adj x a})) :
+    (hloss : ∀ p a, future.holds p a → (trace core).holds p (ground {x : W2 | H.Adj x a})) :
     ∃ p : Condition P, p ≤ p0 ∧
       ∃ sys : StationaryCliqueDecisions (Set.Iic p) V G,
         sys.start = (⟨p, stronger_refl (P := P) p⟩ : Set.Iic p) ∧

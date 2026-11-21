@@ -46,8 +46,7 @@ theorem pullback_lift_iff (r : CompleteRestriction P Q)
     (full : FunctionDecisions P I X) (earlier : FunctionDecisions Q I X)
     (hdec : ∀ p i x, full.decides p i x ↔ earlier.decides (r.restrict p) i x)
     (p : P) (U : RegularName Q X) (i : I) :
-    (pullback full (r.liftRegular U)).holds p i ↔
-      (pullback earlier U).holds (r.restrict p) i := by
+    (pullback full (r.liftRegular U)).holds p i ↔ (pullback earlier U).holds (r.restrict p) i := by
   constructor
   · intro hp q hqp x hx
     obtain ⟨s, hsp, hs⟩ := r.lift p q hqp
@@ -76,8 +75,7 @@ theorem pullback_eq_of_refines (F N : FunctionDecisions P I X)
     apply U.of_dense q x
     intro r hrq
     obtain ⟨s, hsr, y, hy⟩ := N.dense r i
-    have hxy : x = y :=
-      F.unique (F.persistent (hsr.trans hrq) hx) (href s i y hy)
+    have hxy : x = y := F.unique (F.persistent (hsr.trans hrq) hx) (href s i y hy)
     subst y
     exact ⟨s, hsr, hp s ((hsr.trans hrq).trans hqp) x hy⟩
   · intro hp q hqp x hx
@@ -127,8 +125,7 @@ theorem hasOrderedEmbeddingBelow_onCone_iff (q : P) (U : RegularName P X)
       exact hmem (flattenCone p s) i x hx
 
 theorem smallName_onCone_iff (q : P) (U : RegularName P X) (p : Set.Iic q) :
-    (smallName (I := I)).holds p (onCone q U) ↔
-      (smallName (I := I)).holds p.val U := by
+    (smallName (I := I)).holds p (onCone q U) ↔ (smallName (I := I)).holds p.val U := by
   constructor
   · intro hp r hrp hE
     let s : Set.Iic q := ⟨r, hrp.trans p.property⟩
@@ -152,8 +149,7 @@ theorem pullback_onCone_eq_of_refines (q : P)
         pullback (onConeDecisions (cliqueFunction global) q) (onCone q U) :=
       (pullback_eq_of_refines (cliqueFunction sub)
         (onConeDecisions (cliqueFunction global) q) href (onCone q U)).symm
-    _ = onCone q (pullback (cliqueFunction global) U) :=
-      pullback_onCone q (cliqueFunction global) U
+    _ = onCone q (pullback (cliqueFunction global) U) := pullback_onCone q (cliqueFunction global) U
 
 /-- Normalization or globalization with one-way refinement preserves
 the entire ordered trace exactly on the selected cone. -/
@@ -184,8 +180,7 @@ theorem trace_lift_iff (r : CompleteRestriction P Q)
     (hclosedP : CountablyClosed P) (hclosedQ : CountablyClosed Q)
     (hcard : #I ≤ ℵ_ 1) (htype : typeLT I = (ω_ 1 : Ordinal.{0}) ^ (ω + 1))
     (p : P) (U : RegularName Q W2) :
-    (trace full).holds p (r.liftRegular U) ↔
-      (trace earlier).holds (r.restrict p) U := by
+    (trace full).holds p (r.liftRegular U) ↔ (trace earlier).holds (r.restrict p) U := by
   change (smallName (I := I)).holds p (pullback (cliqueFunction full) (r.liftRegular U)) ↔
     (smallName (I := I)).holds (r.restrict p) (pullback (cliqueFunction earlier) U)
   rw [pullback_lift r (cliqueFunction full) (cliqueFunction earlier) hdec U]

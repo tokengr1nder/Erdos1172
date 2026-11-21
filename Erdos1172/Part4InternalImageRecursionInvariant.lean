@@ -58,8 +58,7 @@ def badStages (θ Run : bSet 𝔹) (Good : bSet 𝔹 → 𝔹) : bSet 𝔹 :=
   comprehend (fun i => ⨆ y, pair i y ∈ᴮ Run ⊓ (Good y)ᶜ) θ
 
 private theorem mem_badStages_iff {θ Run i : bSet 𝔹} {Good : bSet 𝔹 → 𝔹} {Γ : 𝔹} :
-    Γ ≤ i ∈ᴮ badStages θ Run Good ↔
-      Γ ≤ i ∈ᴮ θ ∧ Γ ≤ ⨆ y, pair i y ∈ᴮ Run ⊓ (Good y)ᶜ :=
+    Γ ≤ i ∈ᴮ badStages θ Run Good ↔ Γ ≤ i ∈ᴮ θ ∧ Γ ≤ ⨆ y, pair i y ∈ᴮ Run ⊓ (Good y)ᶜ :=
   mem_comprehend_and (B_ext_iSup (h := fun _ => B_ext_inf B_ext_pair_mem_left B_ext_const))
 
 private theorem badStages_subset {θ Run : bSet 𝔹} {Good : bSet 𝔹 → 𝔹} {Γ : 𝔹} :
@@ -79,8 +78,7 @@ private theorem least_bad_prefix_allGood {θ V Run j : bSet 𝔹}
   obtain ⟨k, Hk⟩ := exists_convert ((mem_image_iff.mp
     (show Δ ≤ y ∈ᴮ image j V Run from inf_le_left.trans inf_le_right)).2)
     (B_ext_inf B_ext_mem_left B_ext_pair_mem_left)
-  have Hkθ : Δ ≤ k ∈ᴮ θ :=
-    mem_of_mem_Ord (Hk.trans inf_le_left) (HΔ.trans Hjθ) (HΔ.trans Hθ)
+  have Hkθ : Δ ≤ k ∈ᴮ θ := mem_of_mem_Ord (Hk.trans inf_le_left) (HΔ.trans Hjθ) (HΔ.trans Hθ)
   have Hkbad : Δ ≤ k ∈ᴮ badStages θ Run Good :=
     mem_badStages_iff.mpr ⟨Hkθ, le_iSup_of_le y (le_inf (Hk.trans inf_le_right) inf_le_right)⟩
   have Hcases : Δ ≤ j =ᴮ k ⊔ j ∈ᴮ k := leastIn_apply (HΔ.trans Hleast) Hkbad
@@ -103,8 +101,7 @@ private theorem bot_of_bad_value {θ V Run i y : bSet 𝔹}
     nonempty_of_exists_mem _ (le_iSup_of_le i Hibad)
   obtain ⟨j, Hj⟩ := exists_least_of_nonempty Hθ badStages_subset Hnonempty
   have Hjbad := mem_badStages_iff.mp (leastIn_mem Hj)
-  obtain ⟨z, Hz⟩ := exists_convert Hjbad.2
-    (B_ext_inf B_ext_pair_mem_right (B_ext_neg (h := HGood)))
+  obtain ⟨z, Hz⟩ := exists_convert Hjbad.2 (B_ext_inf B_ext_pair_mem_right (B_ext_neg (h := HGood)))
   have Hnext : Γ ≤ Good (Φ j (image j V Run)) :=
     imageRecInvariantStep_apply Hstep Hjbad.1 (least_bad_prefix_allGood Hθ Hj)
   have Hgoodz : Γ ≤ Good z :=

@@ -39,8 +39,7 @@ theorem omegaOne_injects_row_image {J C h : bSet 𝔹} {Γ : 𝔹}
     (Hh : Γ ≤ is_injective_function C omegaTwo h) :
     Γ ≤ injects_into omegaOne (image C omegaTwo h) :=
   injects_into_trans (omegaOne_injects_positive Habsorb HC)
-    (injects_into_of_injection_into
-      (le_iSup_of_le h (factor_image_is_injective_function Hh)))
+    (injects_into_of_injection_into (le_iSup_of_le h (factor_image_is_injective_function Hh)))
 
 /-- Restrict an actual injective row to positive indices and increasingly
 enumerate its image. No increasingness of the given row, CH, normality,

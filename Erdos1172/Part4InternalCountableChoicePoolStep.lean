@@ -111,8 +111,7 @@ theorem selectedObject_subset_selectedPoints {κ B P F A : bSet 𝔹} {Γ : 𝔹
   apply le_iInf
   intro x
   rw [← deduction]
-  exact mem_bv_union_iff.mpr
-    (le_iSup_of_le A (le_inf (inf_le_left.trans HA) inf_le_right))
+  exact mem_bv_union_iff.mpr (le_iSup_of_le A (le_inf (inf_le_left.trans HA) inf_le_right))
 
 theorem selected_value_subset_selectedPoints {κ B P F T U A : bSet 𝔹} {Γ : 𝔹}
     (HF : Γ ≤ is_func' (choicePoolDomain B P) (bv_powerset κ) F)

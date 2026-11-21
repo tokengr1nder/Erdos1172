@@ -101,8 +101,7 @@ theorem fusion_full_block_mem_pool {ν b : bSet 𝔹}
   have Hb := fullBlocks_blockObject HE HElaw HF HFlaw HRun Hlaw Hsuccess Hνb
   have Hvalues := fusion_prefix_poolValues (ξ := omegaOne) HE HElaw HF Hhull HRun Hlaw
   have Hcases : Γ ≤ b =ᴮ (∅ : bSet 𝔹) ⊔ b ∈ᴮ B :=
-    (le_inf (Hvalues.trans ((iInf_le _ ν).trans (iInf_le _ b))) (le_inf Hν Hνb)).trans
-      bv_imp_elim
+    (le_inf (Hvalues.trans ((iInf_le _ ν).trans (iInf_le _ b))) (le_inf Hν Hνb)).trans bv_imp_elim
   apply (le_inf le_rfl Hcases).trans
   rw [inf_sup_left]
   exact sup_le
@@ -136,8 +135,7 @@ theorem birthGreedyLaw_of_fullLeastLaw {ν b : bSet 𝔹}
   apply le_iInf
   intro v
   rw [← deduction]
-  let Δ := Γ ⊓ ((ν ∈ᴮ ξ ⊓ ξ ∈ᴮ omegaOne) ⊓
-    pair ξ v ∈ᴮ rowHistory omegaOne (fullCoordinates Run) ν)
+  let Δ := Γ ⊓ ((ν ∈ᴮ ξ ⊓ ξ ∈ᴮ omegaOne) ⊓ pair ξ v ∈ᴮ rowHistory omegaOne (fullCoordinates Run) ν)
   have HΔ : Δ ≤ Γ := inf_le_left
   have Hξ : Δ ≤ ξ ∈ᴮ omegaOne := inf_le_right.trans (inf_le_left.trans inf_le_right)
   have Hνξ : Δ ≤ ν ∈ᴮ ξ := inf_le_right.trans (inf_le_left.trans inf_le_left)
@@ -150,8 +148,7 @@ theorem birthGreedyLaw_of_fullLeastLaw {ν b : bSet 𝔹}
       ((iInf_le _ ξ).trans ((iInf_le _ b).trans (iInf_le _ v))))))
       (le_inf (le_inf Hνξ Hξ) (le_inf (HΔ.trans Hνb) Hcoord))).trans bv_imp_elim
   exact bv_rw' (ϕ := fun C => leastIn C v)
-    (birth_rowCandidates_eq_fusion (HΔ.trans HX)
-      (subset_of_mem_Ord Hξ omegaOne_Ord) (HΔ.trans Hν))
+    (birth_rowCandidates_eq_fusion (HΔ.trans HX) (subset_of_mem_Ord Hξ omegaOne_Ord) (HΔ.trans Hν))
     (h_congr := leastIn_ext_set v) (H_new := Hmin)
 
 include HJ Habsorb Hclosure Hnormal HE HElaw HF HFlaw Hhull Hseeds Htop HRun Hlaw Hsuccess in

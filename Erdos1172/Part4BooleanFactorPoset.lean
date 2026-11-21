@@ -53,8 +53,7 @@ theorem lowerProjection_le_iff (e : CompleteLatticeHom B C) {c : C} {b : B} :
   ⟨fun h => (le_image_lowerProjection e c).trans (OrderHomClass.mono e h),
     lowerProjection_le e⟩
 
-theorem lowerProjection_mono (e : CompleteLatticeHom B C) :
-    Monotone (lowerProjection e) := by
+theorem lowerProjection_mono (e : CompleteLatticeHom B C) : Monotone (lowerProjection e) := by
   intro c d hcd
   exact lowerProjection_le e (hcd.trans (le_image_lowerProjection e d))
 

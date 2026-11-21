@@ -86,8 +86,7 @@ theorem unboundedIn_mono {κ C D : bSet 𝔹} {Γ : 𝔹}
       (Hb.trans (inf_le_left.trans inf_le_left)))
       (Hb.trans (inf_le_left.trans inf_le_right))) (Hb.trans inf_le_right))
 
-theorem club_subset {κ C : bSet 𝔹} {Γ : 𝔹}
-    (H : Γ ≤ club κ C) : Γ ≤ C ⊆ᴮ κ := H.trans inf_le_left
+theorem club_subset {κ C : bSet 𝔹} {Γ : 𝔹} (H : Γ ≤ club κ C) : Γ ≤ C ⊆ᴮ κ := H.trans inf_le_left
 
 theorem club_unbounded {κ C : bSet 𝔹} {Γ : 𝔹}
     (H : Γ ≤ club κ C) : Γ ≤ unboundedIn κ C :=
@@ -110,8 +109,7 @@ theorem indexedIntersection_subset_value {κ T F i A : bSet 𝔹} {Γ : 𝔹}
   intro a
   rw [← deduction]
   have Ha := mem_indexedIntersection_iff.mp
-    (show Γ ⊓ a ∈ᴮ indexedIntersection κ F T ≤
-      a ∈ᴮ indexedIntersection κ F T from inf_le_right)
+    (show Γ ⊓ a ∈ᴮ indexedIntersection κ F T ≤ a ∈ᴮ indexedIntersection κ F T from inf_le_right)
   exact (le_inf (Ha.2.trans ((iInf_le _ i).trans (iInf_le _ A)))
     (le_inf (inf_le_left.trans Hi) (inf_le_left.trans Hpair))).trans bv_imp_elim
 
@@ -119,20 +117,16 @@ theorem indexedIntersection_subset_value {κ T F i A : bSet 𝔹} {Γ : 𝔹}
 closed. The family may be empty, and functionality is not needed for this
 closure direction: each value occurring in the graph is constrained. -/
 theorem closedIn_indexedIntersection {κ T F : bSet 𝔹} {Γ : 𝔹}
-    (Hclosed : Γ ≤ ⨅ i, ⨅ A, _root_.imp
-      (i ∈ᴮ T ⊓ pair i A ∈ᴮ F) (closedIn κ A)) :
+    (Hclosed : Γ ≤ ⨅ i, ⨅ A, _root_.imp (i ∈ᴮ T ⊓ pair i A ∈ᴮ F) (closedIn κ A)) :
     Γ ≤ closedIn κ (indexedIntersection κ F T) := by
   apply le_iInf
   intro a
   rw [← deduction]
-  let Δ := Γ ⊓ ((a ∈ᴮ κ ⊓ (a =ᴮ (∅ : bSet 𝔹))ᶜ) ⊓
-    unboundedIn a (indexedIntersection κ F T))
+  let Δ := Γ ⊓ ((a ∈ᴮ κ ⊓ (a =ᴮ (∅ : bSet 𝔹))ᶜ) ⊓ unboundedIn a (indexedIntersection κ F T))
   have HΔ : Δ ≤ Γ := inf_le_left
   have Ha : Δ ≤ a ∈ᴮ κ := inf_le_right.trans (inf_le_left.trans inf_le_left)
-  have Hne : Δ ≤ (a =ᴮ (∅ : bSet 𝔹))ᶜ :=
-    inf_le_right.trans (inf_le_left.trans inf_le_right)
-  have HU : Δ ≤ unboundedIn a (indexedIntersection κ F T) :=
-    inf_le_right.trans inf_le_right
+  have Hne : Δ ≤ (a =ᴮ (∅ : bSet 𝔹))ᶜ := inf_le_right.trans (inf_le_left.trans inf_le_right)
+  have HU : Δ ≤ unboundedIn a (indexedIntersection κ F T) := inf_le_right.trans inf_le_right
   apply mem_indexedIntersection_iff.mpr
   refine ⟨Ha, ?_⟩
   apply le_iInf

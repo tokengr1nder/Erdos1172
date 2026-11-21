@@ -42,17 +42,14 @@ theorem homogeneousUnion_of_independent_func'
   apply le_iInf
   intro y
   rw [← deduction]
-  let Δ := Γ ⊓ (((rangeMem K f x ⊔ rangeMem L g x) ⊓
-    (rangeMem K f y ⊔ rangeMem L g y)) ⊓ x ∈ᴮ y)
+  let Δ := Γ ⊓ (((rangeMem K f x ⊔ rangeMem L g x) ⊓ (rangeMem K f y ⊔ rangeMem L g y)) ⊓ x ∈ᴮ y)
   have HΔ : Δ ≤ Γ := inf_le_left
   have Hrx : Δ ≤ rangeMem K f x ⊔ rangeMem L g x :=
     inf_le_right.trans (inf_le_left.trans inf_le_left)
   have Hry : Δ ≤ rangeMem K f y ⊔ rangeMem L g y :=
     inf_le_right.trans (inf_le_left.trans inf_le_right)
-  have HxA : Δ ≤ x ∈ᴮ A :=
-    (le_inf HΔ Hrx).trans (unionRange_le_codomain Hf Hg)
-  have HyA : Δ ≤ y ∈ᴮ A :=
-    (le_inf HΔ Hry).trans (unionRange_le_codomain Hf Hg)
+  have HxA : Δ ≤ x ∈ᴮ A := (le_inf HΔ Hrx).trans (unionRange_le_codomain Hf Hg)
+  have HyA : Δ ≤ y ∈ᴮ A := (le_inf HΔ Hry).trans (unionRange_le_codomain Hf Hg)
   exact opposite_oriented_of_not_graphColor (inf_le_right.trans inf_le_right)
     (independent_apply (HΔ.trans Hind) HxA HyA)
 

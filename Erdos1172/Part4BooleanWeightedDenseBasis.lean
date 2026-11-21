@@ -46,8 +46,7 @@ def graph (b : κ.ord.ToType → β) (X : κ.ord.ToType → bSet β) : bSet β :
 
 variable (b : κ.ord.ToType → β) (X : κ.ord.ToType → bSet β)
 
-theorem label_mem (i : κ.ord.ToType) : b i ≤ label κ i ∈ᴮ domain κ b :=
-  mem_mk' (domain κ b) i
+theorem label_mem (i : κ.ord.ToType) : b i ≤ label κ i ∈ᴮ domain κ b := mem_mk' (domain κ b) i
 
 theorem pair_mem (i : κ.ord.ToType) : b i ≤ pair (label κ i) (X i) ∈ᴮ graph κ b X :=
   functionMk_self (u := domain κ b) (F := X) (h_congr := label_congr κ X)

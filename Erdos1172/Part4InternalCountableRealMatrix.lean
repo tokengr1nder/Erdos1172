@@ -143,8 +143,7 @@ theorem real_eq_of_numeral_membership {r s : bSet 𝔹} {Γ : 𝔹}
     (Hrs : ∀ n : ℕ, Γ ⊓ (of_nat n : bSet 𝔹) ∈ᴮ r ≤ (of_nat n : bSet 𝔹) ∈ᴮ s)
     (Hsr : ∀ n : ℕ, Γ ⊓ (of_nat n : bSet 𝔹) ∈ᴮ s ≤ (of_nat n : bSet 𝔹) ∈ᴮ r) :
     Γ ≤ r =ᴮ s :=
-  subset_ext (real_subset_of_numeral_membership Hr Hrs)
-    (real_subset_of_numeral_membership Hs Hsr)
+  subset_ext (real_subset_of_numeral_membership Hr Hrs) (real_subset_of_numeral_membership Hs Hsr)
 
 theorem rowBit_of_pair {f r : bSet 𝔹} {n m : ℕ} {Γ : 𝔹}
     (Hrow : Γ ≤ pair (of_nat n) r ∈ᴮ f)

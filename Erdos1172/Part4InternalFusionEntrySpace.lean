@@ -117,8 +117,7 @@ theorem blockProjection_is_function {Γ : 𝔹} :
     rw [← deduction]
     obtain ⟨A, Z, U, HA, _, _, Hq⟩ := entrySpace_witness
       (show Γ ⊓ q ∈ᴮ entrySpace ≤ q ∈ᴮ entrySpace from inf_le_right)
-    exact le_iSup_of_le A (le_inf (mem_powerset_iff.mpr HA)
-      (le_iSup_of_le Z (le_iSup_of_le U Hq)))
+    exact le_iSup_of_le A (le_inf (mem_powerset_iff.mpr HA) (le_iSup_of_le Z (le_iSup_of_le U Hq)))
   · intro q t A B Δ _ _ _ _ _ Hq Ht Heq
     obtain ⟨Z, U, Hq⟩ := blockRel_witness Hq
     obtain ⟨W, V, Ht⟩ := blockRel_witness Ht
@@ -132,20 +131,17 @@ theorem activeProjection_is_function {Γ : 𝔹} :
     rw [← deduction]
     obtain ⟨A, Z, U, _, _, HU, Hq⟩ := entrySpace_witness
       (show Γ ⊓ q ∈ᴮ entrySpace ≤ q ∈ᴮ entrySpace from inf_le_right)
-    exact le_iSup_of_le U (le_inf (mem_powerset_iff.mpr HU)
-      (le_iSup_of_le A (le_iSup_of_le Z Hq)))
+    exact le_iSup_of_le U (le_inf (mem_powerset_iff.mpr HU) (le_iSup_of_le A (le_iSup_of_le Z Hq)))
   · intro q t U V Δ _ _ _ _ _ Hq Ht Heq
     obtain ⟨A, Z, Hq⟩ := activeRel_witness Hq
     obtain ⟨B, W, Ht⟩ := activeRel_witness Ht
-    exact eq_of_eq_pair_right' (eq_of_eq_pair_right'
-      (bv_trans (bv_symm Hq) (bv_trans Heq Ht)))
+    exact eq_of_eq_pair_right' (eq_of_eq_pair_right' (bv_trans (bv_symm Hq) (bv_trans Heq Ht)))
 
 theorem blockProjection_pair {A Z U : bSet 𝔹} {Γ : 𝔹}
     (H : Γ ≤ entry A Z U ∈ᴮ entrySpace) :
     Γ ≤ pair (entry A Z U) A ∈ᴮ blockProjection :=
   (mem_relationGraph_iff blockRel_ext_input blockRel_ext_output).mpr
-    ⟨H, mem_powerset_iff.mpr (mem_entrySpace_iff.mp H).1,
-      le_iSup_of_le Z (le_iSup_of_le U bv_refl)⟩
+    ⟨H, mem_powerset_iff.mpr (mem_entrySpace_iff.mp H).1, le_iSup_of_le Z (le_iSup_of_le U bv_refl)⟩
 
 theorem indexProjection_pair {A Z U : bSet 𝔹} {Γ : 𝔹}
     (H : Γ ≤ entry A Z U ∈ᴮ entrySpace) :
@@ -176,8 +172,7 @@ private theorem decodeRel_ext_output (π T i : bSet 𝔹) :
   B_ext_iSup (h := fun _ => B_ext_inf B_ext_const B_ext_pair_mem_right)
 
 private theorem decode_pair_iff {C π T i x : bSet 𝔹} {Γ : 𝔹} :
-    Γ ≤ pair i x ∈ᴮ decodeHistory C π T ↔
-      Γ ≤ i ∈ᴮ omegaOne ∧ Γ ≤ x ∈ᴮ C ∧ Γ ≤ decodeRel π T i x :=
+    Γ ≤ pair i x ∈ᴮ decodeHistory C π T ↔ Γ ≤ i ∈ᴮ omegaOne ∧ Γ ≤ x ∈ᴮ C ∧ Γ ≤ decodeRel π T i x :=
   mem_relationGraph_iff (decodeRel_ext_input π T) (decodeRel_ext_output π T)
 
 private theorem decode_witness {C π T i x : bSet 𝔹} {Γ : 𝔹}
@@ -225,14 +220,11 @@ private theorem decode_function {ξ C π T : bSet 𝔹} {Γ : 𝔹}
     apply le_iInf
     intro y
     rw [← deduction, ← deduction]
-    let Δ := (Γ ⊓ (pair i x ∈ᴮ decodeHistory C π T ⊓
-      pair j y ∈ᴮ decodeHistory C π T)) ⊓ i =ᴮ j
+    let Δ := (Γ ⊓ (pair i x ∈ᴮ decodeHistory C π T ⊓ pair j y ∈ᴮ decodeHistory C π T)) ⊓ i =ᴮ j
     have HΔ : Δ ≤ Γ := inf_le_left.trans inf_le_left
-    obtain ⟨q, Hq, Hqx⟩ := decode_witness
-      (show Δ ≤ pair i x ∈ᴮ decodeHistory C π T from
+    obtain ⟨q, Hq, Hqx⟩ := decode_witness (show Δ ≤ pair i x ∈ᴮ decodeHistory C π T from
         inf_le_left.trans (inf_le_right.trans inf_le_left))
-    obtain ⟨r, Hr, Hry⟩ := decode_witness
-      (show Δ ≤ pair j y ∈ᴮ decodeHistory C π T from
+    obtain ⟨r, Hr, Hry⟩ := decode_witness (show Δ ≤ pair j y ∈ᴮ decodeHistory C π T from
         inf_le_left.trans (inf_le_right.trans inf_le_right))
     exact eq_of_is_function_of_eq (HΔ.trans Hπ)
       (eq_of_is_function_of_eq (HΔ.trans HT) inf_le_right Hq Hr) Hqx Hry
@@ -357,8 +349,7 @@ private theorem coordinateRel_ext_output (T q : bSet 𝔹) :
     (h := fun _ => B_ext_inf B_ext_const (B_ext_inf B_ext_const B_ext_pair_mem_right))))
 
 private theorem coordinateRel_pair (T i ν v : bSet 𝔹) :
-    coordinateRel T (pair i ν) v =
-      ⨆ Z, pair i Z ∈ᴮ indexFamily T ⊓ pair ν v ∈ᴮ Z := by
+    coordinateRel T (pair i ν) v = ⨆ Z, pair i Z ∈ᴮ indexFamily T ⊓ pair ν v ∈ᴮ Z := by
   apply le_antisymm
   · unfold coordinateRel
     apply iSup_le
@@ -381,8 +372,7 @@ private theorem coordinateRel_pair (T i ν v : bSet 𝔹) :
 
 private theorem coordinate_pair_general {T q v : bSet 𝔹} {Γ : 𝔹} :
     Γ ≤ pair q v ∈ᴮ coordinateHistory T ↔
-      Γ ≤ q ∈ᴮ prod omegaOne omegaOne ∧ Γ ≤ v ∈ᴮ omegaOne ∧
-        Γ ≤ coordinateRel T q v :=
+      Γ ≤ q ∈ᴮ prod omegaOne omegaOne ∧ Γ ≤ v ∈ᴮ omegaOne ∧ Γ ≤ coordinateRel T q v :=
   mem_relationGraph_iff (coordinateRel_ext_input T) (coordinateRel_ext_output T)
 
 theorem coordinateHistory_pair_iff {T i ν v : bSet 𝔹} {Γ : 𝔹} :
@@ -432,8 +422,7 @@ private theorem coordinate_mono {T Q : bSet 𝔹} {Γ : 𝔹}
   rw [← deduction]
   let Δ := Γ ⊓ p ∈ᴮ coordinateHistory T
   have Hp : Δ ≤ p ∈ᴮ coordinateHistory T := inf_le_right
-  obtain ⟨q, Hq, v, Hv, Heq⟩ := mem_prod_iff₂.mp
-    (mem_of_mem_subset coordinateHistory_subset Hp)
+  obtain ⟨q, Hq, v, Hv, Heq⟩ := mem_prod_iff₂.mp (mem_of_mem_subset coordinateHistory_subset Hp)
   obtain ⟨i, Hi, ν, Hν, Hqeq⟩ := mem_prod_iff₂.mp Hq
   have Heq' : Δ ≤ p =ᴮ pair (pair i ν) v := bv_trans Heq (pair_congr Hqeq bv_refl)
   obtain ⟨Z, HZ, HvZ⟩ := coordinate_family_witness (mem_congr Heq' bv_refl Hp)
@@ -443,8 +432,7 @@ private theorem coordinate_mono {T Q : bSet 𝔹} {Γ : 𝔹}
 
 theorem coordinateHistory_congr : B_congr (coordinateHistory : bSet 𝔹 → bSet 𝔹) := by
   intro T Q Γ H
-  exact subset_ext (coordinate_mono (subset_of_eq H))
-    (coordinate_mono (subset_of_eq (bv_symm H)))
+  exact subset_ext (coordinate_mono (subset_of_eq H)) (coordinate_mono (subset_of_eq (bv_symm H)))
 
 /-- The flattened graph has the actual rectangular prefix as its support,
 not just weak totality on that prefix. -/
@@ -462,8 +450,7 @@ theorem coordinateHistory_is_function {ξ T : bSet 𝔹} {Γ : 𝔹}
     apply le_iInf
     intro w
     rw [← deduction, ← deduction]
-    let Δ := (Γ ⊓ (pair q v ∈ᴮ coordinateHistory T ⊓
-      pair r w ∈ᴮ coordinateHistory T)) ⊓ q =ᴮ r
+    let Δ := (Γ ⊓ (pair q v ∈ᴮ coordinateHistory T ⊓ pair r w ∈ᴮ coordinateHistory T)) ⊓ q =ᴮ r
     have HΔ : Δ ≤ Γ := inf_le_left.trans inf_le_left
     have Hv : Δ ≤ pair q v ∈ᴮ coordinateHistory T :=
       inf_le_left.trans (inf_le_right.trans inf_le_left)
@@ -475,8 +462,7 @@ theorem coordinateHistory_is_function {ξ T : bSet 𝔹} {Γ : 𝔹}
       (mem_congr (pair_congr Hq bv_refl) bv_refl Hv)
     obtain ⟨B, W, V, Hj, HwW⟩ := coordinateHistory_witness
       (mem_congr (pair_congr Hr bv_refl) bv_refl Hw)
-    have Hcoords : Δ ≤ pair i ν =ᴮ pair j μ :=
-      bv_trans (bv_symm Hq) (bv_trans inf_le_right Hr)
+    have Hcoords : Δ ≤ pair i ν =ᴮ pair j μ := bv_trans (bv_symm Hq) (bv_trans inf_le_right Hr)
     have HZW : Δ ≤ Z =ᴮ W := eq_of_eq_pair_left' (eq_of_eq_pair_right'
       (eq_of_is_function_of_eq (HΔ.trans HT) (eq_of_eq_pair_left' Hcoords) Hi Hj))
     exact eq_of_is_function_of_eq (rowFunctions_apply (HΔ.trans Hrows) Hi)
@@ -486,11 +472,9 @@ theorem coordinateHistory_is_function {ξ T : bSet 𝔹} {Γ : 𝔹}
     rw [← deduction]
     let Δ := Γ ⊓ q ∈ᴮ prod ξ omegaOne
     have HΔ : Δ ≤ Γ := inf_le_left
-    obtain ⟨i, Hi, ν, Hν, Hq⟩ := mem_prod_iff₂.mp
-      (show Δ ≤ q ∈ᴮ prod ξ omegaOne from inf_le_right)
+    obtain ⟨i, Hi, ν, Hν, Hq⟩ := mem_prod_iff₂.mp (show Δ ≤ q ∈ᴮ prod ξ omegaOne from inf_le_right)
     have Hex : Δ ≤ ⨆ e, e ∈ᴮ entrySpace ⊓ pair i e ∈ᴮ T :=
-      (le_inf (HΔ.trans ((is_total_of_is_function HT).trans (iInf_le _ i))) Hi).trans
-        bv_imp_elim
+      (le_inf (HΔ.trans ((is_total_of_is_function HT).trans (iInf_le _ i))) Hi).trans bv_imp_elim
     obtain ⟨e, He⟩ := exists_convert Hex (B_ext_inf B_ext_mem_left B_ext_pair_mem_right)
     obtain ⟨A, Z, U, _, _, _, Heq⟩ := entrySpace_witness (He.trans inf_le_left)
     have Hentry : Δ ≤ pair i (entry A Z U) ∈ᴮ T :=
@@ -508,8 +492,7 @@ theorem coordinateHistory_is_function {ξ T : bSet 𝔹} {Γ : 𝔹}
     rw [← deduction]
     let Δ := Γ ⊓ p ∈ᴮ coordinateHistory T
     have Hp : Δ ≤ p ∈ᴮ coordinateHistory T := inf_le_right
-    obtain ⟨q, Hq, v, Hv, Heq⟩ := mem_prod_iff₂.mp
-      (mem_of_mem_subset coordinateHistory_subset Hp)
+    obtain ⟨q, Hq, v, Hv, Heq⟩ := mem_prod_iff₂.mp (mem_of_mem_subset coordinateHistory_subset Hp)
     obtain ⟨i, _, ν, Hν, Hqeq⟩ := mem_prod_iff₂.mp Hq
     have Heq' : Δ ≤ p =ᴮ pair (pair i ν) v := bv_trans Heq (pair_congr Hqeq bv_refl)
     obtain ⟨A, Z, U, Hentry, _⟩ := coordinateHistory_witness (mem_congr Heq' bv_refl Hp)

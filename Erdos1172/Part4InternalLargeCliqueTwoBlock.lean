@@ -58,11 +58,9 @@ theorem independent_image_of_homogeneous
   rw [← deduction, ← imp_bot, ← deduction]
   let Δ := (Γ ⊓ (x ∈ᴮ image K S f ⊓ y ∈ᴮ image K S f)) ⊓ graphColor (!color) R x y
   have HΔ : Δ ≤ Γ := inf_le_left.trans inf_le_left
-  have Hx : Δ ≤ rangeMem K f x :=
-    (mem_image_iff.mp (show Δ ≤ x ∈ᴮ image K S f from
+  have Hx : Δ ≤ rangeMem K f x := (mem_image_iff.mp (show Δ ≤ x ∈ᴮ image K S f from
       inf_le_left.trans (inf_le_right.trans inf_le_left))).2
-  have Hy : Δ ≤ rangeMem K f y :=
-    (mem_image_iff.mp (show Δ ≤ y ∈ᴮ image K S f from
+  have Hy : Δ ≤ rangeMem K f y := (mem_image_iff.mp (show Δ ≤ y ∈ᴮ image K S f from
       inf_le_left.trans (inf_le_right.trans inf_le_right))).2
   have Horder : Δ ≤ x ∈ᴮ y ⊔ y ∈ᴮ x :=
     (show Δ ≤ graphColor (!color) R x y from inf_le_right).trans

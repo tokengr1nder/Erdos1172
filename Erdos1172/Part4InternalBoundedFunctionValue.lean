@@ -70,8 +70,7 @@ theorem graphValue_eq_of_pair {D V F x y : bSet 𝔹} {Γ : 𝔹}
   · apply le_iInf
     intro t
     rw [← deduction]
-    exact mem_bv_union_iff.mpr
-      (le_iSup_of_le y (le_inf (inf_le_left.trans Hyimage) inf_le_right))
+    exact mem_bv_union_iff.mpr (le_iSup_of_le y (le_inf (inf_le_left.trans Hyimage) inf_le_right))
 
 /-- Both boundedness and the original graph pair hold for the single
 proof-independent value operation, without shrinking the condition. -/

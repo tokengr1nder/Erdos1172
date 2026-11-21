@@ -83,8 +83,7 @@ theorem realize_part4Sentence_expanded :
       ⨆ α : bSet β, ⨆ δ : bSet β,
         ErdosHartogs.hartogsProperty bSet.omega α ⊓
           (ErdosHartogs.hartogsProperty α δ ⊓ ErdosPartition.partitionValue δ α bSet.omega) := by
-  simp only [part4Sentence, boolean_realize_bounded_formula_ex,
-    boolean_realize_bounded_formula_and]
+  simp only [part4Sentence, boolean_realize_bounded_formula_ex, boolean_realize_bounded_formula_and]
   apply iSup_congr
   intro α
   change bSet β at α
@@ -112,8 +111,7 @@ theorem realize_part4Sentence :
       (inf_le_right.trans inf_le_right)
   · apply le_iSup_of_le (ErdosOmegaTwo.omegaOne : bSet β)
     apply le_iSup_of_le (ErdosOmegaTwo.omegaTwo : bSet β)
-    exact le_inf ErdosOmegaTwo.omegaOne_property
-      (le_inf ErdosOmegaTwo.omegaTwo_property le_rfl)
+    exact le_inf ErdosOmegaTwo.omegaOne_property (le_inf ErdosOmegaTwo.omegaTwo_property le_rfl)
 
 theorem forces_part4Sentence_iff {Γ : β} :
     (Γ ⊩[V β] part4Sentence) ↔ Γ ≤ (ErdosPartition.part4Value : β) := by

@@ -65,8 +65,7 @@ theorem futureCommonBlockRows_colarge_apply {S L f C σ J A : bSet 𝔹} {Γ : �
     (Hdata : Γ ≤ rowNormalIdealDataOn S L σ J) (HC : Γ ≤ pair σ A ∈ᴮ C) :
     Γ ≤ colarge omegaOne J A :=
   (le_inf ((Hcommon.trans (inf_le_right.trans (inf_le_right.trans inf_le_left))).trans
-    ((iInf_le _ σ).trans ((iInf_le _ J).trans (iInf_le _ A)))) (le_inf Hdata HC)).trans
-      bv_imp_elim
+    ((iInf_le _ σ).trans ((iInf_le _ J).trans (iInf_le _ A)))) (le_inf Hdata HC)).trans bv_imp_elim
 
 theorem futureCommonBlockRows_section_apply {S L f C σ A y B : bSet 𝔹} {Γ : 𝔹}
     (Hcommon : Γ ≤ futureCommonBlockRows S L f C) (HC : Γ ≤ pair σ A ∈ᴮ C)
@@ -84,8 +83,7 @@ theorem futureCommonBlockRows_of_pullback {S L e f C : bSet 𝔹} {Γ : 𝔹}
     (HS : Γ ≤ is_func' (prod omegaOne L) (bv_powerset omegaOne) S)
     (Hrows : Γ ≤ normalRowAvailabilityOn S L)
     (Hcommon : Γ ≤ commonBlockRows (sectionPullback e S) f C) :
-    Γ ≤ futureCommonBlockRows S L
-      (is_func'_comp Hf (is_func'_of_is_function He)) C := by
+    Γ ≤ futureCommonBlockRows S L (is_func'_comp Hf (is_func'_of_is_function He)) C := by
   refine le_inf (Hcommon.trans inf_le_left) (le_inf Hrows (le_inf ?_ ?_))
   · apply le_iInf
     intro σ
@@ -111,10 +109,8 @@ theorem futureCommonBlockRows_of_pullback {S L e f C : bSet 𝔹} {Γ : 𝔹}
     intro B
     rw [← deduction]
     let Δ := Γ ⊓ ((pair σ A ∈ᴮ C ⊓
-      rangeMem omegaOne (is_func'_comp Hf (is_func'_of_is_function He)) y) ⊓
-        pair (pair σ y) B ∈ᴮ S)
-    have HC : Δ ≤ pair σ A ∈ᴮ C :=
-      inf_le_right.trans (inf_le_left.trans inf_le_left)
+      rangeMem omegaOne (is_func'_comp Hf (is_func'_of_is_function He)) y) ⊓ pair (pair σ y) B ∈ᴮ S)
+    have HC : Δ ≤ pair σ A ∈ᴮ C := inf_le_right.trans (inf_le_left.trans inf_le_left)
     have Hσ : Δ ≤ σ ∈ᴮ omegaOne :=
       mem_domain_of_is_function HC (inf_le_left.trans (Hcommon.trans inf_le_left))
     obtain ⟨t, Ht⟩ := rangeMem_comp_witness Hf (is_func'_of_is_function He)
@@ -167,8 +163,7 @@ theorem hasFutureSuccessfulBlock_of_pullback
   rw [inf_iSup_eq]
   apply iSup_le
   intro C
-  let Δ := Γ ⊓ successfulBlockData color (pullbackRelation omegaTwo R e)
-    (sectionPullback e S) f C
+  let Δ := Γ ⊓ successfulBlockData color (pullbackRelation omegaTwo R e) (sectionPullback e S) f C
   have Hdata : Δ ≤ successfulBlockData color (pullbackRelation omegaTwo R e)
       (sectionPullback e S) f C := inf_le_right
   exact le_iSup_of_le (injective_function_comp (Hdata.trans inf_le_left) (inf_le_left.trans He))
@@ -238,8 +233,7 @@ theorem successful_block_in_future_or_opposite_twoBlock
     (Hlarge : Γ ≤ injects_into omegaTwo L)
     (HS : Γ ≤ is_func' (prod omegaOne L) (bv_powerset omegaOne) S)
     (Hrows : Γ ≤ normalRowAvailabilityOn S L) :
-    Γ ≤ hasFutureSuccessfulBlock color R S L ⊔
-      hasTwoBlock (!color) R omegaOne bSet.omega L := by
+    Γ ≤ hasFutureSuccessfulBlock color R S L ⊔ hasTwoBlock (!color) R omegaOne bSet.omega L := by
   apply (le_inf le_rfl
     (successful_block_in_future_or_ordered_opposite HCH HL Hlarge HS Hrows)).trans
   rw [inf_sup_left]

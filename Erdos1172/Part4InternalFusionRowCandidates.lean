@@ -55,8 +55,7 @@ theorem activatedStages_subset {ξ ν : bSet 𝔹} {Γ : 𝔹} :
 
 theorem activatedStages_countable {ξ ν : bSet 𝔹} {Γ : 𝔹}
     (Hξ : Γ ≤ ξ ∈ᴮ omegaOne) : Γ ≤ injects_into (activatedStages ξ ν) bSet.omega :=
-  injects_into_trans (injects_into_of_subset activatedStages_subset)
-    (omegaOne_member_injects Hξ)
+  injects_into_trans (injects_into_of_subset activatedStages_subset) (omegaOne_member_injects Hξ)
 
 theorem activatedStages_congr_row (ξ : bSet 𝔹) : B_congr (activatedStages ξ) := by
   intro ν μ Γ H
@@ -66,15 +65,13 @@ theorem activatedStages_congr_row (ξ : bSet 𝔹) : B_congr (activatedStages ξ
     rw [← deduction]
     have Hj := mem_activatedStages_iff.mp
       (show Γ ⊓ j ∈ᴮ activatedStages ξ ν ≤ j ∈ᴮ activatedStages ξ ν from inf_le_right)
-    exact mem_activatedStages_iff.mpr ⟨Hj.1,
-      mem_congr (inf_le_left.trans H) bv_refl Hj.2⟩
+    exact mem_activatedStages_iff.mpr ⟨Hj.1, mem_congr (inf_le_left.trans H) bv_refl Hj.2⟩
   · apply le_iInf
     intro j
     rw [← deduction]
     have Hj := mem_activatedStages_iff.mp
       (show Γ ⊓ j ∈ᴮ activatedStages ξ μ ≤ j ∈ᴮ activatedStages ξ μ from inf_le_right)
-    exact mem_activatedStages_iff.mpr ⟨Hj.1,
-      mem_congr (inf_le_left.trans (bv_symm H)) bv_refl Hj.2⟩
+    exact mem_activatedStages_iff.mpr ⟨Hj.1, mem_congr (inf_le_left.trans (bv_symm H)) bv_refl Hj.2⟩
 
 def canonicalRow (E b : bSet 𝔹) : bSet 𝔹 := graphValue blockEnumerationCodes E b
 
@@ -100,8 +97,7 @@ private theorem seedPredicate_ext (edgeColor : Bool) (R E b top : bSet 𝔹) :
 
 theorem mem_fusionSeed_iff {edgeColor : Bool} {R E b top v : bSet 𝔹} {Γ : 𝔹} :
     Γ ≤ v ∈ᴮ fusionSeed edgeColor R E b top ↔
-      Γ ≤ v ∈ᴮ omegaOne ∧
-        Γ ≤ ⨆ x, pair v x ∈ᴮ canonicalRow E b ⊓ graphColor edgeColor R x top :=
+      Γ ≤ v ∈ᴮ omegaOne ∧ Γ ≤ ⨆ x, pair v x ∈ᴮ canonicalRow E b ⊓ graphColor edgeColor R x top :=
   mem_comprehend_and (seedPredicate_ext edgeColor R E b top)
 
 theorem fusionSeed_subset {edgeColor : Bool} {R E b top : bSet 𝔹} {Γ : 𝔹} :
@@ -162,8 +158,7 @@ theorem fusionSection_congr_stage (edgeColor : Bool) (R E b Blocks : bSet 𝔹) 
       (show Γ ⊓ v ∈ᴮ fusionSection edgeColor R E b Blocks j ≤
         v ∈ᴮ fusionSection edgeColor R E b Blocks j from inf_le_right)
     exact mem_fusionSection_iff.mpr ⟨Hv.1,
-      bv_rw'' (inf_le_left.trans Hjk) Hv.2
-        (sectionRequirement_ext_stage edgeColor R E b Blocks v)⟩
+      bv_rw'' (inf_le_left.trans Hjk) Hv.2 (sectionRequirement_ext_stage edgeColor R E b Blocks v)⟩
   · apply le_iInf
     intro v
     rw [← deduction]
@@ -227,13 +222,11 @@ theorem mem_fusionSectionFamily_iff
     Γ ≤ pair j A ∈ᴮ fusionSectionFamily edgeColor R E b Blocks D ↔
       Γ ≤ j ∈ᴮ D ∧ Γ ≤ A ∈ᴮ bv_powerset omegaOne ∧
         Γ ≤ A =ᴮ fusionSection edgeColor R E b Blocks j :=
-  mem_relationGraph_iff (sectionFamily_ext_left edgeColor R E b Blocks)
-    (fun _ => B_ext_bv_eq_left)
+  mem_relationGraph_iff (sectionFamily_ext_left edgeColor R E b Blocks) (fun _ => B_ext_bv_eq_left)
 
 theorem fusionSectionFamily_is_function
     {edgeColor : Bool} {R E b Blocks D : bSet 𝔹} {Γ : 𝔹} :
-    Γ ≤ is_function D (bv_powerset omegaOne)
-      (fusionSectionFamily edgeColor R E b Blocks D) := by
+    Γ ≤ is_function D (bv_powerset omegaOne) (fusionSectionFamily edgeColor R E b Blocks D) := by
   apply relationGraph_is_function
     (sectionFamily_ext_left edgeColor R E b Blocks) (fun _ => B_ext_bv_eq_left)
   · apply le_iInf
@@ -242,8 +235,7 @@ theorem fusionSectionFamily_is_function
     exact le_iSup_of_le (fusionSection edgeColor R E b Blocks j)
       (le_inf (mem_powerset_iff.mpr fusionSection_subset) bv_refl)
   · intro j k A B Δ _ _ _ _ _ HA HB Hjk
-    exact bv_trans HA (bv_trans (fusionSection_congr_stage edgeColor R E b Blocks Hjk)
-      (bv_symm HB))
+    exact bv_trans HA (bv_trans (fusionSection_congr_stage edgeColor R E b Blocks Hjk) (bv_symm HB))
 
 theorem fusionSectionFamily_pair
     {edgeColor : Bool} {R E b Blocks D j : bSet 𝔹} {Γ : 𝔹}
@@ -350,8 +342,7 @@ theorem fusionRowCandidates_colarge
     Γ ≤ colarge omegaOne J (fusionRowCandidates edgeColor R E b top ξ ν Blocks X) := by
   let D := activatedStages ξ ν
   let F := fusionSectionFamily edgeColor R E b Blocks ξ
-  have Hvalues : Γ ≤ ⨅ j, ⨅ A, _root_.imp (j ∈ᴮ D ⊓ pair j A ∈ᴮ F)
-      (colarge omegaOne J A) := by
+  have Hvalues : Γ ≤ ⨅ j, ⨅ A, _root_.imp (j ∈ᴮ D ⊓ pair j A ∈ᴮ F) (colarge omegaOne J A) := by
     apply le_iInf
     intro j
     apply le_iInf
@@ -366,8 +357,7 @@ theorem fusionRowCandidates_colarge
     have Hcolarge := (le_inf (inf_le_left.trans (Hsections.trans (iInf_le _ j)))
       (le_inf Hj.1 Hj.2)).trans bv_imp_elim
     exact le_inf (mem_powerset_iff.mp HA.2.1)
-      (mem_congr (bv_symm (difference_congr_right HA.2.2)) bv_refl
-        (Hcolarge.trans inf_le_right))
+      (mem_congr (bv_symm (difference_congr_right HA.2.2)) bv_refl (Hcolarge.trans inf_le_right))
   have Hinter : Γ ≤ colarge omegaOne J (indexedIntersection omegaOne F D) :=
     indexedIntersection_colarge_of_colarge_values HJ Hclosure
       (is_func'_subset_of_is_func' (is_func'_of_is_function fusionSectionFamily_is_function)

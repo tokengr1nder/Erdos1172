@@ -24,8 +24,7 @@ def Small (r : Code ↪ W2) (G H : SimpleGraph W2) (a : W2) (s : Set W2) : Prop 
 
 variable {r : Code ↪ W2} {G H : SimpleGraph W2} {a : W2}
 
-theorem small_mono {s t : Set W2} (hst : s ⊆ t)
-    (ht : Small r G H a t) : Small r G H a s := by
+theorem small_mono {s t : Set W2} (hst : s ⊆ t) (ht : Small r G H a t) : Small r G H a s := by
   rcases ht with ⟨c, hc, hca, ht⟩
   exact ⟨c, hc, hca, hst.trans ht⟩
 
@@ -76,8 +75,7 @@ theorem named_compl_small (ha : GoodCut r G H a) {c : Code}
 
 theorem exists_club_positive_trace (r : Code ↪ W2) (G H : SimpleGraph W2)
     (s : Set W2) :
-    ∃ club : Set W2, IsClub club ∧ ∀ a ∈ club, a ∈ s →
-      ¬Small r G H a (s ∩ Set.Iio a) := by
+    ∃ club : Set W2, IsClub club ∧ ∀ a ∈ club, a ∈ s → ¬Small r G H a (s ∩ Set.Iio a) := by
   obtain ⟨club, hclub, hreflect⟩ := ClubClosure.exists_club_reflects
     r (eval G H) s alephZero_lt_cof_W2
   exact ⟨club, hclub, fun a ha has ⟨c, hc, hca, hsub⟩ => hca (hreflect a ha c hc hsub has)⟩

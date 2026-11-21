@@ -84,8 +84,7 @@ theorem holds_addedRow (data : LineCoverData V) (L : LowerCovers n V)
         ((encodedName_row_decides_iff F R _ _ _ _).mp hw)).le) hx
   apply holds_combine hhead hlocal
   intro f hyf hxf
-  exact Set.mem_iUnion.mpr ⟨y, Set.mem_iUnion.mpr ⟨⟨hyf, hycut⟩,
-    Set.mem_iUnion.mpr ⟨k, hrow, hxf⟩⟩⟩
+  exact Set.mem_iUnion.mpr ⟨y, Set.mem_iUnion.mpr ⟨⟨hyf, hycut⟩, Set.mem_iUnion.mpr ⟨k, hrow, hxf⟩⟩⟩
 
 theorem holds_piece (data : LineCoverData V) (L : LowerCovers n V)
     (seed : Set V) (F : FunctionDecisions P W1 W1)

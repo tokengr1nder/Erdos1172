@@ -44,8 +44,7 @@ theorem naturalShift_is_injective {Γ : 𝔹} :
 
 private theorem bot_of_zero_shift_value {i : bSet 𝔹} {Γ : 𝔹}
     (H : Γ ≤ pair i (0 : bSet 𝔹) ∈ᴮ naturalShift) : Γ ≤ ⊥ := by
-  have Hjoin := H.trans (mem_sequenceGraph
-    (fun n => (of_nat (n + 1) : bSet 𝔹)) (pair i 0)).le
+  have Hjoin := H.trans (mem_sequenceGraph (fun n => (of_nat (n + 1) : bSet 𝔹)) (pair i 0)).le
   apply Hjoin.trans
   apply iSup_le
   intro n
@@ -67,8 +66,7 @@ theorem zero_not_mem_shifted_image {A f : bSet 𝔹} {Γ : 𝔹}
       (0 : bSet 𝔹) ∈ᴮ image A bSet.omega
         (injective_function_comp Hf (naturalShift_is_injective (Γ := Γ))) from
       inf_le_right)).2
-  obtain ⟨x, Hx⟩ := exists_convert Hrange
-    (B_ext_inf B_ext_mem_left B_ext_pair_mem_left)
+  obtain ⟨x, Hx⟩ := exists_convert Hrange (B_ext_inf B_ext_mem_left B_ext_pair_mem_left)
   have Hcomp := (mem_is_func'_comp_iff (is_func'_of_is_injective_function Hf)
     (is_func'_of_is_injective_function (naturalShift_is_injective (Γ := Γ)))).mp
       (Hx.trans inf_le_right)
@@ -86,8 +84,7 @@ theorem insert_countable_of_fresh {A a : bSet 𝔹} {Γ : 𝔹}
   have Hg : Γ ≤ is_injective_function A bSet.omega g :=
     injective_function_comp_is_injective_function
       (H₁ := Hf) (H₂ := naturalShift_is_injective (Γ := Γ))
-  have Hfresh : Γ ≤ ((0 : bSet 𝔹) ∈ᴮ image A bSet.omega g)ᶜ :=
-    zero_not_mem_shifted_image Hf
+  have Hfresh : Γ ≤ ((0 : bSet 𝔹) ∈ᴮ image A bSet.omega g)ᶜ := zero_not_mem_shifted_image Hf
   exact injects_into_of_injection_into
     (le_iSup_of_le (bSet.insert1 (pair a (0 : bSet 𝔹)) g)
       (is_injective_function_insertPair Hg Ha

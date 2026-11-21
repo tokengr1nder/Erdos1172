@@ -43,8 +43,7 @@ open ErdosIncreasingComposition
 theorem pool_recursion_increasing
     {color : Bool} {R F Run j i B P C Q : bSet 𝔹} {Γ : 𝔹}
     (HF : Γ ≤ is_function omegaOne (stateSpace color R) Run)
-    (Hlaw : Γ ≤ imageRecLaw (stateSpace color R)
-      (fun _ T => poolUpdate color R F T) Run)
+    (Hlaw : Γ ≤ imageRecLaw (stateSpace color R) (fun _ T => poolUpdate color R F T) Run)
     (Hji : Γ ≤ j ∈ᴮ i)
     (Hj : Γ ≤ pair j (pair B P) ∈ᴮ Run)
     (Hi : Γ ≤ pair i (pair C Q) ∈ᴮ Run) :
@@ -97,10 +96,8 @@ theorem objectFamily_witness {color : Bool} {R Run i B : bSet 𝔹} {Γ Δ : �
   obtain ⟨s, Hs⟩ := comp_pair_witness (is_func'_of_is_function HF)
     (is_func'_of_is_function (leftProjection_is_function
       (K := blockObjects color R) (L := omegaTwo))) Hpair
-  obtain ⟨P, Heq, _, _⟩ := leftProjection_witness
-    (Hs.trans (inf_le_right.trans inf_le_right))
-  exact ⟨P, mem_congr (pair_congr bv_refl Heq) bv_refl
-    (Hs.trans (inf_le_right.trans inf_le_left))⟩
+  obtain ⟨P, Heq, _, _⟩ := leftProjection_witness (Hs.trans (inf_le_right.trans inf_le_right))
+  exact ⟨P, mem_congr (pair_congr bv_refl Heq) bv_refl (Hs.trans (inf_le_right.trans inf_le_left))⟩
 
 theorem pointFamily_witness {color : Bool} {R Run i P : bSet 𝔹} {Γ Δ : 𝔹}
     (HF : Γ ≤ is_function omegaOne (stateSpace color R) Run)
@@ -109,10 +106,8 @@ theorem pointFamily_witness {color : Bool} {R Run i P : bSet 𝔹} {Γ Δ : 𝔹
   obtain ⟨s, Hs⟩ := comp_pair_witness (is_func'_of_is_function HF)
     (is_func'_of_is_function (rightProjection_is_function
       (K := blockObjects color R) (L := omegaTwo))) Hpair
-  obtain ⟨B, Heq, _, _⟩ := rightProjection_witness
-    (Hs.trans (inf_le_right.trans inf_le_right))
-  exact ⟨B, mem_congr (pair_congr bv_refl Heq) bv_refl
-    (Hs.trans (inf_le_right.trans inf_le_left))⟩
+  obtain ⟨B, Heq, _, _⟩ := rightProjection_witness (Hs.trans (inf_le_right.trans inf_le_right))
+  exact ⟨B, mem_congr (pair_congr bv_refl Heq) bv_refl (Hs.trans (inf_le_right.trans inf_le_left))⟩
 
 theorem objectFamily_pair {color : Bool} {R Run i B P : bSet 𝔹} {Γ : 𝔹}
     (HF : Γ ≤ is_function omegaOne (stateSpace color R) Run)
@@ -140,8 +135,7 @@ theorem pointFamily_pair {color : Bool} {R Run i B P : bSet 𝔹} {Γ : 𝔹}
 
 theorem objectFamily_increasing {color : Bool} {R F Run : bSet 𝔹} {Γ : 𝔹}
     (HF : Γ ≤ is_function omegaOne (stateSpace color R) Run)
-    (Hlaw : Γ ≤ imageRecLaw (stateSpace color R)
-      (fun _ T => poolUpdate color R F T) Run) :
+    (Hlaw : Γ ≤ imageRecLaw (stateSpace color R) (fun _ T => poolUpdate color R F T) Run) :
     Γ ≤ increasingFamily (objectFamily HF) := by
   apply le_iInf
   intro i
@@ -166,8 +160,7 @@ theorem objectFamily_increasing {color : Bool} {R F Run : bSet 𝔹} {Γ : 𝔹}
 
 theorem pointFamily_increasing {color : Bool} {R F Run : bSet 𝔹} {Γ : 𝔹}
     (HF : Γ ≤ is_function omegaOne (stateSpace color R) Run)
-    (Hlaw : Γ ≤ imageRecLaw (stateSpace color R)
-      (fun _ T => poolUpdate color R F T) Run) :
+    (Hlaw : Γ ≤ imageRecLaw (stateSpace color R) (fun _ T => poolUpdate color R F T) Run) :
     Γ ≤ increasingFamily (pointFamily HF) := by
   apply le_iInf
   intro i

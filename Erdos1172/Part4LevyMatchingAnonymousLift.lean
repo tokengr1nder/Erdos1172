@@ -66,8 +66,7 @@ namespace LocalizedBelow
 variable {W : Type u} [CompleteBooleanAlgebra W] (m₀ : Positive W)
 
 @[ext]
-theorem ext {x y : LocalizedBelow W m₀} (h : x.val = y.val) : x = y :=
-  Subtype.ext h
+theorem ext {x y : LocalizedBelow W m₀} (h : x.val = y.val) : x = y := Subtype.ext h
 
 instance : CompleteBooleanAlgebra (LocalizedBelow W m₀) where
   le x y := x.val ≤ y.val
@@ -153,8 +152,7 @@ def equivCone (U₁ U₂ : bSet E) (p : Condition U₁) :
 
 theorem equivCone_ne_bot {U₁ U₂ : bSet E} (heq : (⊤ : E) ≤ U₁ =ᴮ U₂) (p : Condition U₁) :
     equivCone U₁ U₂ p ≠ ⊥ := by
-  have hmem : p.value ≤ name p ∈ᴮ U₂ :=
-    mem_congr bv_refl (le_top.trans heq) (name_mem p)
+  have hmem : p.value ≤ name p ∈ᴮ U₂ := mem_congr bv_refl (le_top.trans heq) (name_mem p)
   obtain ⟨q, hqv, hqeq⟩ := exists_canonical_refinement p.nonzero hmem
   intro h0
   have hle : Erdos1172PosetCompletion.condition q ≤ equivCone U₁ U₂ p :=
@@ -212,8 +210,7 @@ theorem equivConeOrderHom_lifts {U₁ U₂ : bSet E} (heq : (⊤ : E) ≤ U₁ =
 theorem equivConeOrderHom_compat {U₁ U₂ : bSet E} (heq : (⊤ : E) ≤ U₁ =ᴮ U₂)
     (p₁ p₂ : Condition U₁) (hle : equivConeOrderHom heq p₁ ≤ equivConeOrderHom heq p₂) :
     ∃ z ≤ p₁, z ≤ p₂ := by
-  have hmem : p₁.value ≤ name p₁ ∈ᴮ U₂ :=
-    mem_congr bv_refl (le_top.trans heq) (name_mem p₁)
+  have hmem : p₁.value ≤ name p₁ ∈ᴮ U₂ := mem_congr bv_refl (le_top.trans heq) (name_mem p₁)
   obtain ⟨q, hqv, hqeq⟩ := exists_canonical_refinement p₁.nonzero hmem
   have hq_cone₂ : Erdos1172PosetCompletion.condition q ≤ equivCone U₁ U₂ p₂ :=
     (le_iSup (fun r : {r : Condition U₂ // r.value ≤ p₁.value ∧ r.value ≤ name p₁ ⊆ᴮ name r} =>
@@ -223,8 +220,7 @@ theorem equivConeOrderHom_compat {U₁ U₂ : bSet E} (heq : (⊤ : E) ≤ U₁ 
     exact Erdos1172PosetCompletion.condition_ne_bot q
   obtain ⟨⟨r, hrv, hrsub⟩, hqr⟩ := exists_mem_iSup_inf_ne_bot hmeet
   obtain ⟨s, hs_q, hs_r⟩ := (Erdos1172PosetCompletion.condition_inf_ne_bot_iff q r).mp hqr
-  have hmem₁ : s.value ≤ name s ∈ᴮ U₁ :=
-    mem_congr bv_refl (le_top.trans (bv_symm heq)) (name_mem s)
+  have hmem₁ : s.value ≤ name s ∈ᴮ U₁ := mem_congr bv_refl (le_top.trans (bv_symm heq)) (name_mem s)
   obtain ⟨z, hzv, hzeq⟩ := exists_canonical_refinement s.nonzero hmem₁
   have hz₁ : z ≤ p₁ :=
     ⟨hzv.trans (hs_q.1.trans hqv),
@@ -232,16 +228,14 @@ theorem equivConeOrderHom_compat {U₁ U₂ : bSet E} (heq : (⊤ : E) ≤ U₁ 
        (subset_of_eq hzeq)⟩
   have hz₂ : z ≤ p₂ :=
     ⟨hzv.trans (hs_r.1.trans hrv),
-     subset_trans' (hzv.trans (subset_trans' (hs_r.1.trans hrsub) hs_r.2))
-       (subset_of_eq hzeq)⟩
+     subset_trans' (hzv.trans (subset_trans' (hs_r.1.trans hrsub) hs_r.2)) (subset_of_eq hzeq)⟩
   exact ⟨z, hz₁, hz₂⟩
 
 theorem equivConeOrderHom_dense {U₁ U₂ : bSet E} (heq : (⊤ : E) ≤ U₁ =ᴮ U₂)
     (c : Positive (Erdos1172BooleanNameIteration.Algebra U₂)) :
     ∃ p, equivConeOrderHom heq p ≤ c := by
   obtain ⟨q, hqc⟩ := Erdos1172PosetCompletion.exists_condition_le c.property
-  have hmem₁ : q.value ≤ name q ∈ᴮ U₁ :=
-    mem_congr bv_refl (le_top.trans (bv_symm heq)) (name_mem q)
+  have hmem₁ : q.value ≤ name q ∈ᴮ U₁ := mem_congr bv_refl (le_top.trans (bv_symm heq)) (name_mem q)
   obtain ⟨p, hpv, hpeq⟩ := exists_canonical_refinement q.nonzero hmem₁
   exact ⟨p, (equivCone_le_condition hpv (subset_of_eq hpeq)).trans hqc⟩
 
@@ -306,8 +300,7 @@ theorem changeEquivalentName_sourceHom {U₁ U₂ : bSet E} (heq : (⊤ : E) ≤
     obtain ⟨p, hpv, hpeq⟩ := exists_canonical_refinement q''.nonzero hmem₁
     have hp_b : Erdos1172PosetCompletion.condition p ≤ sourceHom U₁ b :=
       (condition_le_source U₁ p b).mpr (hpv.trans (hq''_q.1.trans hq_b))
-    have hmem_cone : p.value ≤ name p ∈ᴮ U₂ :=
-      mem_congr bv_refl (le_top.trans heq) (name_mem p)
+    have hmem_cone : p.value ≤ name p ∈ᴮ U₂ := mem_congr bv_refl (le_top.trans heq) (name_mem p)
     obtain ⟨r, hrv, hreq⟩ := exists_canonical_refinement p.nonzero hmem_cone
     have hr_cone : Erdos1172PosetCompletion.condition r ≤ ψ (sourceHom U₁ b) := by
       have h1 : Erdos1172PosetCompletion.condition r ≤ equivCone U₁ U₂ p :=
@@ -315,8 +308,7 @@ theorem changeEquivalentName_sourceHom {U₁ U₂ : bSet E} (heq : (⊤ : E) ≤
           Erdos1172PosetCompletion.condition s.val) ⟨r, hrv, subset_of_eq hreq⟩
       exact h1.trans ((changeEquivalentName_condition heq p).symm.le.trans (OrderHomClass.mono ψ hp_b))
     have hr_q'' : r ≤ q'' :=
-      ⟨hrv.trans hpv,
-       subset_trans' (subset_of_eq (hrv.trans hpeq)) (subset_of_eq hreq)⟩
+      ⟨hrv.trans hpv, subset_trans' (subset_of_eq (hrv.trans hpeq)) (subset_of_eq hreq)⟩
     have hr_not : Erdos1172PosetCompletion.condition r ≤ (ψ (sourceHom U₁ b))ᶜ :=
       (Erdos1172PosetCompletion.condition_mono (hr_q''.trans hq''_q')).trans (hq'.trans inf_le_right)
     exact Erdos1172PosetCompletion.condition_ne_bot r
@@ -353,12 +345,9 @@ theorem changeEquivalentName_memCone {U₁ U₂ : bSet E} (heq : (⊤ : E) ≤ U
     have hmem₁ : q₂.value ≤ name q₂ ∈ᴮ U₁ :=
       mem_congr bv_refl (le_top.trans (bv_symm heq)) (name_mem q₂)
     obtain ⟨p, hpv, hpeq⟩ := exists_canonical_refinement q₂.nonzero hmem₁
-    have hq₂z : q₂.value ≤ z ∈ᴮ name q₂ :=
-      mem_of_mem_subset hq₂_q.2 (hq₂_q.1.trans hq)
-    have hpz : p.value ≤ z ∈ᴮ name p :=
-      mem_congr bv_refl hpeq (hpv.trans hq₂z)
-    have hmem₂ : p.value ≤ name p ∈ᴮ U₂ :=
-      mem_congr bv_refl (le_top.trans heq) (name_mem p)
+    have hq₂z : q₂.value ≤ z ∈ᴮ name q₂ := mem_of_mem_subset hq₂_q.2 (hq₂_q.1.trans hq)
+    have hpz : p.value ≤ z ∈ᴮ name p := mem_congr bv_refl hpeq (hpv.trans hq₂z)
+    have hmem₂ : p.value ≤ name p ∈ᴮ U₂ := mem_congr bv_refl (le_top.trans heq) (name_mem p)
     obtain ⟨r, hrv, hreq⟩ := exists_canonical_refinement p.nonzero hmem₂
     have hr_rhs : Erdos1172PosetCompletion.condition r ≤ rhs := by
       have h1 : Erdos1172PosetCompletion.condition r ≤ equivCone U₁ U₂ p :=
@@ -369,8 +358,7 @@ theorem changeEquivalentName_memCone {U₁ U₂ : bSet E} (heq : (⊤ : E) ≤ U
           ψ (Erdos1172PosetCompletion.condition t.val)) ⟨p, hpz⟩
       exact h1.trans ((changeEquivalentName_condition heq p).symm.le.trans h2)
     have hr_q₂ : r ≤ q₂ :=
-      ⟨hrv.trans hpv,
-       subset_trans' (subset_of_eq (hrv.trans hpeq)) (subset_of_eq hreq)⟩
+      ⟨hrv.trans hpv, subset_trans' (subset_of_eq (hrv.trans hpeq)) (subset_of_eq hreq)⟩
     have hr_not : Erdos1172PosetCompletion.condition r ≤ rhsᶜ :=
       (Erdos1172PosetCompletion.condition_mono (hr_q₂.trans hq₂_q₁)).trans (hq₁.trans inf_le_right)
     exact Erdos1172PosetCompletion.condition_ne_bot r
@@ -391,8 +379,7 @@ private theorem completeHom_compl {X Y : Type u} [CompleteBooleanAlgebra X] [Com
 theorem baseChange_memCone {V E : Type u} [NontrivialCompleteBooleanAlgebra V]
     [NontrivialCompleteBooleanAlgebra E] (j : CompleteLatticeHom V E) (Q z : bSet V) :
     BaseChange.hom j Q
-      (⨆ p : {p : Condition Q // p.value ≤ z ∈ᴮ name p},
-        Erdos1172PosetCompletion.condition p.val) =
+      (⨆ p : {p : Condition Q // p.value ≤ z ∈ᴮ name p}, Erdos1172PosetCompletion.condition p.val) =
     ⨆ q : {q : Condition (mapNames j Q) // q.value ≤ mapNames j z ∈ᴮ name q},
       Erdos1172PosetCompletion.condition q.val := by
   let rhs := ⨆ q : {q : Condition (mapNames j Q) // q.value ≤ mapNames j z ∈ᴮ name q},

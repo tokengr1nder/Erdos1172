@@ -57,8 +57,7 @@ theorem exists_condition_antichain_sup (b : Completion P) :
       exact h (disjoint_compl_right_iff.mp (disjoint_iff_inf_le.mpr heq.le))
     obtain ⟨p, hp⟩ := exists_condition_le hres
     have hpb : condition p ≤ b := hp.trans inf_le_left
-    have hpc : condition p ≤ (⨆ q : A, condition q.val)ᶜ :=
-      hp.trans inf_le_right
+    have hpc : condition p ≤ (⨆ q : A, condition q.val)ᶜ := hp.trans inf_le_right
     have hdisj : ∀ q ∈ A, condition p ⊓ condition q = ⊥ := by
       intro q hq
       apply bot_unique
@@ -67,8 +66,7 @@ theorem exists_condition_antichain_sup (b : Completion P) :
       exact (inf_le_inf hpc hqs).trans compl_inf_eq_bot.le
     have hpA : p ∉ A := by
       intro hpA
-      exact condition_ne_bot p
-        (bot_unique ((le_inf le_rfl le_rfl).trans (hdisj p hpA).le))
+      exact condition_ne_bot p (bot_unique ((le_inf le_rfl le_rfl).trans (hdisj p hpA).le))
     have hinsert : (∀ q ∈ insert p A, condition q ≤ b) ∧
         (insert p A).Pairwise (fun q r => condition q ⊓ condition r = ⊥) := by
       constructor
@@ -77,8 +75,7 @@ theorem exists_condition_antichain_sup (b : Completion P) :
         · exact hpb
         · exact hA.1.1 q hq
       · exact hA.1.2.insert (fun q hq _ =>
-          ⟨hdisj q hq, bot_unique
-            ((le_inf inf_le_right inf_le_left).trans (hdisj q hq).le)⟩)
+          ⟨hdisj q hq, bot_unique ((le_inf inf_le_right inf_le_left).trans (hdisj q hq).le)⟩)
     exact hpA (hA.2 hinsert (Set.subset_insert _ _) (Set.mem_insert _ _))
 
 /-- The cardinal bound is applied to a constructed representation of each
@@ -100,10 +97,8 @@ theorem completion_cardinal_le_small_subsets (κ : Cardinal.{u})
     (Hcc : ∀ {J : Type u} (a : J → Completion P),
       (∀ j, a j ≠ ⊥) → (∀ j k, j ≠ k → a j ⊓ a k = ⊥) →
       Cardinal.mk J < κ) :
-    Cardinal.mk (Completion P) ≤
-      Cardinal.mk {A : Set P // Cardinal.mk A < κ} := by
-  apply Cardinal.mk_le_of_surjective
-    (f := fun A : {A : Set P // Cardinal.mk A < κ} =>
+    Cardinal.mk (Completion P) ≤ Cardinal.mk {A : Set P // Cardinal.mk A < κ} := by
+  apply Cardinal.mk_le_of_surjective (f := fun A : {A : Set P // Cardinal.mk A < κ} =>
       ⨆ p : A.val, condition p.val)
   intro b
   obtain ⟨A, hsize, _, hsup⟩ := exists_small_condition_antichain_sup κ Hcc b

@@ -38,8 +38,7 @@ theorem exists_club_red_positive_family (center : CountablyCenteredCode P)
     (hcompl : IsCompl G H) (hblue : ¬HasCliqueOfType H (ω_ 2))
     (t : J ↪ W2) (U : J → RegularName P W2) :
     ∃ club : Set W2, IsClub club ∧ ∀ a ∈ club, ∀ j : J, t j < a →
-      ∀ p : P, (U j).holds p a →
-        (neg (smallName r H a)).holds p (colorFiber G H (U j) a true) := by
+      ∀ p : P, (U j).holds p a → (neg (smallName r H a)).holds p (colorFiber G H (U j) a true) := by
   classical
   let bad : Set W2 := {a | ∃ j : J, t j < a ∧ ∃ p : P,
     (U j).holds p a ∧ (smallName r H a).holds p (colorFiber G H (U j) a true)}
@@ -86,8 +85,7 @@ theorem exists_club_red_positive_family (center : CountablyCenteredCode P)
         have hyc' : r (cover yb) = cvalue := by
           simpa only [coverRank, dif_pos hy.1.1] using hy.2
         exact hxc'.trans hyc'.symm
-      have hcenter : center.code (assigned xb) = center.code (assigned yb) :=
-        hxc.trans hyc.symm
+      have hcenter : center.code (assigned xb) = center.code (assigned yb) := hxc.trans hyc.symm
       obtain ⟨q, hqx, hqy⟩ := center.common_lower hcenter
       rw [← hcompl.compl_eq, SimpleGraph.compl_adj]
       refine ⟨hxy, ?_⟩
@@ -111,16 +109,14 @@ theorem exists_club_red_positive_family (center : CountablyCenteredCode P)
   obtain ⟨club, hclub, hdisjoint⟩ := not_isStationary_iff.mp hnonstat
   refine ⟨club, hclub, ?_⟩
   intro a hac j hj p hp q hqp hq
-  exact Set.disjoint_left.mp hdisjoint
-    ⟨j, hj, q, (U j).persistent hqp hp, hq⟩ hac
+  exact Set.disjoint_left.mp hdisjoint ⟨j, hj, q, (U j).persistent hqp hp, hq⟩ hac
 
 theorem exists_club_red_positive_family_of_no_blue_target (center : CountablyCenteredCode P)
     {G : SimpleGraph W2} (r : Code P I G ↪ W2) (H : SimpleGraph W2)
     (hcompl : IsCompl G H) (hblue : ¬HasCliqueOfType H (ω_ 1 + 2))
     (t : J ↪ W2) (U : J → RegularName P W2) :
     ∃ club : Set W2, IsClub club ∧ ∀ a ∈ club, ∀ j : J, t j < a →
-      ∀ p : P, (U j).holds p a →
-        (neg (smallName r H a)).holds p (colorFiber G H (U j) a true) := by
+      ∀ p : P, (U j).holds p a → (neg (smallName r H a)).holds p (colorFiber G H (U j) a true) := by
   apply exists_club_red_positive_family center r H hcompl _ t U
   rintro ⟨s, hs, ht⟩
   obtain ⟨v, hvs, hvt⟩ := Ordinal.exists_subset_typeLT_eq s

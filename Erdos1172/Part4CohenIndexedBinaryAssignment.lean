@@ -42,8 +42,7 @@ theorem indexedBinaryValues_congr (C : PSet.{u}) (b : C.Type → B)
     (Hsep : ∀ i j : C.Type, i ≠ j → ¬ PSet.Equiv (C.Func i) (C.Func j))
     (i j : (check C : bSet B).type) :
     (check C : bSet B).func i =ᴮ (check C : bSet B).func j ≤
-      binaryAssignmentName (b (check_cast i)) =ᴮ
-        binaryAssignmentName (b (check_cast j)) := by
+      binaryAssignmentName (b (check_cast i)) =ᴮ binaryAssignmentName (b (check_cast j)) := by
   classical
   rw [check_func, check_func]
   by_cases hij : check_cast i = check_cast j
@@ -103,16 +102,14 @@ theorem indexedBinaryAssignment_is_function (C : PSet.{u}) (b : C.Type → B)
 theorem indexedBinaryAssignment_one (C : PSet.{u}) (b : C.Type → B)
     (Hsep : ∀ i j : C.Type, i ≠ j → ¬ PSet.Equiv (C.Func i) (C.Func j))
     (i : C.Type) :
-    b i ≤ pair (check (C.Func i)) (1 : bSet B) ∈ᴮ
-      indexedBinaryAssignment C b Hsep :=
+    b i ≤ pair (check (C.Func i)) (1 : bSet B) ∈ᴮ indexedBinaryAssignment C b Hsep :=
   mem_congr (pair_congr bv_refl (binaryAssignmentName_eq_one (b i))) bv_refl
     (le_top.trans (indexedBinaryAssignment_pair C b Hsep i))
 
 theorem indexedBinaryAssignment_zero (C : PSet.{u}) (b : C.Type → B)
     (Hsep : ∀ i j : C.Type, i ≠ j → ¬ PSet.Equiv (C.Func i) (C.Func j))
     (i : C.Type) :
-    (b i)ᶜ ≤ pair (check (C.Func i)) (0 : bSet B) ∈ᴮ
-      indexedBinaryAssignment C b Hsep :=
+    (b i)ᶜ ≤ pair (check (C.Func i)) (0 : bSet B) ∈ᴮ indexedBinaryAssignment C b Hsep :=
   mem_congr (pair_congr bv_refl (binaryAssignmentName_eq_zero (b i))) bv_refl
     (le_top.trans (indexedBinaryAssignment_pair C b Hsep i))
 

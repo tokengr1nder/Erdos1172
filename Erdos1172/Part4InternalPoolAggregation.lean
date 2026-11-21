@@ -104,8 +104,7 @@ theorem mem_poolSpace_iff {K L A B : bSet 𝔹} {Γ : 𝔹} :
     Γ ≤ pair A B ∈ᴮ poolSpace K L ↔ Γ ≤ A ⊆ᴮ K ∧ Γ ≤ B ⊆ᴮ L := by
   constructor
   · intro H
-    exact ⟨mem_powerset_iff.mp (mem_prod_iff.mp H).1,
-      mem_powerset_iff.mp (mem_prod_iff.mp H).2⟩
+    exact ⟨mem_powerset_iff.mp (mem_prod_iff.mp H).1, mem_powerset_iff.mp (mem_prod_iff.mp H).2⟩
   · rintro ⟨HA, HB⟩
     exact mem_prod (mem_powerset_iff.mpr HA) (mem_powerset_iff.mpr HB)
 
@@ -113,15 +112,13 @@ theorem leftProjection_pair {K L A B : bSet 𝔹} {Γ : 𝔹}
     (HA : Γ ≤ A ⊆ᴮ K) (HB : Γ ≤ B ⊆ᴮ L) :
     Γ ≤ pair (pair A B) A ∈ᴮ leftProjection K L :=
   (mem_relationGraph_iff leftRel_ext_input leftRel_ext_output).mpr
-    ⟨mem_poolSpace_iff.mpr ⟨HA, HB⟩, mem_powerset_iff.mpr HA,
-      le_iSup_of_le B bv_refl⟩
+    ⟨mem_poolSpace_iff.mpr ⟨HA, HB⟩, mem_powerset_iff.mpr HA, le_iSup_of_le B bv_refl⟩
 
 theorem rightProjection_pair {K L A B : bSet 𝔹} {Γ : 𝔹}
     (HA : Γ ≤ A ⊆ᴮ K) (HB : Γ ≤ B ⊆ᴮ L) :
     Γ ≤ pair (pair A B) B ∈ᴮ rightProjection K L :=
   (mem_relationGraph_iff rightRel_ext_input rightRel_ext_output).mpr
-    ⟨mem_poolSpace_iff.mpr ⟨HA, HB⟩, mem_powerset_iff.mpr HB,
-      le_iSup_of_le A bv_refl⟩
+    ⟨mem_poolSpace_iff.mpr ⟨HA, HB⟩, mem_powerset_iff.mpr HB, le_iSup_of_le A bv_refl⟩
 
 theorem leftProjection_witness {K L q A : bSet 𝔹} {Γ : 𝔹}
     (H : Γ ≤ pair q A ∈ᴮ leftProjection K L) :
@@ -161,21 +158,17 @@ theorem aggregateRight_congr (K L : bSet 𝔹) : B_congr (aggregateRight K L) :=
 
 theorem aggregateLeft_witness {K L T x : bSet 𝔹} {Γ : 𝔹}
     (Hx : Γ ≤ x ∈ᴮ aggregateLeft K L T) :
-    ∃ A B : bSet 𝔹, Γ ≤ pair A B ∈ᴮ T ∧ Γ ≤ A ⊆ᴮ K ∧
-      Γ ≤ B ⊆ᴮ L ∧ Γ ≤ x ∈ᴮ A := by
+    ∃ A B : bSet 𝔹, Γ ≤ pair A B ∈ᴮ T ∧ Γ ≤ A ⊆ᴮ K ∧ Γ ≤ B ⊆ᴮ L ∧ Γ ≤ x ∈ᴮ A := by
   obtain ⟨q, A, Hq⟩ := exists_indexed_union_witness Hx
-  obtain ⟨B, Heq, HA, HB⟩ := leftProjection_witness
-    (Hq.trans (inf_le_left.trans inf_le_right))
+  obtain ⟨B, Heq, HA, HB⟩ := leftProjection_witness (Hq.trans (inf_le_left.trans inf_le_right))
   exact ⟨A, B, mem_congr Heq bv_refl (Hq.trans (inf_le_left.trans inf_le_left)),
     HA, HB, Hq.trans inf_le_right⟩
 
 theorem aggregateRight_witness {K L T x : bSet 𝔹} {Γ : 𝔹}
     (Hx : Γ ≤ x ∈ᴮ aggregateRight K L T) :
-    ∃ A B : bSet 𝔹, Γ ≤ pair A B ∈ᴮ T ∧ Γ ≤ A ⊆ᴮ K ∧
-      Γ ≤ B ⊆ᴮ L ∧ Γ ≤ x ∈ᴮ B := by
+    ∃ A B : bSet 𝔹, Γ ≤ pair A B ∈ᴮ T ∧ Γ ≤ A ⊆ᴮ K ∧ Γ ≤ B ⊆ᴮ L ∧ Γ ≤ x ∈ᴮ B := by
   obtain ⟨q, B, Hq⟩ := exists_indexed_union_witness Hx
-  obtain ⟨A, Heq, HA, HB⟩ := rightProjection_witness
-    (Hq.trans (inf_le_left.trans inf_le_right))
+  obtain ⟨A, Heq, HA, HB⟩ := rightProjection_witness (Hq.trans (inf_le_left.trans inf_le_right))
   exact ⟨A, B, mem_congr Heq bv_refl (Hq.trans (inf_le_left.trans inf_le_left)),
     HA, HB, Hq.trans inf_le_right⟩
 

@@ -53,8 +53,7 @@ theorem mem_sequenceRange_iff {v : ℕ → bSet 𝔹} {x : bSet 𝔹} {Γ : 𝔹
   constructor
   · intro Hx
     have Hrange := (mem_image_iff.mp Hx).2
-    obtain ⟨i, Hi⟩ := exists_convert Hrange
-      (B_ext_inf B_ext_mem_left B_ext_pair_mem_left)
+    obtain ⟨i, Hi⟩ := exists_convert Hrange (B_ext_inf B_ext_mem_left B_ext_pair_mem_left)
     have Hgraph := Hi.trans inf_le_right
     rw [mem_sequenceGraph] at Hgraph
     apply Hgraph.trans
@@ -116,8 +115,7 @@ theorem sequenceSup_nonempty {v : ℕ → bSet 𝔹} {Γ : 𝔹}
     (Hv : ∀ n, Γ ≤ v n ∈ᴮ omegaTwo)
     (Hstep : ∀ n, Γ ≤ v n ∈ᴮ v (n + 1)) :
     Γ ≤ (sequenceSup v =ᴮ (∅ : bSet 𝔹))ᶜ :=
-  nonempty_of_exists_mem (sequenceSup v)
-    (le_iSup_of_le (v 0) (sequence_value_mem_sup Hv Hstep 0))
+  nonempty_of_exists_mem (sequenceSup v) (le_iSup_of_le (v 0) (sequence_value_mem_sup Hv Hstep 0))
 
 /-- Internal witnesses in every successive interval are unbounded below
 the supremum. The target is the exact unboundedness value, without importing
@@ -125,8 +123,7 @@ a club predicate. The interval witnesses and numeral joins remain local. -/
 theorem interval_points_cofinal {v : ℕ → bSet 𝔹} {C : bSet 𝔹} {Γ : 𝔹}
     (Hv : ∀ n, Γ ≤ v n ∈ᴮ omegaTwo)
     (Hinterval : ∀ n, Γ ≤ ⨆ c, c ∈ᴮ C ⊓ (v n ∈ᴮ c ⊓ c ∈ᴮ v (n + 1))) :
-    Γ ≤ ⨅ a, _root_.imp (a ∈ᴮ sequenceSup v)
-      (⨆ c, (c ∈ᴮ C ⊓ c ∈ᴮ sequenceSup v) ⊓ a ∈ᴮ c) := by
+    Γ ≤ ⨅ a, _root_.imp (a ∈ᴮ sequenceSup v) (⨆ c, (c ∈ᴮ C ⊓ c ∈ᴮ sequenceSup v) ⊓ a ∈ᴮ c) := by
   apply le_iInf
   intro a
   rw [← deduction]
@@ -146,8 +143,7 @@ theorem interval_points_cofinal {v : ℕ → bSet 𝔹} {C : bSet 𝔹} {Γ : �
   intro c
   let Θ := Λ ⊓ (c ∈ᴮ C ⊓ (v n ∈ᴮ c ⊓ c ∈ᴮ v (n + 1)))
   have HΘ : Θ ≤ Γ := inf_le_left.trans (inf_le_left.trans inf_le_left)
-  have Hcnext : Θ ≤ c ∈ᴮ v (n + 1) :=
-    inf_le_right.trans (inf_le_right.trans inf_le_right)
+  have Hcnext : Θ ≤ c ∈ᴮ v (n + 1) := inf_le_right.trans (inf_le_right.trans inf_le_right)
   have HcOrd : Θ ≤ Ord c := Ord_of_mem_Ord Hcnext
     (Ord_of_mem_Ord (HΘ.trans (Hv (n + 1))) omegaTwo_Ord)
   have Hac : Θ ≤ a ∈ᴮ c := mem_of_mem_Ord
@@ -156,7 +152,6 @@ theorem interval_points_cofinal {v : ℕ → bSet 𝔹} {C : bSet 𝔹} {Γ : �
   have Hcsup : Θ ≤ c ∈ᴮ sequenceSup v :=
     (mem_sequenceSup_iff (fun m => HΘ.trans (Hv m))).mpr
       (le_iSup_of_le (n + 1) Hcnext)
-  exact le_iSup_of_le c (le_inf
-    (le_inf (inf_le_right.trans inf_le_left) Hcsup) Hac)
+  exact le_iSup_of_le c (le_inf (le_inf (inf_le_right.trans inf_le_left) Hcsup) Hac)
 
 end bSet.ErdosOmegaTwoSequenceSup

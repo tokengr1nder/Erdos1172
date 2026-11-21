@@ -59,22 +59,18 @@ original first-stage context, not merely one positive subcondition. -/
 theorem cover_reading_name_extension_cover {K q : bSet B} {Γ : B} {I : Type u}
     (Hq : Γ ≤ q ∈ᴮ ErdosCohen.conditions K)
     (c : I → Algebra K) (Hcover : (⨆ i, c i) = ⊤) :
-    Γ ≤ ⨆ r : bSet B, r ∈ᴮ ErdosCohen.conditions K ⊓
-      (q ⊆ᴮ r ⊓ ⨆ i : I, reads (c i) r) := by
+    Γ ≤ ⨆ r : bSet B, r ∈ᴮ ErdosCohen.conditions K ⊓ (q ⊆ᴮ r ⊓ ⨆ i : I, reads (c i) r) := by
   classical
-  let V : B := ⨆ r : bSet B, r ∈ᴮ ErdosCohen.conditions K ⊓
-    (q ⊆ᴮ r ⊓ ⨆ i : I, reads (c i) r)
+  let V : B := ⨆ r : bSet B, r ∈ᴮ ErdosCohen.conditions K ⊓ (q ⊆ᴮ r ⊓ ⨆ i : I, reads (c i) r)
   change Γ ≤ V
   by_contra Hnot
   have Hpositive : Γ ⊓ Vᶜ ≠ ⊥ := by
     intro Hzero
     apply Hnot
-    have H : Γ ≤ (Vᶜ)ᶜ :=
-      le_compl_iff_disjoint_right.mpr (disjoint_iff_inf_le.mpr Hzero.le)
+    have H : Γ ≤ (Vᶜ)ᶜ := le_compl_iff_disjoint_right.mpr (disjoint_iff_inf_le.mpr Hzero.le)
     simpa only [compl_compl] using H
   obtain ⟨p, Hpb, Hpeq⟩ :=
-    Erdos1172BooleanNameIteration.exists_canonical_refinement Hpositive
-      (inf_le_left.trans Hq)
+    Erdos1172BooleanNameIteration.exists_canonical_refinement Hpositive (inf_le_left.trans Hq)
   obtain ⟨r, Hrp, i, Hi⟩ := exists_condition_in_cover p c Hcover
   have Hsub : r.value ≤ q ⊆ᴮ Erdos1172BooleanNameIteration.name r :=
     subset_trans' (subset_of_eq (Hrp.1.trans Hpeq)) Hrp.2
@@ -92,8 +88,7 @@ the same condition. No label is chosen globally from that join. -/
 theorem exists_cover_reading_extension {K q : bSet B} {Γ : B} {I : Type u}
     (Hq : Γ ≤ ErdosCohen.condition K q)
     (c : I → Algebra K) (Hcover : (⨆ i, c i) = ⊤) :
-    ∃ r : bSet B, Γ ≤ ErdosCohen.condition K r ∧ Γ ≤ q ⊆ᴮ r ∧
-      Γ ≤ ⨆ i : I, reads (c i) r := by
+    ∃ r : bSet B, Γ ≤ ErdosCohen.condition K r ∧ Γ ≤ q ⊆ᴮ r ∧ Γ ≤ ⨆ i : I, reads (c i) r := by
   obtain ⟨r, Hr⟩ := exists_convert
     (cover_reading_name_extension_cover (ErdosCohen.mem_conditions_iff.mpr Hq) c Hcover)
     (B_ext_inf B_ext_mem_left (B_ext_inf B_ext_subset_right
@@ -112,8 +107,7 @@ theorem reads_cover_of_extension {K q r : bSet B} {Γ : B} {I : Type u}
   calc
     Γ ≤ Γ ⊓ (⨆ i : I, reads (c i) q) := le_inf le_rfl Hread
     _ = ⨆ i : I, Γ ⊓ reads (c i) q := inf_iSup_eq _ _
-    _ ≤ ⨆ i : I, reads (c i) r :=
-      iSup_mono (fun _ => reads_mono_of_subset Hsub Hr)
+    _ ≤ ⨆ i : I, reads (c i) r := iSup_mono (fun _ => reads_mono_of_subset Hsub Hr)
 
 /-- One actual mixed extension simultaneously reads countably many
 arbitrary cover rows, with all conclusions at the original condition. -/
@@ -128,8 +122,7 @@ theorem exists_countable_cover_extension {K q : bSet B} {Γ : B}
   classical
   let State := {r : bSet B // Γ ≤ ErdosCohen.condition K r}
   have Hextend (n : ℕ) (s : State) :
-      ∃ t : State, Γ ≤ s.val ⊆ᴮ t.val ∧
-        Γ ≤ ⨆ i : I n, reads (c n i) t.val := by
+      ∃ t : State, Γ ≤ s.val ⊆ᴮ t.val ∧ Γ ≤ ⨆ i : I n, reads (c n i) t.val := by
     obtain ⟨r, Hr, Hsub, Hread⟩ := exists_cover_reading_extension s.property (c n) (Hcover n)
     exact ⟨⟨r, Hr⟩, Hsub, Hread⟩
   choose next hnext using Hextend

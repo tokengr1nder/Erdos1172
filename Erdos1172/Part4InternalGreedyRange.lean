@@ -41,8 +41,7 @@ private theorem mem_of_not_mem_complement {κ A x : bSet 𝔹} {Γ : 𝔹}
 theorem colarge_of_subset {κ J A B : bSet 𝔹} {Γ : 𝔹}
     (HJ : Γ ≤ isIdeal κ J) (HA : Γ ≤ colarge κ J A)
     (HAB : Γ ≤ A ⊆ᴮ B) (HB : Γ ≤ B ⊆ᴮ κ) : Γ ≤ colarge κ J B := by
-  refine le_inf HB (small_of_subset (downwardClosed_of_isIdeal HJ)
-    (HA.trans inf_le_right) ?_)
+  refine le_inf HB (small_of_subset (downwardClosed_of_isIdeal HJ) (HA.trans inf_le_right) ?_)
   rw [subset_unfold']
   apply le_iInf
   intro x
@@ -70,8 +69,7 @@ theorem fixedPoint_of_mem_diagonal_closure {seed F f x : bSet 𝔹} {Γ : 𝔹}
       apply le_iInf
       intro A
       rw [← deduction]
-      have Hjx : Γ ⊓ (j ∈ᴮ x ⊓ pair j A ∈ᴮ F) ≤ j ∈ᴮ x :=
-        inf_le_right.trans inf_le_left
+      have Hjx : Γ ⊓ (j ∈ᴮ x ⊓ pair j A ∈ᴮ F) ≤ j ∈ᴮ x := inf_le_right.trans inf_le_left
       exact diagonalCommon_mem_value (inf_le_left.trans Hdiag)
         (mem_of_mem_Ord Hjx (inf_le_left.trans Hxω) omegaOne_Ord) Hjx
         (inf_le_right.trans inf_le_right)
@@ -80,13 +78,11 @@ theorem fixedPoint_of_mem_diagonal_closure {seed F f x : bSet 𝔹} {Γ : 𝔹}
       apply le_iInf
       intro v
       rw [← deduction]
-      have Hjx : Γ ⊓ (j ∈ᴮ x ⊓ pair j v ∈ᴮ f) ≤ j ∈ᴮ x :=
-        inf_le_right.trans inf_le_left
+      have Hjx : Γ ⊓ (j ∈ᴮ x ⊓ pair j v ∈ᴮ f) ≤ j ∈ᴮ x := inf_le_right.trans inf_le_left
       exact closurePoints_apply (inf_le_left.trans Hclosed)
         (mem_of_mem_Ord Hjx (inf_le_left.trans Hxω) omegaOne_Ord) Hjx
         (inf_le_right.trans inf_le_right)
-  have Hcandidate : Γ ≤ x ∈ᴮ rowCandidates x seed F f :=
-    (mem_rowCandidates_iff Hprefix).mpr Hlegal
+  have Hcandidate : Γ ≤ x ∈ᴮ rowCandidates x seed F f := (mem_rowCandidates_iff Hprefix).mpr Hlegal
   have Hex : Γ ≤ ⨆ v, v ∈ᴮ omegaOne ⊓ pair x v ∈ᴮ f :=
     (le_inf ((Hf.trans inf_le_right).trans (iInf_le _ x)) Hxω).trans bv_imp_elim
   obtain ⟨v, Hv⟩ := exists_convert Hex (B_ext_inf B_ext_mem_left B_ext_pair_mem_right)
@@ -129,8 +125,7 @@ theorem greedy_range_colarge {J seed F f : bSet 𝔹} {Γ : 𝔹}
   intro x
   rw [← deduction]
   let Δ := Γ ⊓ x ∈ᴮ G
-  have Hx : Δ ≤ x ∈ᴮ seed ⊓
-      ((x ∈ᴮ difference omegaOne D)ᶜ ⊓ (x ∈ᴮ difference omegaOne C)ᶜ) := by
+  have Hx : Δ ≤ x ∈ᴮ seed ⊓ ((x ∈ᴮ difference omegaOne D)ᶜ ⊓ (x ∈ᴮ difference omegaOne C)ᶜ) := by
     simpa only [G, mem_difference, mem_binary_union, compl_sup] using
       (show Δ ≤ x ∈ᴮ G from inf_le_right)
   have Hxω : Δ ≤ x ∈ᴮ omegaOne :=

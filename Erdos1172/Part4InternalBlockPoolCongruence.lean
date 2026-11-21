@@ -36,8 +36,7 @@ variable {𝔹 : Type u} [NontrivialCompleteBooleanAlgebra 𝔹]
 open ErdosOmegaTwo ErdosCanonicalBlocks ErdosCountableSubsetCodes
 open ErdosCountableChoicePoolStep ErdosBlockSelectorPool
 
-theorem countableSubsets_congr :
-    B_congr (countableSubsets : bSet 𝔹 → bSet 𝔹) := by
+theorem countableSubsets_congr : B_congr (countableSubsets : bSet 𝔹 → bSet 𝔹) := by
   intro A B Γ H
   exact B_congr_comprehend (ϕ := fun T => injects_into T bSet.omega)
     (H_congr := B_ext_injects_into_left) (bv_powerset_congr H)

@@ -59,15 +59,13 @@ theorem sparse_small_cover_absurd {color : Bool} {R X A : bSet 𝔹} {Γ : 𝔹}
     apply le_iInf
     intro y
     rw [← deduction]
-    have Hy := mem_fiber_iff.mp
-      (show Δ ⊓ y ∈ᴮ fiber D f a ≤ y ∈ᴮ fiber D f a from inf_le_right)
+    have Hy := mem_fiber_iff.mp (show Δ ⊓ y ∈ᴮ fiber D f a ≤ y ∈ᴮ fiber D f a from inf_le_right)
     have Hcolor : Δ ⊓ y ∈ᴮ fiber D f a ≤ graphColor color R a y :=
       (le_inf
         (inf_le_left.trans (inf_le_left.trans
           ((Hf.trans inf_le_right).trans ((iInf_le _ y).trans (iInf_le _ a)))))
         (le_inf Hy.1 Hy.2)).trans bv_imp_elim
-    exact mem_neighborhood_iff.mpr
-      ⟨mem_of_mem_subset difference_subset Hy.1, Hcolor⟩
+    exact mem_neighborhood_iff.mpr ⟨mem_of_mem_subset difference_subset Hy.1, Hcolor⟩
   have Hbad : Δ ≤ injects_into omegaTwo omegaOne :=
     injects_into_trans (inf_le_right.trans inf_le_right)
       (injects_into_trans (injects_into_of_subset Hsub) HNsmall)
@@ -79,8 +77,7 @@ theorem maximal_independent_large {color : Bool} {R X A : bSet 𝔹} {Γ : 𝔹}
     (HCH : Γ ≤ (CH : 𝔹)) (HX : Γ ≤ injects_into omegaTwo X)
     (Hsparse : Γ ≤ sparseNeighborhoods color R X)
     (HAX : Γ ≤ A ⊆ᴮ X) (HA : Γ ≤ independent color R A)
-    (Hmax : Γ ≤ ⨅ B, _root_.imp (B ⊆ᴮ X ⊓ independent color R B)
-      (_root_.imp (A ⊆ᴮ B) (A =ᴮ B))) :
+    (Hmax : Γ ≤ ⨅ B, _root_.imp (B ⊆ᴮ X ⊓ independent color R B) (_root_.imp (A ⊆ᴮ B) (A =ᴮ B))) :
     Γ ≤ injects_into omegaTwo A := by
   have Hcover := ErdosIndependentCoverage.maximal_independent_covers HAX HA Hmax
   apply (le_inf (le_refl Γ)
@@ -104,8 +101,7 @@ theorem large_independent_value {color : Bool} {R X : bSet 𝔹} {Γ : 𝔹}
   apply iSup_le
   intro A
   let Δ := Γ ⊓ ((A ⊆ᴮ X ⊓ independent color R A) ⊓
-    ⨅ B, _root_.imp (B ⊆ᴮ X ⊓ independent color R B)
-      (_root_.imp (A ⊆ᴮ B) (A =ᴮ B)))
+    ⨅ B, _root_.imp (B ⊆ᴮ X ⊓ independent color R B) (_root_.imp (A ⊆ᴮ B) (A =ᴮ B)))
   have HAX : Δ ≤ A ⊆ᴮ X := inf_le_right.trans (inf_le_left.trans inf_le_left)
   have HA : Δ ≤ independent color R A := inf_le_right.trans (inf_le_left.trans inf_le_right)
   exact le_iSup_of_le A (le_inf (le_inf HAX HA)

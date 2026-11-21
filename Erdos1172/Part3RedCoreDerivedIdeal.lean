@@ -49,8 +49,7 @@ theorem blueSmall_union (ha : GoodCut r G H a) (e : Ordinal) {s t : Set W2}
     by_contra h
     exact hnot (Or.inr ⟨hb.1, hb.2.1, h⟩)
   apply hb.2.2
-  have heq : blueSection H a b (s ∪ t) =
-      blueSection H a b s ∪ blueSection H a b t := by
+  have heq : blueSection H a b (s ∪ t) = blueSection H a b s ∪ blueSection H a b t := by
     simp only [blueSection, Set.union_inter_distrib_right]
   rw [heq]
   exact redSmall_union hb.2.1 e hleft hright
@@ -66,8 +65,7 @@ theorem base_le_blue (ha : GoodCut r G H a) (hδ : 0 < δ)
   · exact Or.inl hmem
   by_cases hle : b ≤ r c
   · exact Or.inr hle
-  exact (hb.2.2 (base_le_red hδ
-    ⟨c, lt_of_not_ge hle, hmem, fun _ hx => hsub hx.1.1⟩)).elim
+  exact (hb.2.2 (base_le_red hδ ⟨c, lt_of_not_ge hle, hmem, fun _ hx => hsub hx.1.1⟩)).elim
 
 def blueSmallness (ha : GoodCut r G H a) (e : Ordinal) : FiniteSmallness W2 where
   small := BlueSmall r G H (ω ^ e) a

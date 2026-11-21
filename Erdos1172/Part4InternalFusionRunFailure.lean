@@ -62,8 +62,7 @@ theorem fusion_run_stored_selector_pair
   have HU : Γ ≤ U =ᴮ nextActive color R E top ξ T :=
     eq_of_eq_pair_right' (eq_of_eq_pair_right' Hentryeq)
   exact mem_congr (bv_symm (pair_congr (pair_congr bv_refl HU) HA)) bv_refl
-    (fusion_run_nextBlock_pair HE HElaw HF HRun Hlaw
-      (mem_domain_of_is_function Hentry HRun))
+    (fusion_run_nextBlock_pair HE HElaw HF HRun Hlaw (mem_domain_of_is_function Hentry HRun))
 
 /-- Domain validity is derived from the actual run. In particular,
 the stored active set retains points chosen at the current failed stage. -/

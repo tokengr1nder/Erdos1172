@@ -71,8 +71,7 @@ theorem hasTwoBlock_of_large_independent
     apply le_iInf; intro i; apply le_iInf; intro j
     apply le_iInf; intro x; apply le_iInf; intro y
     rw [← deduction]
-    let Δ := Γ ⊓ ((i ∈ᴮ omegaOne ⊓ j ∈ᴮ bSet.omega) ⊓
-      (pair i x ∈ᴮ f ⊓ pair j y ∈ᴮ g))
+    let Δ := Γ ⊓ ((i ∈ᴮ omegaOne ⊓ j ∈ᴮ bSet.omega) ⊓ (pair i x ∈ᴮ f ⊓ pair j y ∈ᴮ g))
     have Hrx : Δ ≤ rangeMem omegaOne f x :=
       rangeMem_of_pair (inf_le_right.trans (inf_le_left.trans inf_le_left))
         (inf_le_right.trans (inf_le_right.trans inf_le_left))

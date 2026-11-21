@@ -38,8 +38,7 @@ theorem fusionRowCandidates_mem_of_history_transfer
     (HX : Γ ≤ is_func' (prod ξ omegaOne) omegaOne X)
     (HX' : Γ ≤ is_func' (prod ξ omegaOne) omegaOne X')
     (Hν : Γ ≤ ν ∈ᴮ omegaOne)
-    (HBlocks : ∀ j A Δ, Δ ≤ Γ → Δ ≤ j ∈ᴮ ξ →
-      Δ ≤ pair j A ∈ᴮ Blocks' → Δ ≤ pair j A ∈ᴮ Blocks)
+    (HBlocks : ∀ j A Δ, Δ ≤ Γ → Δ ≤ j ∈ᴮ ξ → Δ ≤ pair j A ∈ᴮ Blocks' → Δ ≤ pair j A ∈ᴮ Blocks)
     (Hcoords : ∀ j w Δ, Δ ≤ Γ → Δ ≤ j ∈ᴮ ξ →
       Δ ≤ pair (pair j ν) w ∈ᴮ X' → Δ ≤ pair (pair j ν) w ∈ᴮ X)
     (Hv : Γ ≤ v ∈ᴮ fusionRowCandidates edgeColor R E b top ξ ν Blocks X) :
@@ -101,8 +100,7 @@ theorem fusionRowCandidates_eq_of_history_coherence
     (HX : Γ ≤ is_func' (prod ξ omegaOne) omegaOne X)
     (HX' : Γ ≤ is_func' (prod ξ omegaOne) omegaOne X')
     (Hν : Γ ≤ ν ∈ᴮ omegaOne)
-    (HBlocks : ∀ j A Δ, Δ ≤ Γ → Δ ≤ j ∈ᴮ ξ →
-      ((Δ ≤ pair j A ∈ᴮ Blocks) ↔ Δ ≤ pair j A ∈ᴮ Blocks'))
+    (HBlocks : ∀ j A Δ, Δ ≤ Γ → Δ ≤ j ∈ᴮ ξ → ((Δ ≤ pair j A ∈ᴮ Blocks) ↔ Δ ≤ pair j A ∈ᴮ Blocks'))
     (Hcoords : ∀ j v Δ, Δ ≤ Γ → Δ ≤ j ∈ᴮ ξ →
       ((Δ ≤ pair (pair j ν) v ∈ᴮ X) ↔ Δ ≤ pair (pair j ν) v ∈ᴮ X')) :
     Γ ≤ fusionRowCandidates edgeColor R E b top ξ ν Blocks X =ᴮ

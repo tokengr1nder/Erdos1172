@@ -45,16 +45,14 @@ theorem past_congr : B_congr (past : bSet 𝔹 → bSet 𝔹) := by
   intro A B Γ H
   exact binary_union_congr H (B_congr_bv_union H)
 
-theorem subset_binary_union_left {A B : bSet 𝔹} {Γ : 𝔹} :
-    Γ ≤ A ⊆ᴮ binary_union A B := by
+theorem subset_binary_union_left {A B : bSet 𝔹} {Γ : 𝔹} : Γ ≤ A ⊆ᴮ binary_union A B := by
   rw [subset_unfold']
   apply le_iInf
   intro x
   rw [← deduction, mem_binary_union]
   exact inf_le_right.trans le_sup_left
 
-theorem subset_binary_union_right {A B : bSet 𝔹} {Γ : 𝔹} :
-    Γ ≤ B ⊆ᴮ binary_union A B := by
+theorem subset_binary_union_right {A B : bSet 𝔹} {Γ : 𝔹} : Γ ≤ B ⊆ᴮ binary_union A B := by
   rw [subset_unfold']
   apply le_iInf
   intro x
@@ -80,8 +78,7 @@ theorem binary_union_injects_omegaOne {A B : bSet 𝔹} {Γ : 𝔹}
     rw [← imp_bot, ← deduction]
     let Δ := Γ ⊓ injects_into omegaTwo (binary_union A B)
     have Hlarge : Δ ≤ injects_into omegaTwo (difference (binary_union A B) A) :=
-      omegaTwo_injects_difference (inf_le_left.trans HCH) inf_le_right
-        (inf_le_left.trans HA)
+      omegaTwo_injects_difference (inf_le_left.trans HCH) inf_le_right (inf_le_left.trans HA)
     have Hsub : Δ ≤ difference (binary_union A B) A ⊆ᴮ B := by
       rw [subset_unfold']
       apply le_iInf
@@ -94,11 +91,9 @@ theorem binary_union_injects_omegaOne {A B : bSet 𝔹} {Γ : 𝔹}
     exact bv_absurd _ (injects_into_trans Hlarge
       (injects_into_trans (injects_into_of_subset Hsub) (inf_le_left.trans HB)))
       omegaTwo_not_injects
-  apply (le_inf le_rfl
-    (omegaTwo_cardinal_dichotomy (S := binary_union A B) (Γ := Γ))).trans
+  apply (le_inf le_rfl (omegaTwo_cardinal_dichotomy (S := binary_union A B) (Γ := Γ))).trans
   rw [inf_sup_left]
-  exact sup_le inf_le_right
-    ((bv_absurd _ inf_le_right (inf_le_left.trans Hnot)).trans bot_le)
+  exact sup_le inf_le_right ((bv_absurd _ inf_le_right (inf_le_left.trans Hnot)).trans bot_le)
 
 theorem succ_injects_omegaOne {A : bSet 𝔹} {Γ : 𝔹}
     (HCH : Γ ≤ (CH : 𝔹)) (HA : Γ ≤ injects_into A omegaOne) :

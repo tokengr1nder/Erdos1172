@@ -59,8 +59,7 @@ theorem FunctionDecisions.exists_simultaneous (F : FunctionDecisions P I V)
       subst i
       exact ⟨v, hv⟩
     · exact ⟨p, fun i hi => (h ⟨i, hi⟩).elim, le_rfl⟩
-  obtain ⟨conditions, hanti, hstart, hmeet⟩ :=
-    exists_antitone_dense_sequence hclosed p0 D hD
+  obtain ⟨conditions, hanti, hstart, hmeet⟩ := exists_antitone_dense_sequence hclosed p0 D hD
   have hcount : (Set.range index).Countable :=
     Cardinal.le_aleph0_iff_set_countable.mp (Cardinal.mk_range_le.trans hI)
   obtain ⟨bound, hbound⟩ := exists_bound_of_countable (Set.range index) hcount

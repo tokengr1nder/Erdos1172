@@ -51,8 +51,7 @@ theorem fusion_full_blocks_before
     (Hνb : Γ ≤ pair ν b ∈ᴮ fullBlocks Run)
     (Hμc : Γ ≤ pair μ c ∈ᴮ fullBlocks Run)
     (Hx : Γ ≤ x ∈ᴮ b) (Hy : Γ ≤ y ∈ᴮ c) : Γ ≤ x ∈ᴮ y := by
-  have Hμ : Γ ≤ μ ∈ᴮ omegaOne :=
-    mem_domain_of_is_function Hμc (fullBlocks_is_function HRun Hlaw)
+  have Hμ : Γ ≤ μ ∈ᴮ omegaOne := mem_domain_of_is_function Hμc (fullBlocks_is_function HRun Hlaw)
   have Hμsub := subset_of_mem_Ord Hμ omegaOne_Ord
   have Hprefix : Γ ≤ pair ν b ∈ᴮ
       blockHistory (taggedPrefix μ omegaOne entrySpace Run) :=
@@ -63,17 +62,14 @@ theorem fusion_full_blocks_before
       (blockHistory_is_function Hμsub (fusion_prefix_is_function HRun Hlaw Hμsub))
       Hprefix (fullBlocks_blockObject HE HElaw HF HFlaw HRun Hlaw Hsuccess Hνb)
   obtain ⟨Z, U, Hentry⟩ := blockHistory_witness Hμc
-  have Hstored := ((mem_taggedPrefix_pair_iff HRun
-    (fusion_run_tagging HRun Hlaw)).mp Hentry).2
-  have Hcases := fusion_run_stored_block_candidate_or_empty HE HElaw HF HFlaw
-    HRun Hlaw Hstored
+  have Hstored := ((mem_taggedPrefix_pair_iff HRun (fusion_run_tagging HRun Hlaw)).mp Hentry).2
+  have Hcases := fusion_run_stored_block_candidate_or_empty HE HElaw HF HFlaw HRun Hlaw Hstored
   apply (le_inf le_rfl Hcases).trans
   rw [inf_sup_left]
   apply sup_le
   · exact objectsBefore_apply (blockCandidate_before inf_le_right)
       (inf_le_left.trans Hearlier) (inf_le_left.trans Hx) (inf_le_left.trans Hy)
-  · exact (bot_of_mem_empty (mem_congr bv_refl inf_le_right
-      (inf_le_left.trans Hy))).trans bot_le
+  · exact (bot_of_mem_empty (mem_congr bv_refl inf_le_right (inf_le_left.trans Hy))).trans bot_le
 
 def fullBlockOrder (Run : bSet 𝔹) : 𝔹 :=
   ⨅ ν, ⨅ μ, ⨅ b, ⨅ c, ⨅ x, ⨅ y, _root_.imp

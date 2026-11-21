@@ -29,8 +29,7 @@ open Erdos1172Part3DecisionSelection (exists_function_decisions_of_dense)
 
 theorem mk_Iio_W1_le_aleph0 (i : W1) : #(Set.Iio i) ≤ ℵ₀ := by
   apply Cardinal.lt_aleph_one_iff.mp
-  simpa only [W1, Cardinal.mk_toType, Ordinal.card_omega] using
-    Cardinal.mk_Iio_lt i (by simp [W1])
+  simpa only [W1, Cardinal.mk_toType, Ordinal.card_omega] using Cardinal.mk_Iio_lt i (by simp [W1])
 
 variable {P L : Type} [Preorder P]
 
@@ -53,8 +52,7 @@ theorem exists_next_label (hclosed : CountablyClosed P) (R : P → L → Prop)
       ∀ j (hj : j < i) w, (previous j hj).val.decides p () w → J p w v := by
   classical
   let T (p : P) (_ : Unit) (v : L) : Prop := R p v ∧ K i p v ∧
-    ∀ q : P, q ≤ p → ∀ j (hj : j < i) w,
-      (previous j hj).val.decides q () w → J q w v
+    ∀ q : P, q ≤ p → ∀ j (hj : j < i) w, (previous j hj).val.decides q () w → J q w v
   have hT : ∀ {p q u v}, q ≤ p → T p u v → T q u v := by
     intro p q u v hqp h
     exact ⟨hR hqp h.1, hK hqp h.2.1, fun s hsq => h.2.2 s (hsq.trans hqp)⟩
@@ -70,8 +68,7 @@ theorem exists_next_label (hclosed : CountablyClosed P) (R : P → L → Prop)
     have hvalue (j : Set.Iio i) :
         (previous j.val j.property).val.decides q () (value j) := (hq j).choose_spec
     have hcount : (Set.range value).Countable :=
-      Cardinal.le_aleph0_iff_set_countable.mp
-        (Cardinal.mk_range_le.trans (mk_Iio_W1_le_aleph0 i))
+      Cardinal.le_aleph0_iff_set_countable.mp (Cardinal.mk_range_le.trans (mk_Iio_W1_le_aleph0 i))
     obtain ⟨r, hrq, v, hv, hKv, hcross⟩ := hextend i q (Set.range value) hcount (by
       rintro w ⟨j, rfl⟩
       exact (previous j.val j.property).property q (value j) (hvalue j))

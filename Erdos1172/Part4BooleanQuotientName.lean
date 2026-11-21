@@ -59,8 +59,7 @@ def upperSetCode (c : Positive C) : PSet.{u} :=
     (PSet.ordinalMk (Cardinal.mk (Positive C)).ord).Func
       (ordinalLabelEmbedding C d.val))
 
-theorem upperSetCode_subset_iff (c d : Positive C) :
-    upperSetCode d ⊆ upperSetCode c ↔ c ≤ d := by
+theorem upperSetCode_subset_iff (c d : Positive C) : upperSetCode d ⊆ upperSetCode c ↔ c ≤ d := by
   constructor
   · intro Hsub
     obtain ⟨z, Hz⟩ := Hsub (show (upperSetCode d).Type from ⟨d, le_rfl⟩)
@@ -76,8 +75,7 @@ theorem check_upperSetCode_subset_eq_top {c d : Positive C} (Hcd : c ≤ d) :
 
 theorem check_upperSetCode_subset_eq_bot {c d : Positive C} (Hcd : ¬ c ≤ d) :
     ((check (upperSetCode d) : bSet B) ⊆ᴮ check (upperSetCode c)) = ⊥ := by
-  have Hnot : ¬ upperSetCode d ⊆ upperSetCode c :=
-    fun H => Hcd ((upperSetCode_subset_iff c d).mp H)
+  have Hnot : ¬ upperSetCode d ⊆ upperSetCode c := fun H => Hcd ((upperSetCode_subset_iff c d).mp H)
   have Hneg : (⊤ : B) ≤
       ((check (upperSetCode d) : bSet B) ⊆ᴮ check (upperSetCode c))ᶜ :=
     check_not_subset Hnot

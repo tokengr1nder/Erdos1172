@@ -27,16 +27,14 @@ namespace bSet.ErdosPartialInjection
 
 variable {𝔹 : Type u} [NontrivialCompleteBooleanAlgebra 𝔹]
 
-theorem prod_domain_mono {A κ S : bSet 𝔹} {Γ : 𝔹}
-    (HA : Γ ≤ A ⊆ᴮ κ) : Γ ≤ prod A S ⊆ᴮ prod κ S := by
+theorem prod_domain_mono {A κ S : bSet 𝔹} {Γ : 𝔹} (HA : Γ ≤ A ⊆ᴮ κ) : Γ ≤ prod A S ⊆ᴮ prod κ S := by
   rw [subset_unfold']
   apply le_iInf
   intro z
   rw [← deduction]
   obtain ⟨x, Hx, y, Hy, Hz⟩ := mem_prod_iff₂.mp
     (show Γ ⊓ (z ∈ᴮ prod A S) ≤ z ∈ᴮ prod A S from inf_le_right)
-  exact mem_prod_iff₂.mpr
-    ⟨x, mem_of_mem_subset (inf_le_left.trans HA) Hx, y, Hy, Hz⟩
+  exact mem_prod_iff₂.mpr ⟨x, mem_of_mem_subset (inf_le_left.trans HA) Hx, y, Hy, Hz⟩
 
 theorem prefixClosed_of_ordinal_function {A S f : bSet 𝔹} {Γ : 𝔹}
     (HA : Γ ≤ Ord A) (Hf : Γ ≤ is_function A S f) :
@@ -50,12 +48,9 @@ theorem prefixClosed_of_ordinal_function {A S f : bSet 𝔹} {Γ : 𝔹}
   rw [← deduction]
   let Δ := Γ ⊓ ((pair x y ∈ᴮ f) ⊓ z ∈ᴮ x)
   have Hfunction : Δ ≤ is_function A S f := inf_le_left.trans Hf
-  have Hx : Δ ≤ x ∈ᴮ A :=
-    mem_domain_of_is_function (inf_le_right.trans inf_le_left) Hfunction
-  have Hz : Δ ≤ z ∈ᴮ A :=
-    mem_of_mem_Ord (inf_le_right.trans inf_le_right) Hx (inf_le_left.trans HA)
-  exact (le_inf ((is_total_of_is_function Hfunction).trans (iInf_le _ z)) Hz).trans
-    bv_imp_elim
+  have Hx : Δ ≤ x ∈ᴮ A := mem_domain_of_is_function (inf_le_right.trans inf_le_left) Hfunction
+  have Hz : Δ ≤ z ∈ᴮ A := mem_of_mem_Ord (inf_le_right.trans inf_le_right) Hx (inf_le_left.trans HA)
+  exact (le_inf ((is_total_of_is_function Hfunction).trans (iInf_le _ z)) Hz).trans bv_imp_elim
 
 theorem partialGraph_of_ordinal_function {A κ S f : bSet 𝔹} {Γ : 𝔹}
     (HAOrd : Γ ≤ Ord A) (HAsub : Γ ≤ A ⊆ᴮ κ)
@@ -77,8 +72,7 @@ theorem graphDomain_eq_of_function {A κ S f : bSet 𝔹} {Γ : 𝔹}
     apply le_iInf
     intro x
     rw [← deduction]
-    have Hmem : Γ ⊓ (x ∈ᴮ graphDomain κ S f) ≤
-        (x ∈ᴮ κ) ⊓ ⨆ y, (y ∈ᴮ S) ⊓ pair x y ∈ᴮ f := by
+    have Hmem : Γ ⊓ (x ∈ᴮ graphDomain κ S f) ≤ (x ∈ᴮ κ) ⊓ ⨆ y, (y ∈ᴮ S) ⊓ pair x y ∈ᴮ f := by
       rw [← mem_graphDomain]
       exact inf_le_right
     obtain ⟨y, Hy⟩ := exists_convert (Hmem.trans inf_le_right)

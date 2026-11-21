@@ -45,12 +45,10 @@ theorem exists_ground_cover_union_of_no_complement_embedding
     (hclosed : CountablyClosed P) (p0 : P) (hcard : #V ≤ ℵ_ 1)
     (htype : typeLT V = (ω_ 1 : Ordinal.{0}) ^ (ω + 1))
     (hno : ¬HasOrderedEmbeddingBelow (I := V) (neg (coverName F C)) p0) :
-    ∃ f : W1 → W1, ∃ A : Set V,
-      typeLT A < (ω_ 1 : Ordinal.{0}) ^ (ω + 1) ∧ Set.univ ⊆ C f ∪ A := by
+    ∃ f : W1 → W1, ∃ A : Set V, typeLT A < (ω_ 1 : Ordinal.{0}) ^ (ω + 1) ∧ Set.univ ⊆ C f ∪ A := by
   obtain ⟨D, hD, hcoverage⟩ :=
     Erdos1172Part3NamedShortCover.exists_supported_named_short_covers hcard htype
-  obtain ⟨q, _hqp0, e, H, hH⟩ :=
-    hcoverage P hclosed (neg (coverName F C)) p0 hno
+  obtain ⟨q, _hqp0, e, H, hH⟩ := hcoverage P hclosed (neg (coverName F C)) p0 hno
   let restricted : FunctionDecisions (Set.Iic q) W1 W1 := onConeDecisions F q
   have hdense : ∀ p : Set.Iic q, p ≤ (⟨q, le_rfl⟩ : Set.Iic q) →
       ∀ x ∈ (Set.univ : Set V), ∃ r : Set.Iic q, r ≤ p ∧

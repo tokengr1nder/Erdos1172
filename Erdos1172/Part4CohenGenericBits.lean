@@ -84,8 +84,7 @@ theorem bitValue_inf_eq_bot {K a y z : bSet B}
   intro q
   exact (condition_inf_eq_bot_of_distinct_decisions p.property q.property Hneq).le
 
-theorem bitValue_zero_inf_one_eq_bot (K a : bSet B) :
-    bitValue K a 0 ⊓ bitValue K a 1 = ⊥ := by
+theorem bitValue_zero_inf_one_eq_bot (K a : bSet B) : bitValue K a 0 ⊓ bitValue K a 1 = ⊥ := by
   apply bitValue_inf_eq_bot
   rw [← imp_bot, ← deduction]
   exact bot_of_zero_eq_one inf_le_right

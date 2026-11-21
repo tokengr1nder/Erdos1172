@@ -115,8 +115,7 @@ theorem active_index_subset_value_of_inverse_closure
     rw [← imp_bot, ← deduction]
     exact bot_of_mem_self' (closurePoints_apply (inf_le_left.trans Hclosed)
       (inf_le_left.trans Hv) inf_le_right (inf_le_left.trans Hvi))
-  apply (Ord.le_iff_lt_or_eq (Ord_of_mem_Ord Hi omegaOne_Ord)
-    (Ord_of_mem_Ord Hv omegaOne_Ord)).mpr
+  apply (Ord.le_iff_lt_or_eq (Ord_of_mem_Ord Hi omegaOne_Ord) (Ord_of_mem_Ord Hv omegaOne_Ord)).mpr
   apply (le_inf (le_refl Γ) (epsilon_trichotomy_of_Ord Hi Hv omegaOne_Ord)).trans
   rw [inf_sup_left, inf_sup_left]
   exact sup_le (sup_le (inf_le_right.trans le_sup_right) (inf_le_right.trans le_sup_left))

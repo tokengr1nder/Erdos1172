@@ -88,8 +88,7 @@ theorem small_ground_nonneighbors (ha : GoodCut r σ H source a)
     (hxa : (colorGraph G H b).Adj x a) :
     (smallName r H a).holds p (ground {y | ¬(colorGraph G H b).Adj x y}) := by
   apply smallName_of_witness
-  refine ⟨SmallUnionCode.compl (colorPointCode G b x),
-    ha.compl_lt _ (ha.point_lt _ x hx), ?_, ?_⟩
+  refine ⟨SmallUnionCode.compl (colorPointCode G b x), ha.compl_lt _ (ha.point_lt _ x hx), ?_, ?_⟩
   · rw [eval_compl, eval_colorPointCode, Erdos1172Part3RegularMembership.neg_neg]
     exact hxa
   · intro y hy q hqp hq
@@ -114,16 +113,14 @@ theorem exists_actual_extension (hclosed : CountablyClosed P)
     | some x => {y | ¬(colorGraph G H b).Adj x.val y}
   have hindex : #(Option selected) ≤ ℵ₀ := by
     rw [Cardinal.mk_option]
-    exact (add_le_add hcard Cardinal.one_le_aleph0).trans_eq
-      (Cardinal.add_eq_self le_rfl)
+    exact (add_le_add hcard Cardinal.one_le_aleph0).trans_eq (Cardinal.add_eq_self le_rfl)
   have hsmall : (smallName r H a).holds p (ground (⋃ j, losses j)) :=
     small_ground_iUnion hclosed ha p losses hindex (by
       intro j
       cases j with
       | none => exact small_ground_bounded_interval ha p hcutoff
       | some x =>
-          exact small_ground_nonneighbors ha p b (hbelow x.property)
-            (hcolor x.val x.property))
+          exact small_ground_nonneighbors ha p b (hbelow x.property) (hcolor x.val x.property))
   have hnot : ¬∀ y < a, ∀ q : P, q ≤ p → U.holds q y → y ∈ ⋃ j, losses j := by
     intro h
     exact hpositive (smallName_mono_set (V := ground (⋃ j, losses j)) h hsmall)

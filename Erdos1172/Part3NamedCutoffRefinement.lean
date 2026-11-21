@@ -28,12 +28,10 @@ value with stationary possibilities below one stronger condition. -/
 theorem exists_stationary_small_decision_fiber {I : Type} (hI : #I < ℵ_ 2)
     (hcc : OmegaTwoCC P) (p0 : P) (U : P → W2 → Prop) (hU : Persistent U)
     (hs : IsStationary (possible U p0)) (K : FunctionDecisions P W2 I) :
-    ∃ value : I, ∃ p : P, p ≤ p0 ∧
-      StationaryAt (fun q a => U q a ∧ K.decides q a value) p := by
+    ∃ value : I, ∃ p : P, p ≤ p0 ∧ StationaryAt (fun q a => U q a ∧ K.decides q a value) p := by
   classical
   let S := possible U p0
-  have witness (a : S) : ∃ value : I, ∃ p : P,
-      p ≤ p0 ∧ U p a.val ∧ K.decides p a.val value := by
+  have witness (a : S) : ∃ value : I, ∃ p : P, p ≤ p0 ∧ U p a.val ∧ K.decides p a.val value := by
     obtain ⟨q, hqp, hqa⟩ := a.property
     obtain ⟨p, hpq, value, hvalue⟩ := K.dense q a.val
     exact ⟨value, p, hpq.trans hqp, hU hpq hqa, hvalue⟩

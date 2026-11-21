@@ -70,8 +70,7 @@ theorem targetClass_fine_range (a : I → Set J) (hf : FineOn U a) (hn : NormalO
     (X : J → ZFSet.{u}) (hX : ∀ ξ, X ξ ∈ targetClass U) : ZFSet.range X ∈ targetClass U := by
   have rep (ξ : J) : ∃ f : I → ZFSet.{u}, collapse U (Germ.ofFun f) = X ξ := by
     obtain ⟨z, hz⟩ := hX ξ
-    obtain ⟨f, he⟩ : ∃ f : I → ZFSet.{u}, Germ.ofFun f = z :=
-      Germ.inductionOn z (fun f => ⟨f, rfl⟩)
+    obtain ⟨f, he⟩ : ∃ f : I → ZFSet.{u}, Germ.ofFun f = z := Germ.inductionOn z (fun f => ⟨f, rfl⟩)
     exact ⟨f, (congrArg (collapse U) he).trans hz⟩
   choose v hv using rep
   exact ⟨fineFamilyCode U a v, (collapse_fineFamilyCode U a hf hn v).trans

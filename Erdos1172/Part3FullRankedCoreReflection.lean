@@ -120,8 +120,7 @@ theorem exists_club_local_core_family {C : Type} (hGCH : GCH) (hI : #I ≤ ℵ_ 
   classical
   choose clubs hclubs hcores using fun c =>
     exists_club_local_cores hGCH hI factory σ (source c) (hsup c) (hlocal c)
-  let allClubs (a : W2) : Set W2 :=
-    if h : ∃ c, r c = a then clubs h.choose else Set.univ
+  let allClubs (a : W2) : Set W2 := if h : ∃ c, r c = a then clubs h.choose else Set.univ
   have hallClubs (a : W2) : IsClub (allClubs a) := by
     dsimp only [allClubs]
     split_ifs with h

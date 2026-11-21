@@ -100,8 +100,7 @@ theorem trace_holds_iff (core : CliqueDecisions P I X G) (p : P) (U : RegularNam
 
 theorem trace_mono_on_decisions (core : CliqueDecisions P I X G)
     {p : P} {U W : RegularName P X}
-    (hsub : ∀ q : P, q ≤ p → ∀ i x,
-      core.decides q i x → U.holds q x → W.holds q x)
+    (hsub : ∀ q : P, q ≤ p → ∀ i x, core.decides q i x → U.holds q x → W.holds q x)
     (hsmall : (trace core).holds p W) : (trace core).holds p U :=
   smallAt_mono (pullback_mono_on_decisions (cliqueFunction core) hsub) hsmall
 
@@ -136,8 +135,7 @@ theorem pullback_boundedRows_of_avoids
     (p : P) (bound : W1)
     (havoid : ∀ q : P, q ≤ p → ∀ z : OmegaSuccessor, bound < (ofLex z).1 →
       ∀ x, core.decides q z x → ¬U.holds q x) :
-    ∀ q : P, q ≤ p → ∀ z, (pullback (cliqueFunction core) U).holds q z →
-      z ∈ boundedRows bound := by
+    ∀ q : P, q ≤ p → ∀ z, (pullback (cliqueFunction core) U).holds q z → z ∈ boundedRows bound := by
   intro q hqp z hz
   change (ofLex z).1 ≤ bound
   apply le_of_not_gt
@@ -175,8 +173,7 @@ theorem base_small_to_ordered_trace (hclosed : CountablyClosed P)
     exact hn
   obtain ⟨t, hts, bound, hbound⟩ := data.converges (SmallUnionCode.compl c)
     (ha.compl_lt c hc) s (source.persistent (hsq.trans hqp) hp) hca s le_rfl
-  refine ⟨t, hts.trans hsq,
-    small_trace_of_avoids_late_rows hclosed data.name.toClique U t bound ?_⟩
+  refine ⟨t, hts.trans hsq, small_trace_of_avoids_late_rows hclosed data.name.toClique U t bound ?_⟩
   intro v hvt z hz x hx hUx
   have hcx := hbound v hvt z hz x hx
   rw [Erdos1172Part3RegularNeighborhoodCode.eval_compl] at hcx
@@ -187,7 +184,6 @@ theorem prior_source_ordered_positive (data : ProductData r H source a)
     (neg (trace data.name.toClique)).holds p (priorSource source a) := by
   apply trace_not_small_of_cover data.name.toClique p (priorSource source a)
   intro q hqp z x hx
-  exact ⟨data.actual_source q (source.persistent hqp hp) z x hx,
-    (data.geometry q z x hx).1⟩
+  exact ⟨data.actual_source q (source.persistent hqp hp) z x hx, (data.geometry q z x hx).1⟩
 
 end Erdos1172Part3OrderedCoreTrace

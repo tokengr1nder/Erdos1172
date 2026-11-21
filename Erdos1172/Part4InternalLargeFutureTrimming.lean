@@ -32,8 +32,7 @@ theorem exists_large_future_avoiding_small_sets
     (HEsmall : Γ ≤ injects_into E omegaOne)
     (HS : Γ ≤ S ⊆ᴮ omegaTwo) (HSlarge : Γ ≤ injects_into omegaTwo S) :
     ∃ a L : bSet 𝔹, Γ ≤ a ∈ᴮ omegaTwo ⊓ (A ⊆ᴮ a ⊓
-      (L ⊆ᴮ S ⊓ (injects_into omegaTwo L ⊓
-        (⨅ y, _root_.imp (y ∈ᴮ L) (a ∈ᴮ y ⊓ (y ∈ᴮ E)ᶜ))))) := by
+      (L ⊆ᴮ S ⊓ (injects_into omegaTwo L ⊓ (⨅ y, _root_.imp (y ∈ᴮ L) (a ∈ᴮ y ⊓ (y ∈ᴮ E)ᶜ))))) := by
   obtain ⟨a, Ha⟩ := ErdosOmegaTwoBounded.exists_strict_upper_bound HCH HA HAsmall
   let L := difference (difference S E) (succ a)
   have HLS : Γ ≤ L ⊆ᴮ S := subset_trans' difference_subset difference_subset

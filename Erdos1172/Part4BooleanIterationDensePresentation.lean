@@ -59,55 +59,42 @@ theorem exists_dense_presentation_of_checked_surjection
   rcases A with ⟨I, a⟩
   let q : I → bSet B := fun i =>
     function_eval HF (check (a i)) (check_mem (PSet.func_mem (PSet.mk I a) i))
-  have Hqmem (i : I) : (⊤ : B) ≤ q i ∈ᴮ Q :=
-    function_eval_mem_codomain
-  have Hqpair (i : I) : (⊤ : B) ≤ pair (check (a i)) (q i) ∈ᴮ f :=
-    function_eval_pair_mem
+  have Hqmem (i : I) : (⊤ : B) ≤ q i ∈ᴮ Q := function_eval_mem_codomain
+  have Hqpair (i : I) : (⊤ : B) ≤ pair (check (a i)) (q i) ∈ᴮ f := function_eval_pair_mem
   have Hex (z : {b : B // b ≠ ⊥} × I) :
-      ∃ r : Condition Q, r.value ≤ z.1.val ∧
-        r.value ≤ q z.2 =ᴮ name r :=
+      ∃ r : Condition Q, r.value ≤ z.1.val ∧ r.value ≤ q z.2 =ᴮ name r :=
     exists_canonical_refinement z.1.property (le_top.trans (Hqmem z.2))
-  let d : {b : B // b ≠ ⊥} × I → Condition Q :=
-    fun z => (Hex z).choose
+  let d : {b : B // b ≠ ⊥} × I → Condition Q := fun z => (Hex z).choose
   refine ⟨Set.range d, ?_, ?_⟩
-  · have Hembed : Function.Injective
-        (fun z : {b : B // b ≠ ⊥} × I => (z.1.val, z.2)) := by
+  · have Hembed : Function.Injective (fun z : {b : B // b ≠ ⊥} × I => (z.1.val, z.2)) := by
       intro x y H
       apply Prod.ext
       · apply Subtype.ext
         exact congrArg (fun z : B × I => z.1) H
       · exact congrArg (fun z : B × I => z.2) H
     calc
-      Cardinal.mk (Set.range d)
-          ≤ Cardinal.mk ({b : B // b ≠ ⊥} × I) := Cardinal.mk_range_le
+      Cardinal.mk (Set.range d) ≤ Cardinal.mk ({b : B // b ≠ ⊥} × I) := Cardinal.mk_range_le
       _ ≤ Cardinal.mk (B × I) := Cardinal.mk_le_of_injective Hembed
       _ = Cardinal.mk B * Cardinal.mk I := by
         simp only [Cardinal.mk_prod, Cardinal.lift_id]
   · intro p
     have Hpre := checked_surjection_preimages Hsurj p
-    have Hpositive : ∃ i : I,
-        p.value ⊓ pair (check (a i)) (name p) ∈ᴮ f ≠ ⊥ := by
+    have Hpositive : ∃ i : I, p.value ⊓ pair (check (a i)) (name p) ∈ᴮ f ≠ ⊥ := by
       by_contra Hnone
-      have Hbot : (⨆ i : I,
-          p.value ⊓ pair (check (a i)) (name p) ∈ᴮ f) = ⊥ := by
+      have Hbot : (⨆ i : I, p.value ⊓ pair (check (a i)) (name p) ∈ᴮ f) = ⊥ := by
         apply iSup_eq_bot.mpr
         intro i
         by_contra Hi
         exact Hnone ⟨i, Hi⟩
       apply p.nonzero
       calc
-        p.value = p.value ⊓ ⨆ i : I,
-            pair (check (a i)) (name p) ∈ᴮ f := (inf_eq_left.mpr Hpre).symm
-        _ = ⨆ i : I, p.value ⊓ pair (check (a i)) (name p) ∈ᴮ f :=
-          inf_iSup_eq _ _
+        p.value = p.value ⊓ ⨆ i : I, pair (check (a i)) (name p) ∈ᴮ f := (inf_eq_left.mpr Hpre).symm
+        _ = ⨆ i : I, p.value ⊓ pair (check (a i)) (name p) ∈ᴮ f := inf_iSup_eq _ _
         _ = ⊥ := Hbot
     obtain ⟨i, Hi⟩ := Hpositive
-    let z : {b : B // b ≠ ⊥} × I :=
-      (⟨p.value ⊓ pair (check (a i)) (name p) ∈ᴮ f, Hi⟩, i)
-    have Hd : (d z).value ≤ p.value ⊓ pair (check (a i)) (name p) ∈ᴮ f :=
-      (Hex z).choose_spec.1
-    have Heq : (d z).value ≤ q i =ᴮ name (d z) :=
-      (Hex z).choose_spec.2
+    let z : {b : B // b ≠ ⊥} × I := (⟨p.value ⊓ pair (check (a i)) (name p) ∈ᴮ f, Hi⟩, i)
+    have Hd : (d z).value ≤ p.value ⊓ pair (check (a i)) (name p) ∈ᴮ f := (Hex z).choose_spec.1
+    have Heq : (d z).value ≤ q i =ᴮ name (d z) := (Hex z).choose_spec.2
     have Hpq : (d z).value ≤ name p =ᴮ q i :=
       eq_of_is_func_of_eq
         (le_top.trans (HF.trans (inf_le_left.trans inf_le_left))) bv_refl

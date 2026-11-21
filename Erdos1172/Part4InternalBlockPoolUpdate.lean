@@ -53,8 +53,7 @@ theorem nextObjects_congr {color : Bool} {R F B₁ B₂ P₁ P₂ : bSet 𝔹} {
 theorem pointInput_congr {F B₁ B₂ P₁ P₂ : bSet 𝔹} {Γ : 𝔹}
     (HB : Γ ≤ B₁ =ᴮ B₂) (HP : Γ ≤ P₁ =ᴮ P₂) :
     Γ ≤ pointInput B₁ P₁ F =ᴮ pointInput B₂ P₂ F :=
-  binary_union_congr HP (binary_union_congr (B_congr_bv_union HB)
-    (selectedPoints_congr HB HP))
+  binary_union_congr HP (binary_union_congr (B_congr_bv_union HB) (selectedPoints_congr HB HP))
 
 theorem nextPoints_congr {F B₁ B₂ P₁ P₂ : bSet 𝔹} {Γ : 𝔹}
     (HB : Γ ≤ B₁ =ᴮ B₂) (HP : Γ ≤ P₁ =ᴮ P₂) :
@@ -75,14 +74,12 @@ theorem blockPool_union_subset {color : Bool} {R B : bSet 𝔹} {Γ : 𝔹}
   apply le_iInf
   intro A
   rw [← deduction]
-  exact (mem_blockObjects_iff.mp
-    (mem_of_mem_subset (inf_le_left.trans HB) inf_le_right)).1
+  exact (mem_blockObjects_iff.mp (mem_of_mem_subset (inf_le_left.trans HB) inf_le_right)).1
 
 theorem pointInput_subset {color : Bool} {R B P F : bSet 𝔹} {Γ : 𝔹}
     (HB : Γ ≤ B ⊆ᴮ blockObjects color R) (HP : Γ ≤ P ⊆ᴮ omegaTwo) :
     Γ ≤ pointInput B P F ⊆ᴮ omegaTwo :=
-  binary_union_subset HP (binary_union_subset (blockPool_union_subset HB)
-    selectedPoints_subset)
+  binary_union_subset HP (binary_union_subset (blockPool_union_subset HB) selectedPoints_subset)
 
 theorem nextObjects_subset {color : Bool} {R B P F : bSet 𝔹} {Γ : 𝔹}
     (HB : Γ ≤ B ⊆ᴮ blockObjects color R) :
@@ -132,8 +129,7 @@ theorem update_small {color : Bool} {R J E S F B P : bSet 𝔹} {Γ : 𝔹}
     (Hlaw : Γ ≤ blockSelectorLaw color R J E S F)
     (HB : Γ ≤ B ⊆ᴮ blockObjects color R) (HP : Γ ≤ P ⊆ᴮ omegaTwo) :
     Γ ≤ injects_into (nextObjects color R B P F) omegaOne ⊓
-      (injects_into (pointInput B P F) omegaOne ⊓
-        injects_into (nextPoints B P F) omegaOne) := by
+      (injects_into (pointInput B P F) omegaOne ⊓ injects_into (nextPoints B P F) omegaOne) := by
   have Hselected := successful_pool_step_small HCH HBsmall HPsmall HF Hlaw HB HP
   have Hinput : Γ ≤ injects_into (pointInput B P F) omegaOne :=
     binary_union_injects_omegaOne HCH HPsmall

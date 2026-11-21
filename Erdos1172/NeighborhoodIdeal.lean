@@ -25,10 +25,8 @@ theorem codedSmall_iUnion {B : Type} {r : SmallUnionCode.Code W1 B ↪ W3}
     (hunion : ∀ c : W1 → SmallUnionCode.Code W1 B, (∀ i, r (c i) < a) →
       r (SmallUnionCode.union c) < a)
     {J : Type} (s : J → Set W3) (hJ : #J < ℵ_ 2)
-    (hs : ∀ j, ∃ c, r c < a ∧ a ∉ SmallUnionCode.eval atms c ∧
-      s j ⊆ SmallUnionCode.eval atms c) :
-    ∃ c, r c < a ∧ a ∉ SmallUnionCode.eval atms c ∧
-      (⋃ j, s j) ⊆ SmallUnionCode.eval atms c := by
+    (hs : ∀ j, ∃ c, r c < a ∧ a ∉ SmallUnionCode.eval atms c ∧ s j ⊆ SmallUnionCode.eval atms c) :
+    ∃ c, r c < a ∧ a ∉ SmallUnionCode.eval atms c ∧ (⋃ j, s j) ⊆ SmallUnionCode.eval atms c := by
   classical
   choose c hc hca hcs using hs
   obtain ⟨e⟩ := (Cardinal.le_def J W1).mp
@@ -69,8 +67,7 @@ def Small (r : Code ↪ W3) (G H : SimpleGraph W3) (a : W3) (s : Set W3) : Prop 
 
 variable {r : Code ↪ W3} {G H : SimpleGraph W3} {a : W3}
 
-theorem small_mono {s t : Set W3} (hst : s ⊆ t)
-    (ht : Small r G H a t) : Small r G H a s := by
+theorem small_mono {s t : Set W3} (hst : s ⊆ t) (ht : Small r G H a t) : Small r G H a s := by
   rcases ht with ⟨c, hc, hca, ht⟩
   exact ⟨c, hc, hca, hst.trans ht⟩
 
@@ -105,8 +102,7 @@ theorem named_compl_small (ha : GoodCut r G H a) {c : Code}
 
 theorem exists_club_positive_trace (r : Code ↪ W3) (G H : SimpleGraph W3)
     (s : Set W3) :
-    ∃ club : Set W3, IsClub club ∧ ∀ a ∈ club, a ∈ s →
-      ¬Small r G H a (s ∩ Set.Iio a) := by
+    ∃ club : Set W3, IsClub club ∧ ∀ a ∈ club, a ∈ s → ¬Small r G H a (s ∩ Set.Iio a) := by
   obtain ⟨club, hclub, hreflect⟩ := ClubClosure.exists_club_reflects
     r (eval G H) s alephZero_lt_cof_W3
   exact ⟨club, hclub, fun a ha has ⟨c, hc, hca, hsub⟩ => hca (hreflect a ha c hc hsub has)⟩

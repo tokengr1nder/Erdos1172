@@ -100,8 +100,7 @@ theorem nextEntry_congr
     {color : Bool} {R E F top ξ η T Q : bSet 𝔹} {Γ : 𝔹}
     (Hξ : Γ ≤ ξ =ᴮ η) (HT : Γ ≤ T =ᴮ Q) :
     Γ ≤ nextEntry color R E F top ξ T =ᴮ nextEntry color R E F top η Q :=
-  pair_congr (nextBlock_congr Hξ HT)
-    (pair_congr (nextIndices_congr Hξ HT) (nextActive_congr Hξ HT))
+  pair_congr (nextBlock_congr Hξ HT) (pair_congr (nextIndices_congr Hξ HT) (nextActive_congr Hξ HT))
 
 def runSpace : bSet 𝔹 := prod omegaOne entrySpace
 
@@ -141,8 +140,7 @@ theorem fusion_run_entry_eq
     {color : Bool} {R E F top Run ξ A Z U : bSet 𝔹} {Γ : 𝔹}
     (Hlaw : Γ ≤ runLaw color R E F top Run)
     (Hpair : Γ ≤ pair ξ (pair ξ (entry A Z U)) ∈ᴮ Run) :
-    Γ ≤ entry A Z U =ᴮ
-      nextEntry color R E F top ξ (taggedPrefix ξ omegaOne entrySpace Run) :=
+    Γ ≤ entry A Z U =ᴮ nextEntry color R E F top ξ (taggedPrefix ξ omegaOne entrySpace Run) :=
   eq_of_eq_pair_right' (imageRecLaw_apply Hlaw Hpair)
 
 /-- Every actual stored row graph is total, before any later invariant

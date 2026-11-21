@@ -48,8 +48,7 @@ theorem part2Targets_of_favorable_pattern (hCH : CH) {r : Code ↪ W3}
   obtain ⟨club, hclub, hstable⟩ := system.stable system.source Set.Subset.rfl system.stationary
   obtain ⟨a, has, hac⟩ := system.stationary hclub
   obtain ⟨b, hbs, hbc, hab⟩ := system.stationary
-    (hclub.inter alephZero_lt_cof_W3.ne' (Set.isClub_Ioi_of_aleph0_lt_cof
-      alephZero_lt_cof_W3 a))
+    (hclub.inter alephZero_lt_cof_W3.ne' (Set.isClub_Ioi_of_aleph0_lt_cof alephZero_lt_cof_W3 a))
   have hpa : ¬DerivedSmall r G H (word 2) a (system.source ∩ Set.Iio a) :=
     mem_spectrum.mp (by rwa [hstable a has hac])
   have hpb : ¬DerivedSmall r G H [false, true] b (Set.Iio b) := by
@@ -74,8 +73,7 @@ theorem red_target_of_hard_pattern_and_no_targets (hCH : CH) {r : Code ↪ W3}
     (hclub.inter alephZero_lt_cof_W3.ne'
       (Set.isClub_Ioi_of_aleph0_lt_cof alephZero_lt_cof_W3 first))
   have hdGood : ∀ a ∈ domain, GoodCut r G H a := fun a ha => system.good a ha.1
-  have hext : ∀ a ∈ domain,
-      DerivedSmall r G H (false :: word 3) a (system.source ∩ Set.Iio a) := by
+  have hext : ∀ a ∈ domain, DerivedSmall r G H (false :: word 3) a (system.source ∩ Set.Iio a) := by
     intro a ha
     have hfav : DerivedSmall r G H [false, true] a (Set.Iio a) :=
       favorable_small_of_no_targets hCH G H hcompl hno (system.good first hfirstS)

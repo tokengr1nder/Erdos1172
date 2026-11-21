@@ -39,8 +39,7 @@ theorem small_iJoin (hclosed : CountablyClosed P) (ha : GoodCut r σ H source a)
   classical
   obtain ⟨e⟩ : Nonempty (J ↪ ℕ) := (Cardinal.le_def _ _).mp (by
     simpa only [Cardinal.mk_nat] using hJ)
-  let V (n : ℕ) : RegularName P W2 :=
-    if h : ∃ j, e j = n then U h.choose else ground ∅
+  let V (n : ℕ) : RegularName P W2 := if h : ∃ j, e j = n then U h.choose else ground ∅
   have hV : ∀ n, (smallName r H a).holds p (V n) := by
     intro n
     dsimp only [V]

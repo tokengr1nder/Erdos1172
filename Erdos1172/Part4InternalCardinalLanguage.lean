@@ -67,8 +67,7 @@ namespace Erdos1172Part4InternalCardinalLanguage
 theorem realize_least_noninjecting_ordinal_f {κ α : V β} :
     boolean_realize_bounded_formula (DVec.cons κ (DVec.cons α DVec.nil))
       least_noninjecting_ordinal_f DVec.nil =
-    Ord α ⊓ ((injects_into α κ)ᶜ ⊓
-      ⨅ γ : bSet β, _root_.imp (γ ∈ᴮ α) (injects_into γ κ)) := by
+    Ord α ⊓ ((injects_into α κ)ᶜ ⊓ ⨅ γ : bSet β, _root_.imp (γ ∈ᴮ α) (injects_into γ κ)) := by
   have hOrd :
       boolean_realize_bounded_formula (S := V β)
         (DVec.cons κ (DVec.cons α DVec.nil)) (Ord_f ↑ᶠᵇ' 1 # 0) DVec.nil = Ord α := by

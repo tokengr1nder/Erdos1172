@@ -53,8 +53,7 @@ def NiceFunctionName.toDecisions (N : NiceFunctionName P I V) : FunctionDecision
 decisions made by the resulting name are decisions of the original
 function system, so normalization does not invent any value. -/
 theorem exists_nice_name (hcc : OmegaTwoCC P) (F : FunctionDecisions P I V) :
-    ∃ N : NiceFunctionName P I V,
-      ∀ p i v, N.toDecisions.decides p i v → F.decides p i v := by
+    ∃ N : NiceFunctionName P I V, ∀ p i v, N.toDecisions.decides p i v → F.decides p i v := by
   classical
   let D (i : I) : Set P := {p | ∃ v, F.decides p i v}
   have hD : ∀ i, DenseBelow (D i) := by
@@ -112,8 +111,7 @@ theorem boundedAt_iff_of_refines {F K : FunctionDecisions P W1 W1}
   · intro h q hqp v hv
     exact h q hqp v (href q i v hv)
 
-theorem NiceFunctionName.ext {N M : NiceFunctionName P I V} (h : N.graph = M.graph) :
-    N = M := by
+theorem NiceFunctionName.ext {N M : NiceFunctionName P I V} (h : N.graph = M.graph) : N = M := by
   cases N
   cases M
   cases h
@@ -134,8 +132,7 @@ theorem mk_nice_function_name_le (hGCH : GCH) (hP : #P ≤ ℵ_ 2) :
     apply (Cardinal.mk_bounded_set_le (P × W1) (ℵ_ 1)).trans
     exact (Cardinal.power_le_power_right (max_le hprod (Cardinal.aleph0_le_aleph 2))).trans_eq
         hGCH.aleph_two_power_aleph_one
-  let encode (N : NiceFunctionName P W1 W1) : W1 → Code :=
-    fun i => ⟨N.graph i, N.small i⟩
+  let encode (N : NiceFunctionName P W1 W1) : W1 → Code := fun i => ⟨N.graph i, N.small i⟩
   have hinj : Injective encode := by
     intro N M h
     apply NiceFunctionName.ext

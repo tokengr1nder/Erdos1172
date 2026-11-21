@@ -38,8 +38,7 @@ noncomputable def smallValues (Q F : bSet 𝔹) : 𝔹 :=
 theorem smallValues_apply {Q F q A : bSet 𝔹} {Γ : 𝔹}
     (H : Γ ≤ smallValues Q F) (Hq : Γ ≤ q ∈ᴮ Q)
     (HA : Γ ≤ pair q A ∈ᴮ F) : Γ ≤ injects_into A omegaOne :=
-  (le_inf (H.trans ((iInf_le _ q).trans (iInf_le _ A))) (le_inf Hq HA)).trans
-    bv_imp_elim
+  (le_inf (H.trans ((iInf_le _ q).trans (iInf_le _ A))) (le_inf Hq HA)).trans bv_imp_elim
 
 /-- The pointwise indexed law holds for every arbitrary name in the actual
 value image. Functionality is not needed for this transfer. -/
@@ -49,12 +48,9 @@ theorem smallValues_image {Q K F : bSet 𝔹} {Γ : 𝔹}
   apply le_iInf
   intro A
   rw [← deduction]
-  have Hex := (mem_image_iff.mp
-    (show Γ ⊓ A ∈ᴮ image Q K F ≤ A ∈ᴮ image Q K F from inf_le_right)).2
-  obtain ⟨q, Hq⟩ := exists_convert Hex
-    (B_ext_inf B_ext_mem_left B_ext_pair_mem_left)
-  exact smallValues_apply (inf_le_left.trans H) (Hq.trans inf_le_left)
-    (Hq.trans inf_le_right)
+  have Hex := (mem_image_iff.mp (show Γ ⊓ A ∈ᴮ image Q K F ≤ A ∈ᴮ image Q K F from inf_le_right)).2
+  obtain ⟨q, Hq⟩ := exists_convert Hex (B_ext_inf B_ext_mem_left B_ext_pair_mem_left)
+  exact smallValues_apply (inf_le_left.trans H) (Hq.trans inf_le_left) (Hq.trans inf_le_right)
 
 /-- A small family of small sets has small union. All families and their
 members are arbitrary Boolean-valued names, with no ambient containment
@@ -80,8 +76,7 @@ theorem union_injects_omegaOne {T : bSet 𝔹} {Γ : 𝔹}
       (le_inf (inf_le_left.trans (inf_le_left.trans (Hmembers.trans (iInf_le _ A))))
         (inf_le_right.trans inf_le_left)).trans bv_imp_elim
     have Hsub : Θ ≤ fiber (bv_union T) f A ⊆ᴮ A :=
-      ErdosOmegaTwoBounded.union_selector_fiber_subset
-        (inf_le_left.trans (Hf.trans inf_le_right))
+      ErdosOmegaTwoBounded.union_selector_fiber_subset (inf_le_left.trans (Hf.trans inf_le_right))
     have Hbad : Θ ≤ injects_into omegaTwo omegaOne :=
       injects_into_trans (inf_le_right.trans inf_le_right)
         (injects_into_trans (injects_into_of_subset Hsub) HAsmall)
@@ -89,8 +84,7 @@ theorem union_injects_omegaOne {T : bSet 𝔹} {Γ : 𝔹}
   apply (le_inf (le_refl Γ)
     (ErdosPartialInjection.omegaTwo_cardinal_dichotomy (S := bv_union T) (Γ := Γ))).trans
   rw [inf_sup_left]
-  exact sup_le inf_le_right
-    ((bv_absurd _ inf_le_right (inf_le_left.trans Hnot)).trans bot_le)
+  exact sup_le inf_le_right ((bv_absurd _ inf_le_right (inf_le_left.trans Hnot)).trans bot_le)
 
 /-- The actual union of a small internal indexed family is small when each
 guarded value is small. The arbitrary base may in particular be omega-two. -/
@@ -99,8 +93,7 @@ theorem indexed_union_injects_omegaOne {Q κ F : bSet 𝔹} {Γ : 𝔹}
     (HQ : Γ ≤ injects_into Q omegaOne) (Hvalues : Γ ≤ smallValues Q F) :
     Γ ≤ injects_into (bv_union (image Q (bv_powerset κ) F)) omegaOne :=
   union_injects_omegaOne HCH
-    (ErdosCountableImage.image_injects_into_ordinal
-      (is_func'_of_is_function HF) HQ omegaOne_Ord)
+    (ErdosCountableImage.image_injects_into_ordinal (is_func'_of_is_function HF) HQ omegaOne_Ord)
     (smallValues_image Hvalues)
 
 /-- An arbitrary name in the indexed union has an actual internal index

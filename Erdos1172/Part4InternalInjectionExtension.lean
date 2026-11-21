@@ -36,13 +36,11 @@ private theorem insert_cases {p q f : bSet 𝔹} {Γ v : 𝔹}
     (Hp : Γ ≤ p ∈ᴮ bSet.insert1 q f)
     (Hnew : ∀ {Δ : 𝔹}, Δ ≤ Γ → Δ ≤ p =ᴮ q → Δ ≤ v)
     (Hold : ∀ {Δ : 𝔹}, Δ ≤ Γ → Δ ≤ p ∈ᴮ f → Δ ≤ v) : Γ ≤ v := by
-  have Hsplit : Γ ≤ p =ᴮ q ⊔ p ∈ᴮ f :=
-    Hp.trans (mem_insert1_value (x := p) (y := q) (z := f)).le
+  have Hsplit : Γ ≤ p =ᴮ q ⊔ p ∈ᴮ f := Hp.trans (mem_insert1_value (x := p) (y := q) (z := f)).le
   exact (le_inf le_rfl Hsplit).trans
     (bv_or_elim_right (Hnew inf_le_left inf_le_right) (Hold inf_le_left inf_le_right))
 
-theorem subset_insertPair {a y f : bSet 𝔹} {Γ : 𝔹} :
-    Γ ≤ f ⊆ᴮ bSet.insert1 (pair a y) f := by
+theorem subset_insertPair {a y f : bSet 𝔹} {Γ : 𝔹} : Γ ≤ f ⊆ᴮ bSet.insert1 (pair a y) f := by
   rw [subset_unfold']
   apply le_iInf
   intro z
@@ -63,8 +61,7 @@ private theorem old_image_conflict {A S f y x z : bSet 𝔹} {Γ : 𝔹}
     (Hf : Γ ≤ is_function A S f) (Hy : Γ ≤ (y ∈ᴮ image A S f)ᶜ)
     (Hzy : Γ ≤ z =ᴮ y) (Hp : Γ ≤ pair x z ∈ᴮ f) : Γ ≤ ⊥ :=
   bv_absurd _ (mem_congr Hzy bv_refl
-    (mem_image Hp (mem_domain_of_is_function Hp Hf)
-      (mem_codomain_of_is_function Hp Hf))) Hy
+    (mem_image Hp (mem_domain_of_is_function Hp Hf) (mem_codomain_of_is_function Hp Hf))) Hy
 
 private theorem output_eq_of_insertPair {A S f a y x₁ x₂ z₁ z₂ : bSet 𝔹} {Γ : 𝔹}
     (Hf : Γ ≤ is_function A S f) (Ha : Γ ≤ (a ∈ᴮ A)ᶜ)
@@ -75,19 +72,16 @@ private theorem output_eq_of_insertPair {A S f a y x₁ x₂ z₁ z₂ : bSet �
   · intro Δ HΔ Hnew₁
     apply insert_cases (HΔ.trans H₂)
     · intro Θ HΘ Hnew₂
-      exact bv_trans (HΘ.trans (eq_of_eq_pair_right' Hnew₁))
-        (bv_symm (eq_of_eq_pair_right' Hnew₂))
+      exact bv_trans (HΘ.trans (eq_of_eq_pair_right' Hnew₁)) (bv_symm (eq_of_eq_pair_right' Hnew₂))
     · intro Θ HΘ Hold₂
       have Hxa : Θ ≤ x₂ =ᴮ a :=
-        bv_trans (bv_symm ((HΘ.trans HΔ).trans Heq))
-          (HΘ.trans (eq_of_eq_pair_left' Hnew₁))
+        bv_trans (bv_symm ((HΘ.trans HΔ).trans Heq)) (HΘ.trans (eq_of_eq_pair_left' Hnew₁))
       exact (old_domain_conflict ((HΘ.trans HΔ).trans Hf)
         ((HΘ.trans HΔ).trans Ha) Hxa Hold₂).trans bot_le
   · intro Δ HΔ Hold₁
     apply insert_cases (HΔ.trans H₂)
     · intro Θ HΘ Hnew₂
-      have Hxa : Θ ≤ x₁ =ᴮ a :=
-        bv_trans ((HΘ.trans HΔ).trans Heq) (eq_of_eq_pair_left' Hnew₂)
+      have Hxa : Θ ≤ x₁ =ᴮ a := bv_trans ((HΘ.trans HΔ).trans Heq) (eq_of_eq_pair_left' Hnew₂)
       exact (old_domain_conflict ((HΘ.trans HΔ).trans Hf)
         ((HΘ.trans HΔ).trans Ha) Hxa (HΘ.trans Hold₁)).trans bot_le
     · intro Θ HΘ Hold₂
@@ -117,19 +111,16 @@ private theorem input_eq_of_insertPair {A S f a y x₁ x₂ z₁ z₂ : bSet �
   · intro Δ HΔ Hnew₁
     apply insert_cases (HΔ.trans H₂)
     · intro Θ HΘ Hnew₂
-      exact bv_trans (HΘ.trans (eq_of_eq_pair_left' Hnew₁))
-        (bv_symm (eq_of_eq_pair_left' Hnew₂))
+      exact bv_trans (HΘ.trans (eq_of_eq_pair_left' Hnew₁)) (bv_symm (eq_of_eq_pair_left' Hnew₂))
     · intro Θ HΘ Hold₂
       have Hzy : Θ ≤ z₂ =ᴮ y :=
-        bv_trans (bv_symm ((HΘ.trans HΔ).trans Heq))
-          (HΘ.trans (eq_of_eq_pair_right' Hnew₁))
+        bv_trans (bv_symm ((HΘ.trans HΔ).trans Heq)) (HΘ.trans (eq_of_eq_pair_right' Hnew₁))
       exact (old_image_conflict ((HΘ.trans HΔ).trans Hf)
         ((HΘ.trans HΔ).trans Hfresh) Hzy Hold₂).trans bot_le
   · intro Δ HΔ Hold₁
     apply insert_cases (HΔ.trans H₂)
     · intro Θ HΘ Hnew₂
-      have Hzy : Θ ≤ z₁ =ᴮ y :=
-        bv_trans ((HΘ.trans HΔ).trans Heq) (eq_of_eq_pair_right' Hnew₂)
+      have Hzy : Θ ≤ z₁ =ᴮ y := bv_trans ((HΘ.trans HΔ).trans Heq) (eq_of_eq_pair_right' Hnew₂)
       exact (old_image_conflict ((HΘ.trans HΔ).trans Hf)
         ((HΘ.trans HΔ).trans Hfresh) Hzy (HΘ.trans Hold₁)).trans bot_le
     · intro Θ HΘ Hold₂

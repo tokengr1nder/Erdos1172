@@ -70,8 +70,7 @@ theorem supportGraph_injective : Function.Injective (supportGraph (A := A)) := b
         (mem_supportGraph_iff q i (q i)).mpr ⟨hq, rfl⟩
       rw [← hpq] at hmem
       exact (mem_supportGraph_iff p i (q i)).mp hmem |>.2
-  · have hmem : Sigma.mk i (p i) ∈ supportGraph p :=
-      (mem_supportGraph_iff p i (p i)).mpr ⟨hp, rfl⟩
+  · have hmem : Sigma.mk i (p i) ∈ supportGraph p := (mem_supportGraph_iff p i (p i)).mpr ⟨hp, rfl⟩
     rw [hpq] at hmem
     exact ((mem_supportGraph_iff q i (p i)).mp hmem).2.symm
 
@@ -83,8 +82,7 @@ theorem productCondition_cardinal_le_finite_graphs :
 /-- All coordinate/value pairs together have at most κ possible values. -/
 theorem belowCoordinateValues_cardinal_le (κ : Cardinal.{u})
     (hκ : Cardinal.aleph0 < κ) :
-    Cardinal.mk (Σ i : κ.ord.ToType,
-      Erdos1172Collapse.Condition (Set.Iio i)) ≤ κ := by
+    Cardinal.mk (Σ i : κ.ord.ToType, Erdos1172Collapse.Condition (Set.Iio i)) ≤ κ := by
   calc
     Cardinal.mk (Σ i : κ.ord.ToType,
         Erdos1172Collapse.Condition (Set.Iio i)) =

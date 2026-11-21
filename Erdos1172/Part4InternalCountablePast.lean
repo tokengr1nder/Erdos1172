@@ -41,8 +41,7 @@ theorem ordinal_members_small {A J : bSet 𝔹} {Γ : 𝔹}
   apply le_iInf
   intro a
   rw [← deduction]
-  have Ha : Γ ⊓ a ∈ᴮ A ≤ a ∈ᴮ omegaOne :=
-    mem_of_mem_subset (inf_le_left.trans HA) inf_le_right
+  have Ha : Γ ⊓ a ∈ᴮ A ≤ a ∈ᴮ omegaOne := mem_of_mem_subset (inf_le_left.trans HA) inf_le_right
   exact countableAbsorption_apply (inf_le_left.trans Habsorb)
     (subset_of_mem_Ord Ha omegaOne_Ord) (omegaOne_member_injects Ha)
 
@@ -72,8 +71,7 @@ theorem above_past {A x : bSet 𝔹} {Γ : 𝔹}
   intro a
   rw [← deduction]
   let Δ := Γ ⊓ a ∈ᴮ A
-  have Ha : Δ ≤ a ∈ᴮ omegaOne :=
-    mem_of_mem_subset (inf_le_left.trans HA) inf_le_right
+  have Ha : Δ ≤ a ∈ᴮ omegaOne := mem_of_mem_subset (inf_le_left.trans HA) inf_le_right
   have Hcases := epsilon_trichotomy_of_Ord (inf_le_left.trans Hx) Ha omegaOne_Ord
   change Δ ≤ a ∈ᴮ x
   apply (le_inf (le_refl Δ) Hcases).trans
@@ -86,8 +84,7 @@ theorem above_past {A x : bSet 𝔹} {Γ : 𝔹}
         change Δ ⊓ x =ᴮ a ≤ x ∈ᴮ binary_union A (bv_union A)
         rw [mem_binary_union]
         exact HxA.trans le_sup_left
-      exact (bv_absurd _ Hxpast
-        (inf_le_left.trans (inf_le_left.trans Hnot))).trans bot_le
+      exact (bv_absurd _ Hxpast (inf_le_left.trans (inf_le_left.trans Hnot))).trans bot_le
     · have HxUnion : Δ ⊓ x ∈ᴮ a ≤ x ∈ᴮ bv_union A :=
         mem_bv_union_iff.mpr (le_iSup_of_le a
           (le_inf (inf_le_left.trans inf_le_right) inf_le_right))
@@ -95,8 +92,7 @@ theorem above_past {A x : bSet 𝔹} {Γ : 𝔹}
         change Δ ⊓ x ∈ᴮ a ≤ x ∈ᴮ binary_union A (bv_union A)
         rw [mem_binary_union]
         exact HxUnion.trans le_sup_right
-      exact (bv_absurd _ Hxpast
-        (inf_le_left.trans (inf_le_left.trans Hnot))).trans bot_le
+      exact (bv_absurd _ Hxpast (inf_le_left.trans (inf_le_left.trans Hnot))).trans bot_le
   · exact inf_le_right
 
 /-- The reverse implication is valid for arbitrary names, using only
@@ -109,12 +105,9 @@ theorem not_mem_past_of_above {A x : bSet 𝔹} {Γ : 𝔹}
   rw [mem_binary_union, inf_sup_left]
   apply sup_le
   · exact bot_of_mem_self'
-      ((le_inf (inf_le_left.trans (Habove.trans (iInf_le _ x))) inf_le_right).trans
-        bv_imp_elim)
-  · have Hmem : Γ ⊓ x ∈ᴮ bv_union A ≤ ⨆ a, a ∈ᴮ A ⊓ x ∈ᴮ a :=
-      mem_bv_union_iff.mp inf_le_right
-    obtain ⟨a, Ha⟩ := exists_convert Hmem
-      (B_ext_inf B_ext_mem_left B_ext_mem_right)
+      ((le_inf (inf_le_left.trans (Habove.trans (iInf_le _ x))) inf_le_right).trans bv_imp_elim)
+  · have Hmem : Γ ⊓ x ∈ᴮ bv_union A ≤ ⨆ a, a ∈ᴮ A ⊓ x ∈ᴮ a := mem_bv_union_iff.mp inf_le_right
+    obtain ⟨a, Ha⟩ := exists_convert Hmem (B_ext_inf B_ext_mem_left B_ext_mem_right)
     have Hax : Γ ⊓ x ∈ᴮ bv_union A ≤ a ∈ᴮ x :=
       (le_inf (inf_le_left.trans (Habove.trans (iInf_le _ a)))
         (Ha.trans inf_le_left)).trans bv_imp_elim

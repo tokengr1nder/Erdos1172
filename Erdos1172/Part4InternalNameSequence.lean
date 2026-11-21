@@ -33,13 +33,11 @@ variable {B : Type u} [NontrivialCompleteBooleanAlgebra B]
 def family (q : ℕ → bSet B) : bSet B :=
   .mk (ULift.{u} ℕ) (fun i => q i.down) (fun _ => ⊤)
 
-theorem term_mem_family (q : ℕ → bSet B) (n : ℕ) {Γ : B} :
-    Γ ≤ q n ∈ᴮ family q := by
+theorem term_mem_family (q : ℕ → bSet B) (n : ℕ) {Γ : B} : Γ ≤ q n ∈ᴮ family q := by
   rw [mem_unfold]
   exact le_iSup_of_le ⟨n⟩ (le_inf le_top bv_refl)
 
-theorem family_countable (q : ℕ → bSet B) {Γ : B} :
-    Γ ≤ injects_into (family q) omega := by
+theorem family_countable (q : ℕ → bSet B) {Γ : B} : Γ ≤ injects_into (family q) omega := by
   apply ErdosCHHartogs.injects_into_of_larger_than_ordinal Ord_omega
   exact le_top.trans
     (ErdosGroundIndexNameBound.larger_than_of_index_embedding PSet.omega (family q)
@@ -71,10 +69,8 @@ theorem family_inclusionChain {q : ℕ → bSet B} {Γ : B}
     intro j
     rw [← deduction]
     rcases le_total i.down j.down with Hij | Hji
-    · exact ((inf_le_left.trans inf_le_left).trans (Hmono i.down j.down Hij)).trans
-        le_sup_left
-    · exact ((inf_le_left.trans inf_le_left).trans (Hmono j.down i.down Hji)).trans
-        le_sup_right
+    · exact ((inf_le_left.trans inf_le_left).trans (Hmono i.down j.down Hij)).trans le_sup_left
+    · exact ((inf_le_left.trans inf_le_left).trans (Hmono j.down i.down Hji)).trans le_sup_right
   apply le_iInf
   intro f
   apply le_iInf
@@ -84,11 +80,9 @@ theorem family_inclusionChain {q : ℕ → bSet B} {Γ : B}
       ⨅ g : bSet B, _root_.imp (g ∈ᴮ family q) (f ⊆ᴮ g ⊔ g ⊆ᴮ f) :=
     (le_inf (inf_le_left.trans (Hbounded.trans (iInf_le _ f)))
       (inf_le_right.trans inf_le_left)).trans bv_imp_elim
-  exact (le_inf (Hfirst.trans (iInf_le _ g))
-    (inf_le_right.trans inf_le_right)).trans bv_imp_elim
+  exact (le_inf (Hfirst.trans (iInf_le _ g)) (inf_le_right.trans inf_le_right)).trans bv_imp_elim
 
-theorem term_subset_union (q : ℕ → bSet B) (n : ℕ) {Γ : B} :
-    Γ ≤ q n ⊆ᴮ bv_union (family q) := by
+theorem term_subset_union (q : ℕ → bSet B) (n : ℕ) {Γ : B} : Γ ≤ q n ⊆ᴮ bv_union (family q) := by
   rw [subset_unfold']
   apply le_iInf
   intro x

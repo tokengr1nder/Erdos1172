@@ -31,8 +31,7 @@ private theorem mem_comprehend_value (ϕ : bSet 𝔹 → 𝔹) (Hϕ : B_ext ϕ)
   · apply ((mem_comprehend_iff₂ ϕ A Hϕ).mp le_rfl).trans
     apply iSup_le
     intro y
-    have Heq : y ∈ᴮ A ⊓ (x =ᴮ y ⊓ ϕ y) ≤ x =ᴮ y :=
-      inf_le_right.trans inf_le_left
+    have Heq : y ∈ᴮ A ⊓ (x =ᴮ y ⊓ ϕ y) ≤ x =ᴮ y := inf_le_right.trans inf_le_left
     exact le_inf
       (bv_rw' (ϕ := fun z => z ∈ᴮ A) Heq
         (h_congr := B_ext_mem_left) (H_new := inf_le_left))
@@ -44,8 +43,7 @@ def graphDomain (κ S f : bSet 𝔹) : bSet 𝔹 :=
   comprehend (fun x => ⨆ y, (y ∈ᴮ S) ⊓ pair x y ∈ᴮ f) κ
 
 theorem mem_graphDomain (κ S f x : bSet 𝔹) :
-    x ∈ᴮ graphDomain κ S f =
-      (x ∈ᴮ κ) ⊓ ⨆ y, (y ∈ᴮ S) ⊓ pair x y ∈ᴮ f :=
+    x ∈ᴮ graphDomain κ S f = (x ∈ᴮ κ) ⊓ ⨆ y, (y ∈ᴮ S) ⊓ pair x y ∈ᴮ f :=
   mem_comprehend_value _ (B_ext_iSup (h := fun _ =>
     B_ext_inf B_ext_const B_ext_pair_mem_left)) _ _
 
@@ -76,10 +74,8 @@ theorem function_on_graphDomain {κ S f : bSet 𝔹} {Γ : 𝔹}
     have Hprod := mem_of_mem_subset (inf_le_left.trans Hsub)
       (show Γ ⊓ z ∈ᴮ f ≤ z ∈ᴮ f from inf_le_right)
     obtain ⟨x, _, y, Hy, Hz⟩ := mem_prod_iff₂.mp Hprod
-    have Hpair : Γ ⊓ z ∈ᴮ f ≤ pair x y ∈ᴮ f :=
-      mem_congr Hz bv_refl inf_le_right
-    exact mem_prod_iff₂.mpr ⟨x,
-      mem_graphDomain_of_pair (inf_le_left.trans Hsub) Hpair, y, Hy, Hz⟩
+    have Hpair : Γ ⊓ z ∈ᴮ f ≤ pair x y ∈ᴮ f := mem_congr Hz bv_refl inf_le_right
+    exact mem_prod_iff₂.mpr ⟨x, mem_graphDomain_of_pair (inf_le_left.trans Hsub) Hpair, y, Hy, Hz⟩
 
 def prefixClosed (S f : bSet 𝔹) : 𝔹 :=
   ⨅ x, ⨅ y, ⨅ z, _root_.imp ((pair x y ∈ᴮ f) ⊓ z ∈ᴮ x)
@@ -127,8 +123,7 @@ private theorem B_ext_func : B_ext (is_func : bSet 𝔹 → 𝔹) := by
   unfold is_func
   exact B_ext_iInf (h := fun _ => B_ext_iInf (h := fun _ =>
     B_ext_iInf (h := fun _ => B_ext_iInf (h := fun _ =>
-      B_ext_imp (h₁ := B_ext_inf B_ext_mem_right B_ext_mem_right)
-        (h₂ := B_ext_const)))))
+      B_ext_imp (h₁ := B_ext_inf B_ext_mem_right B_ext_mem_right) (h₂ := B_ext_const)))))
 
 private theorem B_ext_inj : B_ext (is_inj : bSet 𝔹 → 𝔹) := by
   unfold is_inj
@@ -144,8 +139,7 @@ def partialMaps (κ S : bSet 𝔹) : bSet 𝔹 :=
 theorem mem_partialMaps_iff {κ S f : bSet 𝔹} {Γ : 𝔹} :
     Γ ≤ f ∈ᴮ partialMaps κ S ↔ Γ ≤ partialGraph κ S f := by
   unfold partialMaps
-  rw [mem_comprehend_value _
-    (B_ext_inf B_ext_func (B_ext_inf B_ext_inj (B_ext_prefixClosed S)))]
+  rw [mem_comprehend_value _ (B_ext_inf B_ext_func (B_ext_inf B_ext_inj (B_ext_prefixClosed S)))]
   constructor
   · intro H
     exact le_inf (mem_powerset_iff.mp (H.trans inf_le_left)) (H.trans inf_le_right)
@@ -163,8 +157,7 @@ theorem partialGraph_domain_Ord {κ S f : bSet 𝔹} {Γ : 𝔹}
     (Hκ : Γ ≤ Ord κ) (H : Γ ≤ partialGraph κ S f) :
     Γ ≤ Ord (graphDomain κ S f) :=
   ErdosInitialSegments.Ord_of_transitive_subset Hκ graphDomain_subset
-    (graphDomain_transitive Hκ
-      (H.trans (inf_le_right.trans (inf_le_right.trans inf_le_right))))
+    (graphDomain_transitive Hκ (H.trans (inf_le_right.trans (inf_le_right.trans inf_le_right))))
 
 theorem prefixClosed_union {S C : bSet 𝔹} {Γ : 𝔹}
     (Hfamily : Γ ≤ ⨅ f, _root_.imp (f ∈ᴮ C) (prefixClosed S f)) :
@@ -185,8 +178,7 @@ theorem prefixClosed_union {S C : bSet 𝔹} {Γ : 𝔹}
       (Hf.trans inf_le_left)).trans bv_imp_elim
   have Hstep := prefixClosed_apply Hprefix (Hf.trans inf_le_right)
     (show Δ ≤ z ∈ᴮ x from inf_le_right.trans inf_le_right)
-  obtain ⟨w, Hw⟩ := exists_convert Hstep
-    (B_ext_inf B_ext_mem_left B_ext_pair_mem_right)
+  obtain ⟨w, Hw⟩ := exists_convert Hstep (B_ext_inf B_ext_mem_left B_ext_pair_mem_right)
   apply le_iSup_of_le w
   refine le_inf (Hw.trans inf_le_left) ?_
   exact mem_bv_union_iff.mpr

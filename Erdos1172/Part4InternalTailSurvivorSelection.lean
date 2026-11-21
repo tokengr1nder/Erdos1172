@@ -126,8 +126,7 @@ theorem exists_old_survivor_coordinates
     (HTail : Γ ≤ is_function bSet.omega (bv_powerset omegaTwo) Tail)
     (Htail : Γ ≤ tailCandidatesLaw color R J E S
       (image omegaOne (bv_powerset omegaTwo) Blocks) Tail)
-    (Hmasks : Γ ≤ ⨅ ν, _root_.imp (ν ∈ᴮ omegaOne)
-      (colarge omegaOne J (activeMask X ν))) :
+    (Hmasks : Γ ≤ ⨅ ν, _root_.imp (ν ∈ᴮ omegaOne) (colarge omegaOne J (activeMask X ν))) :
     ∃ u : bSet 𝔹, Γ ≤ is_function omegaOne omegaOne u ⊓
       oldCoordinateLaw color R E Tail Blocks X u := by
   have Hpointwise : Γ ≤ ⨅ ν, _root_.imp (ν ∈ᴮ omegaOne)
@@ -166,8 +165,7 @@ theorem exists_old_survivor_coordinates
     (le_inf (inf_le_left.trans ((Hu.trans inf_le_right).trans
       ((iInf_le _ ν).trans (iInf_le _ v))))
       (le_inf Hν (inf_le_right.trans inf_le_right))).trans bv_imp_elim
-  have Hb : Δ ≤ blockValue Blocks ν =ᴮ b :=
-    graphValue_eq_of_pair (inf_le_left.trans HBlocks) Hνb
+  have Hb : Δ ≤ blockValue Blocks ν =ᴮ b := graphValue_eq_of_pair (inf_le_left.trans HBlocks) Hνb
   exact mem_congr bv_refl (oldSurvivors_congr_object color R E Tail X ν Hb) Hv
 
 theorem exists_tail_survivor_coordinates
@@ -176,8 +174,7 @@ theorem exists_tail_survivor_coordinates
     (HE : Γ ≤ is_function (blockObjects color R) blockEnumerationCodes E)
     (HTail : Γ ≤ is_function bSet.omega (bv_powerset omegaTwo) Tail)
     (Htail : Γ ≤ tailCandidatesLaw color R J E S B Tail) :
-    ∃ v : bSet 𝔹, Γ ≤ is_function bSet.omega omegaOne v ⊓
-      tailCoordinateLaw color R E Tail v := by
+    ∃ v : bSet 𝔹, Γ ≤ is_function bSet.omega omegaOne v ⊓ tailCoordinateLaw color R E Tail v := by
   have Hpointwise : Γ ≤ ⨅ m, _root_.imp (m ∈ᴮ bSet.omega)
       (⨆ w, w ∈ᴮ omegaOne ⊓ w ∈ᴮ tailChoiceSet color R E Tail m) := by
     apply le_iInf
@@ -209,8 +206,7 @@ theorem exists_tail_survivor_coordinates
     (le_inf (inf_le_left.trans ((Hv.trans inf_le_right).trans
       ((iInf_le _ m).trans (iInf_le _ w))))
       (le_inf Hm (inf_le_right.trans inf_le_right))).trans bv_imp_elim
-  have Hb : Δ ≤ blockValue Tail m =ᴮ b :=
-    graphValue_eq_of_pair (inf_le_left.trans HTail) Hmb
+  have Hb : Δ ≤ blockValue Tail m =ᴮ b := graphValue_eq_of_pair (inf_le_left.trans HTail) Hmb
   exact mem_congr bv_refl (laterSurvivors_congr_object color R E Tail m Hb) Hw
 
 /-- Two actual coherent selections are produced at precisely the
@@ -225,8 +221,7 @@ theorem exists_survivor_coordinates
     (HTail : Γ ≤ is_function bSet.omega (bv_powerset omegaTwo) Tail)
     (Htail : Γ ≤ tailCandidatesLaw color R J E S
       (image omegaOne (bv_powerset omegaTwo) Blocks) Tail)
-    (Hmasks : Γ ≤ ⨅ ν, _root_.imp (ν ∈ᴮ omegaOne)
-      (colarge omegaOne J (activeMask X ν))) :
+    (Hmasks : Γ ≤ ⨅ ν, _root_.imp (ν ∈ᴮ omegaOne) (colarge omegaOne J (activeMask X ν))) :
     ∃ u v : bSet 𝔹, Γ ≤ is_function omegaOne omegaOne u ⊓
       (is_function bSet.omega omegaOne v ⊓
         (oldCoordinateLaw color R E Tail Blocks X u ⊓ tailCoordinateLaw color R E Tail v)) := by

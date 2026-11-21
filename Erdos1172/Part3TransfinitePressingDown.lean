@@ -43,8 +43,7 @@ theorem readsAt_of_factors (hGCH : GCH) {U : RegularName (Full hGCH) W2} {a : W2
     (hU : Factors (restriction hGCH a) U) : ReadsAt hGCH U a := by
   obtain ⟨V, rfl⟩ := hU
   intro p q hpq
-  change V.holds ((restriction hGCH a).restrict p) a ↔
-    V.holds ((restriction hGCH a).restrict q) a
+  change V.holds ((restriction hGCH a).restrict p) a ↔ V.holds ((restriction hGCH a).restrict q) a
   rw [hpq]
 
 theorem readsAt_meet (hGCH : GCH) {U V : RegularName (Full hGCH) W2} {a : W2}
@@ -86,8 +85,7 @@ theorem exists_stationary_earlier_source (hGCH : GCH) (U : RegularName (Full hGC
     (hsup : ∀ p a, U.holds p a → IsOmegaOneSup a)
     (hstat : IsStationary {a : W2 | ∃ p : Full hGCH, U.holds p a})
     (club : Set W2) (hclub : IsClub club) (hread : ∀ a ∈ club, ReadsAt hGCH U a) :
-    ∃ b : W2, ∃ p : Earlier hGCH b,
-      StationaryAt (pullRegular (restriction hGCH b) U).holds p := by
+    ∃ b : W2, ∃ p : Earlier hGCH b, StationaryAt (pullRegular (restriction hGCH b) U).holds p := by
   classical
   let S : Set W2 := {a | ∃ p : Full hGCH, U.holds p a} ∩ club
   have hS : IsStationary S := stationary_inter_club hstat hclub

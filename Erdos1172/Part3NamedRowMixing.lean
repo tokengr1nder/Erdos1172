@@ -46,13 +46,11 @@ branches. Their countability, bounds, row witnesses, and dense local
 coverage therefore survive together. -/
 theorem exists_mixed_row_covers (data : LineCoverData V) (L : LowerCovers n V)
     (U : RegularName P V)
-    (hlocal : ∀ p : P, ∀ i : W1, ∃ q : P, q ≤ p ∧
-      Nonempty (LocalRowCover data L U i q)) :
+    (hlocal : ∀ p : P, ∀ i : W1, ∃ q : P, q ≤ p ∧ Nonempty (LocalRowCover data L U i q)) :
     ∃ B : FunctionDecisions P W1 (Set V),
       ∃ R : W1 → FunctionDecisions P W1 W1,
         (∀ p : P, ∀ i : W1, ∀ S : Set V, B.decides p i S →
-          S.Countable ∧ (∀ y ∈ S, y ≤ data.cut i) ∧
-            ∀ y ∈ S, ∃ x : V, data.row x = i ∧ x ≤ y) ∧
+          S.Countable ∧ (∀ y ∈ S, y ≤ data.cut i) ∧ ∀ y ∈ S, ∃ x : V, data.row x = i ∧ x ≤ y) ∧
         ∀ p : P, ∀ x : V, U.holds p x →
           ∃ q : P, q ≤ p ∧ ∃ S : Set V, B.decides q (data.row x) S ∧
             (x ∈ S ∨ ∃ y ∈ S, ∃ k : Fin n,
@@ -85,14 +83,12 @@ theorem exists_mixed_row_covers (data : LineCoverData V) (L : LowerCovers n V)
   refine ⟨B, R, ?_, ?_⟩
   · intro p i S hS
     rcases hS with ⟨a, hpa, rfl⟩
-    exact ⟨(localData i a).countable, (localData i a).endpoint_le,
-      (localData i a).row_witness⟩
+    exact ⟨(localData i a).countable, (localData i a).endpoint_le, (localData i a).row_witness⟩
   · intro p x hx
     let i : W1 := data.row x
     obtain ⟨a, ha, q, hqp, hqa⟩ := hAP i p
     let branch : A i := ⟨a, ha⟩
-    obtain ⟨r, hrq, hr⟩ := (localData i branch).covered ⟨q, hqa⟩ x
-      (U.persistent hqp hx) rfl
+    obtain ⟨r, hrq, hr⟩ := (localData i branch).covered ⟨q, hqa⟩ x (U.persistent hqp hx) rfl
     refine ⟨r.val, (show r.val ≤ q from hrq).trans hqp,
       (localData i branch).endpoints, ?_, ?_⟩
     · exact ⟨branch, r.property, rfl⟩

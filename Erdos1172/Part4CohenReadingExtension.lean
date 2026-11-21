@@ -45,8 +45,7 @@ theorem reads_mono_of_subset {K q r : bSet B} {Γ : B} {c : Algebra K}
   rw [inf_iSup_eq]
   apply iSup_le
   intro p
-  let Δ : B := Γ ⊓
-    (p.val.value ⊓ (q =ᴮ Erdos1172BooleanNameIteration.name p.val))
+  let Δ : B := Γ ⊓ (p.val.value ⊓ (q =ᴮ Erdos1172BooleanNameIteration.name p.val))
   change Δ ≤ reads c r
   by_contra Hnot
   have Hpositive : Δ ⊓ (reads c r)ᶜ ≠ ⊥ := by
@@ -55,10 +54,8 @@ theorem reads_mono_of_subset {K q r : bSet B} {Γ : B} {c : Algebra K}
     have H : Δ ≤ ((reads c r)ᶜ)ᶜ :=
       le_compl_iff_disjoint_right.mpr (disjoint_iff_inf_le.mpr Hzero.le)
     simpa only [compl_compl] using H
-  have Hcontext : Δ ⊓ (reads c r)ᶜ ≤ Γ :=
-    inf_le_left.trans inf_le_left
-  have Hvalue : Δ ⊓ (reads c r)ᶜ ≤ p.val.value :=
-    inf_le_left.trans (inf_le_right.trans inf_le_left)
+  have Hcontext : Δ ⊓ (reads c r)ᶜ ≤ Γ := inf_le_left.trans inf_le_left
+  have Hvalue : Δ ⊓ (reads c r)ᶜ ≤ p.val.value := inf_le_left.trans (inf_le_right.trans inf_le_left)
   have Heq : Δ ⊓ (reads c r)ᶜ ≤
       q =ᴮ Erdos1172BooleanNameIteration.name p.val :=
     inf_le_left.trans (inf_le_right.trans inf_le_right)
@@ -69,8 +66,7 @@ theorem reads_mono_of_subset {K q r : bSet B} {Γ : B} {c : Algebra K}
     Erdos1172BooleanNameIteration.exists_extension_refinement p.val Hpositive
       Hvalue (Hcontext.trans Hr) Hextension
   have Hcone : condition t ≤ c := (condition_mono Htp).trans p.property
-  have Hread : t.value ≤ reads c r :=
-    le_iSup_of_le ⟨t, Hcone⟩ (le_inf le_rfl Hteq)
+  have Hread : t.value ≤ reads c r := le_iSup_of_le ⟨t, Hcone⟩ (le_inf le_rfl Hteq)
   have Hnotread : t.value ≤ (reads c r)ᶜ := Htb.trans inf_le_right
   exact t.nonzero (bot_unique ((le_inf Hread Hnotread).trans inf_compl_eq_bot.le))
 

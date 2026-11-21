@@ -24,35 +24,29 @@ open Ordinal
 namespace Cardinal
 
 /-- GCH at `ℵ₁`. -/
-theorem GCH.two_power_aleph_one (h : GCH) :
-    (2 : Cardinal.{0}) ^ ℵ_ 1 = ℵ_ 2 := by
+theorem GCH.two_power_aleph_one (h : GCH) : (2 : Cardinal.{0}) ^ ℵ_ 1 = ℵ_ 2 := by
   have h1 := h (1 : Ordinal)
   norm_num at h1
   exact h1
 
 /-- GCH at `ℵ₂`. -/
-theorem GCH.two_power_aleph_two (h : GCH) :
-    (2 : Cardinal.{0}) ^ ℵ_ 2 = ℵ_ 3 := by aesop
+theorem GCH.two_power_aleph_two (h : GCH) : (2 : Cardinal.{0}) ^ ℵ_ 2 = ℵ_ 3 := by aesop
 
 /-- Under CH, `ℵ₁` is closed under countable cardinal powers. -/
-theorem CH.aleph_one_power_aleph_zero (h : CH) :
-    (ℵ_ 1 : Cardinal.{0}) ^ ℵ₀ = ℵ_ 1 := by
+theorem CH.aleph_one_power_aleph_zero (h : CH) : (ℵ_ 1 : Cardinal.{0}) ^ ℵ₀ = ℵ_ 1 := by
   rw [← h]
   exact continuum_power_aleph0
 
 /-- Under GCH, `ℵ₂` is closed under `ℵ₀`-powers. -/
-theorem GCH.aleph_two_power_aleph_zero (h : GCH) :
-    (ℵ_ 2 : Cardinal.{0}) ^ ℵ₀ = ℵ_ 2 := by
+theorem GCH.aleph_two_power_aleph_zero (h : GCH) : (ℵ_ 2 : Cardinal.{0}) ^ ℵ₀ = ℵ_ 2 := by
   rw [← h.two_power_aleph_one, ← power_mul, aleph_mul_aleph0]
 
 /-- Under GCH, `ℵ₂` is closed under `ℵ₁`-powers. -/
-theorem GCH.aleph_two_power_aleph_one (h : GCH) :
-    (ℵ_ 2 : Cardinal.{0}) ^ ℵ_ 1 = ℵ_ 2 := by
+theorem GCH.aleph_two_power_aleph_one (h : GCH) : (ℵ_ 2 : Cardinal.{0}) ^ ℵ_ 1 = ℵ_ 2 := by
   rw [← h.two_power_aleph_one, ← power_mul, aleph_mul_aleph, max_self]
 
 /-- Under GCH, `ℵ₃` is closed under `ℵ₁`-powers. -/
-theorem GCH.aleph_three_power_aleph_one (h : GCH) :
-    (ℵ_ 3 : Cardinal.{0}) ^ ℵ_ 1 = ℵ_ 3 := by
+theorem GCH.aleph_three_power_aleph_one (h : GCH) : (ℵ_ 3 : Cardinal.{0}) ^ ℵ_ 1 = ℵ_ 3 := by
   rw [← h.two_power_aleph_two, ← power_mul, aleph_mul_aleph,
     max_eq_left (by norm_num : (1 : Ordinal) ≤ 2)]
 

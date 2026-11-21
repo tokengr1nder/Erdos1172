@@ -27,10 +27,8 @@ def indexedIntersection (κ F T : bSet 𝔹) : bSet 𝔹 :=
 
 theorem mem_indexedIntersection_iff {κ F T z : bSet 𝔹} {Γ : 𝔹} :
     Γ ≤ z ∈ᴮ indexedIntersection κ F T ↔
-      Γ ≤ z ∈ᴮ κ ∧ Γ ≤ ⨅ x, ⨅ A,
-        _root_.imp ((x ∈ᴮ T) ⊓ pair x A ∈ᴮ F) (z ∈ᴮ A) :=
-  ErdosRelationGraph.mem_comprehend_and
-    (B_ext_iInf (h := fun _ => B_ext_iInf (h := fun _ =>
+      Γ ≤ z ∈ᴮ κ ∧ Γ ≤ ⨅ x, ⨅ A, _root_.imp ((x ∈ᴮ T) ⊓ pair x A ∈ᴮ F) (z ∈ᴮ A) :=
+  ErdosRelationGraph.mem_comprehend_and (B_ext_iInf (h := fun _ => B_ext_iInf (h := fun _ =>
       B_ext_imp (h₁ := B_ext_const) (h₂ := B_ext_mem_left))))
 
 theorem indexedIntersection_subset {κ F T : bSet 𝔹} {Γ : 𝔹} :
@@ -77,8 +75,7 @@ theorem positiveCountableIntersections_of_centered {κ J F U : bSet 𝔹} {Γ : 
   apply le_iInf; intro T; rw [← deduction]
   let Δ := Γ ⊓ ((T ⊆ᴮ U) ⊓ injects_into T bSet.omega)
   have Hcommon : Δ ≤ ⨆ C, positive κ J C ⊓ indexedCommon F T C :=
-    (le_inf (inf_le_left.trans (Hcenter.trans (iInf_le _ T)))
-      inf_le_right).trans bv_imp_elim
+    (le_inf (inf_le_left.trans (Hcenter.trans (iInf_le _ T))) inf_le_right).trans bv_imp_elim
   apply (le_inf (le_refl Δ) Hcommon).trans
   rw [inf_iSup_eq]
   apply iSup_le; intro C

@@ -43,8 +43,7 @@ theorem subset_past {T : bSet 𝔹} {Γ : 𝔹} : Γ ≤ T ⊆ᴮ past T := by
   rw [← deduction, past, mem_binary_union]
   exact inf_le_right.trans le_sup_left
 
-theorem union_subset_past {T : bSet 𝔹} {Γ : 𝔹} :
-    Γ ≤ bv_union T ⊆ᴮ past T := by
+theorem union_subset_past {T : bSet 𝔹} {Γ : 𝔹} : Γ ≤ bv_union T ⊆ᴮ past T := by
   rw [subset_unfold']
   apply le_iInf
   intro x

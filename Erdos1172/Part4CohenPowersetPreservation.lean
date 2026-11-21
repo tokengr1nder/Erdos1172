@@ -69,11 +69,9 @@ theorem powerset_omega_subset_map :
   apply (real_reading_cover Hx).trans
   apply iSup_le
   intro y
-  have Hmem : (y ⊆ᴮ (omega : bSet B)) ≤ y ∈ᴮ bv_powerset omega :=
-    mem_powerset_iff.mpr le_rfl
+  have Hmem : (y ⊆ᴮ (omega : bSet B)) ≤ y ∈ᴮ bv_powerset omega := mem_powerset_iff.mpr le_rfl
   have Hmap : omegaOneFirstStageHom (y ⊆ᴮ (omega : bSet B)) ≤
-      mapNames omegaOneFirstStageHom y ∈ᴮ
-        mapNames omegaOneFirstStageHom (bv_powerset omega) := by
+      mapNames omegaOneFirstStageHom y ∈ᴮ mapNames omegaOneFirstStageHom (bv_powerset omega) := by
     rw [← map_mem]
     exact OrderHomClass.mono omegaOneFirstStageHom Hmem
   exact bv_rw' (ϕ := fun z => z ∈ᴮ
@@ -84,10 +82,8 @@ theorem powerset_omega_subset_map :
 target subsets, proved from real-name reading rather than assumed. -/
 theorem map_powerset_omega_eq :
     (⊤ : omegaOneAlgebra B) ≤
-      mapNames omegaOneFirstStageHom (bv_powerset (omega : bSet B)) =ᴮ
-        bv_powerset omega := by
+      mapNames omegaOneFirstStageHom (bv_powerset (omega : bSet B)) =ᴮ bv_powerset omega := by
   apply (le_inf ?_ powerset_omega_subset_map).trans (eq_of_subset_subset _ _)
-  simpa only [omega, map_check] using
-    (map_powerset_subset omegaOneFirstStageHom (omega : bSet B))
+  simpa only [omega, map_check] using (map_powerset_subset omegaOneFirstStageHom (omega : bSet B))
 
 end Erdos1172CohenIteration

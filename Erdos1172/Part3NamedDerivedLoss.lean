@@ -109,7 +109,6 @@ theorem exists_earlier_positive_loss (center : CountablyCenteredCode P)
     intro q hqp
     obtain ⟨c, s, hsq, hs⟩ := (hp q hqp).nonempty
     exact ⟨s, hsq, hs.2.2.1⟩
-  exact ⟨b.val, b.property, p, hpp0, hDp, hpos, out, hp,
-    fun q c hq => ⟨hq.1, hq.2.2.2⟩⟩
+  exact ⟨b.val, b.property, p, hpp0, hDp, hpos, out, hp, fun q c hq => ⟨hq.1, hq.2.2.2⟩⟩
 
 end Erdos1172Part3NamedDerivedLoss

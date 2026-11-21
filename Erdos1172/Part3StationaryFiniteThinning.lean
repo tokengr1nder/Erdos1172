@@ -78,8 +78,7 @@ theorem exists_stationary_finite_from_cutoffs (n : ℕ)
       (subBounds (B a) (row (ofLex z).1)) (fun e => prefixCode n (row (ofLex z).1, e))
       q (ofLex z).2 old hsel
       (fun e v hv => encodedBounds_bound n (ha.2 q le_rfl _ (hcodeBound _ hrowCode e) v hv)) q.base le_rfl
-    apply hloss next a (hU hnext ha.1.1) (toLex (row (ofLex z).1, old)) x
-      (core.persistent hnext hx)
+    apply hloss next a (hU hnext ha.1.1) (toLex (row (ofLex z).1, old)) x (core.persistent hnext hx)
     exact ⟨cutoff, K.persistent hnext ha.1.2, hrowCut, hclear⟩
   refine ⟨{
     start := p

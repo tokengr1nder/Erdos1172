@@ -73,8 +73,7 @@ theorem selector_local_is_func'
       (bv_powerset omegaTwo) F)
     (HBsub : Γ ≤ B ⊆ᴮ blockObjects color R) (HPsub : Γ ≤ P ⊆ᴮ omegaTwo) :
     Γ ≤ is_func' (choicePoolDomain B P) (bv_powerset omegaTwo) F :=
-  is_func'_subset_of_is_func' (is_func'_of_is_function HF)
-    (choicePoolDomain_subset HBsub HPsub)
+  is_func'_subset_of_is_func' (is_func'_of_is_function HF) (choicePoolDomain_subset HBsub HPsub)
 
 /-- This is a guarded value law only. It does not assert totality on an
 arbitrary local domain; that separate fact needs both pool inclusions. -/
@@ -95,8 +94,7 @@ theorem selector_local_smallValues
       inf_le_right.trans inf_le_left)
   have Hpair : Δ ≤ pair (pair T U) A ∈ᴮ F :=
     mem_congr (pair_congr Hq bv_refl) bv_refl (inf_le_right.trans inf_le_right)
-  exact selected_value_injects_omegaOne (inf_le_left.trans HF)
-    (inf_le_left.trans Hlaw) Hpair
+  exact selected_value_injects_omegaOne (inf_le_left.trans HF) (inf_le_left.trans Hlaw) Hpair
 
 /-- The actual selector discharges the former pointwise-smallness premise. -/
 theorem choice_pool_step_small
@@ -148,8 +146,7 @@ theorem successfulObjects_injects_omegaOne
     (HBsub : Γ ≤ B ⊆ᴮ blockObjects color R) (HPsub : Γ ≤ P ⊆ᴮ omegaTwo) :
     Γ ≤ injects_into (successfulObjects color R B P F) omegaOne :=
   injects_into_trans (injects_into_of_subset successfulObjects_subset_selected)
-    (selectedObjects_injects_omegaOne HCH HBsmall HPsmall
-      (selector_local_is_func' HF HBsub HPsub))
+    (selectedObjects_injects_omegaOne HCH HBsmall HPsmall (selector_local_is_func' HF HBsub HPsub))
 
 /-- A nonempty local selected output belongs to the filtered object pool.
 The proof uses the full candidate law, not just powerset support. -/

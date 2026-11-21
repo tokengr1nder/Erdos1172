@@ -67,8 +67,7 @@ instance completionNontrivial [Nonempty P] : Nontrivial (Completion P) := by
   obtain ⟨p⟩ := ‹Nonempty P›
   exact ⟨⟨condition p, ⊥, condition_ne_bot p⟩⟩
 
-theorem exists_condition_le {b : Completion P} (hb : b ≠ ⊥) :
-    ∃ p : P, condition p ≤ b := by
+theorem exists_condition_le {b : Completion P} (hb : b ≠ ⊥) : ∃ p : P, condition p ≤ b := by
   have hv : b.val ≠ (⊥ : LowerSet P) := by
     intro h
     exact hb (Heyting.Regular.coe_injective h)
@@ -85,15 +84,13 @@ theorem mem_pseudocompl_iff (A : LowerSet P) (p : P) :
     exact h q hq.1 hq.2
 
 theorem mem_regularization_iff (A : LowerSet P) (p : P) :
-    p ∈ (Aᶜᶜ : LowerSet P) ↔
-      ∀ q, q ≤ p → ∃ r, r ≤ q ∧ r ∈ A := by
+    p ∈ (Aᶜᶜ : LowerSet P) ↔ ∀ q, q ≤ p → ∃ r, r ≤ q ∧ r ∈ A := by
   classical
   simp only [mem_pseudocompl_iff, not_forall, not_not, exists_prop]
 
 /-- This membership test records compatibility below every strengthening. -/
 theorem mem_condition_iff (p q : P) :
-    q ∈ ((condition p).val : LowerSet P) ↔
-      ∀ r, r ≤ q → ∃ s, s ≤ r ∧ s ≤ p :=
+    q ∈ ((condition p).val : LowerSet P) ↔ ∀ r, r ≤ q → ∃ s, s ≤ r ∧ s ≤ p :=
   mem_regularization_iff (LowerSet.Iic p) q
 
 /-- The completion preserves exactly incompatibility of conditions. -/
@@ -119,8 +116,7 @@ theorem iSup_condition_eq_top_of_dense (D : Set P)
   classical
   apply eq_top_iff.mpr
   by_contra h
-  have hn : (⨆ q : D, condition q.val) ≠ ⊤ :=
-    fun he => h he.ge
+  have hn : (⨆ q : D, condition q.val) ≠ ⊤ := fun he => h he.ge
   have hc : (⨆ q : D, condition q.val)ᶜ ≠ ⊥ := by
     intro he
     apply hn
@@ -130,9 +126,7 @@ theorem iSup_condition_eq_top_of_dense (D : Set P)
   obtain ⟨q, hqD, hqp⟩ := hD p
   have hqleft : condition q ≤ ⨆ r : D, condition r.val :=
     le_iSup (fun r : D => condition r.val) ⟨q, hqD⟩
-  have hqright : condition q ≤ (⨆ r : D, condition r.val)ᶜ :=
-    (condition_mono hqp).trans hp
-  exact condition_ne_bot q
-    (bot_unique ((le_inf hqleft hqright).trans inf_compl_eq_bot.le))
+  have hqright : condition q ≤ (⨆ r : D, condition r.val)ᶜ := (condition_mono hqp).trans hp
+  exact condition_ne_bot q (bot_unique ((le_inf hqleft hqright).trans inf_compl_eq_bot.le))
 
 end Erdos1172PosetCompletion

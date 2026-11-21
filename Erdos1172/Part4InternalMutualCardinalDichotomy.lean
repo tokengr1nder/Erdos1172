@@ -33,8 +33,7 @@ variable {𝔹 : Type u} [NontrivialCompleteBooleanAlgebra 𝔹]
 or has mutual injections with one of its strict predecessors. -/
 theorem ordinal_mutual_cardinal_dichotomy {κ S : bSet 𝔹} {Γ : 𝔹}
     (Hκ : Γ ≤ Ord κ) :
-    Γ ≤ injects_into κ S ⊔
-      ⨆ A, (A ∈ᴮ κ) ⊓ (injects_into S A ⊓ injects_into A S) := by
+    Γ ≤ injects_into κ S ⊔ ⨆ A, (A ∈ᴮ κ) ⊓ (injects_into S A ⊓ injects_into A S) := by
   have Hmax := exists_maximal_partialGraph (κ := κ) (S := S) (Γ := Γ)
   apply (le_inf (le_refl Γ) Hmax).trans
   rw [inf_iSup_eq]
@@ -49,15 +48,13 @@ theorem ordinal_mutual_cardinal_dichotomy {κ S : bSet 𝔹} {Γ : 𝔹}
   have HA : Δ ≤ Ord A := partialGraph_domain_Ord (inf_le_left.trans Hκ) Hf
   have Hfunc : Δ ≤ is_injective_function A S f := partialGraph_function Hf
   have Hcase : Δ ≤ A =ᴮ κ ⊔ A ∈ᴮ κ :=
-    ErdosInitialSegments.eq_or_mem_of_ordinal_subset HA (inf_le_left.trans Hκ)
-      graphDomain_subset
+    ErdosInitialSegments.eq_or_mem_of_ordinal_subset HA (inf_le_left.trans Hκ) graphDomain_subset
   apply (le_inf (le_refl Δ) Hcase).trans
   rw [inf_sup_left]
   apply sup_le
   · apply le_sup_of_le_left
     have Hinj : Δ ⊓ A =ᴮ κ ≤ injects_into A S :=
-      injects_into_of_injection_into
-        (le_iSup_of_le f (inf_le_left.trans Hfunc))
+      injects_into_of_injection_into (le_iSup_of_le f (inf_le_left.trans Hfunc))
     exact bv_rw'' (ϕ := fun X => injects_into X S) inf_le_right Hinj
       B_ext_injects_into_left
   · apply le_sup_of_le_right
@@ -67,7 +64,6 @@ theorem ordinal_mutual_cardinal_dichotomy {κ S : bSet 𝔹} {Γ : 𝔹}
         (maximal_range_covers_of_domain_mem
           (inf_le_left.trans (inf_le_left.trans Hκ))
           (inf_le_left.trans Hf) (inf_le_left.trans Hmaxf) inf_le_right)
-    · exact injects_into_of_injection_into
-        (le_iSup_of_le f (inf_le_left.trans Hfunc))
+    · exact injects_into_of_injection_into (le_iSup_of_le f (inf_le_left.trans Hfunc))
 
 end bSet.ErdosPartialInjection

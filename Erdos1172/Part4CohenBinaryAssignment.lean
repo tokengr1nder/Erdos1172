@@ -50,8 +50,7 @@ theorem binaryAssignmentName_eq_zero (b : B) :
   (mixing_lemma_two_term b bᶜ inf_compl_eq_bot (1 : bSet B) (0 : bSet B)).2
 
 /-- Both components are in two, so the mixed name belongs to two at top. -/
-theorem binaryAssignmentName_mem_two (b : B) :
-    (⊤ : B) ≤ binaryAssignmentName b ∈ᴮ two := by
+theorem binaryAssignmentName_mem_two (b : B) : (⊤ : B) ≤ binaryAssignmentName b ∈ᴮ two := by
   have Hone : (⊤ : B) ≤ (1 : bSet B) ∈ᴮ two :=
     check_mem (PSet.ofNat_mem_of_lt (show 1 < 2 by omega))
   have Hzero : (⊤ : B) ≤ (0 : bSet B) ∈ᴮ two :=

@@ -42,15 +42,12 @@ theorem exists_guarded_cover_of_dense_local
     (C : (W1 → W1) → Set X)
     (hlocal : ∀ p : P, ∃ q : P, q ≤ p ∧
       ∃ F : FunctionDecisions (Iic q) W1 W1,
-        ∀ r : Iic q, ∀ x : X, guard.holds r.val () → U.holds r.val x →
-          (coverName F C).holds r x) :
+        ∀ r : Iic q, ∀ x : X, guard.holds r.val () → U.holds r.val x → (coverName F C).holds r x) :
     ∃ H : FunctionDecisions P W1 W1,
-      ∀ p : P, ∀ x : X, guard.holds p () → U.holds p x →
-        (coverName H C).holds p x := by
+      ∀ p : P, ∀ x : X, guard.holds p () → U.holds p x → (coverName H C).holds p x := by
   classical
   let D : Set P := {q | ∃ F : FunctionDecisions (Iic q) W1 W1,
-    ∀ r : Iic q, ∀ x : X, guard.holds r.val () → U.holds r.val x →
-      (coverName F C).holds r x}
+    ∀ r : Iic q, ∀ x : X, guard.holds r.val () → U.holds r.val x → (coverName F C).holds r x}
   have hD : DenseBelow D := by
     intro p
     obtain ⟨q, hqp, F, hF⟩ := hlocal p
@@ -77,8 +74,7 @@ theorem exists_guarded_cover_of_local
       ∃ q : P, q ≤ p ∧ ∃ F : FunctionDecisions (Iic q) W1 W1,
         ∀ r : Iic q, ∀ x : X, U.holds r.val x → (coverName F C).holds r x) :
     ∃ H : FunctionDecisions P W1 W1,
-      ∀ p : P, ∀ x : X, guard.holds p () → U.holds p x →
-        (coverName H C).holds p x := by
+      ∀ p : P, ∀ x : X, guard.holds p () → U.holds p x → (coverName H C).holds p x := by
   apply exists_guarded_cover_of_dense_local guard U C
   intro p
   obtain ⟨q, hqp, hq⟩ := exists_deciding_refinement guard p ()

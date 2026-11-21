@@ -49,8 +49,7 @@ theorem gchAt_of_mutual_injections {X Y : bSet 𝔹} {Γ : 𝔹}
     (HXY : Γ ≤ injects_into X Y) (HYX : Γ ≤ injects_into Y X)
     (HX : Γ ≤ gchAt X) : Γ ≤ gchAt Y := by
   obtain ⟨δ, Hδ⟩ := exists_gchAt_witness HX
-  apply gchAt_of_witness
-    (hartogsProperty_of_mutual_injections HXY HYX (Hδ.trans inf_le_left))
+  apply gchAt_of_witness (hartogsProperty_of_mutual_injections HXY HYX (Hδ.trans inf_le_left))
   exact injects_into_trans
     (ErdosPowersetInjection.powerset_injects_of_injects HYX)
     (Hδ.trans inf_le_right)

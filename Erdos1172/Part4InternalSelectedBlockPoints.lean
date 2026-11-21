@@ -41,8 +41,7 @@ def selectedPoints (K E Blocks coords : bSet 𝔹) : bSet 𝔹 :=
 
 theorem mem_selectedPoints_iff {K E Blocks coords i x : bSet 𝔹} {Γ : 𝔹} :
     Γ ≤ pair i x ∈ᴮ selectedPoints K E Blocks coords ↔
-      Γ ≤ i ∈ᴮ K ∧ Γ ≤ x ∈ᴮ omegaTwo ∧
-        Γ ≤ x =ᴮ currentPoint E Blocks coords i :=
+      Γ ≤ i ∈ᴮ K ∧ Γ ≤ x ∈ᴮ omegaTwo ∧ Γ ≤ x =ᴮ currentPoint E Blocks coords i :=
   mem_relationGraph_iff
     (fun x => B_ext_term (ϕ := fun y => x =ᴮ y) (t := currentPoint E Blocks coords)
       B_ext_bv_eq_right (currentPoint_congr E Blocks coords))
@@ -74,8 +73,7 @@ theorem currentPoint_spec_on {i : bSet 𝔹} (Hi : Γ ≤ i ∈ᴮ K) :
       image omegaOne omegaTwo (canonicalRow E (blockValue Blocks i)) :=
     mem_image (Hpoint.trans inf_le_right) Hv (Hpoint.trans inf_le_left)
   exact le_inf (Hpoint.trans inf_le_left) (le_inf (Hpoint.trans inf_le_right)
-    (mem_congr bv_refl (Hr.trans (inf_le_right.trans
-      (inf_le_right.trans inf_le_right))) Him))
+    (mem_congr bv_refl (Hr.trans (inf_le_right.trans (inf_le_right.trans inf_le_right))) Him))
 
 include HE HElaw HBlocks Hvalues Hcoords in
 theorem selectedPoints_is_function :
@@ -120,8 +118,7 @@ include HE HElaw HBlocks Hvalues Hcoords in
 physical-point graph, on its original actual domain. -/
 theorem selectedPoints_increasingOn
     (Horder : Γ ≤ ⨅ i, ⨅ j, ⨅ b, ⨅ c, ⨅ x, ⨅ y, _root_.imp
-      ((i ∈ᴮ j ⊓ (pair i b ∈ᴮ Blocks ⊓ pair j c ∈ᴮ Blocks)) ⊓
-        (x ∈ᴮ b ⊓ y ∈ᴮ c)) (x ∈ᴮ y)) :
+      ((i ∈ᴮ j ⊓ (pair i b ∈ᴮ Blocks ⊓ pair j c ∈ᴮ Blocks)) ⊓ (x ∈ᴮ b ⊓ y ∈ᴮ c)) (x ∈ᴮ y)) :
     Γ ≤ increasingOn K (selectedPoints K E Blocks coords) := by
   apply le_iInf
   intro i
@@ -133,8 +130,7 @@ theorem selectedPoints_increasingOn
   intro y
   rw [← deduction]
   let Δ := Γ ⊓ (((i ∈ᴮ K ⊓ j ∈ᴮ K) ⊓ i ∈ᴮ j) ⊓
-    (pair i x ∈ᴮ selectedPoints K E Blocks coords ⊓
-      pair j y ∈ᴮ selectedPoints K E Blocks coords))
+    (pair i x ∈ᴮ selectedPoints K E Blocks coords ⊓ pair j y ∈ᴮ selectedPoints K E Blocks coords))
   have HΔ : Δ ≤ Γ := inf_le_left
   have Hix : Δ ≤ pair i x ∈ᴮ selectedPoints K E Blocks coords :=
     inf_le_right.trans (inf_le_right.trans inf_le_left)

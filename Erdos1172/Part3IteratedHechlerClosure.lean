@@ -61,8 +61,7 @@ theorem countablyClosed (hclosed : CountablyClosed P) : CountablyClosed (Conditi
     obtain ⟨g, ⟨r, hr, rfl⟩, hrv⟩ := Erdos1172Part3HechlerOrder.unionStem_some hqv
     change r.stem i = some v at hrv
     rcases hchain.total hr hp with hrp | hpr
-    · exact boundedAt_mono (hrp.2.2.2 i hpi v hrv F hFp)
-        (hlower r.base ⟨r, hr, rfl⟩)
+    · exact boundedAt_mono (hrp.2.2.2 i hpi v hrv F hFp) (hlower r.base ⟨r, hr, rfl⟩)
     · have hpv := hpr.2.1 i v hrv
       rw [hpi] at hpv
       cases hpv

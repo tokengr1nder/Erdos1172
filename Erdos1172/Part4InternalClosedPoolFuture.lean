@@ -122,8 +122,7 @@ theorem exists_large_pool_future
     HCH Habsorb HJ Hclosure HD HDpos Hdense HI HRows HBsmall HrowInj HrowHom
       Hno HnoOpp Htail HtailLarge
   have Hremaining : Γ ≤ Y ⊆ᴮ difference S (succ P) ⊓ (injects_into omegaTwo Y ⊓
-      ((⨅ y, _root_.imp (y ∈ᴮ Y) (a ∈ᴮ y)) ⊓
-        oppositeSectionsColarge color R J B Rows Y)) :=
+      ((⨅ y, _root_.imp (y ∈ᴮ Y) (a ∈ᴮ y)) ⊓ oppositeSectionsColarge color R J B Rows Y)) :=
     Hfuture.trans (inf_le_right.trans inf_le_right)
   have HYtail : Γ ≤ Y ⊆ᴮ difference S (succ P) := Hremaining.trans inf_le_left
   have Hseeds : Γ ≤ oppositeSectionsColarge color R J B Rows Y :=

@@ -31,8 +31,7 @@ open Erdos1172Part3CountableRankClosure (Local mk_local_le)
 variable {r : Code ↪ W2} {σ : Obj ↪ W2} {G H : SimpleGraph W2} {a : W2}
 
 theorem mk_Iio_W1_lt (i : W1) : #(Set.Iio i) < ℵ_ 1 := by
-  simpa only [W1, Cardinal.mk_toType, Ordinal.card_omega] using
-    Cardinal.mk_Iio_lt i (by simp [W1])
+  simpa only [W1, Cardinal.mk_toType, Ordinal.card_omega] using Cardinal.mk_Iio_lt i (by simp [W1])
 
 theorem mk_Iic_W1_lt (i : W1) : #(Set.Iic i) < ℵ_ 1 := by
   simpa only [W1, Cardinal.mk_toType, Ordinal.card_omega] using

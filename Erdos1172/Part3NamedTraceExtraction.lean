@@ -33,8 +33,7 @@ variable {P : Type} [Preorder P] {G : SimpleGraph W2}
 theorem exists_unbounded_trace_cone (core : CliqueDecisions P W1 W2 G)
     (p0 : P) (U : RegularName P W2) (hU : ¬(traceName core).holds p0 U) :
     ∃ q : P, q ≤ p0 ∧ ∀ p : P, p ≤ q → ∀ bound : W1,
-      ∃ s : P, s ≤ p ∧ ∃ i : W1, bound < i ∧
-        ∃ x : W2, core.decides s i x ∧ U.holds s x := by
+      ∃ s : P, s ≤ p ∧ ∃ i : W1, bound < i ∧ ∃ x : W2, core.decides s i x ∧ U.holds s x := by
   classical
   change ¬∀ q : P, q ≤ p0 → ∃ s : P, s ≤ q ∧ ∃ bound, TailAvoid core s U bound at hU
   push Not at hU

@@ -123,8 +123,7 @@ theorem exists_stationary_cover_profile
     ∃ e : E, ∃ p : P, p ≤ p0 ∧ ∃ T : RegularName P W2,
       StationaryAt T.holds p ∧ (∀ q b, T.holds q b → U.holds q b) ∧
         ∃ F : W2 → FunctionDecisions P W1 W1,
-          ∀ q b x, T.holds q b → (loss b).holds q x →
-            (coverName (F b) (C e)).holds q x := by
+          ∀ q b x, T.holds q b → (loss b).holds q x → (coverName (F b) (C e)).holds q x := by
   classical
   have witness (b : possible U.holds p0) :
       ∃ e : E, ∃ q : P, q ≤ p0 ∧ ProfileWitness U loss C e q b.val := by
@@ -148,7 +147,6 @@ theorem exists_stationary_cover_profile
     rintro b ⟨r, hrq, hr⟩
     exact ⟨r, hrq, profileName_holds_of_witness U loss C e hr⟩
   obtain ⟨F, hF⟩ := exists_profile_functionNames U loss C e
-  exact ⟨e, p, hpp0, profileName U loss C e, hstationary,
-    profileName_le_source U loss C e, F, hF⟩
+  exact ⟨e, p, hpp0, profileName U loss C e, hstationary, profileName_le_source U loss C e, F, hF⟩
 
 end Erdos1172Part3NamedDiscreteCoverProfile

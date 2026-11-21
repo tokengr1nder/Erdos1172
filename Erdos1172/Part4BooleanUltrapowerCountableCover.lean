@@ -37,8 +37,7 @@ variable {B : Type u} [NontrivialCompleteBooleanAlgebra B]
 /-- A single ambient injection supplies a fixed countable sequence of
 names. Their validity may vary from one Boolean piece to another. -/
 theorem exists_countable_member_cover (F : bSet B) (Γ : B) (hcnt : Γ ≤ injects_into F omega) :
-    ∃ x : ULift.{u} ℕ → bSet B, ∀ z : bSet B,
-      Γ ⊓ (z ∈ᴮ F) ≤ ⨆ n, (x n ∈ᴮ F) ⊓ (z =ᴮ x n) := by
+    ∃ x : ULift.{u} ℕ → bSet B, ∀ z : bSet B, Γ ⊓ (z ∈ᴮ F) ≤ ⨆ n, (x n ∈ᴮ F) ⊓ (z =ᴮ x n) := by
   classical
   have hext : B_ext (fun g : bSet B => is_injective_function F omega g) := by
     apply B_ext_inf B_ext_is_function_right

@@ -77,10 +77,8 @@ theorem exists_fusion_preparation_for_selector
   obtain ⟨B, P, Hpool⟩ := exists_closed_pool_for_selector HCH
     (countablyBounded_of_ideal HJ Habsorb Hclosure) HF Hlaw
   obtain ⟨Y, HY⟩ := exists_large_closed_pool_future HCH Habsorb
-    (HJ.trans inf_le_left) Hclosure HD HDpos Hdense HI HE HElaw Hpool
-      Hno HnoOpp HS HSlarge
-  exact ⟨B, P, Y, le_inf (le_inf HE HElaw)
-    (le_inf HF (le_inf Hlaw (le_inf Hpool HY)))⟩
+    (HJ.trans inf_le_left) Hclosure HD HDpos Hdense HI HE HElaw Hpool Hno HnoOpp HS HSlarge
+  exact ⟨B, P, Y, le_inf (le_inf HE HElaw) (le_inf HF (le_inf Hlaw (le_inf Hpool HY)))⟩
 
 /-- Construct the enumeration, then its selector, then the selector's
 closed whole-object/point pools and a simultaneous large future. All

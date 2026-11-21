@@ -116,8 +116,7 @@ theorem stoppedVertexWitness_ext_value (F b ρ top : bSet 𝔹) :
 
 theorem stoppedVertexWitness_exists {F b ρ top V : bSet 𝔹} {Γ : 𝔹}
     (H : Γ ≤ stoppedVertexWitness F b ρ top V) :
-    ∃ P : bSet 𝔹, Γ ≤ pair top P ∈ᴮ F ⊓
-      (stoppedCutoff P top ρ b ⊓ priorVertexGraph ρ P =ᴮ V) :=
+    ∃ P : bSet 𝔹, Γ ≤ pair top P ∈ᴮ F ⊓ (stoppedCutoff P top ρ b ⊓ priorVertexGraph ρ P =ᴮ V) :=
   exists_convert H (B_ext_inf B_ext_pair_mem_right
     (B_ext_inf (stoppedCutoff_ext_graph top ρ b)
       (B_ext_term (ϕ := fun g => g =ᴮ V) (t := priorVertexGraph ρ)
@@ -160,8 +159,7 @@ theorem exists_stationary_frozen_stopped_histories
       (Γ ≤ V ∈ᴮ vertexHistoryCodes b) ∧ (Γ ≤ X ∈ᴮ coordinateHistoryCodes) ∧
       (Γ ≤ positive omegaTwo nonstationaryIdeal T) ∧
       (Γ ≤ injects_into omegaTwo T) ∧ (Γ ≤ T ⊆ᴮ stationaryEndpoints) ∧
-      Γ ≤ ⨅ top, _root_.imp (top ∈ᴮ T)
-        (b ∈ᴮ top ⊓ frozenHistoryWitness F b ρ V top X) := by
+      Γ ≤ ⨅ top, _root_.imp (top ∈ᴮ T) (b ∈ᴮ top ⊓ frozenHistoryWitness F b ρ V top X) := by
   obtain ⟨g, b, _, _, Hb, HUpos, _, HUsub, HUlaw⟩ :=
     exists_common_endpoint_cutoff HCH HB HF Hlaw Hstop
   let U := fiber omegaTwo g b
@@ -197,8 +195,7 @@ theorem exists_stationary_frozen_stopped_histories
         (Hrun.trans (inf_le_left.trans (inf_le_left.trans inf_le_left)))
         (inf_le_left.trans Hρ) (HP.trans (inf_le_right.trans inf_le_right))
     exact le_iSup_of_le (priorVertexGraph ρ P) (le_inf Hcode
-      (le_iSup_of_le P (le_inf (HP.trans inf_le_left)
-        (le_inf (HP.trans inf_le_right) bv_refl))))
+      (le_iSup_of_le P (le_inf (HP.trans inf_le_left) (le_inf (HP.trans inf_le_right) bv_refl))))
   obtain ⟨V, U₂, HV, HU₂pos, _, HU₂sub, HU₂law⟩ :=
     exists_stationary_constant_label HCH HU₁pos (vertexHistoryCodes_small HCH Hb)
       (stoppedVertexWitness_ext_top F b ρ) (stoppedVertexWitness_ext_value F b ρ) Hvertex
@@ -225,13 +222,11 @@ theorem exists_stationary_frozen_stopped_histories
     exists_stationary_constant_label HCH HU₂pos (coordinateHistoryCodes_small HCH)
       (frozenHistoryWitness_ext_top F b ρ V) (frozenHistoryWitness_ext_value F b ρ V) Hcoordinates
   have HTU : Γ ≤ T ⊆ᴮ U := subset_trans' HTsub (subset_trans' HU₂sub HU₁sub)
-  refine ⟨b, ρ, V, X, T, Hb, Hρ, HV, HX, HTpos, HTlarge,
-    subset_trans' HTU HUsub, ?_⟩
+  refine ⟨b, ρ, V, X, T, Hb, Hρ, HV, HX, HTpos, HTlarge, subset_trans' HTU HUsub, ?_⟩
   apply le_iInf
   intro top
   rw [← deduction]
-  have HtopU : Γ ⊓ top ∈ᴮ T ≤ top ∈ᴮ U :=
-    mem_of_mem_subset (inf_le_left.trans HTU) inf_le_right
+  have HtopU : Γ ⊓ top ∈ᴮ T ≤ top ∈ᴮ U := mem_of_mem_subset (inf_le_left.trans HTU) inf_le_right
   have Hcut : Γ ⊓ top ∈ᴮ T ≤ endpointCutoffWitness F top b :=
     (le_inf (inf_le_left.trans (HUlaw.trans (iInf_le _ top))) HtopU).trans bv_imp_elim
   exact le_inf (Hcut.trans inf_le_left)

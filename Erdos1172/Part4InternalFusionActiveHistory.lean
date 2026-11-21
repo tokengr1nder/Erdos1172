@@ -145,8 +145,7 @@ theorem currentPoints_witness
 /-- Bounds for all guarded earlier active values bound their actual
 union. No functionality or nonempty history is needed for this implication. -/
 theorem previousActive_subset_of_values {ξ Acts P : bSet 𝔹} {Γ : 𝔹}
-    (Hvalues : Γ ≤ ⨅ ν, ⨅ A, _root_.imp
-      (ν ∈ᴮ ξ ⊓ pair ν A ∈ᴮ Acts) (A ⊆ᴮ P)) :
+    (Hvalues : Γ ≤ ⨅ ν, ⨅ A, _root_.imp (ν ∈ᴮ ξ ⊓ pair ν A ∈ᴮ Acts) (A ⊆ᴮ P)) :
     Γ ≤ previousActive ξ Acts ⊆ᴮ P := by
   apply union_subset_of_members_subset
   apply le_iInf

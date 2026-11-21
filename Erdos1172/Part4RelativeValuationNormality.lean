@@ -82,8 +82,7 @@ theorem countable_union_value (hk : Cardinal.aleph0 < κ) (F : ULift.{u} ℕ →
   intro n
   exact emb.monotone (show (n.down : Ordinal.{u}) ≤ Ordinal.omega0 from (Ordinal.natCast_lt_omega0 _).le)
 
-theorem checked_member_cover (x : bSet B) :
-    (x ∈ᴮ K) = ⨆ i : W, x =ᴮ label κ i := by
+theorem checked_member_cover (x : bSet B) : (x ∈ᴮ K) = ⨆ i : W, x =ᴮ label κ i := by
   rw [PSet.ordinalMk_eq_def κ.ord,check_unfold,mem_unfold]
   change (⨆ i : W, ⊤ ⊓ (x =ᴮ label κ i)) = _
   simp only [top_inf_eq]

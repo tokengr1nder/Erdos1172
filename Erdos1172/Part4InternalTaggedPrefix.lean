@@ -50,8 +50,7 @@ theorem taggingLaw_witness {V Run j z : bSet 𝔹} {Γ : 𝔹}
 the full domain: actual function support already bounds its image values. -/
 theorem mem_taggedPrefix_pair_iff {i θ V Run j x : bSet 𝔹} {Γ : 𝔹}
     (HF : Γ ≤ is_function θ (prod θ V) Run) (Htag : Γ ≤ taggingLaw V Run) :
-    (Γ ≤ pair j x ∈ᴮ taggedPrefix i θ V Run) ↔
-      Γ ≤ j ∈ᴮ i ∧ Γ ≤ pair j (pair j x) ∈ᴮ Run := by
+    (Γ ≤ pair j x ∈ᴮ taggedPrefix i θ V Run) ↔ Γ ≤ j ∈ᴮ i ∧ Γ ≤ pair j (pair j x) ∈ᴮ Run := by
   constructor
   · intro H
     obtain ⟨k, Hk⟩ := exists_convert (mem_image_iff.mp H).2
@@ -73,8 +72,7 @@ theorem taggedPrefix_subset {i θ V Run : bSet 𝔹} {Γ : 𝔹}
     (show Γ ⊓ z ∈ᴮ taggedPrefix i θ V Run ≤ z ∈ᴮ taggedPrefix i θ V Run from inf_le_right)).2)
     (B_ext_inf B_ext_mem_left B_ext_pair_mem_left)
   obtain ⟨x, Hx⟩ := taggingLaw_witness (inf_le_left.trans Htag) (Hj.trans inf_le_right)
-  exact mem_prod_iff₂.mpr
-    ⟨j, Hj.trans inf_le_left, x, Hx.trans inf_le_left, Hx.trans inf_le_right⟩
+  exact mem_prod_iff₂.mpr ⟨j, Hj.trans inf_le_left, x, Hx.trans inf_le_left, Hx.trans inf_le_right⟩
 
 /-- The exact tagged image, not a newly chosen restriction graph, is an
 actual function on the whole prefix. The entries need not be distinct. -/
@@ -135,7 +133,6 @@ theorem taggingLaw_of_imageRecLaw {θ V Run : bSet 𝔹}
     imageRecLaw_apply (inf_le_left.trans Hlaw) inf_le_right
   have Hvalue : Δ ≤ pair j (nextEntry j (image j (prod θ V) Run)) ∈ᴮ prod θ V :=
     mem_congr Hz bv_refl (mem_codomain_of_is_function inf_le_right (inf_le_left.trans HF))
-  exact le_iSup_of_le (nextEntry j (image j (prod θ V) Run))
-    (le_inf (mem_prod_iff.mp Hvalue).2 Hz)
+  exact le_iSup_of_le (nextEntry j (image j (prod θ V) Run)) (le_inf (mem_prod_iff.mp Hvalue).2 Hz)
 
 end bSet.ErdosTaggedPrefix

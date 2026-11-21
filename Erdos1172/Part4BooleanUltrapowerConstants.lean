@@ -123,8 +123,7 @@ theorem constant_iSup (U : Ultrafilter I) (κ : Cardinal.{u})
   · calc
       constant U (⨆ j, a j) = constant U (⨆ j : S, a j.val) := congrArg (constant U) heq.symm
       _ = ⨆ j : S, constant U (a j.val) := value_small_iSup U κ hcard (fun _ j => a j.val)
-      _ ≤ ⨆ j, constant U (a j) :=
-        iSup_le fun j => le_iSup (fun k : J => constant U (a k)) j.val
+      _ ≤ ⨆ j, constant U (a j) := iSup_le fun j => le_iSup (fun k : J => constant U (a k)) j.val
   · exact iSup_le fun j => (constant_le_iff U).mpr (le_iSup a j)
 
 theorem constant_iInf (U : Ultrafilter I) (κ : Cardinal.{u})

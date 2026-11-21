@@ -42,11 +42,9 @@ The losses retain the same source trace throughout the argument. -/
 theorem exists_stationary_smallLoss {r : Code ↪ W3} {G H : SimpleGraph W3}
     (word : List Bool) (color : Bool) (source domain : Set W3)
     (hd : IsStationary domain) (hgood : ∀ a ∈ domain, GoodCut r G H a)
-    (hext : ∀ a ∈ domain,
-      DerivedSmall r G H (color :: word) a (source ∩ Set.Iio a)) :
+    (hext : ∀ a ∈ domain, DerivedSmall r G H (color :: word) a (source ∩ Set.Iio a)) :
     ∃ a ∈ domain, ∃ future : Set W3, future ⊆ domain ∧ IsStationary future ∧
-      ∀ b ∈ future, a < b ∧ DerivedSmall r G H word a
-        (colorLoss G H color source a b) := by
+      ∀ b ∈ future, a < b ∧ DerivedSmall r G H word a (colorLoss G H color source a b) := by
   classical
   let goodFuture (a : W3) : Set W3 :=
     {b | b ∈ domain ∧ a < b ∧ DerivedSmall r G H word a
@@ -70,8 +68,7 @@ theorem exists_stationary_smallLoss {r : Code ↪ W3} {G H : SimpleGraph W3}
   have hdiagonal : IsClub diagonal := isClub_diagonalInter allClubs hallClubs
   obtain ⟨reflectClub, hreflectClub, hreflect⟩ :=
     exists_club_positive_trace r G H (domain ∩ diagonal)
-  obtain ⟨a, had, haDiag, haReflect⟩ := hd
-    (hdiagonal.inter alephZero_lt_cof_W3.ne' hreflectClub)
+  obtain ⟨a, had, haDiag, haReflect⟩ := hd (hdiagonal.inter alephZero_lt_cof_W3.ne' hreflectClub)
   have hpositive := hreflect a haReflect ⟨had, haDiag⟩
   apply hpositive
   apply small_mono (t := {β | β < a ∧ GoodCut r G H β ∧
@@ -137,8 +134,7 @@ theorem target_of_stationary_smallLoss {r : Code ↪ W3}
     rwa [ht]
   let bad : Set W3 := ⋃ y : tail, rows ∩ {x | (colorGraph G H (!color)).Adj x y.val}
   have hbad : DerivedSmall r G H (word p) a bad :=
-    derivedSmall_iUnion (word p) ha _ htailCard
-      (fun y => (hloss y.val (htailSub y.property)).2)
+    derivedSmall_iUnion (word p) ha _ htailCard (fun y => (hloss y.val (htailSub y.property)).2)
   have hremaining : ¬DerivedSmall r G H (word p) a (rows \ bad) :=
     (derivedSmallness (word p) ha).positive_sdiff hpositive hbad
   obtain ⟨core, hcoreSub, hcoreClique, hcoreType⟩ :=

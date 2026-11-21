@@ -81,8 +81,7 @@ theorem prefixGraph_is_func'_prefix {κ S f i x : bSet 𝔹} {Γ : 𝔹}
     (inf_le_left.trans (H.trans (inf_le_right.trans inf_le_right)))
     (inf_le_left.trans Hpair) inf_le_right
 
-theorem empty_prefixGraph {κ S : bSet 𝔹} {Γ : 𝔹} :
-    Γ ≤ prefixGraph κ S (∅ : bSet 𝔹) := by
+theorem empty_prefixGraph {κ S : bSet 𝔹} {Γ : 𝔹} : Γ ≤ prefixGraph κ S (∅ : bSet 𝔹) := by
   refine le_inf empty_subset (le_inf ((is_func'_empty (x := S)).trans inf_le_left) ?_)
   apply le_iInf
   intro x

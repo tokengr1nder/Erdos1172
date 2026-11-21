@@ -59,8 +59,7 @@ theorem stemGraph_injective : Injective stemGraph := by
     exact hmem.symm
 
 theorem mk_Stem_le (hCH : CH) : #Stem ≤ ℵ_ 1 := by
-  let graphCode (s : Stem) : {t : Set (W1 × W1) // #t ≤ ℵ₀} :=
-    ⟨stemGraph s, stemGraph_countable s⟩
+  let graphCode (s : Stem) : {t : Set (W1 × W1) // #t ≤ ℵ₀} := ⟨stemGraph s, stemGraph_countable s⟩
   have hgraph : #Stem ≤ #{t : Set (W1 × W1) // #t ≤ ℵ₀} :=
     Cardinal.mk_le_of_injective (f := graphCode)
       (fun _ _ h => stemGraph_injective (congrArg Subtype.val h))

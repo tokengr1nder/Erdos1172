@@ -55,8 +55,7 @@ theorem indicator_subset_value (χ ψ : (bSet.omega : bSet 𝔹).type → 𝔹) 
 
 /-- Local inclusion is pointwise implication under precisely the same context. -/
 theorem indicator_subset_iff {χ ψ : (bSet.omega : bSet 𝔹).type → 𝔹} {Γ : 𝔹} :
-    Γ ≤ set_of_indicator (u := bSet.omega) χ ⊆ᴮ set_of_indicator ψ ↔
-      ∀ n, Γ ⊓ χ n ≤ ψ n := by
+    Γ ≤ set_of_indicator (u := bSet.omega) χ ⊆ᴮ set_of_indicator ψ ↔ ∀ n, Γ ⊓ χ n ≤ ψ n := by
   rw [indicator_subset_value]
   constructor
   · intro H n
@@ -114,19 +113,15 @@ theorem interleave_eq_iff
     · apply indicator_eq_iff.mpr
       constructor
       · rintro ⟨n⟩
-        simpa only [interleave_left] using
-          Hpoint.1 ⟨Equiv.natSumNatEquivNat (Sum.inl n)⟩
+        simpa only [interleave_left] using Hpoint.1 ⟨Equiv.natSumNatEquivNat (Sum.inl n)⟩
       · rintro ⟨n⟩
-        simpa only [interleave_left] using
-          Hpoint.2 ⟨Equiv.natSumNatEquivNat (Sum.inl n)⟩
+        simpa only [interleave_left] using Hpoint.2 ⟨Equiv.natSumNatEquivNat (Sum.inl n)⟩
     · apply indicator_eq_iff.mpr
       constructor
       · rintro ⟨n⟩
-        simpa only [interleave_right] using
-          Hpoint.1 ⟨Equiv.natSumNatEquivNat (Sum.inr n)⟩
+        simpa only [interleave_right] using Hpoint.1 ⟨Equiv.natSumNatEquivNat (Sum.inr n)⟩
       · rintro ⟨n⟩
-        simpa only [interleave_right] using
-          Hpoint.2 ⟨Equiv.natSumNatEquivNat (Sum.inr n)⟩
+        simpa only [interleave_right] using Hpoint.2 ⟨Equiv.natSumNatEquivNat (Sum.inr n)⟩
   · rintro ⟨Hχ, Hψ⟩
     rw [eq_iff_subset_subset] at Hχ Hψ ⊢
     exact le_inf
@@ -150,8 +145,7 @@ theorem pairCodeIndex_inj (i j : (prod Pω Pω).type) {Γ : 𝔹}
     set_of_indicator (interleave j.1 j.2) at H
   exact pair_eq_pair_iff.mpr (interleave_eq_iff.mp H)
 
-theorem pairCodeIndex_mem (i : (prod Pω Pω).type) {Γ : 𝔹} :
-    Γ ≤ (Pω).bval (pairCodeIndex i) := by
+theorem pairCodeIndex_mem (i : (prod Pω Pω).type) {Γ : 𝔹} : Γ ≤ (Pω).bval (pairCodeIndex i) := by
   change Γ ≤ set_of_indicator (u := bSet.omega) (pairCodeIndex i) ⊆ᴮ bSet.omega
   apply set_of_indicator_subset (x := bSet.omega)
   intro n
@@ -166,13 +160,11 @@ noncomputable def powersetPairCode : bSet 𝔹 :=
 theorem powersetPairCode_is_injective {Γ : 𝔹} :
     Γ ≤ is_injective_function (prod Pω Pω) Pω powersetPairCode := by
   unfold powersetPairCode
-  exact le_inf (functionMk'_is_function _ _ _ _)
-    (functionMk'_is_inj _ _ _ _ pairCodeIndex_inj)
+  exact le_inf (functionMk'_is_function _ _ _ _) (functionMk'_is_inj _ _ _ _ pairCodeIndex_inj)
 
 /-- This is unconditional and quantifies over all internal powerset members. -/
 theorem powerset_omega_square_injects {Γ : 𝔹} :
     Γ ≤ injects_into (prod Pω Pω) Pω :=
-  injects_into_of_injection_into
-    (le_iSup_of_le powersetPairCode powersetPairCode_is_injective)
+  injects_into_of_injection_into (le_iSup_of_le powersetPairCode powersetPairCode_is_injective)
 
 end bSet.ErdosPowersetPairCoding

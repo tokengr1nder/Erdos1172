@@ -63,8 +63,7 @@ theorem exists_above_of_countablyBounded {κ i : bSet 𝔹} {Γ : 𝔹}
     apply le_iInf
     intro x
     rw [← deduction]
-    exact mem_congr (bv_symm (eq_mem_singleton inf_le_right)) bv_refl
-      (inf_le_left.trans Hi)
+    exact mem_congr (bv_symm (eq_mem_singleton inf_le_right)) bv_refl (inf_le_left.trans Hi)
   have Hcount : Γ ≤ injects_into ({i} : bSet 𝔹) bSet.omega :=
     singleton_injects_of_mem (b := of_nat 0) of_nat_mem_omega
   obtain ⟨j, Hj⟩ := exists_bound_of_countablyBounded HB Hsub Hcount
@@ -128,8 +127,7 @@ a function value. No countability claim about all such indices is made. -/
 theorem exists_sup_index_selector {T C f : bSet 𝔹} {Γ : 𝔹}
     (HT : Γ ≤ T ⊆ᴮ increasingSup C f) :
     ∃ h : bSet 𝔹, Γ ≤ is_function T omegaOne h ⊓
-      ⨅ x, ⨅ i, _root_.imp (x ∈ᴮ T ⊓ pair x i ∈ᴮ h)
-        (⨆ y, pair i y ∈ᴮ f ⊓ x ∈ᴮ y) := by
+      ⨅ x, ⨅ i, _root_.imp (x ∈ᴮ T ⊓ pair x i ∈ᴮ h) (⨆ y, pair i y ∈ᴮ f ⊓ x ∈ᴮ y) := by
   apply ErdosSmallFiberBound.exists_selector_of_pointwise
     (P := fun x i => ⨆ y, pair i y ∈ᴮ f ⊓ x ∈ᴮ y)
     (fun _ => B_ext_iSup (h := fun _ => B_ext_inf B_ext_const B_ext_mem_left))
@@ -138,8 +136,7 @@ theorem exists_sup_index_selector {T C f : bSet 𝔹} {Γ : 𝔹}
   intro x
   rw [← deduction]
   obtain ⟨i, y, Hiy⟩ := exists_indexed_union_witness
-    (mem_of_mem_subset (inf_le_left.trans HT)
-      (show Γ ⊓ x ∈ᴮ T ≤ x ∈ᴮ T from inf_le_right))
+    (mem_of_mem_subset (inf_le_left.trans HT) (show Γ ⊓ x ∈ᴮ T ≤ x ∈ᴮ T from inf_le_right))
   exact le_iSup_of_le i (le_inf (Hiy.trans (inf_le_left.trans inf_le_left))
     (le_iSup_of_le y (le_inf (Hiy.trans (inf_le_left.trans inf_le_right))
       (Hiy.trans inf_le_right))))
@@ -188,8 +185,7 @@ theorem countablyBounded_increasingSup {C f : bSet 𝔹} {Γ : 𝔹}
     (le_inf (inf_le_left.trans ((Hh.trans inf_le_right).trans
       ((iInf_le _ x).trans (iInf_le _ i))))
       (le_inf inf_le_right (Hi.trans inf_le_right))).trans bv_imp_elim
-  obtain ⟨z, Hz⟩ := exists_convert Hselected
-    (B_ext_inf B_ext_pair_mem_right B_ext_mem_right)
+  obtain ⟨z, Hz⟩ := exists_convert Hselected (B_ext_inf B_ext_pair_mem_right B_ext_mem_right)
   have Hij : Θ ≤ i ∈ᴮ j := mem_of_mem_subset
     (inf_le_left.trans (Hj.trans inf_le_right))
     (mem_image (Hi.trans inf_le_right) inf_le_right (Hi.trans inf_le_left))

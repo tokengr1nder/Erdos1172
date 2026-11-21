@@ -112,8 +112,7 @@ theorem simultaneousChoices_is_function {δ S Y X top : bSet 𝔹} {Γ : 𝔹}
       (mem_of_mem_subset simultaneousCandidates_subset (leastIn_mem (Hv.trans inf_le_right)))
       (Hv.trans inf_le_right))
   · intro σ τ v w Δ _ _ _ _ _ Hv Hw Hστ
-    exact leastIn_unique_of_eq
-      (simultaneousCandidates_congr_row δ S Y X top Hστ) Hv Hw
+    exact leastIn_unique_of_eq (simultaneousCandidates_congr_row δ S Y X top Hστ) Hv Hw
 
 theorem exists_simultaneous_row_choices {δ S Y X top : bSet 𝔹} {Γ : 𝔹}
     (Hδ : Γ ≤ δ ∈ᴮ omegaOne) (Htop : Γ ≤ top ∈ᴮ omegaTwo)
@@ -121,8 +120,7 @@ theorem exists_simultaneous_row_choices {δ S Y X top : bSet 𝔹} {Γ : 𝔹}
     (HY : Γ ≤ is_func' δ omegaTwo Y)
     (HX : Γ ≤ is_func' (prod δ omegaOne) omegaOne X)
     (Hrows : Γ ≤ ⨅ σ, _root_.imp (σ ∈ᴮ omegaOne) (⨆ J, rowIdealData S σ J)) :
-    ∃ Z : bSet 𝔹, Γ ≤ is_function omegaOne omegaOne Z ⊓
-      simultaneousRowLaw δ S Y X top Z :=
+    ∃ Z : bSet 𝔹, Γ ≤ is_function omegaOne omegaOne Z ⊓ simultaneousRowLaw δ S Y X top Z :=
   ⟨simultaneousChoices δ S Y X top,
     le_inf (simultaneousChoices_is_function Hδ Htop HS HY HX Hrows) simultaneousChoices_law⟩
 
@@ -130,7 +128,6 @@ theorem simultaneousRowLaw_apply {δ S Y X top Z σ v : bSet 𝔹} {Γ : 𝔹}
     (Hlaw : Γ ≤ simultaneousRowLaw δ S Y X top Z)
     (Hσ : Γ ≤ σ ∈ᴮ omegaOne) (Hpair : Γ ≤ pair σ v ∈ᴮ Z) :
     Γ ≤ leastIn (simultaneousCandidates δ S Y X top σ) v :=
-  (le_inf (Hlaw.trans ((iInf_le _ σ).trans (iInf_le _ v)))
-    (le_inf Hσ Hpair)).trans bv_imp_elim
+  (le_inf (Hlaw.trans ((iInf_le _ σ).trans (iInf_le _ v))) (le_inf Hσ Hpair)).trans bv_imp_elim
 
 end bSet.ErdosSimultaneousRowChoice

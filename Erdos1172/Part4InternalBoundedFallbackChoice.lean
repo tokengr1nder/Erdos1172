@@ -53,8 +53,7 @@ theorem fallbackData_ext_index {C fallback x : bSet 𝔹}
 theorem fallbackData_ext_value {C fallback i : bSet 𝔹}
     {P : bSet 𝔹 → bSet 𝔹 → 𝔹} (Hright : B_ext (P i)) :
     B_ext (fallbackData C P fallback i) :=
-  B_ext_sup (h₁ := B_ext_inf B_ext_const Hright)
-    (h₂ := B_ext_inf B_ext_const B_ext_bv_eq_left)
+  B_ext_sup (h₁ := B_ext_inf B_ext_const Hright) (h₂ := B_ext_inf B_ext_const B_ext_bv_eq_left)
 
 theorem fallbackData_of_candidate {C fallback i x : bSet 𝔹}
     {P : bSet 𝔹 → bSet 𝔹 → 𝔹} {Γ : 𝔹}

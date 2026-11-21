@@ -76,8 +76,7 @@ theorem countablyBounded_of_rowIdeals {S : bSet 𝔹} {Γ : 𝔹}
   rw [inf_iSup_eq]
   apply iSup_le
   intro J
-  have Hdata : Γ ⊓ rowIdealData S (0 : bSet 𝔹) J ≤ rowIdealData S (0 : bSet 𝔹) J :=
-    inf_le_right
+  have Hdata : Γ ⊓ rowIdealData S (0 : bSet 𝔹) J ≤ rowIdealData S (0 : bSet 𝔹) J := inf_le_right
   exact countablyBounded_of_ideal (Hdata.trans inf_le_left)
     (Hdata.trans (inf_le_right.trans inf_le_left))
     (Hdata.trans (inf_le_right.trans (inf_le_right.trans inf_le_left)))

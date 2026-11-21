@@ -86,10 +86,8 @@ strict upper endpoint below the original bound and dense cofinal members
 below that endpoint. No assumption on the endpoint being a limit is needed. -/
 theorem exists_cofinal_endpoint (U : RegularName P V) (p0 : P) (y0 : V)
     (hy0 : Upper U p0 y0) :
-    ∃ q : P, q ≤ p0 ∧ ∃ y : V, y ≤ y0 ∧
-      Upper U q y ∧ CofinalBelow U q y := by
+    ∃ q : P, q ≤ p0 ∧ ∃ y : V, y ≤ y0 ∧ Upper U q y ∧ CofinalBelow U q y := by
   obtain ⟨q, hqp0, y, hyy0, hy, hmin⟩ := exists_least_possible_upper U p0 y0 hy0
-  exact ⟨q, hqp0, y, hyy0, hy,
-    cofinalBelow_of_least_possible_upper U p0 q y hqp0 hy hmin⟩
+  exact ⟨q, hqp0, y, hyy0, hy, cofinalBelow_of_least_possible_upper U p0 q y hqp0 hy hmin⟩
 
 end Erdos1172Part3NamedCofinalEndpoint

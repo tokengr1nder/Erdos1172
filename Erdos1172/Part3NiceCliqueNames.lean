@@ -51,10 +51,8 @@ theorem NiceCliqueName.ext {N M : NiceCliqueName P I V G} (h : N.function = M.fu
   rfl
 
 theorem exists_nice_clique_name (hcc : OmegaTwoCC P) (core : CliqueDecisions P I V G) :
-    ∃ N : NiceCliqueName P I V G,
-      ∀ p i x, N.toClique.decides p i x → core.decides p i x := by
-  let F : FunctionDecisions P I V :=
-    ⟨core.decides, core.dense, core.persistent, core.unique⟩
+    ∃ N : NiceCliqueName P I V G, ∀ p i x, N.toClique.decides p i x → core.decides p i x := by
+  let F : FunctionDecisions P I V := ⟨core.decides, core.dense, core.persistent, core.unique⟩
   obtain ⟨N, hN⟩ := Erdos1172Part3NiceFunctionNames.exists_nice_name hcc F
   exact ⟨⟨N, fun h hx hy => core.ordered h (hN _ _ _ hx) (hN _ _ _ hy),
     fun h hx hy => core.adjacent h (hN _ _ _ hx) (hN _ _ _ hy)⟩, hN⟩

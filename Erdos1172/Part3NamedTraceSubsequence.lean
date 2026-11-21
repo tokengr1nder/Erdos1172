@@ -37,13 +37,11 @@ theorem exists_cone_subsequence (hclosed : CountablyClosed P)
     (core : CliqueDecisions P W1 W2 G) (p0 : P) (U : RegularName P W2)
     (hU : ¬(traceName core).holds p0 U) :
     ∃ q : P, q ≤ p0 ∧ ∃ out : CliqueDecisions (Set.Iic q) W1 W2 G,
-      ∀ p i x, out.decides p i x → U.holds p.val x ∧
-        ∃ j : W1, i < j ∧ core.decides p.val j x := by
+      ∀ p i x, out.decides p i x → U.holds p.val x ∧ ∃ j : W1, i < j ∧ core.decides p.val j x := by
   classical
   obtain ⟨q, hqp0, hq⟩ := exists_unbounded_trace_cone core p0 U hU
   let R (p : Set.Iic q) (x : W2) : Prop := U.holds p.val x ∧ ∃ j, core.decides p.val j x
-  let K (i : W1) (p : Set.Iic q) (x : W2) : Prop :=
-    ∃ j : W1, i < j ∧ core.decides p.val j x
+  let K (i : W1) (p : Set.Iic q) (x : W2) : Prop := ∃ j : W1, i < j ∧ core.decides p.val j x
   have hR : ∀ {p s : Set.Iic q} {x}, s ≤ p → R p x → R s x := by
     rintro p s x hsp ⟨hU, j, hj⟩
     exact ⟨U.persistent hsp hU, j, core.persistent hsp hj⟩
@@ -64,8 +62,7 @@ theorem exists_cone_subsequence (hclosed : CountablyClosed P)
     refine ⟨⟨s, hsp.trans p.property⟩, hsp, y, ⟨hUy, j, hcore⟩,
       ⟨j, (hbound i (Set.mem_insert _ _)).trans hbj, hcore⟩, ?_⟩
     intro x hx
-    have hij : index ⟨x, hx⟩ < j :=
-      (hbound _ (Set.mem_insert_of_mem _ ⟨⟨x, hx⟩, rfl⟩)).trans hbj
+    have hij : index ⟨x, hx⟩ < j := (hbound _ (Set.mem_insert_of_mem _ ⟨⟨x, hx⟩, rfl⟩)).trans hbj
     have hxc := core.persistent hsp (hindex ⟨x, hx⟩)
     exact ⟨core.ordered hij hxc hcore, core.adjacent hij.ne hxc hcore⟩
   obtain ⟨out, hout⟩ := exists_controlled_clique

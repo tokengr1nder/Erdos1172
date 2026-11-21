@@ -89,8 +89,7 @@ theorem mk_Code_le (hGCH : GCH) (hP : #P ≤ ℵ_ 2) (hI : #I ≤ ℵ_ 1)
     change #((Fin 3 × W2) ⊕ NiceCliqueName P I W2 G) ≤ ℵ_ 2
     rw [Cardinal.mk_sum]
     simp only [Cardinal.lift_id]
-    exact (add_le_add hpoint hblock).trans_eq
-      (Cardinal.add_eq_self (Cardinal.aleph0_le_aleph 2))
+    exact (add_le_add hpoint hblock).trans_eq (Cardinal.add_eq_self (Cardinal.aleph0_le_aleph 2))
   · exact hGCH.aleph_two_power_aleph_zero.le
 
 noncomputable def rank (hGCH : GCH) (hP : #P ≤ ℵ_ 2) (hI : #I ≤ ℵ_ 1)

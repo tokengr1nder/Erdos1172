@@ -46,8 +46,7 @@ theorem difference_congr_right {A B C : bSet 𝔹} {Γ : 𝔹}
     intro x
     rw [← deduction, mem_difference, mem_difference]
     exact le_inf (inf_le_right.trans inf_le_left)
-      (bv_rw'' (inf_le_left.trans (bv_symm H))
-        (inf_le_right.trans inf_le_right) (Hext x))
+      (bv_rw'' (inf_le_left.trans (bv_symm H)) (inf_le_right.trans inf_le_right) (Hext x))
 
 theorem B_congr_difference_right (A : bSet 𝔹) : B_congr (difference A) := by
   intro B C Γ H
@@ -59,8 +58,7 @@ def lossFamily (A T : bSet 𝔹) : bSet 𝔹 :=
 
 /-- Membership is the internal image predicate, over arbitrary names. -/
 theorem mem_lossFamily (A T X : bSet 𝔹) :
-    X ∈ᴮ lossFamily A T =
-      ⨆ B : bSet 𝔹, (B ∈ᴮ T) ⊓ (X =ᴮ difference A B) := by
+    X ∈ᴮ lossFamily A T = ⨆ B : bSet 𝔹, (B ∈ᴮ T) ⊓ (X =ᴮ difference A B) := by
   rw [mem_unfold]
   change (⨆ i : T.type, T.bval i ⊓ X =ᴮ difference A (T.func i)) = _
   exact bounded_exists (h_congr :=
@@ -104,8 +102,7 @@ theorem lossGraph_apply {A T B : bSet 𝔹} {Γ : 𝔹}
     pair_eq_pair_iff.mpr ⟨inf_le_right, difference_congr_right inf_le_right⟩
   rw [mem_unfold]
   change T.bval i ⊓ B =ᴮ T.func i ≤
-    ⨆ j : T.type, T.bval j ⊓
-      pair B (difference A B) =ᴮ pair (T.func j) (difference A (T.func j))
+    ⨆ j : T.type, T.bval j ⊓ pair B (difference A B) =ᴮ pair (T.func j) (difference A (T.func j))
   exact le_iSup_of_le i (le_inf inf_le_left Hpair)
 
 theorem lossGraph_is_func {A T : bSet 𝔹} {Γ : 𝔹} :
@@ -139,8 +136,7 @@ theorem lossGraph_is_surj {A T : bSet 𝔹} {Γ : 𝔹} :
     pair_eq_pair_iff.mpr ⟨bv_refl, bv_symm (inf_le_right.trans inf_le_right)⟩
   exact mem_congr Hpair bv_refl (lossGraph_apply (inf_le_right.trans inf_le_left))
 
-theorem larger_than_lossFamily {A T : bSet 𝔹} {Γ : 𝔹} :
-    Γ ≤ larger_than T (lossFamily A T) := by
+theorem larger_than_lossFamily {A T : bSet 𝔹} {Γ : 𝔹} : Γ ≤ larger_than T (lossFamily A T) := by
   apply le_iSup_of_le T
   apply le_iSup_of_le (lossGraph A T)
   exact le_inf (le_inf subset_self lossGraph_is_func') lossGraph_is_surj

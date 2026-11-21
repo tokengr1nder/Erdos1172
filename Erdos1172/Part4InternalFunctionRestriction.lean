@@ -48,8 +48,7 @@ theorem is_inj_of_subset {f g : bSet 𝔹} {Γ : 𝔹}
   rw [← deduction]
   exact eq_of_is_inj_of_eq (inf_le_left.trans Hinj)
     (inf_le_right.trans inf_le_right)
-    (mem_of_mem_subset (inf_le_left.trans Hgf)
-      (inf_le_right.trans (inf_le_left.trans inf_le_left)))
+    (mem_of_mem_subset (inf_le_left.trans Hgf) (inf_le_right.trans (inf_le_left.trans inf_le_left)))
     (mem_of_mem_subset (inf_le_left.trans Hgf)
       (inf_le_right.trans (inf_le_left.trans inf_le_right)))
 
@@ -67,8 +66,7 @@ theorem increasingOn_of_subsets {U K f g : bSet 𝔹} {Γ : 𝔹}
   apply le_iInf
   intro y
   rw [← deduction]
-  let Δ := Γ ⊓ (((i ∈ᴮ U ⊓ j ∈ᴮ U) ⊓ i ∈ᴮ j) ⊓
-    (pair i x ∈ᴮ g ⊓ pair j y ∈ᴮ g))
+  let Δ := Γ ⊓ (((i ∈ᴮ U ⊓ j ∈ᴮ U) ⊓ i ∈ᴮ j) ⊓ (pair i x ∈ᴮ g ⊓ pair j y ∈ᴮ g))
   have Hi : Δ ≤ i ∈ᴮ K :=
     mem_of_mem_subset (inf_le_left.trans HU)
       (inf_le_right.trans (inf_le_left.trans (inf_le_left.trans inf_le_left)))
@@ -95,14 +93,11 @@ new internal domain. Empty domains require no special assumption. -/
 theorem exists_restricted_increasing_injection {U K S f : bSet 𝔹} {Γ : 𝔹}
     (HU : Γ ≤ U ⊆ᴮ K) (Hinj : Γ ≤ is_injective_function K S f)
     (Hinc : Γ ≤ increasingOn K f) :
-    ∃ g : bSet 𝔹, Γ ≤ is_injective_function U S g ⊓
-      (increasingOn U g ⊓ g ⊆ᴮ f) := by
-  have Hweak : Γ ≤ is_func' U S f :=
-    is_func'_restrict_domain HU (Hinj.trans inf_le_left)
+    ∃ g : bSet 𝔹, Γ ≤ is_injective_function U S g ⊓ (increasingOn U g ⊓ g ⊆ᴮ f) := by
+  have Hweak : Γ ≤ is_func' U S f := is_func'_restrict_domain HU (Hinj.trans inf_le_left)
   let g := function_of_func' Hweak
   have Hgf : Γ ≤ g ⊆ᴮ f := function_of_func'_subset (H_is_func' := Hweak)
-  have Hfunction : Γ ≤ is_function U S g :=
-    ErdosPartition.function_of_func'_is_function Hweak
+  have Hfunction : Γ ≤ is_function U S g := ErdosPartition.function_of_func'_is_function Hweak
   exact ⟨g, le_inf
     (le_inf Hfunction (is_inj_of_subset Hgf (Hinj.trans inf_le_right)))
     (le_inf (increasingOn_of_subsets HU Hgf Hinc) Hgf)⟩

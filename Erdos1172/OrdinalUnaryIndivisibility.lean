@@ -47,19 +47,14 @@ theorem finiteOrdinalToNat_cast {o : Ordinal.{u}} (ho : o < ω) :
   rw [finiteOrdinalToNat, dif_pos ho]
   exact (Classical.choose_spec (Ordinal.lt_omega0.mp ho)).symm
 
-@[simp] theorem finiteOrdinalToNat_zero :
-    finiteOrdinalToNat (0 : Ordinal.{u}) = 0 := by
+@[simp] theorem finiteOrdinalToNat_zero : finiteOrdinalToNat (0 : Ordinal.{u}) = 0 := by
   apply Nat.cast_injective (R := Ordinal.{u})
-  simpa using
-    (finiteOrdinalToNat_cast
-      (o := (0 : Ordinal.{u})) (Ordinal.natCast_lt_omega0 0))
+  simpa using (finiteOrdinalToNat_cast (o := (0 : Ordinal.{u})) (Ordinal.natCast_lt_omega0 0))
 
 /-- Every coefficient in base-`omega` Cantor normal form is finite. -/
-theorem coeff_omega_lt (o e : Ordinal.{u}) :
-    Ordinal.CNF.coeff ω o e < ω := by
+theorem coeff_omega_lt (o e : Ordinal.{u}) : Ordinal.CNF.coeff ω o e < ω := by
   by_cases he : e ∈ (Ordinal.CNF.coeff ω o).support
-  · rw [Ordinal.CNF.support_coeff, List.mem_toFinset,
-      List.mem_map] at he
+  · rw [Ordinal.CNF.support_coeff, List.mem_toFinset, List.mem_map] at he
     obtain ⟨⟨e', c⟩, he'c, rfl⟩ := he
     rw [Ordinal.CNF.coeff_of_mem_CNF he'c]
     exact Ordinal.CNF.snd_lt Ordinal.one_lt_omega0 he'c
@@ -87,19 +82,16 @@ theorem castCoeff_add (f g : Ordinal.{u} →₀ ℕ) :
     castCoeff (f + g) = castCoeff f + castCoeff g := by aesop
 
 theorem castCoeff_single (e : Ordinal.{u}) (n : ℕ) :
-    castCoeff (Finsupp.single e n) =
-      Finsupp.single e (n : Ordinal.{u}) := by
+    castCoeff (Finsupp.single e n) = Finsupp.single e (n : Ordinal.{u}) := by
   ext d
   by_cases hed : e = d
   · subst d
     simp
   · simp [hed]
 
-theorem castCoeff_support (f : Ordinal.{u} →₀ ℕ) :
-    (castCoeff f).support = f.support := by aesop
+theorem castCoeff_support (f : Ordinal.{u} →₀ ℕ) : (castCoeff f).support = f.support := by aesop
 
-theorem castCoeff_natCoeff (o : Ordinal.{u}) :
-    castCoeff (natCoeff o) = Ordinal.CNF.coeff ω o := by
+theorem castCoeff_natCoeff (o : Ordinal.{u}) : castCoeff (natCoeff o) = Ordinal.CNF.coeff ω o := by
   ext e
   simp only [castCoeff_apply, natCoeff, Finsupp.mapRange_apply]
   exact finiteOrdinalToNat_cast (coeff_omega_lt o e)
@@ -109,8 +101,7 @@ noncomputable def evalNatCoeff
     (f : Ordinal.{u} →₀ ℕ) : Ordinal.{u} :=
   Ordinal.CNF.eval ω (castCoeff f)
 
-theorem evalNatCoeff_natCoeff (o : Ordinal.{u}) :
-    evalNatCoeff (natCoeff o) = o := by
+theorem evalNatCoeff_natCoeff (o : Ordinal.{u}) : evalNatCoeff (natCoeff o) = o := by
   rw [evalNatCoeff, castCoeff_natCoeff, Ordinal.CNF.eval_coeff]
 
 /-! ## Colexicographic evaluation -/
@@ -146,8 +137,7 @@ private theorem castCoeff_low_support
     (e : Ordinal.{u}) (f : Ordinal.{u} →₀ ℕ) :
     ∀ d ∈ (castCoeff (lowPart e f)).support, d < e := by
   intro d hd
-  rw [castCoeff_support, lowPart, Finsupp.support_filter,
-    Finset.mem_filter] at hd
+  rw [castCoeff_support, lowPart, Finsupp.support_filter, Finset.mem_filter] at hd
   exact hd.2
 
 private theorem evalNatCoeff_low_lt
@@ -163,16 +153,12 @@ private theorem castCoeff_high_rest_eval
     (e : Ordinal.{u}) (f : Ordinal.{u} →₀ ℕ) :
     Ordinal.CNF.eval ω
         (castCoeff (highPart e f) +
-          (castCoeff (Finsupp.single e (f e)) +
-            castCoeff (lowPart e f))) =
+          (castCoeff (Finsupp.single e (f e)) + castCoeff (lowPart e f))) =
       Ordinal.CNF.eval ω (castCoeff (highPart e f)) +
-        Ordinal.CNF.eval ω
-          (castCoeff (Finsupp.single e (f e)) +
-            castCoeff (lowPart e f)) := by
+        Ordinal.CNF.eval ω (castCoeff (Finsupp.single e (f e)) + castCoeff (lowPart e f)) := by
   apply Ordinal.CNF.eval_add
   intro eHigh heHigh eRest heRest
-  rw [castCoeff_support, highPart, Finsupp.support_filter,
-    Finset.mem_filter] at heHigh
+  rw [castCoeff_support, highPart, Finsupp.support_filter, Finset.mem_filter] at heHigh
   have heRest' := Finsupp.support_add heRest
   rcases Finset.mem_union.mp heRest' with heAt | heLow
   · have heAt' : eRest = e := by
@@ -183,51 +169,41 @@ private theorem castCoeff_high_rest_eval
       exact (Finsupp.mem_support_iff.mp heAt) hzero
     subst eRest
     exact heHigh.2.le
-  · rw [castCoeff_support, lowPart, Finsupp.support_filter,
-      Finset.mem_filter] at heLow
+  · rw [castCoeff_support, lowPart, Finsupp.support_filter, Finset.mem_filter] at heLow
     exact heLow.2.le.trans heHigh.2.le
 
 private theorem evalNatCoeff_decomposition
     (e : Ordinal.{u}) (f : Ordinal.{u} →₀ ℕ) :
     evalNatCoeff f =
-      evalNatCoeff (highPart e f) +
-        (ω ^ e * (f e : Ordinal.{u}) + evalNatCoeff (lowPart e f)) := by
+      evalNatCoeff (highPart e f) + (ω ^ e * (f e : Ordinal.{u}) + evalNatCoeff (lowPart e f)) := by
   have hlow : ∀ d ∈ (castCoeff (lowPart e f)).support, d ≤ e :=
     fun d hd ↦ (castCoeff_low_support e f d hd).le
   calc
     evalNatCoeff f =
-        evalNatCoeff
-          (highPart e f + Finsupp.single e (f e) + lowPart e f) :=
+        evalNatCoeff (highPart e f + Finsupp.single e (f e) + lowPart e f) :=
       congrArg evalNatCoeff (coeff_decomposition e f).symm
     _ = Ordinal.CNF.eval ω
           (castCoeff (highPart e f) +
-            (castCoeff (Finsupp.single e (f e)) +
-              castCoeff (lowPart e f))) := by
+            (castCoeff (Finsupp.single e (f e)) + castCoeff (lowPart e f))) := by
       simp only [evalNatCoeff, castCoeff_add, add_assoc]
     _ = evalNatCoeff (highPart e f) +
-          Ordinal.CNF.eval ω
-            (castCoeff (Finsupp.single e (f e)) +
-              castCoeff (lowPart e f)) :=
+          Ordinal.CNF.eval ω (castCoeff (Finsupp.single e (f e)) + castCoeff (lowPart e f)) :=
       castCoeff_high_rest_eval e f
     _ = evalNatCoeff (highPart e f) +
-          (ω ^ e * (f e : Ordinal.{u}) +
-            evalNatCoeff (lowPart e f)) := by
-      rw [castCoeff_single,
-        Ordinal.CNF.eval_single_add ω hlow]
+          (ω ^ e * (f e : Ordinal.{u}) + evalNatCoeff (lowPart e f)) := by
+      rw [castCoeff_single, Ordinal.CNF.eval_single_add ω hlow]
       rfl
 
 /-- Evaluation of natural Cantor coefficients is strictly increasing in
 colexicographic order. -/
-theorem evalNatCoeff_strictMono :
-    StrictMono (fun f : Colex (Ordinal.{u} →₀ ℕ) ↦
+theorem evalNatCoeff_strictMono : StrictMono (fun f : Colex (Ordinal.{u} →₀ ℕ) ↦
       evalNatCoeff (ofColex f)) := by
   intro f g hfg
   obtain ⟨e, hhigh, he⟩ := Finsupp.Colex.lt_iff.mp hfg
   have hhighEq : highPart e (ofColex f) = highPart e (ofColex g) :=
     highPart_eq_of_colex_witness hhigh
   change evalNatCoeff (ofColex f) < evalNatCoeff (ofColex g)
-  rw [evalNatCoeff_decomposition e (ofColex f),
-    evalNatCoeff_decomposition e (ofColex g), hhighEq]
+  rw [evalNatCoeff_decomposition e (ofColex f), evalNatCoeff_decomposition e (ofColex g), hhighEq]
   apply add_lt_add_right
   have hlowF := evalNatCoeff_low_lt e (ofColex f)
   have hcoeffStep :
@@ -235,22 +211,18 @@ theorem evalNatCoeff_strictMono :
           evalNatCoeff (lowPart e (ofColex f)) <
         ω ^ e * (((ofColex f) e + 1 : ℕ) : Ordinal.{u}) := by
     simpa [Nat.cast_add, add_assoc, mul_add] using
-      (add_lt_add_right hlowF
-        (ω ^ e * ((ofColex f) e : Ordinal.{u})))
-  have hsuccLe : (ofColex f) e + 1 ≤ (ofColex g) e :=
-    Nat.succ_le_iff.mpr he
+      (add_lt_add_right hlowF (ω ^ e * ((ofColex f) e : Ordinal.{u})))
+  have hsuccLe : (ofColex f) e + 1 ≤ (ofColex g) e := Nat.succ_le_iff.mpr he
   exact hcoeffStep.trans_le <| by
     simpa [Nat.cast_add] using
-      (mul_le_mul_right (Nat.cast_le.mpr hsuccLe) (ω ^ e)).trans
-        (le_add_right le_rfl)
+      (mul_le_mul_right (Nat.cast_le.mpr hsuccLe) (ω ^ e)).trans (le_add_right le_rfl)
 
 /-! ## Hessenberg natural sum -/
 
 /-- Cantor coefficients reflect ordinal order into colexicographic
 order.  This is obtained from the strict evaluation theorem and the
 fact that `natCoeff` is a right inverse of evaluation. -/
-theorem natCoeff_colex_strictMono :
-    StrictMono (fun o : Ordinal.{u} ↦ toColex (natCoeff o)) := by
+theorem natCoeff_colex_strictMono : StrictMono (fun o : Ordinal.{u} ↦ toColex (natCoeff o)) := by
   intro a b hab
   rcases lt_trichotomy (toColex (natCoeff a))
       (toColex (natCoeff b)) with hlt | heq | hgt
@@ -275,22 +247,16 @@ noncomputable def naturalSum
     (a b : Ordinal.{u}) : Ordinal.{u} :=
   evalNatCoeff (natCoeff a + natCoeff b)
 
-theorem naturalSum_comm (a b : Ordinal.{u}) :
-    naturalSum a b = naturalSum b a := by
+theorem naturalSum_comm (a b : Ordinal.{u}) : naturalSum a b = naturalSum b a := by
   simp [naturalSum, add_comm]
 
-theorem naturalSum_strictMono_left (b : Ordinal.{u}) :
-    StrictMono (fun a ↦ naturalSum a b) := by
+theorem naturalSum_strictMono_left (b : Ordinal.{u}) : StrictMono (fun a ↦ naturalSum a b) := by
   intro a a' haa'
   apply evalNatCoeff_strictMono
-  change toColex (natCoeff a) + toColex (natCoeff b) <
-    toColex (natCoeff a') + toColex (natCoeff b)
-  simpa [add_comm] using
-    (add_lt_add_right (natCoeff_colex_strictMono haa')
-      (toColex (natCoeff b)))
+  change toColex (natCoeff a) + toColex (natCoeff b) < toColex (natCoeff a') + toColex (natCoeff b)
+  simpa [add_comm] using (add_lt_add_right (natCoeff_colex_strictMono haa') (toColex (natCoeff b)))
 
-theorem naturalSum_strictMono_right (a : Ordinal.{u}) :
-    StrictMono (naturalSum a) := by
+theorem naturalSum_strictMono_right (a : Ordinal.{u}) : StrictMono (naturalSum a) := by
   intro b b' hbb'
   rw [naturalSum_comm a b, naturalSum_comm a b']
   exact naturalSum_strictMono_left a hbb'
@@ -301,10 +267,8 @@ theorem natCoeff_support_lt_of_lt_opow
   intro d hd
   by_contra hde
   have hed : e ≤ d := le_of_not_gt hde
-  have had : a < ω ^ d :=
-    ha.trans_le (Ordinal.opow_le_opow_right Ordinal.omega0_pos hed)
-  have hcoeffZero : Ordinal.CNF.coeff ω a d = 0 :=
-    Ordinal.CNF.coeff_eq_zero_of_lt had
+  have had : a < ω ^ d := ha.trans_le (Ordinal.opow_le_opow_right Ordinal.omega0_pos hed)
+  have hcoeffZero : Ordinal.CNF.coeff ω a d = 0 := Ordinal.CNF.coeff_eq_zero_of_lt had
   have hnatZero : natCoeff a d = 0 := by
     apply Nat.cast_injective (R := Ordinal.{u})
     rw [← castCoeff_apply, castCoeff_natCoeff, hcoeffZero]
@@ -338,14 +302,12 @@ def prefixIn (s : Set X) (x : X) : Set s :=
 def prefixType (s : Set X) (x : X) : Ordinal :=
   typeLT (prefixIn s x)
 
-theorem prefixType_mono (s : Set X) {x y : X} (hxy : x ≤ y) :
-    prefixType s x ≤ prefixType s y := by
+theorem prefixType_mono (s : Set X) {x y : X} (hxy : x ≤ y) : prefixType s x ≤ prefixType s y := by
   apply Ordinal.type_mono
   intro z hz
   exact hz.trans_le hxy
 
-theorem prefixType_lt (s : Set X) (x : X) (hx : x ∈ s) :
-    prefixType s x < typeLT s := by
+theorem prefixType_lt (s : Set X) (x : X) (hx : x ∈ s) : prefixType s x < typeLT s := by
   let xs : s := ⟨x, hx⟩
   change typeLT (Set.Iio xs) < typeLT s
   rw [Ordinal.type_Iio_lt]
@@ -406,16 +368,14 @@ theorem typeLT_le_naturalSum_partition (s : Set X) :
   have hrank : StrictMono rank := by
     intro x y hxy
     by_cases hx : x ∈ s
-    · have hleft : prefixType s x < prefixType s y :=
-        prefixType_strict_of_mem s hx hxy
+    · have hleft : prefixType s x < prefixType s y := prefixType_strict_of_mem s hx hxy
       have hright : prefixType (sᶜ : Set X) x ≤
           prefixType (sᶜ : Set X) y :=
         prefixType_mono (sᶜ : Set X) hxy.le
       exact (naturalSum_strictMono_left _ hleft).trans_le
         ((naturalSum_strictMono_right _).monotone hright)
     · have hxCompl : x ∈ (sᶜ : Set X) := by simpa
-      have hleft : prefixType s x ≤ prefixType s y :=
-        prefixType_mono s hxy.le
+      have hleft : prefixType s x ≤ prefixType s y := prefixType_mono s hxy.le
       have hright : prefixType (sᶜ : Set X) x <
           prefixType (sᶜ : Set X) y :=
         prefixType_strict_of_mem (sᶜ : Set X) hxCompl hxy
@@ -428,15 +388,11 @@ theorem typeLT_le_naturalSum_partition (s : Set X) :
         typeLT (sᶜ : Set X) :=
       Ordinal.type_set_le (prefixIn (sᶜ : Set X) x)
     exact ((naturalSum_strictMono_right (prefixType s x)).monotone
-      hright).trans_lt
-        (naturalSum_strictMono_left (typeLT (sᶜ : Set X))
-          (prefixType_lt s x hx))
+      hright).trans_lt (naturalSum_strictMono_left (typeLT (sᶜ : Set X)) (prefixType_lt s x hx))
   · have hxCompl : x ∈ (sᶜ : Set X) := by simpa
-    have hleft : prefixType s x ≤ typeLT s :=
-      Ordinal.type_set_le (prefixIn s x)
+    have hleft : prefixType s x ≤ typeLT s := Ordinal.type_set_le (prefixIn s x)
     exact ((naturalSum_strictMono_left
       (prefixType (sᶜ : Set X) x)).monotone hleft).trans_lt
-        (naturalSum_strictMono_right (typeLT s)
-          (prefixType_lt (sᶜ : Set X) x hxCompl))
+        (naturalSum_strictMono_right (typeLT s) (prefixType_lt (sᶜ : Set X) x hxCompl))
 
 end Erdos1172OrdinalUnaryIndivisibility

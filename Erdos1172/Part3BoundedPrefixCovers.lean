@@ -65,8 +65,7 @@ theorem typeLT_prefix_union_le (cut : V) (A : Set V) :
       · exact Or.inl hx
       · exact Or.inr hx.1
   rw [heq, Ordinal.typeLT_union_of_forall_lt (fun x hx y hy => hx.trans_le hy.2)]
-  exact add_le_add_right (Ordinal.type_mono
-    (show A ∩ Set.Ici cut ⊆ A from Set.inter_subset_left)) _
+  exact add_le_add_right (Ordinal.type_mono (show A ∩ Set.Ici cut ⊆ A from Set.inter_subset_left)) _
 
 theorem withPrefix_type_lt {n : ℕ} (C : OptionalCofinalCovers n V) (cut : V)
     (hV : typeLT V = (ω_ 1 : Ordinal.{0}) ^ (ω + 1)) (f : W1 → W1) :

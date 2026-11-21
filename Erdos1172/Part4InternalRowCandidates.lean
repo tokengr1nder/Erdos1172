@@ -61,8 +61,7 @@ theorem mem_rowCandidates_iff {δ seed F h x : bSet 𝔹} {Γ : 𝔹}
       have Hbad : Γ ⊓ (x ∈ᴮ seed)ᶜ ≤ x ∈ᴮ difference omegaOne seed := by
         rw [mem_difference]
         exact le_inf (inf_le_left.trans Hinter.1) inf_le_right
-      exact bv_absurd _ Hbad
-        (inf_le_left.trans (Hdata.trans (inf_le_right.trans inf_le_left)))
+      exact bv_absurd _ Hbad (inf_le_left.trans (Hdata.trans (inf_le_right.trans inf_le_left)))
     refine le_inf Hinter.1 (le_inf Hseed (le_inf Hinter.2 ?_))
     have Habove : Γ ≤ ⨅ v, _root_.imp (v ∈ᴮ image δ omegaOne h) (v ∈ᴮ x) :=
       above_past image_subset Hinter.1 (Hdata.trans (inf_le_right.trans inf_le_right))
@@ -113,14 +112,12 @@ theorem rowCandidates_colarge {J δ seed F h : bSet 𝔹} {Γ : 𝔹}
     (Hclosure : Γ ≤ countableClosure J) (Hδ : Γ ≤ δ ∈ᴮ omegaOne)
     (Hseed : Γ ≤ colarge omegaOne J seed)
     (HF : Γ ≤ is_func' δ (bv_powerset omegaOne) F)
-    (Hvalues : Γ ≤ ⨅ j, ⨅ A, _root_.imp (j ∈ᴮ δ ⊓ pair j A ∈ᴮ F)
-      (difference omegaOne A ∈ᴮ J))
+    (Hvalues : Γ ≤ ⨅ j, ⨅ A, _root_.imp (j ∈ᴮ δ ⊓ pair j A ∈ᴮ F) (difference omegaOne A ∈ᴮ J))
     (Hh : Γ ≤ is_func' δ omegaOne h) :
     Γ ≤ colarge omegaOne J (rowCandidates δ seed F h) := by
   have Hinter : Γ ≤ colarge omegaOne J (indexedIntersection omegaOne F δ) :=
     indexedIntersection_colarge HJ Hclosure HF (omegaOne_member_injects Hδ) Hvalues
-  have Hpast : Γ ≤ past (image δ omegaOne h) ∈ᴮ J :=
-    image_past_small HJ Habsorb Hclosure Hh Hδ
+  have Hpast : Γ ≤ past (image δ omegaOne h) ∈ᴮ J := image_past_small HJ Habsorb Hclosure Hh Hδ
   exact colarge_difference_of_small HJ Hinter
     (small_union (unionClosed_of_isIdeal HJ) (Hseed.trans inf_le_right) Hpast)
 

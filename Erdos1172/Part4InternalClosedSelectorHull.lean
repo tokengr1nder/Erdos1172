@@ -74,8 +74,7 @@ theorem final_pools_selectorClosed
       (bv_powerset omegaTwo) F)
     (Hlaw : Γ ≤ blockSelectorLaw color R J E S F)
     (HRun : Γ ≤ is_function omegaOne (stateSpace color R) Run)
-    (Hrec : Γ ≤ imageRecLaw (stateSpace color R)
-      (fun _ T => poolUpdate color R F T) Run) :
+    (Hrec : Γ ≤ imageRecLaw (stateSpace color R) (fun _ T => poolUpdate color R F T) Run) :
     Γ ≤ selectorClosed F (finalObjects color R Run) (finalPoints color R Run) := by
   apply le_iInf
   intro Earlier
@@ -103,8 +102,7 @@ theorem closedHullData_of_pool_recursion
       (bv_powerset omegaTwo) F)
     (Hlaw : Γ ≤ blockSelectorLaw color R J E S F)
     (HRun : Γ ≤ is_function omegaOne (stateSpace color R) Run)
-    (Hrec : Γ ≤ imageRecLaw (stateSpace color R)
-      (fun _ T => poolUpdate color R F T) Run) :
+    (Hrec : Γ ≤ imageRecLaw (stateSpace color R) (fun _ T => poolUpdate color R F T) Run) :
     Γ ≤ closedHullData color R F (finalObjects color R Run) (finalPoints color R Run) :=
   le_inf finalObjects_subset
     (le_inf ((final_pools_small HCH HF Hlaw HRun Hrec).trans inf_le_left)

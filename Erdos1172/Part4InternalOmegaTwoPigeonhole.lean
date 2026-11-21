@@ -29,25 +29,21 @@ theorem omegaTwo_pigeonhole_of_large_domain {X f : bSet 𝔹} {Γ : 𝔹}
   let T : 𝔹 := ⨆ i, (i ∈ᴮ omegaOne) ⊓ injects_into omegaTwo (fiber X f i)
   change Γ ≤ T
   rw [← compl_compl T, ← imp_bot, ← deduction]
-  have Hsmall : Γ ⊓ Tᶜ ≤ ⨅ i, _root_.imp (i ∈ᴮ omegaOne)
-      (injects_into (fiber X f i) omegaOne) := by
+  have Hsmall : Γ ⊓ Tᶜ ≤ ⨅ i, _root_.imp (i ∈ᴮ omegaOne) (injects_into (fiber X f i) omegaOne) := by
     apply le_iInf
     intro i
     rw [← deduction]
     let Δ := (Γ ⊓ Tᶜ) ⊓ i ∈ᴮ omegaOne
     apply (le_inf (le_refl Δ)
-      (ErdosPartialInjection.omegaTwo_cardinal_dichotomy
-        (S := fiber X f i) (Γ := Δ))).trans
+      (ErdosPartialInjection.omegaTwo_cardinal_dichotomy (S := fiber X f i) (Γ := Δ))).trans
     rw [inf_sup_left]
     apply sup_le
     · exact inf_le_right
     · have HT : Δ ⊓ injects_into omegaTwo (fiber X f i) ≤ T :=
         le_iSup_of_le i (le_inf (inf_le_left.trans inf_le_right) inf_le_right)
-      exact (bv_absurd _ HT
-        (inf_le_left.trans (inf_le_left.trans inf_le_right))).trans bot_le
+      exact (bv_absurd _ HT (inf_le_left.trans (inf_le_left.trans inf_le_right))).trans bot_le
   have Hbound : Γ ⊓ Tᶜ ≤ injects_into X (prod omegaOne omegaOne) :=
-    ErdosSmallFiberBound.injects_into_product_of_small_fibers
-      (inf_le_left.trans Hf) Hsmall
+    ErdosSmallFiberBound.injects_into_product_of_small_fibers (inf_le_left.trans Hf) Hsmall
   exact bv_absurd _
     (injects_into_trans (inf_le_left.trans Hlarge) (injects_into_trans Hbound
       (ErdosCardinalSquare.omegaOne_square_injects (inf_le_left.trans HCH))))

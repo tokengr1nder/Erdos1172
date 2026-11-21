@@ -50,10 +50,8 @@ theorem exists_dense_presentation (κ : Cardinal.{u}) (Hκ : κ.IsInaccessible) 
   have Hindex : Cardinal.mk (PSet.ordinalMk κ.ord).Type = κ := by
     rw [PSet.ordinalMk_type, Cardinal.mk_ord_toType]
   calc
-    Cardinal.mk D ≤ Cardinal.mk (FirstAlgebra κ) *
-        Cardinal.mk (PSet.ordinalMk κ.ord).Type := Hsize
-    _ ≤ κ * κ := mul_le_mul'
-      (Erdos1172LevyCollapse.below_completion_cardinal_le κ Hκ) Hindex.le
+    Cardinal.mk D ≤ Cardinal.mk (FirstAlgebra κ) * Cardinal.mk (PSet.ordinalMk κ.ord).Type := Hsize
+    _ ≤ κ * κ := mul_le_mul' (Erdos1172LevyCollapse.below_completion_cardinal_le κ Hκ) Hindex.le
     _ = κ := Cardinal.mul_eq_self Hκ.aleph0_lt.le
 
 /-- All completed Boolean values are counted by subsets of the constructed

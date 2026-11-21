@@ -548,9 +548,7 @@ theorem internalLevyStage_collapses_below (hκ : κ.IsInaccessible) {α γ : Ord
           bv_trans inf_le_right (pair_congr bv_refl inf_le_left)
         let emb_s := relationGraph slice dom (fun u w => w =ᴮ pair (ordinalCarrier γ) u)
         have hemb_inj : p₂.value ≤ is_injective_function slice dom emb_s := by
-          refine le_inf (relationGraph_is_function
-            hrel_left
-            (fun _ => B_ext_bv_eq_left) ?_ ?_) ?_
+          refine le_inf (relationGraph_is_function hrel_left (fun _ => B_ext_bv_eq_left) ?_ ?_) ?_
           · refine le_iInf fun u => projection_imp.mpr fun _ _ hu => ?_
             have hu_s := (mem_comprehend_and B_ext_pair_mem_right).mp hu
             exact le_iSup_of_le (pair (ordinalCarrier γ) u) (le_inf hu_s.2 bv_refl)

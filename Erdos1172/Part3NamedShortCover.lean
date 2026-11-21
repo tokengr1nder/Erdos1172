@@ -49,8 +49,7 @@ theorem exists_profile_cover (L : ∀ n, OptionalNamedCofinalCovers n V)
         ∀ p : Set.Iic q, ∀ x : V, U.holds p.val x →
           (coverName F (profileFamily L e)).holds p x := by
   classical
-  by_cases hcofinal : ∀ p : P, p ≤ p0 → ∀ cut : V,
-      ∃ q : P, q ≤ p ∧ ∃ x : V, U.holds q x ∧ cut ≤ x
+  by_cases hcofinal : ∀ p : P, p ≤ p0 → ∀ cut : V, ∃ q : P, q ≤ p ∧ ∃ x : V, U.holds q x ∧ cut ≤ x
   · exact exists_cofinal_profile_cover L hcard htype U p0 hclosed hcofinal hno
   · obtain ⟨q, hq⟩ := not_forall.mp hcofinal
     have hqp0 : q ≤ p0 := by
@@ -85,8 +84,7 @@ theorem exists_supported_named_short_covers
     Classical.choice (Erdos1172Part3NamedOptionalCovers.exists_optionalNamedCofinalCovers hcard n)
   refine ⟨profileFamily L, ?_, ?_⟩
   · intro e
-    exact ⟨profileFamily_mono L e, profileFamily_supported L e,
-      profileFamily_type_lt L htype e⟩
+    exact ⟨profileFamily_mono L e, profileFamily_supported L e, profileFamily_type_lt L htype e⟩
   · intro P instP hclosed U p0 hno
     exact exists_profile_cover L hcard htype U p0 hclosed hno
 

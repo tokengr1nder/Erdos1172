@@ -196,8 +196,7 @@ theorem value_iSup (U : Ultrafilter I) (T : I → Type w) (a : ∀ i, T i → B)
       have hd : J ≤ (Rᶜ)ᶜ := le_compl_iff_disjoint_right.mpr (disjoint_iff.mpr h)
       simpa only [compl_compl] using hd)
     obtain ⟨q, hq⟩ := exists_condition_le hpos
-    obtain ⟨f, hf⟩ : ∃ f : I → B, Germ.ofFun f = q.val :=
-      Germ.inductionOn q.val fun f => ⟨f, rfl⟩
+    obtain ⟨f, hf⟩ : ∃ f : I → B, Germ.ofFun f = q.val := Germ.inductionOn q.val fun f => ⟨f, rfl⟩
     have hqf : value U f = condition q := by
       change embed (Germ.ofFun f : Germ (U : Filter I) B) = condition q
       rw [hf, embed_condition]
@@ -207,8 +206,7 @@ theorem value_iSup (U : Ultrafilter I) (T : I → Type w) (a : ∀ i, T i → B)
     obtain ⟨s, hs⟩ := exists_selection U T a f hnon hle
     have hbad : value U (fun i => f i ⊓ selected a s i) ≤ ⊥ := by
       rw [value_inf, hqf]
-      exact (inf_le_inf (hq.trans inf_le_right)
-        (show value U (selected a s) ≤ R from
+      exact (inf_le_inf (hq.trans inf_le_right) (show value U (selected a s) ≤ R from
           le_iSup (fun t : LargeSelection U T => value U (selected a t)) s)).trans compl_inf_eq_bot.le
     rw [← value_bot U] at hbad
     exact (U.eventually_not.mp hs) (((value_le_value_iff U).mp hbad).mono fun _ h => bot_unique h)

@@ -44,8 +44,7 @@ private theorem bot_of_old_new_pairs {K A p g i j x y : bSet B} {Γ : B}
     (Hfresh : Γ ≤ ⨅ a, _root_.imp (a ∈ᴮ A) (a ∈ᴮ graphDomain K two p)ᶜ)
     (Hix : Γ ≤ pair i x ∈ᴮ p) (Hjy : Γ ≤ pair j y ∈ᴮ g)
     (Hij : Γ ≤ i =ᴮ j) : Γ ≤ ⊥ := by
-  have Hi : Γ ≤ i ∈ᴮ graphDomain K two p :=
-    mem_graphDomain_of_pair (Hp.trans inf_le_left) Hix
+  have Hi : Γ ≤ i ∈ᴮ graphDomain K two p := mem_graphDomain_of_pair (Hp.trans inf_le_left) Hix
   have Hj : Γ ≤ j ∈ᴮ A := mem_domain_of_is_function Hjy Hg
   have Hnot : Γ ≤ (j ∈ᴮ graphDomain K two p)ᶜ :=
     (le_inf (Hfresh.trans (iInf_le _ j)) Hj).trans bv_imp_elim
@@ -66,8 +65,7 @@ theorem is_func_binary_union_of_fresh_function {K A p g : bSet B} {Γ : B}
   apply le_iInf
   intro y
   rw [← deduction, ← deduction]
-  let Δ : B := (Γ ⊓ (pair i x ∈ᴮ binary_union p g ⊓
-    pair j y ∈ᴮ binary_union p g)) ⊓ (i =ᴮ j)
+  let Δ : B := (Γ ⊓ (pair i x ∈ᴮ binary_union p g ⊓ pair j y ∈ᴮ binary_union p g)) ⊓ (i =ᴮ j)
   change Δ ≤ x =ᴮ y
   have Hbase : Δ ≤ Γ := inf_le_left.trans inf_le_left
   have HpΔ := Hbase.trans Hp
@@ -75,11 +73,9 @@ theorem is_func_binary_union_of_fresh_function {K A p g : bSet B} {Γ : B}
   have HfreshΔ := Hbase.trans Hfresh
   have Hij : Δ ≤ i =ᴮ j := inf_le_right
   have Hleft : Δ ≤ pair i x ∈ᴮ p ⊔ pair i x ∈ᴮ g :=
-    (inf_le_left.trans (inf_le_right.trans inf_le_left)).trans
-      (mem_binary_union p g (pair i x)).le
+    (inf_le_left.trans (inf_le_right.trans inf_le_left)).trans (mem_binary_union p g (pair i x)).le
   have Hright : Δ ≤ pair j y ∈ᴮ p ⊔ pair j y ∈ᴮ g :=
-    (inf_le_left.trans (inf_le_right.trans inf_le_right)).trans
-      (mem_binary_union p g (pair j y)).le
+    (inf_le_left.trans (inf_le_right.trans inf_le_right)).trans (mem_binary_union p g (pair j y)).le
   apply (le_inf le_rfl Hleft).trans
   rw [inf_sup_left]
   apply sup_le
@@ -87,8 +83,7 @@ theorem is_func_binary_union_of_fresh_function {K A p g : bSet B} {Γ : B}
     rw [inf_sup_left]
     apply sup_le
     · exact eq_of_is_func_of_eq
-        ((inf_le_left.trans inf_le_left).trans
-          (HpΔ.trans (inf_le_right.trans inf_le_left)))
+        ((inf_le_left.trans inf_le_left).trans (HpΔ.trans (inf_le_right.trans inf_le_left)))
         ((inf_le_left.trans inf_le_left).trans Hij)
         (inf_le_left.trans inf_le_right) inf_le_right
     · exact (bot_of_old_new_pairs
@@ -107,8 +102,7 @@ theorem is_func_binary_union_of_fresh_function {K A p g : bSet B} {Γ : B}
         inf_le_right (inf_le_left.trans inf_le_right)
         (bv_symm ((inf_le_left.trans inf_le_left).trans Hij))).trans bot_le
     · exact eq_of_is_func_of_eq
-        ((inf_le_left.trans inf_le_left).trans
-          (HgΔ.trans (inf_le_left.trans inf_le_left)))
+        ((inf_le_left.trans inf_le_left).trans (HgΔ.trans (inf_le_left.trans inf_le_left)))
         ((inf_le_left.trans inf_le_left).trans Hij)
         (inf_le_left.trans inf_le_right) inf_le_right
 
@@ -116,8 +110,7 @@ theorem is_func_binary_union_of_fresh_function {K A p g : bSet B} {Γ : B}
 and the supported new assignment domain. No disjointness is needed here. -/
 theorem graphDomain_binary_union_subset {K A p g : bSet B} {Γ : B}
     (Hg : Γ ≤ is_function A two g) :
-    Γ ≤ graphDomain K two (binary_union p g) ⊆ᴮ
-      binary_union (graphDomain K two p) A := by
+    Γ ≤ graphDomain K two (binary_union p g) ⊆ᴮ binary_union (graphDomain K two p) A := by
   rw [subset_unfold']
   apply le_iInf
   intro x
@@ -139,8 +132,7 @@ theorem graphDomain_binary_union_subset {K A p g : bSet B} {Γ : B}
       (le_iSup_of_le y (le_inf (inf_le_left.trans (Hy.trans inf_le_left)) inf_le_right))
   · rw [mem_binary_union]
     apply le_sup_of_le_right
-    exact mem_domain_of_is_function inf_le_right
-      ((inf_le_left.trans inf_le_left).trans Hg)
+    exact mem_domain_of_is_function inf_le_right ((inf_le_left.trans inf_le_left).trans Hg)
 
 /-- The union itself is a valid condition. Its small domain is proved by
 an actual injection of the union of two internally countable domains. -/
@@ -168,8 +160,7 @@ theorem fresh_assignment_extension {K A p g : bSet B} {Γ : B}
     (Hp : Γ ≤ condition K p) (Hg : Γ ≤ is_function A two g)
     (HA : Γ ≤ A ⊆ᴮ K) (Hcount : Γ ≤ injects_into A omega)
     (Hfresh : Γ ≤ ⨅ a, _root_.imp (a ∈ᴮ A) (a ∈ᴮ graphDomain K two p)ᶜ) :
-    Γ ≤ condition K (binary_union p g) ⊓
-      (p ⊆ᴮ binary_union p g ⊓ g ⊆ᴮ binary_union p g) :=
+    Γ ≤ condition K (binary_union p g) ⊓ (p ⊆ᴮ binary_union p g ⊓ g ⊆ᴮ binary_union p g) :=
   le_inf (condition_binary_union_of_fresh_function HK Hp Hg HA Hcount Hfresh)
     (le_inf subset_binary_union_left subset_binary_union_right)
 
@@ -181,8 +172,7 @@ theorem fresh_checked_assignment_extension (C : PSet.{u})
     (Hp : Γ ≤ condition K p) (Hg : Γ ≤ is_function (check C) two g)
     (HC : Γ ≤ check C ⊆ᴮ K) (Hcount : Γ ≤ injects_into (check C) omega)
     (Hfresh : ∀ i : C.Type, Γ ≤ (check (C.Func i) ∈ᴮ graphDomain K two p)ᶜ) :
-    Γ ≤ condition K (binary_union p g) ⊓
-      (p ⊆ᴮ binary_union p g ⊓ g ⊆ᴮ binary_union p g) := by
+    Γ ≤ condition K (binary_union p g) ⊓ (p ⊆ᴮ binary_union p g ⊓ g ⊆ᴮ binary_union p g) := by
   apply fresh_assignment_extension HK Hp Hg HC Hcount
   rw [← bounded_forall (v := check C)
     (ϕ := fun a : bSet B => (a ∈ᴮ graphDomain K two p)ᶜ)

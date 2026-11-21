@@ -17,10 +17,8 @@ open Erdos1172Part3Failure Erdos1172Part3OneSuccessorBarrier Erdos1172OrdinalUna
 /-- `RedCoreTarget = omegaOne ^ (omega + 2)` is literally a nonzero
 power of `omega`.  The exponent is left existential: only its
 omega-power form, not a chosen logarithm of `omegaOne`, is used below. -/
-theorem exists_redCoreTarget_eq_omega_opow :
-    ∃ e : Ordinal, RedCoreTarget = ω ^ e := by
-  have honePrincipal : IsPrincipal (· + ·) (omega 1) :=
-    Ordinal.isPrincipal_add_omega 1
+theorem exists_redCoreTarget_eq_omega_opow : ∃ e : Ordinal, RedCoreTarget = ω ^ e := by
+  have honePrincipal : IsPrincipal (· + ·) (omega 1) := Ordinal.isPrincipal_add_omega 1
   rcases Ordinal.isPrincipal_add_iff_zero_or_omega0_opow.mp
       honePrincipal with honeZero | ⟨e, he⟩
   · have honePos : (0 : Ordinal) < omega 1 :=

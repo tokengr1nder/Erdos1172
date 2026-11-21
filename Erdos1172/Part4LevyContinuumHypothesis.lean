@@ -54,8 +54,7 @@ theorem below_real_name_indices_cardinal_le (κ : Cardinal.{u})
     intro f g Hfg
     funext n
     exact congrFun Hfg n.down
-  exact (Cardinal.mk_le_of_injective Hinj).trans
-    (below_boolean_sequences_cardinal_le κ Hκ)
+  exact (Cardinal.mk_le_of_injective Hinj).trans (below_boolean_sequences_cardinal_le κ Hκ)
 
 theorem below_powerset_omega_injects_checked_upper (κ : Cardinal.{u})
     (Hκ : κ.IsInaccessible) :
@@ -66,8 +65,7 @@ theorem below_powerset_omega_injects_checked_upper (κ : Cardinal.{u})
 
 theorem below_powerset_omega_injects_omegaOne (κ : Cardinal.{u})
     (Hκ : κ.IsInaccessible) :
-    (⊤ : Completion (BelowCondition κ)) ≤
-      injects_into (bv_powerset omega) ErdosOmegaTwo.omegaOne :=
+    (⊤ : Completion (BelowCondition κ)) ≤ injects_into (bv_powerset omega) ErdosOmegaTwo.omegaOne :=
   bv_rw'' (below_checked_upper_eq_omegaOne κ Hκ.isRegular Hκ.aleph0_lt)
     (below_powerset_omega_injects_checked_upper κ Hκ) B_ext_injects_into_right
 

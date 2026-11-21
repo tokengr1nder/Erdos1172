@@ -81,12 +81,10 @@ theorem graph_is_surj (M : ℕ → α → β) (Y : α → bSet β)
     B_ext_inf B_ext_const B_ext_pair_mem_right))]
   apply le_iInf
   intro a
-  change (⊤ : β) ≤ _root_.imp ⊤
-    (⨆ w, w ∈ᴮ omega ⊓ pair w (Y a) ∈ᴮ graph M Y)
+  change (⊤ : β) ≤ _root_.imp ⊤ (⨆ w, w ∈ᴮ omega ⊓ pair w (Y a) ∈ᴮ graph M Y)
   rw [top_imp, ← Hcol a]
   apply iSup_le
   intro n
-  exact le_iSup_of_le (of_nat n)
-    (le_inf of_nat_mem_omega (graph_pair_of_weight M Y Hdisj n a))
+  exact le_iSup_of_le (of_nat n) (le_inf of_nat_mem_omega (graph_pair_of_weight M Y Hdisj n a))
 
 end bSet.ErdosCountableMatrix

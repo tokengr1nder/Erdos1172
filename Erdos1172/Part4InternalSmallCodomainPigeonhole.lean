@@ -35,8 +35,7 @@ theorem exists_mem_of_injects_into {A B a : bSet 𝔹} {Γ : 𝔹}
   have Hbex : Γ ≤ ⨆ b, b ∈ᴮ B ⊓ pair a b ∈ᴮ g :=
     (le_inf ((is_total_of_is_function (Hg.trans inf_le_left)).trans (iInf_le _ a))
       Ha).trans bv_imp_elim
-  obtain ⟨b, Hb⟩ := exists_convert Hbex
-    (B_ext_inf B_ext_mem_left B_ext_pair_mem_right)
+  obtain ⟨b, Hb⟩ := exists_convert Hbex (B_ext_inf B_ext_mem_left B_ext_pair_mem_right)
   exact ⟨b, Hb.trans inf_le_left⟩
 
 /-- Injectivity of the codomain map pulls a composite fiber back into the
@@ -60,8 +59,7 @@ theorem fiber_function_comp_subset {X I J f e i j : bSet 𝔹} {Γ Δ : 𝔹}
   have Hii : Θ ≤ i' =ᴮ i := eq_of_is_inj_of_eq (inf_le_left.trans Hinj)
     bv_refl (Hi'.trans (inf_le_right.trans inf_le_right)) (inf_le_left.trans Hij)
   exact mem_fiber_iff.mpr ⟨Hxparts.1,
-    mem_congr (pair_congr bv_refl Hii) bv_refl
-      (Hi'.trans (inf_le_right.trans inf_le_left))⟩
+    mem_congr (pair_congr bv_refl Hii) bv_refl (Hi'.trans (inf_le_right.trans inf_le_left))⟩
 
 /-- Under internal CH, a function from an internally omega-two-large set
 to any internally omega-one-small codomain has a full omega-two-sized fiber.
@@ -74,17 +72,14 @@ theorem omegaTwo_pigeonhole_of_small_codomain {X I f : bSet 𝔹} {Γ : 𝔹}
     ErdosSmallFiberBound.B_ext_injective_code
   have Hef : Γ ≤ is_function I omegaOne e := He.trans inf_le_left
   let h := function_comp Hf Hef
-  have Hh : Γ ≤ is_function X omegaOne h :=
-    function_comp_is_function (H₁ := Hf) (H₂ := Hef)
-  have Hfound := ErdosOmegaTwoPigeonhole.omegaTwo_pigeonhole_of_large_domain
-    HCH Hh HX
+  have Hh : Γ ≤ is_function X omegaOne h := function_comp_is_function (H₁ := Hf) (H₂ := Hef)
+  have Hfound := ErdosOmegaTwoPigeonhole.omegaTwo_pigeonhole_of_large_domain HCH Hh HX
   apply (le_inf (le_refl Γ) Hfound).trans
   rw [inf_iSup_eq]
   apply iSup_le
   intro j
   let Δ := Γ ⊓ (j ∈ᴮ omegaOne ⊓ injects_into omegaTwo (fiber X h j))
-  have Hbig : Δ ≤ injects_into omegaTwo (fiber X h j) :=
-    inf_le_right.trans inf_le_right
+  have Hbig : Δ ≤ injects_into omegaTwo (fiber X h j) := inf_le_right.trans inf_le_right
   obtain ⟨x, Hx⟩ := exists_mem_of_injects_into Hbig omegaOne_mem_omegaTwo
   have Hxparts := mem_fiber_iff.mp Hx
   have Hcomp := (mem_is_func'_comp_iff (is_func'_of_is_function Hf)

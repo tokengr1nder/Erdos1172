@@ -69,8 +69,7 @@ theorem exists_namedLowerCovers (n : ℕ) (hV : #V ≤ ℵ_ 1)
       ∃ C : (W1 → W1) → Set (Set.Iio y), Monotone C ∧ FinitelySupported C ∧
         (∀ f, typeLT (C f) ≤ (ω_ 1 : Ordinal.{0}) ^ ((k.val + 1 : ℕ) : Ordinal)) ∧
         (∀ B : Set (Set.Iio y), IsCofinal B →
-          typeLT B = (ω_ 1 : Ordinal.{0}) ^ ((k.val + 1 : ℕ) : Ordinal) →
-            ∃ f : W1 → W1, B ⊆ C f) ∧
+          typeLT B = (ω_ 1 : Ordinal.{0}) ^ ((k.val + 1 : ℕ) : Ordinal) → ∃ f : W1 → W1, B ⊆ C f) ∧
         BoundedNamedCoverage k.val y (fun f => (Subtype.val : Set.Iio y → V) '' C f) := by
     by_cases hseed : ∃ B : Set (Set.Iio y), IsCofinal B ∧
         typeLT B = (ω_ 1 : Ordinal.{0}) ^ ((k.val + 1 : ℕ) : Ordinal)

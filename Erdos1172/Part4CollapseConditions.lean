@@ -53,8 +53,7 @@ instance conditionOrderTop : OrderTop (Condition α) where
 
 instance conditionInhabited : Inhabited (Condition α) := ⟨⊤⟩
 
-@[simp] theorem le_iff_prefix {p q : Condition α} :
-    p ≤ q ↔ q.entries <+: p.entries := Iff.rfl
+@[simp] theorem le_iff_prefix {p q : Condition α} : p ≤ q ↔ q.entries <+: p.entries := Iff.rfl
 
 def Compatible (p q : Condition α) : Prop := ∃ r, r ≤ p ∧ r ≤ q
 
@@ -67,18 +66,15 @@ theorem compatible_iff_prefix_comparable {p q : Condition α} :
     · exact ⟨q, hpq, le_rfl⟩
     · exact ⟨p, le_rfl, hqp⟩
 
-theorem compatible_iff_comparable {p q : Condition α} :
-    Compatible p q ↔ p ≤ q ∨ q ≤ p := by
+theorem compatible_iff_comparable {p q : Condition α} : Compatible p q ↔ p ≤ q ∨ q ≤ p := by
   rw [compatible_iff_prefix_comparable]
   exact or_comm
 
 def extend (p : Condition α) (s : List α) : Condition α := ⟨p.entries ++ s⟩
 
-theorem extend_le (p : Condition α) (s : List α) : extend p s ≤ p :=
-  p.entries.prefix_append s
+theorem extend_le (p : Condition α) (s : List α) : extend p s ≤ p := p.entries.prefix_append s
 
-theorem le_iff_exists_extend {p q : Condition α} :
-    p ≤ q ↔ ∃ s : List α, p = extend q s := by
+theorem le_iff_exists_extend {p q : Condition α} : p ≤ q ↔ ∃ s : List α, p = extend q s := by
   constructor
   · rintro ⟨s, hs⟩
     exact ⟨s, Condition.ext hs.symm⟩

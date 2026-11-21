@@ -61,8 +61,7 @@ theorem activeMask_subset {X ν : bSet 𝔹} {Γ : 𝔹} :
 mask value, without shrinking its original Boolean condition. -/
 theorem activeMask_witness {X ν v : bSet 𝔹} {Γ : 𝔹}
     (Hv : Γ ≤ v ∈ᴮ activeMask X ν) :
-    ∃ ξ : bSet 𝔹, (Γ ≤ ξ ∈ᴮ omegaOne) ∧ (Γ ≤ ν ∈ᴮ ξ) ∧
-      Γ ≤ pair (pair ξ ν) v ∈ᴮ X := by
+    ∃ ξ : bSet 𝔹, (Γ ≤ ξ ∈ᴮ omegaOne) ∧ (Γ ≤ ν ∈ᴮ ξ) ∧ Γ ≤ pair (pair ξ ν) v ∈ᴮ X := by
   obtain ⟨ξ, Hξ⟩ := exists_convert (mem_activeMask_iff.mp Hv).2
     (B_ext_inf (B_ext_inf B_ext_mem_left B_ext_mem_right)
       (B_ext_pair_left (ϕ := fun q => pair q v ∈ᴮ X) B_ext_pair_mem_left))
@@ -114,8 +113,7 @@ theorem inclusiveActiveLaw_apply
     Γ ≤ graphColor edgeColor R x y := by
   have Hcross := (le_inf (H.trans ((iInf_le _ ν).trans ((iInf_le _ ξ).trans
     ((iInf_le _ μ).trans ((iInf_le _ b).trans ((iInf_le _ c).trans (iInf_le _ v)))))))
-    (le_inf (le_inf Hνξ Hξ)
-      (le_inf Hξμ (le_inf Hνb (le_inf Hμc Hcoord))))).trans bv_imp_elim
+    (le_inf (le_inf Hνξ Hξ) (le_inf Hξμ (le_inf Hνb (le_inf Hμc Hcoord))))).trans bv_imp_elim
   exact (le_inf (Hcross.trans ((iInf_le _ x).trans (iInf_le _ y)))
     (le_inf Hvx Hy)).trans bv_imp_elim
 

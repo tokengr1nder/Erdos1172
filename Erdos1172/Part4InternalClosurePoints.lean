@@ -44,8 +44,7 @@ private theorem closure_ext_right (h x : bSet 𝔹) :
 
 theorem mem_closureRelation_iff {h x i : bSet 𝔹} {Γ : 𝔹} :
     Γ ≤ pair x i ∈ᴮ closureRelation h ↔
-      (Γ ≤ x ∈ᴮ omegaOne) ∧ (Γ ≤ i ∈ᴮ omegaOne) ∧
-        Γ ≤ ⨆ v, pair i v ∈ᴮ h ⊓ (v ∈ᴮ x)ᶜ :=
+      (Γ ≤ x ∈ᴮ omegaOne) ∧ (Γ ≤ i ∈ᴮ omegaOne) ∧ Γ ≤ ⨆ v, pair i v ∈ᴮ h ⊓ (v ∈ᴮ x)ᶜ :=
   mem_relationGraph_iff (closure_ext_left h) (closure_ext_right h)
 
 theorem singleton_past_small {J v : bSet 𝔹} {Γ : 𝔹}
@@ -134,8 +133,7 @@ theorem closurePoints_colarge {J h : bSet 𝔹} {Γ : 𝔹}
 theorem closurePoints_apply {h x i v : bSet 𝔹} {Γ : 𝔹}
     (Hx : Γ ≤ x ∈ᴮ closurePoints h) (Hi : Γ ≤ i ∈ᴮ omegaOne)
     (Hix : Γ ≤ i ∈ᴮ x) (Hiv : Γ ≤ pair i v ∈ᴮ h) : Γ ≤ v ∈ᴮ x := by
-  have Hdata : Γ ≤ x ∈ᴮ omegaOne ⊓
-      (x ∈ᴮ diagonalUnion omegaOne (closureRelation h))ᶜ := by
+  have Hdata : Γ ≤ x ∈ᴮ omegaOne ⊓ (x ∈ᴮ diagonalUnion omegaOne (closureRelation h))ᶜ := by
     simpa only [closurePoints, mem_difference] using Hx
   rw [← compl_compl (v ∈ᴮ x), ← imp_bot, ← deduction]
   let Δ := Γ ⊓ (v ∈ᴮ x)ᶜ
@@ -145,8 +143,7 @@ theorem closurePoints_apply {h x i v : bSet 𝔹} {Γ : 𝔹}
   have Hbad : Δ ≤ x ∈ᴮ diagonalUnion omegaOne (closureRelation h) := by
     rw [mem_diagonalUnion]
     exact le_inf (inf_le_left.trans (Hdata.trans inf_le_left))
-      (le_iSup_of_le i (le_inf (le_inf (inf_le_left.trans Hi)
-        (inf_le_left.trans Hix)) Hpair))
+      (le_iSup_of_le i (le_inf (le_inf (inf_le_left.trans Hi) (inf_le_left.trans Hix)) Hpair))
   exact bv_absurd _ Hbad (inf_le_left.trans (Hdata.trans inf_le_right))
 
 end bSet.ErdosClosurePoints

@@ -45,8 +45,7 @@ theorem exists_uniform_bound_of_cof_le_alephZero
     (E : FunctionDecisions P I V) (hclosed : CountablyClosed P)
     (p0 : P) (hordered : OrderedDecisions E)
     (hI : Order.cof I ≤ ℵ₀) (hV : ℵ₀ < Order.cof V) :
-    ∃ q : P, q ≤ p0 ∧ ∃ cut : V,
-      ∀ r : P, r ≤ q → ∀ i x, E.decides r i x → x < cut := by
+    ∃ q : P, q ≤ p0 ∧ ∃ cut : V, ∀ r : P, r ≤ q → ∀ i x, E.decides r i x → x < cut := by
   classical
   obtain ⟨T, hTcof, hTcard⟩ := Order.exists_cof_eq I
   have hT : #T ≤ ℵ₀ := hTcard.trans_le hI
@@ -57,8 +56,7 @@ theorem exists_uniform_bound_of_cof_le_alephZero
       fun {_ _ _ _} hv hw => E.unique hv hw⟩
   obtain ⟨q, hqp0, hvalues⟩ := restricted.exists_simultaneous hclosed p0 hT
   let chosen (j : T) : V := (hvalues j).choose
-  have hchosen (j : T) : E.decides q j.val (chosen j) :=
-    (hvalues j).choose_spec
+  have hchosen (j : T) : E.decides q j.val (chosen j) := (hvalues j).choose_spec
   have hcount : #(Set.range chosen) ≤ ℵ₀ := Cardinal.mk_range_le.trans hT
   have hnot : ¬IsCofinal (Set.range chosen) := by
     intro hcof
@@ -85,8 +83,7 @@ theorem alephZero_lt_cof_domain
     (hV : ℵ₀ < Order.cof V) : ℵ₀ < Order.cof I := by
   apply lt_of_not_ge
   intro hI
-  obtain ⟨q, -, cut, hbound⟩ :=
-    exists_uniform_bound_of_cof_le_alephZero E hclosed p0 hordered hI hV
+  obtain ⟨q, -, cut, hbound⟩ := exists_uniform_bound_of_cof_le_alephZero E hclosed p0 hordered hI hV
   obtain ⟨r, hrq, i, x, hx, hcutx⟩ := hcofinal q cut
   exact (hbound r hrq i x hx).not_ge hcutx
 

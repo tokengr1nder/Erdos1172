@@ -40,16 +40,13 @@ theorem below_checked_upper_hartogsProperty (κ : Cardinal.{u})
     (⊤ : Completion (BelowCondition κ)) ≤
       ErdosHartogs.hartogsProperty omega (check (PSet.ordinalMk κ.ord)) :=
   le_inf (check_Ord (PSet.Ord_mk κ.ord))
-    (le_inf (forces_below_upper_uncountable κ Hκ Hunc)
-      (below_checked_members_countable κ))
+    (le_inf (forces_below_upper_uncountable κ Hκ Hunc) (below_checked_members_countable κ))
 
 /-- This is the actual new internal omega-one, determined uniquely by
 its complete internal Hartogs property, including arbitrary mixed members. -/
 theorem below_checked_upper_eq_omegaOne (κ : Cardinal.{u})
     (Hκ : κ.IsRegular) (Hunc : Cardinal.aleph0 < κ) :
-    (⊤ : Completion (BelowCondition κ)) ≤
-      check (PSet.ordinalMk κ.ord) =ᴮ ErdosOmegaTwo.omegaOne :=
-  ErdosOmegaTwo.omegaOne_property_unique
-    (below_checked_upper_hartogsProperty κ Hκ Hunc)
+    (⊤ : Completion (BelowCondition κ)) ≤ check (PSet.ordinalMk κ.ord) =ᴮ ErdosOmegaTwo.omegaOne :=
+  ErdosOmegaTwo.omegaOne_property_unique (below_checked_upper_hartogsProperty κ Hκ Hunc)
 
 end Erdos1172LevyCollapse

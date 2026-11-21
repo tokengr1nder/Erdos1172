@@ -46,8 +46,7 @@ open ErdosRelationGraph
 
 theorem forwardSection_subset_fusionSeed
     {edgeColor : Bool} {R E b top : bSet 𝔹} {Γ : 𝔹} :
-    Γ ≤ forwardSection edgeColor R (canonicalRow E b) top ⊆ᴮ
-      fusionSeed edgeColor R E b top := by
+    Γ ≤ forwardSection edgeColor R (canonicalRow E b) top ⊆ᴮ fusionSeed edgeColor R E b top := by
   rw [subset_unfold']
   apply le_iInf
   intro v
@@ -96,8 +95,7 @@ theorem rowCross_subset_fusionSection
   apply le_iInf
   intro y
   rw [← deduction]
-  let Δ := (Γ ⊓ v ∈ᴮ C) ⊓
-    ((pair j c' ∈ᴮ Blocks ⊓ pair v x ∈ᴮ canonicalRow E b) ⊓ y ∈ᴮ c')
+  let Δ := (Γ ⊓ v ∈ᴮ C) ⊓ ((pair j c' ∈ᴮ Blocks ⊓ pair v x ∈ᴮ canonicalRow E b) ⊓ y ∈ᴮ c')
   have Hc : Δ ≤ c' =ᴮ c :=
     eq_of_is_func_of_eq (inf_le_left.trans (inf_le_left.trans Hfunc)) bv_refl
       (inf_le_right.trans (inf_le_left.trans inf_le_left))
@@ -153,8 +151,7 @@ theorem fusionSection_colarge_of_candidate_or_empty
     (Hb : Γ ≤ b ∈ᴮ blockObjects color R)
     (Hfunc : Γ ≤ is_func Blocks) (Hjc : Γ ≤ pair j c ∈ᴮ Blocks)
     (Hbefore : Γ ≤ b ∈ᴮ Earlier)
-    (Hcases : Γ ≤ (c =ᴮ (∅ : bSet 𝔹)) ⊔
-      (⨆ Active, blockCandidate color R J E S Earlier Active c)) :
+    (Hcases : Γ ≤ (c =ᴮ (∅ : bSet 𝔹)) ⊔ (⨆ Active, blockCandidate color R J E S Earlier Active c)) :
     Γ ≤ colarge omegaOne J (fusionSection (!color) R E b Blocks j) := by
   apply (le_inf le_rfl Hcases).trans
   rw [inf_sup_left]

@@ -41,8 +41,7 @@ def elementLowerSet (b : B) : LowerSet (Positive B) :=
 /-- Pseudocomplementation of lower sets agrees with Boolean complement.
 If a positive condition is not disjoint from `b`, its intersection with `b`
 is the explicit positive strengthening witnessing failure. -/
-theorem elementLowerSet_compl (b : B) :
-    elementLowerSet bᶜ = (elementLowerSet b)ᶜ := by
+theorem elementLowerSet_compl (b : B) : elementLowerSet bᶜ = (elementLowerSet b)ᶜ := by
   classical
   apply SetLike.ext
   intro p
@@ -52,8 +51,7 @@ theorem elementLowerSet_compl (b : B) :
   · intro hp q hqp hq
     have hqb : q.val ≤ b := hq
     have hqc : q.val ≤ bᶜ := (show q.val ≤ p.val from hqp).trans hp
-    exact q.property (bot_unique
-      ((le_inf hqb hqc).trans inf_compl_eq_bot.le))
+    exact q.property (bot_unique ((le_inf hqb hqc).trans inf_compl_eq_bot.le))
   · intro hp
     apply le_compl_iff_disjoint_right.mpr
     rw [disjoint_iff_inf_le]
@@ -61,8 +59,7 @@ theorem elementLowerSet_compl (b : B) :
     have hpos : p.val ⊓ b ≠ ⊥ := fun he => h he.le
     exact hp ⟨p.val ⊓ b, hpos⟩ inf_le_left inf_le_right
 
-theorem elementLowerSet_regular (b : B) :
-    Heyting.IsRegular (elementLowerSet b) := by
+theorem elementLowerSet_regular (b : B) : Heyting.IsRegular (elementLowerSet b) := by
   change (elementLowerSet b)ᶜᶜ = elementLowerSet b
   rw [← elementLowerSet_compl, ← elementLowerSet_compl, compl_compl]
 
@@ -70,14 +67,12 @@ theorem elementLowerSet_regular (b : B) :
 def element (b : B) : Completion (Positive B) :=
   ⟨elementLowerSet b, elementLowerSet_regular b⟩
 
-@[simp] theorem mem_element (b : B) (p : Positive B) :
-    p ∈ (element b).val ↔ p.val ≤ b := Iff.rfl
+@[simp] theorem mem_element (b : B) (p : Positive B) : p ∈ (element b).val ↔ p.val ≤ b := Iff.rfl
 
 theorem element_compl (b : B) : element bᶜ = (element b)ᶜ :=
   Heyting.Regular.coe_injective (elementLowerSet_compl b)
 
-theorem element_le_element_iff {b c : B} :
-    element b ≤ element c ↔ b ≤ c := by
+theorem element_le_element_iff {b c : B} : element b ≤ element c ↔ b ≤ c := by
   classical
   constructor
   · intro h
@@ -90,22 +85,18 @@ theorem element_le_element_iff {b c : B} :
 
 theorem element_injective : Function.Injective (element (B := B)) := by
   intro b c h
-  exact le_antisymm (element_le_element_iff.mp h.le)
-    (element_le_element_iff.mp h.ge)
+  exact le_antisymm (element_le_element_iff.mp h.le) (element_le_element_iff.mp h.ge)
 
-theorem element_sInf (S : Set B) :
-    element (sInf S) = sInf (element '' S) := by
+theorem element_sInf (S : Set B) : element (sInf S) = sInf (element '' S) := by
   apply Heyting.Regular.coe_injective
   apply SetLike.ext
   intro p
   simp only [mem_element, Erdos1172PosetProjection.mem_sInf_completion,
     Set.forall_mem_image, le_sInf_iff]
 
-theorem element_sSup (S : Set B) :
-    element (sSup S) = sSup (element '' S) := by
+theorem element_sSup (S : Set B) : element (sSup S) = sSup (element '' S) := by
   apply compl_injective
-  rw [← element_compl, compl_sSup', element_sInf, compl_sSup',
-    Set.image_image, Set.image_image]
+  rw [← element_compl, compl_sSup', element_sInf, compl_sSup', Set.image_image, Set.image_image]
   simp only [element_compl]
 
 /-- The complete embedding is built from the explicit lower-set map. -/
@@ -114,8 +105,7 @@ def completionHom : CompleteLatticeHom B (Completion (Positive B)) where
   map_sSup' := element_sSup
   map_sInf' := element_sInf
 
-theorem completionHom_injective : Function.Injective (completionHom (B := B)) :=
-  element_injective
+theorem completionHom_injective : Function.Injective (completionHom (B := B)) := element_injective
 
 /-- A positive Boolean element represents exactly its principal forcing
 condition, not merely a weaker regular lower set. -/
@@ -132,8 +122,7 @@ theorem element_condition (p : Positive B) : element p.val = condition p := by
 def joinMembers (a : Completion (Positive B)) : B :=
   sSup (Subtype.val '' (a.val : Set (Positive B)))
 
-theorem element_joinMembers (a : Completion (Positive B)) :
-    element (joinMembers a) = a := by
+theorem element_joinMembers (a : Completion (Positive B)) : element (joinMembers a) = a := by
   apply le_antisymm
   · unfold joinMembers
     rw [element_sSup]
@@ -157,8 +146,7 @@ def completionOrderIso : B ≃o Completion (Positive B) where
   right_inv := element_joinMembers
   map_rel_iff' := element_le_element_iff
 
-@[simp] theorem completionOrderIso_apply (b : B) :
-    completionOrderIso b = element b := rfl
+@[simp] theorem completionOrderIso_apply (b : B) : completionOrderIso b = element b := rfl
 
 @[simp] theorem completionOrderIso_symm_apply (a : Completion (Positive B)) :
     completionOrderIso.symm a = joinMembers a := rfl

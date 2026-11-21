@@ -34,8 +34,7 @@ variable {𝔹 : Type u} [NontrivialCompleteBooleanAlgebra 𝔹]
 theorem Ord_of_transitive_subset {κ A : bSet 𝔹} {Γ : 𝔹}
     (Hκ : Γ ≤ Ord κ) (HA : Γ ≤ A ⊆ᴮ κ)
     (Htrans : Γ ≤ is_transitive A) : Γ ≤ Ord A := by
-  refine le_inf (le_inf (epsilon_trichotomy_of_sub_Ord A ?_)
-    (epsilon_wf_of_sub_Ord A)) Htrans
+  refine le_inf (le_inf (epsilon_trichotomy_of_sub_Ord A ?_) (epsilon_wf_of_sub_Ord A)) Htrans
   apply le_iInf
   intro x
   rw [← deduction]
@@ -59,11 +58,9 @@ theorem union_subset_of_members_subset {F κ : bSet 𝔹} {Γ : 𝔹}
   have Hmem : Γ ⊓ (x ∈ᴮ bv_union F) ≤
       ⨆ A : bSet 𝔹, (A ∈ᴮ F) ⊓ (x ∈ᴮ A) :=
     mem_bv_union_iff.mp inf_le_right
-  obtain ⟨A, HA⟩ := exists_convert Hmem
-    (B_ext_inf B_ext_mem_left B_ext_mem_right)
+  obtain ⟨A, HA⟩ := exists_convert Hmem (B_ext_inf B_ext_mem_left B_ext_mem_right)
   have Hsub : Γ ⊓ (x ∈ᴮ bv_union F) ≤ A ⊆ᴮ κ :=
-    (le_inf (inf_le_left.trans (HF.trans (iInf_le _ A)))
-      (HA.trans inf_le_left)).trans bv_imp_elim
+    (le_inf (inf_le_left.trans (HF.trans (iInf_le _ A))) (HA.trans inf_le_left)).trans bv_imp_elim
   exact mem_of_mem_subset Hsub (HA.trans inf_le_right)
 
 theorem union_transitive_of_ordinal_members {F : bSet 𝔹} {Γ : 𝔹}
@@ -78,8 +75,7 @@ theorem union_transitive_of_ordinal_members {F : bSet 𝔹} {Γ : 𝔹}
   exact Hord.trans inf_le_right
 
 theorem union_transitive_subset {F κ : bSet 𝔹} {Γ : 𝔹}
-    (HF : Γ ≤ ⨅ A : bSet 𝔹,
-      _root_.imp (A ∈ᴮ F) (is_transitive A ⊓ A ⊆ᴮ κ)) :
+    (HF : Γ ≤ ⨅ A : bSet 𝔹, _root_.imp (A ∈ᴮ F) (is_transitive A ⊓ A ⊆ᴮ κ)) :
     Γ ≤ is_transitive (bv_union F) ⊓ (bv_union F ⊆ᴮ κ) := by
   refine le_inf ?_ ?_
   · apply transitive_union
@@ -114,8 +110,7 @@ bound and is itself either the entire bound or one of its members. -/
 theorem union_initialSegment {F κ : bSet 𝔹} {Γ : 𝔹}
     (Hκ : Γ ≤ Ord κ)
     (HF : Γ ≤ ⨅ A : bSet 𝔹, _root_.imp (A ∈ᴮ F) (Ord A ⊓ A ⊆ᴮ κ)) :
-    Γ ≤ Ord (bv_union F) ⊓
-      ((bv_union F ⊆ᴮ κ) ⊓ ((bv_union F =ᴮ κ) ⊔ (bv_union F ∈ᴮ κ))) := by
+    Γ ≤ Ord (bv_union F) ⊓ ((bv_union F ⊆ᴮ κ) ⊓ ((bv_union F =ᴮ κ) ⊔ (bv_union F ∈ᴮ κ))) := by
   have Hord : Γ ≤ Ord (bv_union F) := union_Ord_of_ordinal_subsets Hκ HF
   have Hsub : Γ ≤ bv_union F ⊆ᴮ κ := by
     apply union_subset_of_members_subset

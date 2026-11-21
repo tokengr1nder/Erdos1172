@@ -35,18 +35,15 @@ def leastOrTop (C top y : bSet 𝔹) : 𝔹 :=
   leastIn C y ⊔ ((C =ᴮ (∅ : bSet 𝔹)) ⊓ y =ᴮ top)
 
 theorem leastOrTop_ext_value (C top : bSet 𝔹) : B_ext (leastOrTop C top) :=
-  B_ext_sup (h₁ := leastIn_ext_value C)
-    (h₂ := B_ext_inf B_ext_const B_ext_bv_eq_left)
+  B_ext_sup (h₁ := leastIn_ext_value C) (h₂ := B_ext_inf B_ext_const B_ext_bv_eq_left)
 
 theorem leastOrTop_ext_set (top y : bSet 𝔹) :
     B_ext (fun C => leastOrTop C top y) :=
-  B_ext_sup (h₁ := leastIn_ext_set y)
-    (h₂ := B_ext_inf B_ext_bv_eq_left B_ext_const)
+  B_ext_sup (h₁ := leastIn_ext_set y) (h₂ := B_ext_inf B_ext_bv_eq_left B_ext_const)
 
 theorem leastOrTop_ext_top (C y : bSet 𝔹) :
     B_ext (fun top => leastOrTop C top y) :=
-  B_ext_sup (h₁ := B_ext_const)
-    (h₂ := B_ext_inf B_ext_const B_ext_bv_eq_right)
+  B_ext_sup (h₁ := B_ext_const) (h₂ := B_ext_inf B_ext_const B_ext_bv_eq_right)
 
 theorem leastOrTop_of_least {C top y : bSet 𝔹} {Γ : 𝔹}
     (H : Γ ≤ leastIn C y) : Γ ≤ leastOrTop C top y := H.trans le_sup_left
@@ -58,11 +55,9 @@ theorem leastOrTop_of_empty {C top : bSet 𝔹} {Γ : 𝔹}
 private theorem choice_cases {C top y : bSet 𝔹} {Γ v : 𝔹}
     (H : Γ ≤ leastOrTop C top y)
     (Hleast : ∀ {Δ : 𝔹}, Δ ≤ Γ → Δ ≤ leastIn C y → Δ ≤ v)
-    (Hempty : ∀ {Δ : 𝔹}, Δ ≤ Γ →
-      Δ ≤ C =ᴮ (∅ : bSet 𝔹) ⊓ y =ᴮ top → Δ ≤ v) : Γ ≤ v := by
+    (Hempty : ∀ {Δ : 𝔹}, Δ ≤ Γ → Δ ≤ C =ᴮ (∅ : bSet 𝔹) ⊓ y =ᴮ top → Δ ≤ v) : Γ ≤ v := by
   exact (le_inf le_rfl H).trans
-    (bv_or_elim_right (Hleast inf_le_left inf_le_right)
-      (Hempty inf_le_left inf_le_right))
+    (bv_or_elim_right (Hleast inf_le_left inf_le_right) (Hempty inf_le_left inf_le_right))
 
 private theorem bot_of_least_empty {C y : bSet 𝔹} {Γ : 𝔹}
     (Hy : Γ ≤ leastIn C y) (Hempty : Γ ≤ C =ᴮ (∅ : bSet 𝔹)) : Γ ≤ ⊥ :=
@@ -82,11 +77,9 @@ theorem leastOrTop_unique {C top x y : bSet 𝔹} {Γ : 𝔹}
   · intro Δ HΔ Hemptyx
     apply choice_cases (HΔ.trans Hy)
     · intro Λ HΛ Hleasty
-      exact (bot_of_least_empty Hleasty
-        (HΛ.trans (Hemptyx.trans inf_le_left))).trans bot_le
+      exact (bot_of_least_empty Hleasty (HΛ.trans (Hemptyx.trans inf_le_left))).trans bot_le
     · intro Λ HΛ Hemptyy
-      exact bv_trans (HΛ.trans (Hemptyx.trans inf_le_right))
-        (bv_symm (Hemptyy.trans inf_le_right))
+      exact bv_trans (HΛ.trans (Hemptyx.trans inf_le_right)) (bv_symm (Hemptyy.trans inf_le_right))
 
 theorem leastOrTop_unique_of_eq {C D top x y : bSet 𝔹} {Γ : 𝔹}
     (HCD : Γ ≤ C =ᴮ D) (Hx : Γ ≤ leastOrTop C top x)

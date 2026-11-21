@@ -74,8 +74,7 @@ theorem positive_value (X : bSet B) :
     rw [mem_ideal_iff κ e μ scalar,le_inf_iff,le_null_iff]
   rw [positive,hm,null,compl_inf,compl_compl,inf_sup_left,inf_compl_eq_bot,bot_sup_eq]
 
-theorem coeff_difference (X Y : bSet B) :
-    coeff κ (difference X Y) = coeff κ X ⊓ (coeff κ Y)ᶜ := by
+theorem coeff_difference (X Y : bSet B) : coeff κ (difference X Y) = coeff κ X ⊓ (coeff κ Y)ᶜ := by
   funext i
   exact mem_difference X Y _
 

@@ -84,8 +84,7 @@ theorem homogeneousUnion_of_orderedPairColorLaw
   apply le_iInf
   intro y
   rw [← deduction]
-  let Δ := Γ ⊓ (((rangeMem K f x ⊔ rangeMem K f x) ⊓
-    (rangeMem K f y ⊔ rangeMem K f y)) ⊓ x ∈ᴮ y)
+  let Δ := Γ ⊓ (((rangeMem K f x ⊔ rangeMem K f x) ⊓ (rangeMem K f y ⊔ rangeMem K f y)) ⊓ x ∈ᴮ y)
   have HΔ : Δ ≤ Γ := inf_le_left
   have Hx : Δ ≤ rangeMem K f x := by
     have H : Δ ≤ rangeMem K f x ⊔ rangeMem K f x :=

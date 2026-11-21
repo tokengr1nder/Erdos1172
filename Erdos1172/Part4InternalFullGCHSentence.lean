@@ -67,8 +67,7 @@ theorem realize_fullGCHSentence :
 
 theorem forces_fullGCHSentence_iff {Γ : β} :
     (Γ ⊩[V β] fullGCHSentence) ↔ Γ ≤ (ErdosFullGCH.fullGCHValue : β) := by
-  change Γ ≤ boolean_realize_bounded_formula (S := V β)
-    DVec.nil fullGCHSentence DVec.nil ↔ _
+  change Γ ≤ boolean_realize_bounded_formula (S := V β) DVec.nil fullGCHSentence DVec.nil ↔ _
   rw [realize_fullGCHSentence]
 
 end Erdos1172Part4InternalFullGCHSentence

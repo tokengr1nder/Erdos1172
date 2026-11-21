@@ -131,7 +131,6 @@ theorem part4Value_of_normal_dense_ideal
     (HI : Γ ≤ injects_into I omegaOne) : Γ ≤ (part4Value : 𝔹) := by
   apply le_iInf
   intro R
-  exact two_color_target_of_normal_dense_ideal HCH HJ Habsorb Hclosure Hdiag
-    HD HDpos Hdense HI
+  exact two_color_target_of_normal_dense_ideal HCH HJ Habsorb Hclosure Hdiag HD HDpos Hdense HI
 
 end bSet.ErdosPartitionFromIdeal

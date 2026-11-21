@@ -48,13 +48,11 @@ def futureRequirements (color : Bool) (δ R S Y X Z top y : bSet 𝔹) : 𝔹 :=
 
 theorem futureRequirements_ext_value (color : Bool) (δ R S Y X Z top : bSet 𝔹) :
     B_ext (futureRequirements color δ R S Y X Z top) :=
-  B_ext_inf
-    (B_ext_iInf (h := fun _ => B_ext_iInf (h := fun v =>
+  B_ext_inf (B_ext_iInf (h := fun _ => B_ext_iInf (h := fun v =>
       B_ext_imp (h₁ := B_ext_const)
         (h₂ := B_ext_inf B_ext_mem_right (graphColor_ext_right color R v)))))
     (B_ext_inf (graphColor_ext_left color R top)
-      (B_ext_inf
-        (B_ext_iInf (h := fun _ => B_ext_iInf (h := fun _ =>
+      (B_ext_inf (B_ext_iInf (h := fun _ => B_ext_iInf (h := fun _ =>
           B_ext_iInf (h := fun _ => B_ext_iInf (h := fun _ =>
             B_ext_imp (h₁ := B_ext_inf B_ext_const
               (B_ext_inf B_ext_const (B_ext_pair_right B_ext_pair_mem_left)))
@@ -160,8 +158,7 @@ on arbitrary Boolean pieces. Nonemptiness is not a premise. -/
 theorem exists_next_vertex
     {color : Bool} {δ R S Y X Z top : bSet 𝔹} {Γ : 𝔹}
     (Htop : Γ ≤ top ∈ᴮ omegaTwo) :
-    ∃ y : bSet 𝔹, Γ ≤ y ∈ᴮ omegaTwo ⊓
-      leastOrTop (futureCandidates color δ R S Y X Z top) top y :=
+    ∃ y : bSet 𝔹, Γ ≤ y ∈ᴮ omegaTwo ⊓ leastOrTop (futureCandidates color δ R S Y X Z top) top y :=
   exists_bounded_leastOrTop omegaTwo_Ord (futureCandidates_subset_omegaTwo Htop) Htop
 
 theorem next_vertex_eq_top_empty

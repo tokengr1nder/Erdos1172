@@ -227,8 +227,7 @@ variable {β : Type 0} [NontrivialCompleteBooleanAlgebra β]
     erw [realize_mem (DVec.cons y (DVec.cons x v))
       (pair' (bd_var ⟨1, by omega⟩) (bd_var ⟨0, by omega⟩)) (liftTerm R 2)]
     dsimp only [termValue]
-    erw [realize_pair (DVec.cons y (DVec.cons x v))
-      (bd_var ⟨1, by omega⟩) (bd_var ⟨0, by omega⟩)]
+    erw [realize_pair (DVec.cons y (DVec.cons x v)) (bd_var ⟨1, by omega⟩) (bd_var ⟨0, by omega⟩)]
     erw [realize_lift2 v y x A, realize_lift2 v y x B,
       realize_lift2 v y x f, realize_lift2 v y x g, realize_lift2 v y x R]
     rfl
@@ -270,8 +269,7 @@ variable {β : Type 0} [NontrivialCompleteBooleanAlgebra β]
     (liftTerm R 2) (liftTerm A 2) (liftTerm B 2) (liftTerm κ 2)
     (bd_var ⟨1, by omega⟩) (bd_var ⟨0, by omega⟩)]
   dsimp only [termValue]
-  erw [realize_lift2 v g f R, realize_lift2 v g f A,
-    realize_lift2 v g f B, realize_lift2 v g f κ]
+  erw [realize_lift2 v g f R, realize_lift2 v g f A, realize_lift2 v g f B, realize_lift2 v g f κ]
   rfl
 
 @[simp] theorem realize_partitionFormula (v : DVec (bSet β) n) (κ A B : bounded_term L_ZFC n) :

@@ -49,8 +49,7 @@ private theorem domain_eq_ext (K D : bSet 𝔹) :
 
 theorem mem_domainMap_iff {K C p D : bSet 𝔹} {Γ : 𝔹} :
     Γ ≤ pair p D ∈ᴮ domainMap K C ↔
-      Γ ≤ p ∈ᴮ C ∧ Γ ≤ D ∈ᴮ bv_powerset K ∧
-        Γ ≤ graphDomain K two p =ᴮ D :=
+      Γ ≤ p ∈ᴮ C ∧ Γ ≤ D ∈ᴮ bv_powerset K ∧ Γ ≤ graphDomain K two p =ᴮ D :=
   mem_relationGraph_iff (fun D => domain_eq_ext K D)
     (fun _ => B_ext_bv_eq_right)
 
@@ -65,8 +64,7 @@ theorem domainMap_is_function {K C : bSet 𝔹} {Γ : 𝔹} :
     exact le_iSup_of_le (graphDomain K two p)
       (le_inf (mem_powerset_iff.mpr graphDomain_subset) bv_refl)
   · intro p₁ p₂ D₁ D₂ Δ _ _ _ _ _ H₁ H₂ Heq
-    exact bv_trans (bv_symm H₁)
-      (bv_trans (graphDomain_congr_graph K two Heq) H₂)
+    exact bv_trans (bv_symm H₁) (bv_trans (graphDomain_congr_graph K two Heq) H₂)
 
 /-- The values of the domain map are countable when its inputs really are
 conditions on an internal first uncountable ordinal. -/
@@ -92,8 +90,7 @@ theorem domainMap_countableValues {K C : bSet 𝔹} {Γ : 𝔹}
 /-- Every point of the union graph's bounded domain belongs to an actual
 domain value in the image. This requires neither chain nor validity. -/
 theorem graphDomain_union_subset_union_domainMap {K C : bSet 𝔹} {Γ : 𝔹} :
-    Γ ≤ graphDomain K two (bv_union C) ⊆ᴮ
-      bv_union (image C (bv_powerset K) (domainMap K C)) := by
+    Γ ≤ graphDomain K two (bv_union C) ⊆ᴮ bv_union (image C (bv_powerset K) (domainMap K C)) := by
   rw [subset_unfold']
   apply le_iInf
   intro x
@@ -110,15 +107,13 @@ theorem graphDomain_union_subset_union_domainMap {K C : bSet 𝔹} {Γ : 𝔹} :
     rw [mem_graphDomain]
     exact le_inf (Hdom.trans inf_le_left)
       (le_iSup_of_le y (le_inf (Hy.trans inf_le_left) (Hp.trans inf_le_right)))
-  have HD : Δ ≤ graphDomain K two p ∈ᴮ bv_powerset K :=
-    mem_powerset_iff.mpr graphDomain_subset
+  have HD : Δ ≤ graphDomain K two p ∈ᴮ bv_powerset K := mem_powerset_iff.mpr graphDomain_subset
   have Hmap : Δ ≤ pair p (graphDomain K two p) ∈ᴮ domainMap K C :=
     mem_domainMap_iff.mpr ⟨Hp.trans inf_le_left, HD, bv_refl⟩
   have Himage : Δ ≤ graphDomain K two p ∈ᴮ
       image C (bv_powerset K) (domainMap K C) :=
     mem_image Hmap (Hp.trans inf_le_left) HD
-  exact (bv_union_spec_split _ x).mpr
-    (le_iSup_of_le (graphDomain K two p) (le_inf Himage Hxp))
+  exact (bv_union_spec_split _ x).mpr (le_iSup_of_le (graphDomain K two p) (le_inf Himage Hxp))
 
 /-- Countability of the union graph's actual domain is derived from the
 countable internal family, not from any external presentation of it. -/

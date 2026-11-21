@@ -125,8 +125,7 @@ theorem subset_of_coordinates (s : StringName B γ) (T : bSet B) (Γ : B)
   rintro ⟨i, j⟩
   let n := (two : bSet B).func j
   let y := pair (label (B := B) i) n
-  have hy : d ⊓ ((⊤ ⊓ (two : bSet B).bval j) ⊓ (z =ᴮ y)) ≤ z =ᴮ y :=
-    inf_le_right.trans inf_le_right
+  have hy : d ⊓ ((⊤ ⊓ (two : bSet B).bval j) ⊓ (z =ᴮ y)) ≤ z =ᴮ y := inf_le_right.trans inf_le_right
   apply bv_rw' hy (h_congr := B_ext_mem_left)
   exact (le_inf (inf_le_left.trans inf_le_left)
     (bv_rw'' hy (inf_le_left.trans inf_le_right) B_ext_mem_left)).trans

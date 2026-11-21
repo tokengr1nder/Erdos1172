@@ -72,8 +72,7 @@ theorem exists_membership_stage_selector {κ F T : bSet 𝔹} {Γ : 𝔹}
     (HT : Γ ≤ T ⊆ᴮ bv_union (image omegaOne (bv_powerset κ) F)) :
     ∃ h : bSet 𝔹, Γ ≤ is_function T omegaOne h ⊓
       (⨅ t, ⨅ i, _root_.imp (t ∈ᴮ T ⊓ pair t i ∈ᴮ h) (stageContains F t i)) := by
-  have Hpoint : Γ ≤ ⨅ t, _root_.imp (t ∈ᴮ T)
-      (⨆ i, i ∈ᴮ omegaOne ⊓ stageContains F t i) := by
+  have Hpoint : Γ ≤ ⨅ t, _root_.imp (t ∈ᴮ T) (⨆ i, i ∈ᴮ omegaOne ⊓ stageContains F t i) := by
     apply le_iInf
     intro t
     rw [← deduction]
@@ -83,8 +82,7 @@ theorem exists_membership_stage_selector {κ F T : bSet 𝔹} {Γ : 𝔹}
     exact le_iSup_of_le i (le_inf (Hdata.trans (inf_le_left.trans inf_le_left))
       (le_iSup_of_le A (le_inf (Hdata.trans (inf_le_left.trans inf_le_right))
         (Hdata.trans inf_le_right))))
-  exact exists_selector_of_pointwise (stageContains_ext_member F)
-    (stageContains_ext_stage F) Hpoint
+  exact exists_selector_of_pointwise (stageContains_ext_member F) (stageContains_ext_stage F) Hpoint
 
 /-- A countable subset of the union is contained in one actual value of
 the family. Countable boundedness also handles the empty selector image,
@@ -105,8 +103,7 @@ theorem exists_family_value_containing_countable
   have HexA : Γ ≤ ⨆ A, A ∈ᴮ bv_powerset κ ⊓ pair j A ∈ᴮ F :=
     (le_inf ((is_total_of_is_function HF).trans (iInf_le _ j))
       (Hj.trans inf_le_left)).trans bv_imp_elim
-  obtain ⟨A, HA⟩ := exists_convert HexA
-    (B_ext_inf B_ext_mem_left B_ext_pair_mem_right)
+  obtain ⟨A, HA⟩ := exists_convert HexA (B_ext_inf B_ext_mem_left B_ext_pair_mem_right)
   refine ⟨j, A, le_inf (Hj.trans inf_le_left) (le_inf (HA.trans inf_le_right) ?_)⟩
   rw [subset_unfold']
   apply le_iInf
@@ -116,8 +113,7 @@ theorem exists_family_value_containing_countable
   have Hexi : Δ ≤ ⨆ i, i ∈ᴮ omegaOne ⊓ pair t i ∈ᴮ h :=
     (le_inf (inf_le_left.trans ((is_total_of_is_function Hhfunc).trans (iInf_le _ t)))
       (show Δ ≤ t ∈ᴮ T from inf_le_right)).trans bv_imp_elim
-  obtain ⟨i, Hi⟩ := exists_convert Hexi
-    (B_ext_inf B_ext_mem_left B_ext_pair_mem_right)
+  obtain ⟨i, Hi⟩ := exists_convert Hexi (B_ext_inf B_ext_mem_left B_ext_pair_mem_right)
   have Hstage : Δ ≤ stageContains F t i :=
     (le_inf (inf_le_left.trans ((Hh.trans inf_le_right).trans
       ((iInf_le _ t).trans (iInf_le _ i))))
@@ -126,8 +122,7 @@ theorem exists_family_value_containing_countable
   have Him : Δ ≤ i ∈ᴮ image T omegaOne h :=
     mem_image (Hi.trans inf_le_right) (show Δ ≤ t ∈ᴮ T from inf_le_right)
       (Hi.trans inf_le_left)
-  have Hij : Δ ≤ i ∈ᴮ j :=
-    mem_of_mem_subset (inf_le_left.trans (Hj.trans inf_le_right)) Him
+  have Hij : Δ ≤ i ∈ᴮ j := mem_of_mem_subset (inf_le_left.trans (Hj.trans inf_le_right)) Him
   have HBA : Δ ≤ B ⊆ᴮ A := increasingFamily_apply (inf_le_left.trans Hinc)
     (Hi.trans inf_le_left) (inf_le_left.trans (Hj.trans inf_le_left)) Hij
     (HBvalue.trans inf_le_left) (inf_le_left.trans (HA.trans inf_le_right))

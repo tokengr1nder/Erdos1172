@@ -29,8 +29,7 @@ open Erdos1172PositiveBoolean Erdos1172BooleanFactor Erdos1172CompleteSubalgebra
 
 theorem disjoint_cover_refinement {C I : Type u} [CompleteBooleanAlgebra C]
     (a : I → C) :
-    ∃ w : I → C, (∀ i, w i ≤ a i) ∧
-      (∀ i j, i ≠ j → w i ⊓ w j = ⊥) ∧ (⨆ i, w i) = ⨆ i, a i := by
+    ∃ w : I → C, (∀ i, w i ≤ a i) ∧ (∀ i j, i ≠ j → w i ⊓ w j = ⊥) ∧ (⨆ i, w i) = ⨆ i, a i := by
   classical
   obtain ⟨_lo, wf⟩ := exists_wellFoundedLT I
   letI := _lo

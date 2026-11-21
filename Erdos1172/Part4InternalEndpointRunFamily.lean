@@ -46,15 +46,13 @@ theorem endpointRunFamilyLaw_apply
     (HF : Γ ≤ endpointRunFamilyLaw color R S F)
     (Htop : Γ ≤ top ∈ᴮ omegaTwo) (HP : Γ ≤ pair top P ∈ᴮ F) :
     Γ ≤ is_function omegaOne entrySpace P ⊓ runLaw color R S top P :=
-  (le_inf (HF.trans ((iInf_le _ top).trans (iInf_le _ P)))
-    (le_inf Htop HP)).trans bv_imp_elim
+  (le_inf (HF.trans ((iInf_le _ top).trans (iInf_le _ P))) (le_inf Htop HP)).trans bv_imp_elim
 
 theorem exists_endpoint_run_family
     {color : Bool} {R S : bSet 𝔹} {Γ : 𝔹}
     (HS : Γ ≤ is_func' (prod omegaOne omegaTwo) (bv_powerset omegaOne) S)
     (Hrows : Γ ≤ ⨅ σ, _root_.imp (σ ∈ᴮ omegaOne) (⨆ J, rowIdealData S σ J)) :
-    ∃ F : bSet 𝔹, Γ ≤ is_function omegaTwo runCodes F ⊓
-      endpointRunFamilyLaw color R S F := by
+    ∃ F : bSet 𝔹, Γ ≤ is_function omegaTwo runCodes F ⊓ endpointRunFamilyLaw color R S F := by
   apply ErdosSmallFiberBound.exists_selector_of_pointwise
     (P := fun top P => is_function omegaOne entrySpace P ⊓ runLaw color R S top P)
     (fun P => B_ext_inf B_ext_const (runLaw_ext_top color R S P))

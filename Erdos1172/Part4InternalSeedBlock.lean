@@ -59,8 +59,7 @@ theorem constantSections_value {L q A : bSet 𝔹} {Γ : 𝔹}
     (fun _ => B_ext_bv_eq_left)).mp Hpair).2.2
 
 theorem constantSections_is_function {L : bSet 𝔹} {Γ : 𝔹} :
-    Γ ≤ is_function (prod omegaOne L) (bv_powerset omegaOne)
-      (constantSections L) := by
+    Γ ≤ is_function (prod omegaOne L) (bv_powerset omegaOne) (constantSections L) := by
   apply relationGraph_is_function (P := fun (_ : bSet 𝔹) X => X =ᴮ omegaOne)
     (fun _ => B_ext_const)
     (fun _ => B_ext_bv_eq_left)
@@ -80,8 +79,7 @@ theorem constantSections_colarge {L J q A : bSet 𝔹} {Γ : 𝔹}
   exact le_inf
     (bv_rw' (ϕ := fun X => X ⊆ᴮ omegaOne) Heq
       (h_congr := B_ext_subset_left) (H_new := subset_self))
-    (mem_congr (bv_symm (difference_congr_right Heq)) bv_refl
-      (Hbase.trans inf_le_right))
+    (mem_congr (bv_symm (difference_congr_right Heq)) bv_refl (Hbase.trans inf_le_right))
 
 theorem constantSections_normal_row {L J σ : bSet 𝔹} {Γ : 𝔹}
     (Hproper : Γ ≤ properIdeal omegaOne J)

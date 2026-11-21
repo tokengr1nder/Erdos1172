@@ -32,8 +32,7 @@ theorem maximal_increasing_range_covers_of_domain_mem
     {θ κ A f : bSet 𝔹} {Γ : 𝔹}
     (Hθ : Γ ≤ Ord θ) (Hκ : Γ ≤ Ord κ) (HA : Γ ≤ A ⊆ᴮ κ)
     (Hf : Γ ≤ increasingPartial θ A f)
-    (Hmax : Γ ≤ ⨅ g, _root_.imp (increasingPartial θ A g)
-      (_root_.imp (f ⊆ᴮ g) (f =ᴮ g)))
+    (Hmax : Γ ≤ ⨅ g, _root_.imp (increasingPartial θ A g) (_root_.imp (f ⊆ᴮ g) (f =ᴮ g)))
     (HD : Γ ≤ graphDomain θ A f ∈ᴮ θ) :
     Γ ≤ A ⊆ᴮ image (graphDomain θ A f) A f := by
   let D := graphDomain θ A f
@@ -55,8 +54,7 @@ theorem maximal_increasing_range_covers_of_domain_mem
   have Habove := range_below_unused (HΔ.trans Hκ) (HΔ.trans HA)
     (HΔ.trans Hpart) (HΔ.trans (Hf.trans (inf_le_right.trans inf_le_right))) Hy Hfresh
   have Hnew : Δ ≤ increasingPartial θ A (bSet.insert1 (pair D y) f) :=
-    increasingPartial_insert_next (HΔ.trans Hθ) (HΔ.trans Hf) (HΔ.trans HD)
-      Hy Hfresh Habove Hleast
+    increasingPartial_insert_next (HΔ.trans Hθ) (HΔ.trans Hf) (HΔ.trans HD) Hy Hfresh Habove Hleast
   have Heq : Δ ≤ f =ᴮ bSet.insert1 (pair D y) f :=
     (le_inf ((le_inf (HΔ.trans (Hmax.trans (iInf_le _ (bSet.insert1 (pair D y) f))))
       Hnew).trans bv_imp_elim) ErdosInjectionExtension.subset_insertPair).trans bv_imp_elim
@@ -70,8 +68,7 @@ theorem maximal_increasing_domain_eq {θ κ A f : bSet 𝔹} {Γ : 𝔹}
     (Hθ : Γ ≤ ErdosHartogs.initialOrdinal θ) (Hκ : Γ ≤ Ord κ)
     (HA : Γ ≤ A ⊆ᴮ κ) (Hlarge : Γ ≤ injects_into θ A)
     (Hf : Γ ≤ increasingPartial θ A f)
-    (Hmax : Γ ≤ ⨅ g, _root_.imp (increasingPartial θ A g)
-      (_root_.imp (f ⊆ᴮ g) (f =ᴮ g))) :
+    (Hmax : Γ ≤ ⨅ g, _root_.imp (increasingPartial θ A g) (_root_.imp (f ⊆ᴮ g) (f =ᴮ g))) :
     Γ ≤ graphDomain θ A f =ᴮ θ := by
   have Hθord := ErdosHartogs.Ord_of_initialOrdinal Hθ
   have Hpart : Γ ≤ partialGraph θ A f := Hf.trans inf_le_left
@@ -98,8 +95,7 @@ injection from the corresponding initial ordinal. No CH is required. -/
 theorem exists_increasing_injection {θ κ A : bSet 𝔹} {Γ : 𝔹}
     (Hκ : Γ ≤ Ord κ) (HA : Γ ≤ A ⊆ᴮ κ)
     (Hθ : Γ ≤ ErdosHartogs.initialOrdinal θ) (Hlarge : Γ ≤ injects_into θ A) :
-    ∃ f : bSet 𝔹, Γ ≤ is_injective_function θ A f ⊓
-      (increasingOn θ f ⊓ rangeInitial θ A f) := by
+    ∃ f : bSet 𝔹, Γ ≤ is_injective_function θ A f ⊓ (increasingOn θ f ⊓ rangeInitial θ A f) := by
   obtain ⟨f, Hf⟩ := exists_convert
     (exists_maximal_increasingPartial (θ := θ) (A := A) (Γ := Γ))
     (maximal_increasingPartial_ext θ A)

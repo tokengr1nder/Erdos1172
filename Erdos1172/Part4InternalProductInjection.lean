@@ -54,16 +54,11 @@ private theorem output_eq_of_prod_map_self
     (H₁ : Γ ≤ pair x₁ y₁ ∈ᴮ prod_map_self X Y f)
     (H₂ : Γ ≤ pair x₂ y₂ ∈ᴮ prod_map_self X Y f)
     (Heq : Γ ≤ x₁ =ᴮ x₂) : Γ ≤ y₁ =ᴮ y₂ := by
-  obtain ⟨a₁, a₂, b₁, b₂, Hx₁, Hy₁, Hab₁, Hab₂⟩ :=
-    components_of_mem_prod_map_self H₁
-  obtain ⟨c₁, c₂, d₁, d₂, Hx₂, Hy₂, Hcd₁, Hcd₂⟩ :=
-    components_of_mem_prod_map_self H₂
-  have Hac : Γ ≤ pair a₁ a₂ =ᴮ pair c₁ c₂ :=
-    bv_trans (bv_symm Hx₁) (bv_trans Heq Hx₂)
-  have Hbd₁ : Γ ≤ b₁ =ᴮ d₁ :=
-    eq_of_is_func_of_eq Hf (eq_of_eq_pair_left' Hac) Hab₁ Hcd₁
-  have Hbd₂ : Γ ≤ b₂ =ᴮ d₂ :=
-    eq_of_is_func_of_eq Hf (eq_of_eq_pair_right' Hac) Hab₂ Hcd₂
+  obtain ⟨a₁, a₂, b₁, b₂, Hx₁, Hy₁, Hab₁, Hab₂⟩ := components_of_mem_prod_map_self H₁
+  obtain ⟨c₁, c₂, d₁, d₂, Hx₂, Hy₂, Hcd₁, Hcd₂⟩ := components_of_mem_prod_map_self H₂
+  have Hac : Γ ≤ pair a₁ a₂ =ᴮ pair c₁ c₂ := bv_trans (bv_symm Hx₁) (bv_trans Heq Hx₂)
+  have Hbd₁ : Γ ≤ b₁ =ᴮ d₁ := eq_of_is_func_of_eq Hf (eq_of_eq_pair_left' Hac) Hab₁ Hcd₁
+  have Hbd₂ : Γ ≤ b₂ =ᴮ d₂ := eq_of_is_func_of_eq Hf (eq_of_eq_pair_right' Hac) Hab₂ Hcd₂
   exact bv_trans Hy₁ (bv_trans (pair_congr Hbd₁ Hbd₂) (bv_symm Hy₂))
 
 theorem prod_map_self_is_func {X Y f : bSet 𝔹} {Γ : 𝔹}
@@ -83,16 +78,11 @@ private theorem input_eq_of_prod_map_self
     (H₁ : Γ ≤ pair x₁ y₁ ∈ᴮ prod_map_self X Y f)
     (H₂ : Γ ≤ pair x₂ y₂ ∈ᴮ prod_map_self X Y f)
     (Heq : Γ ≤ y₁ =ᴮ y₂) : Γ ≤ x₁ =ᴮ x₂ := by
-  obtain ⟨a₁, a₂, b₁, b₂, Hx₁, Hy₁, Hab₁, Hab₂⟩ :=
-    components_of_mem_prod_map_self H₁
-  obtain ⟨c₁, c₂, d₁, d₂, Hx₂, Hy₂, Hcd₁, Hcd₂⟩ :=
-    components_of_mem_prod_map_self H₂
-  have Hbd : Γ ≤ pair b₁ b₂ =ᴮ pair d₁ d₂ :=
-    bv_trans (bv_symm Hy₁) (bv_trans Heq Hy₂)
-  have Hac₁ : Γ ≤ a₁ =ᴮ c₁ :=
-    eq_of_is_inj_of_eq Hf (eq_of_eq_pair_left' Hbd) Hab₁ Hcd₁
-  have Hac₂ : Γ ≤ a₂ =ᴮ c₂ :=
-    eq_of_is_inj_of_eq Hf (eq_of_eq_pair_right' Hbd) Hab₂ Hcd₂
+  obtain ⟨a₁, a₂, b₁, b₂, Hx₁, Hy₁, Hab₁, Hab₂⟩ := components_of_mem_prod_map_self H₁
+  obtain ⟨c₁, c₂, d₁, d₂, Hx₂, Hy₂, Hcd₁, Hcd₂⟩ := components_of_mem_prod_map_self H₂
+  have Hbd : Γ ≤ pair b₁ b₂ =ᴮ pair d₁ d₂ := bv_trans (bv_symm Hy₁) (bv_trans Heq Hy₂)
+  have Hac₁ : Γ ≤ a₁ =ᴮ c₁ := eq_of_is_inj_of_eq Hf (eq_of_eq_pair_left' Hbd) Hab₁ Hcd₁
+  have Hac₂ : Γ ≤ a₂ =ᴮ c₂ := eq_of_is_inj_of_eq Hf (eq_of_eq_pair_right' Hbd) Hab₂ Hcd₂
   exact bv_trans Hx₁ (bv_trans (pair_congr Hac₁ Hac₂) (bv_symm Hx₂))
 
 theorem prod_map_self_is_inj {X Y f : bSet 𝔹} {Γ : 𝔹}
@@ -141,10 +131,8 @@ theorem prod_map_self_is_injective_function {X Y f : bSet 𝔹} {Γ : 𝔹}
   le_inf
     (le_inf
       (le_inf
-        (prod_map_self_is_func
-          (Hf.trans (inf_le_left.trans (inf_le_left.trans inf_le_left))))
-        (prod_map_self_is_total
-          (Hf.trans (inf_le_left.trans (inf_le_left.trans inf_le_right)))))
+        (prod_map_self_is_func (Hf.trans (inf_le_left.trans (inf_le_left.trans inf_le_left))))
+        (prod_map_self_is_total (Hf.trans (inf_le_left.trans (inf_le_left.trans inf_le_right)))))
       prod_map_self_subset)
     (prod_map_self_is_inj (Hf.trans inf_le_right))
 
@@ -156,7 +144,6 @@ theorem injects_into_prod_self {X Y : bSet 𝔹} {Γ : 𝔹}
   apply (injection_into_of_injects_into H).trans
   apply iSup_le
   intro f
-  exact le_iSup_of_le (prod_map_self X Y f)
-    (prod_map_self_is_injective_function le_rfl)
+  exact le_iSup_of_le (prod_map_self X Y f) (prod_map_self_is_injective_function le_rfl)
 
 end bSet.ErdosProductInjection

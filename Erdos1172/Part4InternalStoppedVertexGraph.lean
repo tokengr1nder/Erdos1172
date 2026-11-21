@@ -45,8 +45,7 @@ def priorVertexGraph (ρ P : bSet 𝔹) : bSet 𝔹 :=
   relationGraph ρ omegaTwo (fun i y => pair i y ∈ᴮ vertexHistory P)
 
 theorem mem_priorVertexGraph_iff {ρ P i y : bSet 𝔹} {Γ : 𝔹} :
-    Γ ≤ pair i y ∈ᴮ priorVertexGraph ρ P ↔
-      Γ ≤ i ∈ᴮ ρ ∧ Γ ≤ pair i y ∈ᴮ vertexHistory P := by
+    Γ ≤ pair i y ∈ᴮ priorVertexGraph ρ P ↔ Γ ≤ i ∈ᴮ ρ ∧ Γ ≤ pair i y ∈ᴮ vertexHistory P := by
   unfold priorVertexGraph
   rw [mem_relationGraph_iff (fun _ => B_ext_pair_mem_left) (fun _ => B_ext_pair_mem_right)]
   constructor
@@ -116,8 +115,7 @@ theorem priorVertexGraph_value_in_priorVertices {ρ P i y : bSet 𝔹} {Γ : �
     (Hpair : Γ ≤ pair i y ∈ᴮ priorVertexGraph ρ P) :
     Γ ≤ y ∈ᴮ priorVertices ρ P := by
   have H := mem_priorVertexGraph_iff.mp Hpair
-  exact mem_image_iff.mpr ⟨(mem_vertexHistory_iff.mp H.2).2.1,
-    le_iSup_of_le i (le_inf H.1 H.2)⟩
+  exact mem_image_iff.mpr ⟨(mem_vertexHistory_iff.mp H.2).2.1, le_iSup_of_le i (le_inf H.1 H.2)⟩
 
 theorem priorVertexGraph_subset_bound {ρ P b : bSet 𝔹} {Γ : 𝔹}
     (Hbound : Γ ≤ priorVertices ρ P ⊆ᴮ b) :
@@ -170,8 +168,7 @@ def vertexHistoryCodes (b : bSet 𝔹) : bSet 𝔹 :=
   countableSubsets (prod omegaOne b)
 
 theorem mem_vertexHistoryCodes_iff {b g : bSet 𝔹} {Γ : 𝔹} :
-    Γ ≤ g ∈ᴮ vertexHistoryCodes b ↔
-      Γ ≤ g ⊆ᴮ prod omegaOne b ∧ Γ ≤ injects_into g bSet.omega :=
+    Γ ≤ g ∈ᴮ vertexHistoryCodes b ↔ Γ ≤ g ⊆ᴮ prod omegaOne b ∧ Γ ≤ injects_into g bSet.omega :=
   mem_countableSubsets_iff
 
 theorem priorVertexGraph_mem_codes {ρ P b : bSet 𝔹} {Γ : 𝔹}

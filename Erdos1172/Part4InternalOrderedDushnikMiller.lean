@@ -40,8 +40,7 @@ theorem exists_ordered_homogeneous_injection
       (increasingOn θ f ⊓ homogeneousUnion (!color) R θ θ f f) := by
   obtain ⟨f, Hf⟩ := exists_increasing_injection Hκ HAκ Hθ Hlarge
   exact ⟨f, le_inf
-    (ErdosIndependentHomogeneous.is_injective_function_codomain_mono HAS
-      (Hf.trans inf_le_left))
+    (ErdosIndependentHomogeneous.is_injective_function_codomain_mono HAS (Hf.trans inf_le_left))
     (le_inf (Hf.trans (inf_le_right.trans inf_le_left))
       (ErdosIndependentHomogeneous.homogeneousUnion_of_independent Hind
         (Hf.trans (inf_le_left.trans inf_le_left))))⟩

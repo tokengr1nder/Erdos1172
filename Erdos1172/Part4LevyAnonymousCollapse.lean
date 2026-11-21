@@ -76,8 +76,7 @@ theorem anonymousAlgebra_le_iff (κ : Cardinal.{u})
 theorem bitValue_mem_anonymousAlgebra (κ : Cardinal.{u})
     (i : (PSet.ordinalMk κ.ord).Type) :
     Erdos1172CohenIteration.bitValue (ErdosOmegaTwo.omegaOne : bSet (FirstAlgebra κ))
-      (check ((PSet.ordinalMk κ.ord).Func i)) (1 : bSet (FirstAlgebra κ)) ∈
-        anonymousAlgebra κ :=
+      (check ((PSet.ordinalMk κ.ord).Func i)) (1 : bSet (FirstAlgebra κ)) ∈ anonymousAlgebra κ :=
   Erdos1172CohenIteration.bitValue_mem_generatedAlgebra (PSet.ordinalMk_inj κ.ord) i
 
 end Erdos1172LevyCohen

@@ -53,8 +53,7 @@ theorem subsetName_subset (A : PSet.{u}) :
   intro i
   change (⊤ : omegaOneAlgebra B) ≤ _root_.imp
     (bitValue (ErdosOmegaTwo.omegaOne : bSet B) (check (A.Func i)) (1 : bSet B))
-    (check (A.Func i) ∈ᴮ .mk A.Type
-      (fun j => check (A.Func j)) (fun _ => ⊤))
+    (check (A.Func i) ∈ᴮ .mk A.Type (fun j => check (A.Func j)) (fun _ => ⊤))
   rw [← deduction]
   exact le_top.trans (mem_mk' (check'' (fun j => check (A.Func j))) i)
 
@@ -103,8 +102,7 @@ theorem generatedName_recovers (A : PSet.{u}) :
 theorem generatedAlgebra_le_iff (A : PSet.{u})
     (S : CompleteSubalgebra (omegaOneAlgebra B)) :
     generatedAlgebra (B := B) A ≤ S ↔
-      ∀ i : A.Type,
-        ((check (A.Func i) : bSet (omegaOneAlgebra B)) ∈ᴮ subsetName (B := B) A) ∈ S :=
+      ∀ i : A.Type, ((check (A.Func i) : bSet (omegaOneAlgebra B)) ∈ᴮ subsetName (B := B) A) ∈ S :=
   ErdosGeneratedSubset.nameAlgebra_le_iff A (subsetName (B := B) A) S
 
 /-- Under separation the actual assignment weights themselves are precisely

@@ -127,8 +127,7 @@ theorem smallAt_of_ground_bound (hclosed : CountablyClosed P) (hI : #I ≤ ℵ_ 
     (hsub : ∀ q : P, q ≤ p → ∀ x : V, U.holds q x → x ∈ A) :
     SmallAt (I := I) U p := by
   apply smallAt_of_coveredAt hclosed hI (C := fun _ => A) (hC := fun _ => hA)
-  refine ⟨FunctionDecisions.ofFunction
-    (fun _ => Ordinal.ToType.mk ⟨0, Ordinal.omega_pos 1⟩), ?_⟩
+  refine ⟨FunctionDecisions.ofFunction (fun _ => Ordinal.ToType.mk ⟨0, Ordinal.omega_pos 1⟩), ?_⟩
   intro q x hx
   apply holds_of_certificate
   refine ⟨(fun _ => Ordinal.ToType.mk ⟨0, Ordinal.omega_pos 1⟩), ∅, by simp, ?_⟩

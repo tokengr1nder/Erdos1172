@@ -47,15 +47,13 @@ def positiveSectionExceptions (color : Bool) (R J r : bSet 𝔹) : bSet 𝔹 :=
 theorem mem_positiveSectionExceptions_iff
     {color : Bool} {R J r y : bSet 𝔹} {Γ : 𝔹} :
     Γ ≤ y ∈ᴮ positiveSectionExceptions color R J r ↔
-      (Γ ≤ y ∈ᴮ omegaTwo) ∧
-        Γ ≤ positive omegaOne J (forwardSection color R r y) :=
+      (Γ ≤ y ∈ᴮ omegaTwo) ∧ Γ ≤ positive omegaOne J (forwardSection color R r y) :=
   ErdosRelationGraph.mem_comprehend_and (positive_forwardSection_ext color R J r)
 
 theorem positiveSectionExceptions_subset
     {color : Bool} {R J r : bSet 𝔹} {Γ : 𝔹} :
     Γ ≤ positiveSectionExceptions color R J r ⊆ᴮ omegaTwo :=
-  comprehend_subset
-    (ϕ := fun y => positive omegaOne J (forwardSection color R r y)) omegaTwo
+  comprehend_subset (ϕ := fun y => positive omegaOne J (forwardSection color R r y)) omegaTwo
 
 theorem positiveSectionExceptions_positive
     {color : Bool} {R J r : bSet 𝔹} {Γ : 𝔹} :
@@ -117,11 +115,9 @@ theorem positiveSectionExceptions_injects_omegaOne
         (inf_le_left.trans HB) (inf_le_left.trans HBpos)
         (inf_le_left.trans Hdense) (inf_le_left.trans HI)
         (inf_le_left.trans Hr) (inf_le_left.trans Hrow)
-        (positiveSectionExceptions_subset (color := color) (R := R) (J := J) (r := r)
-          (Γ := Δ))
+        (positiveSectionExceptions_subset (color := color) (R := R) (J := J) (r := r) (Γ := Δ))
         (show Δ ≤ injects_into omegaTwo E from inf_le_right)
-        (positiveSectionExceptions_positive (color := color) (R := R) (J := J) (r := r)
-          (Γ := Δ))
+        (positiveSectionExceptions_positive (color := color) (R := R) (J := J) (r := r) (Γ := Δ))
     have HnotTarget : Δ ≤ (hasTwoBlock color R omegaOne bSet.omega omegaTwo ⊔
         hasTwoBlock (!color) R omegaOne bSet.omega omegaTwo)ᶜ := by
       rw [compl_sup]

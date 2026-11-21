@@ -30,7 +30,6 @@ theorem exists_clique_type_omegaTwo_add_of_later_block
     (hblock : HasLaterCliqueBlock G core γ) :
     OrdinalRamsey.HasCliqueOfType G (ω_ 2 + γ) := by
   obtain ⟨t, ht, httype, hlater, hcross⟩ := hblock
-  exact G.exists_clique_type_add_of_later_block
-    hcore ht hcoreType httype hlater hcross
+  exact G.exists_clique_type_add_of_later_block hcore ht hcoreType httype hlater hcross
 
 end Erdos1172BlockCriterion

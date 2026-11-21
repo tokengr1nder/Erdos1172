@@ -33,7 +33,6 @@ theorem stationaryPressingDown : Set.StationaryPressingDown W2 := by
     norm_num
   change Set.StationaryPressingDown ((ω_ 2 : Ordinal.{0}).ToType)
   rw [← Cardinal.ord_aleph]
-  exact Set.stationaryPressingDown_ord (ℵ_ 2) hreg
-    (Cardinal.aleph0_lt_aleph.mpr (by norm_num))
+  exact Set.stationaryPressingDown_ord (ℵ_ 2) hreg (Cardinal.aleph0_lt_aleph.mpr (by norm_num))
 
 end Erdos1172Part3RedPredecessorReflection

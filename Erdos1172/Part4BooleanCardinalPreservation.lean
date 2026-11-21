@@ -92,8 +92,7 @@ theorem fiber_pair_values_disjoint (X Y : PSet.{u}) (g : Y.Type → X.Type)
   rw [hk] at Hk
   have Heq : w j ⊓ w k ≤ check (Y.Func j.val) =ᴮ check (Y.Func k.val) :=
     eq_of_is_func_of_eq Hfunc bv_refl Hj Hk
-  exact Heq.trans_eq (check_bv_eq_bot_of_not_equiv
-    (Hsep _ _ (fun h => hjk (Subtype.ext h))))
+  exact Heq.trans_eq (check_bv_eq_bot_of_not_equiv (Hsep _ _ (fun h => hjk (Subtype.ext h))))
 
 /-- A regular-cardinal chain condition prevents a surjection from a smaller
 checked indexing set onto a separated checked indexing set of size at least κ. -/
@@ -108,13 +107,11 @@ theorem is_surj_onto_eq_bot {κ : Cardinal.{u}} (Hκ : κ.IsRegular)
   by_contra Hne
   obtain ⟨g, Hg⟩ := Classical.axiomOfChoice
     (positive_pair_witness f (bot_lt_iff_ne_bot.mpr Hne) le_rfl)
-  obtain ⟨a, Ha⟩ := Cardinal.infinite_pigeonhole_card g κ HY Hκ.aleph0_le
-    (by rwa [Hκ.cof_ord])
+  obtain ⟨a, Ha⟩ := Cardinal.infinite_pigeonhole_card g κ HY Hκ.aleph0_le (by rwa [Hκ.cof_ord])
   let w : (g ⁻¹' {a}) → B := fun j =>
     is_func f ⊓ pair (check (X.Func (g j.val))) (check (Y.Func j.val)) ∈ᴮ f
   have Hw : ∀ j, w j ≠ ⊥ := fun j => ne_of_gt (Hg j.val)
-  have Hdisj : ∀ j k, j ≠ k → w j ⊓ w k = ⊥ :=
-    fiber_pair_values_disjoint X Y g a f Hsep
+  have Hdisj : ∀ j k, j ≠ k → w j ⊓ w k = ⊥ := fiber_pair_values_disjoint X Y g a f Hsep
   exact (Hcc w Hw Hdisj).not_ge Ha
 
 theorem surjects_onto_eq_bot {κ : Cardinal.{u}} (Hκ : κ.IsRegular)
@@ -146,13 +143,11 @@ theorem is_surj_onto_eq_bot_of_cardinal_lt {κ : Cardinal.{u}} (Hκ : κ.IsRegul
     by_contra Hne
     obtain ⟨g, Hg⟩ := Classical.axiomOfChoice
       (positive_pair_witness f (bot_lt_iff_ne_bot.mpr Hne) le_rfl)
-    obtain ⟨a, Ha⟩ := Cardinal.infinite_pigeonhole_card_lt g Hlt
-      (Hκ.aleph0_le.trans HY)
+    obtain ⟨a, Ha⟩ := Cardinal.infinite_pigeonhole_card_lt g Hlt (Hκ.aleph0_le.trans HY)
     let w : (g ⁻¹' {a}) → B := fun j =>
       is_func f ⊓ pair (check (X.Func (g j.val))) (check (Y.Func j.val)) ∈ᴮ f
     have Hw : ∀ j, w j ≠ ⊥ := fun j => ne_of_gt (Hg j.val)
-    have Hdisj : ∀ j k, j ≠ k → w j ⊓ w k = ⊥ :=
-      fiber_pair_values_disjoint X Y g a f Hsep
+    have Hdisj : ∀ j k, j ≠ k → w j ⊓ w k = ⊥ := fiber_pair_values_disjoint X Y g a f Hsep
     exact (Hcc w Hw Hdisj).not_ge (HXκ.trans Ha.le)
 
 theorem surjects_onto_eq_bot_of_cardinal_lt {κ : Cardinal.{u}} (Hκ : κ.IsRegular)

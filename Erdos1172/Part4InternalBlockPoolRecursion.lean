@@ -48,8 +48,7 @@ def poolUpdate (color : Bool) (R F T : bSet 𝔹) : bSet 𝔹 :=
   pair (nextObjects color R (priorObjects color R T) (priorPoints color R T) F)
     (nextPoints (priorObjects color R T) (priorPoints color R T) F)
 
-theorem poolUpdate_congr (color : Bool) (R F : bSet 𝔹) :
-    B_congr (poolUpdate color R F) := by
+theorem poolUpdate_congr (color : Bool) (R F : bSet 𝔹) : B_congr (poolUpdate color R F) := by
   intro T U Γ H
   exact pair_congr
     (nextObjects_congr (aggregateLeft_congr _ _ H) (aggregateRight_congr _ _ H))
@@ -76,8 +75,7 @@ theorem exists_pool_recursion (color : Bool) (R F : bSet 𝔹) {Γ : 𝔹} :
     exact poolUpdate_mem_stateSpace
 
 theorem pool_recursion_entry {color : Bool} {R F Run i B P : bSet 𝔹} {Γ : 𝔹}
-    (Hlaw : Γ ≤ imageRecLaw (stateSpace color R)
-      (fun _ T => poolUpdate color R F T) Run)
+    (Hlaw : Γ ≤ imageRecLaw (stateSpace color R) (fun _ T => poolUpdate color R F T) Run)
     (Hpair : Γ ≤ pair i (pair B P) ∈ᴮ Run) :
     Γ ≤ B =ᴮ nextObjects color R
         (priorObjects color R (image i (stateSpace color R) Run))

@@ -50,10 +50,8 @@ def laterSurvivors (color : Bool) (R E Tail m b : bSet 𝔹) : bSet 𝔹 :=
 theorem tailCandidatesLaw_apply {color : Bool} {R J E S B Tail n A : bSet 𝔹} {Γ : 𝔹}
     (H : Γ ≤ tailCandidatesLaw color R J E S B Tail)
     (Hpair : Γ ≤ pair n A ∈ᴮ Tail) :
-    Γ ≤ blockCandidate color R J E S
-      (binary_union B (image n (bv_powerset omegaTwo) Tail)) ∅ A :=
-  ((le_inf (H.trans ((iInf_le _ n).trans (iInf_le _ A))) Hpair).trans bv_imp_elim).trans
-    inf_le_left
+    Γ ≤ blockCandidate color R J E S (binary_union B (image n (bv_powerset omegaTwo) Tail)) ∅ A :=
+  ((le_inf (H.trans ((iInf_le _ n).trans (iInf_le _ A))) Hpair).trans bv_imp_elim).trans inf_le_left
 
 theorem tailCommon_subset {color : Bool} {R E Tail b D : bSet 𝔹} {Γ : 𝔹} :
     Γ ≤ tailCommon color R E Tail b D ⊆ᴮ omegaOne := indexedIntersection_subset
@@ -122,10 +120,8 @@ theorem oldSurvivors_mem_mask {color : Bool} {R E Tail X ν b v : bSet 𝔹} {Γ
 theorem oldSurvivors_mem_common {color : Bool} {R E Tail X ν b v : bSet 𝔹} {Γ : 𝔹}
     (Hv : Γ ≤ v ∈ᴮ oldSurvivors color R E Tail X ν b) :
     Γ ≤ v ∈ᴮ tailCommon color R E Tail b bSet.omega := by
-  have Hbound : Γ ≤ v ∈ᴮ omegaOne :=
-    mem_of_mem_subset activeMask_subset (oldSurvivors_mem_mask Hv)
-  have Hnot : Γ ≤ (v ∈ᴮ difference omegaOne
-      (tailCommon color R E Tail b bSet.omega))ᶜ := by
+  have Hbound : Γ ≤ v ∈ᴮ omegaOne := mem_of_mem_subset activeMask_subset (oldSurvivors_mem_mask Hv)
+  have Hnot : Γ ≤ (v ∈ᴮ difference omegaOne (tailCommon color R E Tail b bSet.omega))ᶜ := by
     have H := Hv
     change Γ ≤ v ∈ᴮ difference (activeMask X ν)
       (difference omegaOne (tailCommon color R E Tail b bSet.omega)) at H

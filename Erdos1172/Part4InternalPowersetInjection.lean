@@ -28,8 +28,7 @@ theorem mem_of_mem_image_of_inj {A Y f x y : bSet 𝔹} {Γ : 𝔹}
     (Hy : Γ ≤ y ∈ᴮ image A Y f) : Γ ≤ x ∈ᴮ A := by
   obtain ⟨z, Hz⟩ := exists_convert (mem_image_iff.mp Hy).2
     (B_ext_inf B_ext_mem_left B_ext_pair_mem_left)
-  have Hxz : Γ ≤ x =ᴮ z :=
-    eq_of_is_inj_of_eq Hinj bv_refl Hxy (Hz.trans inf_le_right)
+  have Hxz : Γ ≤ x =ᴮ z := eq_of_is_inj_of_eq Hinj bv_refl Hxy (Hz.trans inf_le_right)
   exact bv_rw' Hxz (ϕ := fun w => w ∈ᴮ A)
     (h_congr := B_ext_mem_left) (H_new := Hz.trans inf_le_left)
 
@@ -41,18 +40,15 @@ theorem subset_of_image_subset {X Y f A B : bSet 𝔹} {Γ : 𝔹}
   rw [subset_unfold']
   apply le_iInf; intro x
   rw [← deduction]
-  have HxX : Γ ⊓ x ∈ᴮ A ≤ x ∈ᴮ X :=
-    mem_of_mem_subset (inf_le_left.trans HA) inf_le_right
+  have HxX : Γ ⊓ x ∈ᴮ A ≤ x ∈ᴮ X := mem_of_mem_subset (inf_le_left.trans HA) inf_le_right
   have Htotal : Γ ⊓ x ∈ᴮ A ≤ is_total X Y f :=
     is_total_of_is_function (inf_le_left.trans (Hf.trans inf_le_left))
   have Hex : Γ ⊓ x ∈ᴮ A ≤ ⨆ y, y ∈ᴮ Y ⊓ pair x y ∈ᴮ f :=
     (le_inf (Htotal.trans (iInf_le _ x)) HxX).trans bv_imp_elim
-  obtain ⟨y, Hy⟩ := exists_convert Hex
-    (B_ext_inf B_ext_mem_left B_ext_pair_mem_right)
+  obtain ⟨y, Hy⟩ := exists_convert Hex (B_ext_inf B_ext_mem_left B_ext_pair_mem_right)
   have HyA : Γ ⊓ x ∈ᴮ A ≤ y ∈ᴮ image A Y f :=
     mem_image (Hy.trans inf_le_right) inf_le_right (Hy.trans inf_le_left)
-  have HyB : Γ ⊓ x ∈ᴮ A ≤ y ∈ᴮ image B Y f :=
-    mem_of_mem_subset (inf_le_left.trans Himage) HyA
+  have HyB : Γ ⊓ x ∈ᴮ A ≤ y ∈ᴮ image B Y f := mem_of_mem_subset (inf_le_left.trans Himage) HyA
   exact mem_of_mem_image_of_inj (inf_le_left.trans (Hf.trans inf_le_right))
     (Hy.trans inf_le_right) HyB
 
@@ -77,23 +73,20 @@ private theorem image_eq_ext_left (Y f B : bSet 𝔹) :
 
 theorem mem_powersetImageGraph_iff {X Y f A B : bSet 𝔹} {Γ : 𝔹} :
     Γ ≤ pair A B ∈ᴮ powersetImageGraph X Y f ↔
-      Γ ≤ A ∈ᴮ bv_powerset X ∧ Γ ≤ B ∈ᴮ bv_powerset Y ∧
-        Γ ≤ image A Y f =ᴮ B :=
+      Γ ≤ A ∈ᴮ bv_powerset X ∧ Γ ≤ B ∈ᴮ bv_powerset Y ∧ Γ ≤ image A Y f =ᴮ B :=
   ErdosRelationGraph.mem_relationGraph_iff
     (fun B => image_eq_ext_left Y f B) (fun _ => B_ext_bv_eq_right)
 
 /-- Bounded image is a supported function on powersets even for an arbitrary
 relation; no globally valid input-function hypothesis is used. -/
 theorem powersetImageGraph_is_function {X Y f : bSet 𝔹} {Γ : 𝔹} :
-    Γ ≤ is_function (bv_powerset X) (bv_powerset Y)
-      (powersetImageGraph X Y f) := by
+    Γ ≤ is_function (bv_powerset X) (bv_powerset Y) (powersetImageGraph X Y f) := by
   apply ErdosRelationGraph.relationGraph_is_function
     (P := fun A B => image A Y f =ᴮ B)
     (fun B => image_eq_ext_left Y f B) (fun _ => B_ext_bv_eq_right)
   · apply le_iInf; intro A
     rw [← deduction]
-    exact le_iSup_of_le (image A Y f)
-      (le_inf (mem_powerset_iff.mpr image_subset) bv_refl)
+    exact le_iSup_of_le (image A Y f) (le_inf (mem_powerset_iff.mpr image_subset) bv_refl)
   · intro A₁ A₂ B₁ B₂ Δ _ _ _ _ _ H₁ H₂ Heq
     exact bv_trans (bv_symm H₁) (bv_trans (B_congr_image_left Heq) H₂)
 
@@ -126,8 +119,7 @@ theorem powersetImageGraph_is_inj {X Y f : bSet 𝔹} {Γ : 𝔹}
 Boolean condition, not merely for globally valid graph names. -/
 theorem powersetImageGraph_is_injective_function {X Y f : bSet 𝔹} {Γ : 𝔹}
     (Hf : Γ ≤ is_injective_function X Y f) :
-    Γ ≤ is_injective_function (bv_powerset X) (bv_powerset Y)
-      (powersetImageGraph X Y f) :=
+    Γ ≤ is_injective_function (bv_powerset X) (bv_powerset Y) (powersetImageGraph X Y f) :=
   le_inf powersetImageGraph_is_function (powersetImageGraph_is_inj Hf)
 
 /-- Powersets preserve internal cardinal injection in every Boolean context. -/
@@ -137,7 +129,6 @@ theorem powerset_injects_of_injects {X Y : bSet 𝔹} {Γ : 𝔹}
   apply injects_into_of_injection_into
   apply (injection_into_of_injects_into H).trans
   apply iSup_le; intro f
-  exact le_iSup_of_le (powersetImageGraph X Y f)
-    (powersetImageGraph_is_injective_function le_rfl)
+  exact le_iSup_of_le (powersetImageGraph X Y f) (powersetImageGraph_is_injective_function le_rfl)
 
 end bSet.ErdosPowersetInjection

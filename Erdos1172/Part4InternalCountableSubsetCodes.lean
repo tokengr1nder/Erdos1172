@@ -70,8 +70,7 @@ theorem subsetCodeSpec_ext_code (e T : bSet 𝔹) : B_ext (subsetCodeSpec e T) :
 
 theorem subsetCodeSpec_witness {e T c : bSet 𝔹} {Γ : 𝔹}
     (H : Γ ≤ subsetCodeSpec e T c) :
-    ∃ j : bSet 𝔹, Γ ≤ is_injective_function T bSet.omega j ⊓
-      c =ᴮ realGraphCode (enumGraph T j e) :=
+    ∃ j : bSet 𝔹, Γ ≤ is_injective_function T bSet.omega j ⊓ c =ᴮ realGraphCode (enumGraph T j e) :=
   exists_convert H (B_ext_inf B_ext_injective_code
     (B_ext_term (ϕ := fun d => c =ᴮ d) (t := fun j => realGraphCode (enumGraph T j e))
       B_ext_bv_eq_right (enumCode_congr_index T e)))
@@ -107,8 +106,7 @@ theorem subsetCodeFamilyLaw_apply {A e F T c : bSet 𝔹} {Γ : 𝔹}
     (Hlaw : Γ ≤ subsetCodeFamilyLaw A e F)
     (HT : Γ ≤ T ∈ᴮ countableSubsets A) (Hpair : Γ ≤ pair T c ∈ᴮ F) :
     Γ ≤ subsetCodeSpec e T c :=
-  (le_inf (Hlaw.trans ((iInf_le _ T).trans (iInf_le _ c)))
-    (le_inf HT Hpair)).trans bv_imp_elim
+  (le_inf (Hlaw.trans ((iInf_le _ T).trans (iInf_le _ c))) (le_inf HT Hpair)).trans bv_imp_elim
 
 theorem subsetCodeFamily_is_inj {A e F : bSet 𝔹} {Γ : 𝔹}
     (He : Γ ≤ is_injective_function A Pω e)
@@ -126,10 +124,8 @@ theorem subsetCodeFamily_is_inj {A e F : bSet 𝔹} {Γ : 𝔹}
   let Δ := Γ ⊓ ((pair T c ∈ᴮ F ⊓ pair U d ∈ᴮ F) ⊓ c =ᴮ d)
   have HTc : Δ ≤ pair T c ∈ᴮ F := inf_le_right.trans (inf_le_left.trans inf_le_left)
   have HUd : Δ ≤ pair U d ∈ᴮ F := inf_le_right.trans (inf_le_left.trans inf_le_right)
-  have HT : Δ ≤ T ∈ᴮ countableSubsets A :=
-    mem_domain_of_is_function HTc (inf_le_left.trans HF)
-  have HU : Δ ≤ U ∈ᴮ countableSubsets A :=
-    mem_domain_of_is_function HUd (inf_le_left.trans HF)
+  have HT : Δ ≤ T ∈ᴮ countableSubsets A := mem_domain_of_is_function HTc (inf_le_left.trans HF)
+  have HU : Δ ≤ U ∈ᴮ countableSubsets A := mem_domain_of_is_function HUd (inf_le_left.trans HF)
   exact subsetCodeSpec_reflects_equality (inf_le_left.trans He)
     (mem_countableSubsets_iff.mp HT).1 (mem_countableSubsets_iff.mp HU).1
     (subsetCodeFamilyLaw_apply (inf_le_left.trans Hlaw) HT HTc)
