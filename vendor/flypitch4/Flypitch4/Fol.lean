@@ -155,13 +155,6 @@ lemma lift_term2 {l} (t : preterm L l) (n n') :
     lift_term (lift_term t n) n' = lift_term t (n + n') :=
   lift_term2_medium t n' (Nat.zero_le _)
 
-lemma lift_term_at2_large {l} (t : preterm L l) {n} (n') {m m'} (H : m + n ≤ m') :
-    lift_term_at (lift_term_at t n m) n' m' =
-    lift_term_at (lift_term_at t n' (m' - n)) n m := by
-  have H₁ : n ≤ m' := Nat.le_trans (Nat.le_add_left _ _) H
-  have H₂ : m ≤ m' - n := by omega
-  rw [lift_term_at2_small t n' n H₂, Nat.sub_add_cancel H₁]
-
 /-! ## subst_term — substitution -/
 
 @[simp] lemma subst_term_var_lt (s : term L) {k n : ℕ} (H : k < n) :
@@ -259,29 +252,6 @@ lemma lift_formula_at2_medium : ∀ {l} (f : @preformula L l) (n n') {m m'}, m �
 /-! ## count_quantifiers and quantifier_free -/
 
 /-! ## prf — the proof system (src/fol.lean lines 816-824) -/
-
-def axm1 {Γ : Set (formula L)} {A : formula L} : insert A Γ ⊢ A :=
-  prf.axm (Set.mem_insert A Γ)
-
-noncomputable def weakening {Γ Δ : Set (formula L)} {f : formula L} (H₁ : Γ ⊆ Δ) (H₂ : Γ ⊢ f) : Δ ⊢ f := by
-  induction H₂ generalizing Δ with
-  | axm h => exact prf.axm (H₁ h)
-  | impI _ ih => exact prf.impI (ih (Set.insert_subset_insert H₁))
-  | impE A _ _ ih₁ ih₂ => exact prf.impE A (ih₁ H₁) (ih₂ H₁)
-  | falsumE _ ih => exact prf.falsumE (ih (Set.insert_subset_insert H₁))
-  | allI _ ih => exact prf.allI (ih (Set.image_mono H₁))
-  | allE₂ A t _ ih => exact prf.allE₂ A t (ih H₁)
-  | ref => exact prf.ref _ _
-  | subst₂ s t f _ _ ih₁ ih₂ => exact prf.subst₂ s t f (ih₁ H₁) (ih₂ H₁)
-
-noncomputable def weakening1 {Γ : Set (formula L)} {f₁ f₂ : formula L} (H : Γ ⊢ f₂) : insert f₁ Γ ⊢ f₂ :=
-  weakening (Set.subset_insert f₁ Γ) H
-
-noncomputable def deduction {Γ : Set (formula L)} {A B : formula L} (H : Γ ⊢ A ⟹ B) : insert A Γ ⊢ B :=
-  prf.impE A (weakening1 H) axm1
-
-noncomputable def exfalso {Γ : Set (formula L)} {A : formula L} (H : Γ ⊢ ⊥') : Γ ⊢ A :=
-  prf.falsumE (weakening1 H)
 
 /-! ## Theory and consistency (src/fol.lean lines 1105-) -/
 

@@ -83,9 +83,6 @@ abbrev ordinalMk : Ordinal.{u} → PSet.{u} := Ordinal.toPSet
 lemma mem_unfold {x y : PSet} : x ∈ y ↔ ∃ j : y.Type, Equiv x (y.Func j) := by
   cases y; rfl
 
-lemma ext_iff {x y : PSet} : Equiv x y ↔ ∀ z, z ∈ x ↔ z ∈ y :=
-  PSet.equiv_iff_mem
-
 /-! ### Key facts about ordinalMk = Ordinal.toPSet -/
 
 -- The type of `ordinalMk η` is `η.ToType`
@@ -309,15 +306,6 @@ lemma ordinalMk_succ_equiv {η : Ordinal} :
     exact Ord_equiv ordinalMk_succ_equiv.symm (Ord_succ_ord _ ih)
   | limit η H_limit ih => exact Ord_limit η H_limit ih
 
--- WARNING: is_func corresponds to bSet.is_function, not bSet.is_func
--- f ⊆ prod x y ∧ ∀z ∈ x, ∃! w, pair z w ∈ f
-@[reducible] def is_func (x y f : PSet.{u}) : Prop :=
-  ZFSet.IsFunc (ZFSet.mk x) (ZFSet.mk y) (ZFSet.mk f)
-
-@[reducible] def is_surj (x y f : PSet.{u}) : Prop :=
-  ∀ b : PSet.{u}, b ∈ y →
-    ∃ a : PSet.{u}, a ∈ x ∧ ZFSet.pair (ZFSet.mk a) (ZFSet.mk b) ∈ ZFSet.mk f
-
 -- ============================================================
 -- Task 6b additions: lines 512-1000 of src/pSet_ordinal.lean
 -- ============================================================
@@ -409,9 +397,6 @@ open Cardinal in
 
 /-! ### Ordinal arithmetic helpers (src lines 668-697) -/
 
-open Cardinal in
-lemma one_lt_two : (1 : Ordinal) < 2 := _root_.one_lt_two
-
 /-! ### Subset helpers (src lines 698-704) -/
 
 lemma subset_trans {x y z : PSet} : x ⊆ y → y ⊆ z → x ⊆ z := by
@@ -483,8 +468,6 @@ lemma is_ewo_omega : epsilon_well_orders (PSet.omega : PSet.{u}) := by
       exact ofNat_mem_of_lt h
   · exact is_epsilon_well_founded _
 
-lemma Ord_omega : Ord (PSet.omega : PSet.{u}) := ⟨is_ewo_omega, is_transitive_omega⟩
-
 /-- Injectivity of `ofNat`.
     Port of `of_nat_inj` (src/pSet_ordinal.lean:792). -/
 lemma ofNat_inj {n k : ℕ} (H_neq : n ≠ k) :
@@ -533,55 +516,9 @@ lemma equiv_iff_eq_pSet_pair {x y x' y' : PSet.{u}} :
 def pSet_prod (x y : PSet.{u}) : PSet.{u} :=
   ⟨x.Type × y.Type, fun pr => pSet_pair (x.Func pr.1) (y.Func pr.2)⟩
 
-lemma pSet_prod_sound {x y : PSet.{u}} :
-    ZFSet.mk (pSet_prod x y) = ZFSet.prod (ZFSet.mk x) (ZFSet.mk y) := by
-  apply ZFSet.ext
-  intro z
-  rw [ZFSet.mem_prod]
-  constructor
-  · intro hz
-    rw [← ZFSet.mk_out z, ZFSet.mk_mem_iff, PSet.mem_def] at hz
-    obtain ⟨⟨i, j⟩, hij⟩ := hz
-    exact ⟨ZFSet.mk (x.Func i),
-           by rw [ZFSet.mk_mem_iff]; exact PSet.func_mem x i,
-           ZFSet.mk (y.Func j),
-           by rw [ZFSet.mk_mem_iff]; exact PSet.func_mem y j,
-           by rw [← pSet_pair_sound, ← ZFSet.mk_out z]; exact ZFSet.sound hij⟩
-  · rintro ⟨a, ha, b, hb, hab⟩
-    rw [hab, ← ZFSet.mk_out a, ← ZFSet.mk_out b]
-    rw [← ZFSet.mk_out a, ZFSet.mk_mem_iff, PSet.mem_def] at ha
-    rw [← ZFSet.mk_out b, ZFSet.mk_mem_iff, PSet.mem_def] at hb
-    obtain ⟨i, hi⟩ := ha
-    obtain ⟨j, hj⟩ := hb
-    have h_pair : (ZFSet.mk a.out).pair (ZFSet.mk b.out) = ZFSet.mk (pSet_pair a.out b.out) :=
-      pSet_pair_sound.symm
-    rw [h_pair, ZFSet.mk_mem_iff, PSet.mem_def]
-    refine ⟨⟨i, j⟩, ?_⟩
-    show PSet.Equiv (pSet_pair a.out b.out) (pSet_pair (x.Func i) (y.Func j))
-    apply ZFSet.exact
-    show ZFSet.mk (pSet_pair a.out b.out) = ZFSet.mk (pSet_pair (x.Func i) (y.Func j))
-    rw [pSet_pair_sound, pSet_pair_sound, ZFSet.pair_inj]
-    exact ⟨ZFSet.sound hi, ZFSet.sound hj⟩
-
-lemma mem_pSet_prod_iff {x y a b : PSet.{u}} :
-    pSet_pair a b ∈ pSet_prod x y ↔ a ∈ x ∧ b ∈ y := by
-  rw [mem_iff, pSet_pair_sound, pSet_prod_sound, ZFSet.pair_mem_prod, ← mem_iff, ← mem_iff]
-
 /-! ### Injection predicates (src lines 986-990) -/
 
-@[reducible] def is_inj (f : PSet.{u}) : Prop :=
-  ∀ w₁ w₂ v₁ v₂ : PSet.{u},
-    pSet_pair w₁ v₁ ∈ f ∧ pSet_pair w₂ v₂ ∈ f ∧ Equiv v₁ v₂ → Equiv w₁ w₂
-
-def is_injective_function (x y f : PSet.{u}) : Prop := is_func x y f ∧ is_inj f
-
-def injects_into (x y : PSet.{u}) : Prop := ∃ f, is_injective_function x y f
-
 /-! ### Subset characterization via ZFSet (src/pSet_ordinal.lean:994-1000) -/
-
-lemma subset_sound {x y : PSet.{u}} :
-    x ⊆ y ↔ ZFSet.mk x ⊆ ZFSet.mk y := by
-  rw [ZFSet.subset_iff]
 
 -- ============================================================
 -- Task 6c additions: lines 1000-1391 of src/pSet_ordinal.lean
@@ -589,61 +526,12 @@ lemma subset_sound {x y : PSet.{u}} :
 
 /-! ### is_func characterization (src lines 1002-1045) -/
 
-/-- `is_func x y f` iff `f ⊆ pSet_prod x y` and for every `z ∈ x` there exists a unique `w`
-    with `pSet_pair z w ∈ f`.
-    Port of `is_func_iff` (src/pSet_ordinal.lean:1002). -/
-lemma is_func_iff {x y f : PSet.{u}} :
-    is_func x y f ↔ f ⊆ pSet_prod x y ∧ ∀ z, z ∈ x →
-      (∃ w, pSet_pair z w ∈ f ∧ ∀ v, pSet_pair z v ∈ f → Equiv v w) := by
-  unfold is_func ZFSet.IsFunc
-  rw [← pSet_prod_sound, ← subset_sound]
-  constructor
-  · rintro ⟨H_sub, H_uniq⟩
-    refine ⟨H_sub, fun z Hz => ?_⟩
-    specialize H_uniq (ZFSet.mk z) (mem_iff.mp Hz)
-    obtain ⟨w, Hw₁, Hw₂⟩ := H_uniq
-    refine ⟨w.out, ?_, fun v Hv => ?_⟩
-    · rw [mem_iff, pSet_pair_sound, ZFSet.mk_out]; exact Hw₁
-    · rw [mem_iff, pSet_pair_sound] at Hv
-      rw [equiv_iff_eq, ZFSet.mk_out]
-      exact Hw₂ (ZFSet.mk v) Hv
-  · rintro ⟨H_sub, H_uniq⟩
-    refine ⟨H_sub, fun z Hz => ?_⟩
-    rw [← ZFSet.mk_out z] at Hz
-    rw [ZFSet.mk_mem_iff] at Hz
-    obtain ⟨w, Hw₁, Hw₂⟩ := H_uniq z.out Hz
-    refine ⟨ZFSet.mk w, ?_, fun v Hv => ?_⟩
-    · -- goal: (fun w => z.pair w ∈ ZFSet.mk f) (ZFSet.mk w)
-      -- = z.pair (ZFSet.mk w) ∈ ZFSet.mk f
-      change z.pair (ZFSet.mk w) ∈ ZFSet.mk f
-      rw [← ZFSet.mk_out z]
-      rw [show (ZFSet.mk z.out).pair (ZFSet.mk w) = ZFSet.mk (pSet_pair z.out w)
-          from pSet_pair_sound.symm]
-      exact mem_iff.mp Hw₁
-    · -- goal: v = ZFSet.mk w
-      -- v : ZFSet, Hv : z.pair v ∈ ZFSet.mk f
-      rw [← ZFSet.mk_out z, ← ZFSet.mk_out v] at Hv
-      rw [show (ZFSet.mk z.out).pair (ZFSet.mk v.out) = ZFSet.mk (pSet_pair z.out v.out)
-          from pSet_pair_sound.symm, ZFSet.mk_mem_iff] at Hv
-      have h := Hw₂ v.out Hv
-      rw [equiv_iff_eq] at h
-      rw [← ZFSet.mk_out v]
-      exact h
-
-def is_total (x y f : PSet.{u}) : Prop := ∀ z ∈ x, ∃ w, w ∈ y ∧ pSet_pair z w ∈ f
-
 /-! ### powerset_sound (src line 1047) -/
 
 /-! ### set_of_indicator, functions, mem_functions_iff (src lines 1049-1067) -/
 
 def set_of_indicator {x : PSet.{u}} (χ : x.Type → Prop) : PSet.{u} :=
   ⟨{i // χ i}, fun p => x.Func p.1⟩
-
-/-- The set of all functions from x to y (as a pSet).
-    Port of `functions` (src/pSet_ordinal.lean:1052). -/
-def functions (x y : PSet.{u}) : PSet.{u} :=
-  @set_of_indicator (PSet.powerset (pSet_prod x y))
-    (fun i_S => is_func x y ((PSet.powerset (pSet_prod x y)).Func i_S))
 
 /-! ### card_ex_aleph_exists_mem (src line 1071) -/
 
@@ -671,15 +559,6 @@ end function_mk
 
 /-! ### pair_mem.congr_right/left (src lines 1194-1215) -/
 
-lemma pSet_pair_mem_congr_left {p q r s : PSet.{u}} (H : Equiv q r) :
-    pSet_pair q p ∈ s ↔ pSet_pair r p ∈ s := by
-  rw [mem_iff, mem_iff, pSet_pair_sound, pSet_pair_sound]
-  constructor
-  · intro h; rwa [show ZFSet.pair (ZFSet.mk q) (ZFSet.mk p) = ZFSet.pair (ZFSet.mk r) (ZFSet.mk p) from
-      by rw [ZFSet.pair_inj]; exact ⟨ZFSet.sound H, rfl⟩] at h
-  · intro h; rwa [show ZFSet.pair (ZFSet.mk r) (ZFSet.mk p) = ZFSet.pair (ZFSet.mk q) (ZFSet.mk p) from
-      by rw [ZFSet.pair_inj]; exact ⟨ZFSet.sound H.symm, rfl⟩] at h
-
 /-! ### section injects_powerset (src lines 1218-1369) -/
 
 section injects_powerset
@@ -689,19 +568,6 @@ variable {x : PSet.{u}}
 end injects_powerset
 
 /-! ### eq_of_is_func_of_eq (src line 1372) -/
-
-lemma eq_of_is_func_of_eq {a b c d : PSet.{u}} {x y f : PSet.{u}}
-    (H_func : is_func x y f) (H₁ : pSet_pair a c ∈ f) (H₂ : pSet_pair b d ∈ f)
-    (H_eq : Equiv a b) : Equiv c d := by
-  rw [is_func_iff] at H_func
-  obtain ⟨H_sub, H⟩ := H_func
-  have Ha : a ∈ x := (mem_pSet_prod_iff.mp (all_mem_of_subset H_sub _ H₁)).1
-  obtain ⟨_w, _Hw₁, Hw₂⟩ := H a Ha
-  have h1 : Equiv c _w := Hw₂ c H₁
-  have h2 : Equiv d _w := by
-    apply Hw₂
-    exact (pSet_pair_mem_congr_left H_eq).mpr H₂
-  exact PSet.Equiv.trans h1 h2.symm
 
 /-! ### exists_mem_of_nonzero, exists_mem_of_regular (src lines 1384-1388) -/
 

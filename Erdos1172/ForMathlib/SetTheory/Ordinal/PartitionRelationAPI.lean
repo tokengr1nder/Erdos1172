@@ -47,12 +47,4 @@ theorem mono_targets {α β β' γ γ' : Ordinal.{u}}
       Ordinal.exists_subset_typeLT_eq s (hγ.trans_eq hstype.symm)
     exact Or.inr ⟨t, hs.subset hts, httype⟩
 
-/-- Swapping the two complementary colors swaps the two targets. -/
-theorem swap {α β γ : Ordinal.{u}} (h : OrdinalRamsey α β γ) :
-    OrdinalRamsey α γ β := by
-  intro red blue hcompl
-  obtain ⟨s, hs, hstype⟩ | ⟨s, hs, hstype⟩ := h blue red hcompl.symm
-  · exact Or.inr ⟨s, hs, hstype⟩
-  · exact Or.inl ⟨s, hs, hstype⟩
-
 end OrdinalRamsey

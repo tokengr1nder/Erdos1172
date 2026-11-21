@@ -18,22 +18,6 @@ open Erdos1172Part3CountableRankClosure
 /-- Whole candidate blocks, including blocks of cardinality `alephOne`. -/
 abbrev Obj : Type := {s : Set W2 // #s ≤ ℵ_ 1}
 
-def objEmpty : Obj := ⟨∅, by simp⟩
-
-def objSingleton (x : W2) : Obj :=
-  ⟨{x}, by
-    rw [Cardinal.mk_singleton]
-    exact Cardinal.one_le_aleph0.trans (Cardinal.aleph0_le_aleph 1)⟩
-
-def objUnion (s : ℕ → Obj) : Obj := ⟨⋃ n, (s n).val, by
-  calc
-    #(⋃ n, (s n).val) ≤ Cardinal.sum (fun n => #(s n).val) := Cardinal.mk_iUnion_le_sum_mk
-    _ ≤ Cardinal.sum (fun _ : ℕ => (ℵ_ 1 : Cardinal)) :=
-      Cardinal.sum_le_sum _ _ (fun n => (s n).property)
-    _ = #ℕ * ℵ_ 1 := Cardinal.sum_const' ℕ (ℵ_ 1)
-    _ ≤ ℵ_ 1 * ℵ_ 1 := mul_le_mul' (by simp) le_rfl
-    _ = ℵ_ 1 := Cardinal.mul_eq_self (Cardinal.aleph0_le_aleph 1)⟩
-
 theorem mk_Obj_le (hGCH : GCH) : #Obj ≤ ℵ_ 2 := by
   have h := Cardinal.mk_bounded_set_le W2 (ℵ_ 1)
   simpa only [W2, Cardinal.mk_toType, Ordinal.card_omega,
@@ -52,9 +36,6 @@ theorem objectBound_spec (s : Obj) : ∀ x ∈ s.val, x < objectBound s :=
 
 abbrev Atom : Type := (Fin 3 × W2) ⊕ Obj
 abbrev Code : Type := SmallUnionCode.Code ℕ Atom
-
-def pointName (k : Fin 3) (x : W2) : Code := SmallUnionCode.atom (.inl (k, x))
-def objectName (s : Obj) : Code := SmallUnionCode.atom (.inr s)
 
 /-- A later common red neighborhood of an entire block. -/
 def afterRed (G : SimpleGraph W2) (s : Obj) : Set W2 :=
@@ -87,21 +68,5 @@ theorem mk_Code_le (hGCH : GCH) : #Code ≤ ℵ_ 2 := by
 noncomputable def rank (hGCH : GCH) : Code ↪ W2 :=
   Classical.choice ((Cardinal.le_def Code W2).mp (by
     simpa only [W2, Cardinal.mk_toType, Ordinal.card_omega] using mk_Code_le hGCH))
-
-/-- The code and block-object closure needed for whole-block fusion.
-All these fields are constructed on a stationary set below. -/
-structure GoodCut (r : Code ↪ W2) (σ : Obj ↪ W2)
-    (G H : SimpleGraph W2) (a : W2) : Prop where
-  isOmegaOneSup : ErdosRadoCHAsym.IsOmegaOneSup a
-  empty_lt : r SmallUnionCode.empty < a
-  compl_lt : ∀ c, r c < a → r (SmallUnionCode.compl c) < a
-  union_lt : ∀ c : ℕ → Code, (∀ i, r (c i) < a) → r (SmallUnionCode.union c) < a
-  point_lt : ∀ k : Fin 3, ∀ x < a, r (pointName k x) < a
-  reflects_univ : ∀ c, r c < a → Set.Iio a ⊆ eval G H c → Set.univ ⊆ eval G H c
-  object_empty_lt : σ objEmpty < a
-  object_union_lt : ∀ s : ℕ → Obj, (∀ i, σ (s i) < a) → σ (objUnion s) < a
-  object_singleton_lt : ∀ x < a, σ (objSingleton x) < a
-  object_bound_lt : ∀ s, σ s < a → objectBound s < a
-  object_name_lt : ∀ s, σ s < a → r (objectName s) < a
 
 end Erdos1172Part3CoreObjectCode

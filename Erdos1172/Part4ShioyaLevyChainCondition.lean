@@ -4,7 +4,10 @@ Licensed under the Apache License, Version 2.0.
 -/
 module
 
-public import Erdos1172.Part4ShioyaLevyProduct
+public import Mathlib.SetTheory.Cardinal.Ordinal
+public import Erdos1172.Part4DenseCompletionCardinality
+public import Erdos1172.Part4ShioyaStringTransport
+public import Mathlib.Order.Bounds.OrderIso
 
 @[expose] public section
 

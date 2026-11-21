@@ -1110,12 +1110,6 @@ variable {𝔹 : Type u} [NontrivialCompleteBooleanAlgebra 𝔹]
 def is_limit (η : bSet 𝔹) : 𝔹 :=
   (∅ ∈ᴮ η) ⊓ (⨅ x, x ∈ᴮ η ⟹ ⨆ y, y ∈ᴮ η ⊓ x ∈ᴮ y)
 
--- src/bvm_extras2.lean:543
-lemma is_epsilon_well_founded {x : bSet 𝔹} {Γ : 𝔹} : Γ ≤ epsilon_well_founded x := by
-  rw [epsilon_well_founded]
-  apply le_iInf; intro u; rw [← deduction, ← deduction]
-  exact bSet_axiom_of_regularity u inf_le_right
-
 -- src/bvm_extras2.lean:546
 lemma Ord_succ {η : bSet 𝔹} {Γ : 𝔹} (H_Ord : Γ ≤ Ord η) : Γ ≤ Ord (succ η) := by
   -- Ord = epsilon_trichotomy ⊓ epsilon_well_founded ⊓ is_transitive

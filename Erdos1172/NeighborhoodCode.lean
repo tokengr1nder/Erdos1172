@@ -76,11 +76,6 @@ theorem mk_localCode_le_gen {C : Type} (r : C ↪ W3) (a : W3) :
     Cardinal.succ_aleph, show (2 : Ordinal) + 1 = 3 by norm_num] using
     Cardinal.mk_Iio_lt a (Cardinal.ord_cardinalMk (α := W3))
 
-abbrev LocalCode (r : Code ↪ W3) (a : W3) := {c : Code // r c < a}
-
-theorem mk_LocalCode_le (r : Code ↪ W3) (a : W3) :
-    #(LocalCode r a) ≤ ℵ_ 2 := mk_localCode_le_gen r a
-
 theorem mk_unionRanks_le_gen {B : Type} (hGCH : GCH)
     (r : SmallUnionCode.Code W1 B ↪ W3) (a : W3) :
     #(Set.range (fun c : W1 → {c // r c < a} =>
@@ -101,19 +96,6 @@ theorem exists_unionBound_gen {B : Type} (hGCH : GCH)
   obtain ⟨b, hb⟩ := not_isCofinal_iff.mp (fun hc => hsmall.not_ge (Order.cof_le hc))
   exact ⟨b, fun c => hb _ ⟨c, rfl⟩⟩
 
-theorem exists_unionBound (hGCH : GCH) (r : Code ↪ W3) (a : W3) :
-    ∃ b : W3, ∀ c : W1 → LocalCode r a,
-      r (SmallUnionCode.union (fun i => (c i).val)) < b :=
-  exists_unionBound_gen hGCH r a
-
-noncomputable def unionBound (hGCH : GCH) (r : Code ↪ W3) (a : W3) : W3 :=
-  (exists_unionBound hGCH r a).choose
-
-theorem unionBound_spec (hGCH : GCH) (r : Code ↪ W3) (a : W3)
-    (c : W1 → LocalCode r a) :
-    r (SmallUnionCode.union (fun i => (c i).val)) < unionBound hGCH r a :=
-  (exists_unionBound hGCH r a).choose_spec c
-
 theorem union_rank_lt_gen {B : Type} (hGCH : GCH)
     (r : SmallUnionCode.Code W1 B ↪ W3) {a : W3}
     (ha : ErdosRadoGCHAsym.IsOmegaTwoSup a)
@@ -128,13 +110,6 @@ theorem union_rank_lt_gen {B : Type} (hGCH : GCH)
       (by rintro _ ⟨i, rfl⟩; exact hc i)
   exact ((exists_unionBound_gen hGCH r b).choose_spec
     (fun i => ⟨c i, hb _ ⟨i, rfl⟩⟩)).trans (hclosed b hba)
-
-theorem union_rank_lt_of_closedUnder (hGCH : GCH) (r : Code ↪ W3)
-    {a : W3} (ha : ErdosRadoGCHAsym.IsOmegaTwoSup a)
-    (hclosed : ClubClosure.ClosedUnder (unionBound hGCH r) a)
-    (c : W1 → Code) (hc : ∀ i, r (c i) < a) :
-    r (SmallUnionCode.union c) < a :=
-  union_rank_lt_gen hGCH r ha hclosed c hc
 
 theorem exists_club_taggedCut {K : Type} [Countable K] (hGCH : GCH)
     (r : SmallUnionCode.Code W1 (K × W3) ↪ W3) (atms : K × W3 → Set W3) :

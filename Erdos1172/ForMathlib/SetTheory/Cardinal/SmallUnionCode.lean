@@ -86,7 +86,4 @@ theorem mk_code_le {μ κ : Cardinal.{0}}
         (harity n)).trans hpower)
     _ = κ := Cardinal.mul_eq_self hκ
 
-/-- The represented sets, retaining explicit codes for subsequent reflection. -/
-def family (atoms : B → Set V) : Set (Set V) := Set.range (eval (I := I) atoms)
-
 end SmallUnionCode

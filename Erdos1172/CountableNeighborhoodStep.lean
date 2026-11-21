@@ -50,26 +50,6 @@ def atoms (col : Sym2 W3 → ℕ) : OmegaAtom → Set W3
 def eval (col : Sym2 W3 → ℕ) : OmegaCode → Set W3 :=
   SmallUnionCode.eval (atoms col)
 
-abbrev LocalCode (r : OmegaCode ↪ W3) (a : W3) := {c : OmegaCode // r c < a}
-
-theorem mk_LocalCode_le (r : OmegaCode ↪ W3) (a : W3) :
-    #(LocalCode r a) ≤ ℵ_ 2 := mk_localCode_le_gen r a
-
-theorem exists_unionBound (hGCH : GCH) (r : OmegaCode ↪ W3) (a : W3) :
-    ∃ b : W3, ∀ c : W1 → LocalCode r a,
-      r (SmallUnionCode.union (fun i => (c i).val)) < b :=
-  exists_unionBound_gen hGCH r a
-
-noncomputable def unionBound (hGCH : GCH) (r : OmegaCode ↪ W3) (a : W3) : W3 :=
-  (exists_unionBound hGCH r a).choose
-
-theorem union_rank_lt_of_closedUnder (hGCH : GCH) (r : OmegaCode ↪ W3)
-    {a : W3} (ha : ErdosRadoGCHAsym.IsOmegaTwoSup a)
-    (hclosed : ClubClosure.ClosedUnder (unionBound hGCH r) a)
-    (c : W1 → OmegaCode) (hc : ∀ i, r (c i) < a) :
-    r (SmallUnionCode.union c) < a :=
-  union_rank_lt_gen hGCH r ha hclosed c hc
-
 structure OmegaGoodCut (r : OmegaCode ↪ W3) (col : Sym2 W3 → ℕ) (a : W3) : Prop where
   isOmegaTwoSup : ErdosRadoGCHAsym.IsOmegaTwoSup a
   empty_lt : r SmallUnionCode.empty < a

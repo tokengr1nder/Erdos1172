@@ -56,8 +56,6 @@ instance conditionInhabited : Inhabited (Condition α) := ⟨⊤⟩
 @[simp] theorem le_iff_prefix {p q : Condition α} :
     p ≤ q ↔ q.entries <+: p.entries := Iff.rfl
 
-def cone (p : Condition α) : Set (Condition α) := Set.Iic p
-
 def Compatible (p q : Condition α) : Prop := ∃ r, r ≤ p ∧ r ≤ q
 
 theorem compatible_iff_prefix_comparable {p q : Condition α} :

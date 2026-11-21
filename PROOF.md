@@ -31,7 +31,6 @@ Every theorem in `Erdos1172/Solution.lean` is axiom-clean, depending only on `[p
 ## 2. Bibliography and Attribution
 
 - **P. Erdős and R. Rado (1956):** *A partition calculus in set theory*, Bull. Amer. Math. Soc. **62**, 427–489 (`Erdos1172/ForMathlib/SetTheory/Ordinal/`).
-- **B. Dushnik and E. W. Miller (1941):** *Partially ordered sets*, Amer. J. Math. **63**, 600–610 (`DushnikMiller.lean`).
 - **P. Erdős and A. Hajnal (1971, 1974):** *Unsolved problems in set theory*, Proc. Sympos. Pure Math. **13.1**, 17–48; *Unsolved and solved problems in set theory*, Proc. Sympos. Pure Math. **25**, 269–287 (MR 0357122).
 - **K. Prikry (1972):** *On a problem of Erdős, Hajnal and Rado*, Discrete Math. **2**, 51–59.
 - **K. Kunen (1978):** *Saturated ideals*, J. Symbolic Logic **43**, 65–76.

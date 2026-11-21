@@ -27,6 +27,7 @@ Local changes are limited to:
 
 1. **Statement deduplication**: The first-order syntax (`DVec`, `Arity'`, `Fol.Language`, `Fol.prf`, bounded terms/formulas, `SentTheory.is_consistent`) and `L_ZFC` / `ZFC` axiom definitions shared with [Challenge.lean](../../Challenge.lean) live in [Erdos1172/Statement.lean](../../Erdos1172/Statement.lean) and are re-exported via `public import Erdos1172.Statement`, ensuring single-definition identity across the library.
 2. **Lean 4.35 module-system and Mathlib compatibility**: `module` headers, `public import` declarations, `@[expose] public section` visibility annotations, explicit model/type arguments, and updates to ordinal recursion branch names (`add_one`). Mathematical definitions and theorem statements are preserved unchanged.
+3. **Pruning**: declarations that no theorem of this package depends on (found by a reachability pass over the compiled kernel terms) and simp arguments reported unused by Lean's linter are removed. The remaining definitions and theorem statements are unchanged.
 
 ## Internal Cardinal Extensions in `Erdos1172`
 

@@ -150,19 +150,4 @@ theorem exists_bound_of_countable (s : Set W1) (hs : s.Countable) :
       (Cardinal.aleph0_lt_aleph.mpr (by norm_num))
   exact not_isCofinal_iff.mp (fun h => hcard.not_ge (Order.cof_le h))
 
-noncomputable def setValue (p : Condition) (i v : W1) : Condition where
-  stem := Function.update p.stem i (some v)
-  stem_countable := by
-    classical
-    apply (p.stem_countable.insert i).mono
-    intro j hj
-    by_cases hji : j = i
-    · exact Or.inl hji
-    · right
-      change Function.update p.stem i (some v) j ≠ none at hj
-      change p.stem j ≠ none
-      simpa only [Function.update_of_ne hji] using hj
-  side := p.side
-  side_countable := p.side_countable
-
 end Erdos1172Part3HechlerOrder

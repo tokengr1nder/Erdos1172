@@ -2751,11 +2751,6 @@ lemma exists_surjection_of_surjects_onto {x y : bSet 𝔹} {Γ : 𝔹}
       (le_inf (function_of_func'_is_function inf_le_left)
         (function_of_func'_surj_of_surj inf_le_left inf_le_right)))
 
--- src/bvm_extras.lean:1700
-def functions (x y : bSet 𝔹) : bSet 𝔹 :=
-  set_of_indicator (fun s : (bv_powerset (prod x y) : bSet 𝔹).type =>
-    is_function x y ((bv_powerset (prod x y)).func s))
-
 -- ============================================================
 -- src/bvm_extras.lean:1732-1798: function_mk' section
 -- ============================================================
@@ -3756,9 +3751,6 @@ lemma injects_into_of_subset {x y : bSet 𝔹} {Γ : 𝔹} (H : Γ ≤ x ⊆ᴮ 
 -- src/bvm_extras.lean:2475
 lemma injects_into_refl {Γ : 𝔹} {x : bSet 𝔹} : Γ ≤ injects_into x x :=
   injects_into_of_subset subset_self
-
--- src/bvm_extras.lean:2484
-def Card (y : bSet 𝔹) : 𝔹 := Ord y ⊓ ⨅ x, x ∈ᴮ y ⟹ (larger_than y x)ᶜ
 
 -- src/bvm_extras.lean:2486
 lemma is_transitive_of_mem_Ord (y x : bSet 𝔹) : Ord x ⊓ y ∈ᴮ x ≤ is_transitive y := by

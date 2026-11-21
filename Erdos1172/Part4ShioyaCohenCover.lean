@@ -65,14 +65,4 @@ def empty (hθ : 0 < θ) (b : B) (hb : b ≠ ⊥) : Condition θ B where
 
 end Condition
 
-def valueProjection (θ : Cardinal.{u}) (B : Type u) [NontrivialCompleteBooleanAlgebra B] :
-    Condition θ B →o Positive B := ⟨fun p => ⟨p.value,p.positive⟩, fun _ _ h => h.1⟩
-
-theorem valueProjection_lifts : ForcingCover.Lifts (valueProjection θ B) :=
-  fun p b hb => ⟨p.withValue b.val b.property, p.withValue_le b.val b.property hb, le_rfl⟩
-
-def firstStageHom (θ : Cardinal.{u}) (B : Type u) [NontrivialCompleteBooleanAlgebra B] :
-    CompleteLatticeHom B (Completion (Condition θ B)) :=
-  (ForcingCover.booleanHom (valueProjection θ B) valueProjection_lifts).comp Erdos1172PositiveBoolean.completionHom
-
 end Erdos1172Shioya.CohenCover

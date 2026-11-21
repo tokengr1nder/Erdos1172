@@ -80,23 +80,6 @@ theorem nonneighbors_small (ha : GoodCut r G H a) (b : Bool) {x : W3}
   simpa only [eval_neighborhoodCode, Set.compl_setOf] using
     named_compl_small (c := neighborhoodCode b x) ha (ha.atom_lt _ x hx) (by rwa [eval_neighborhoodCode])
 
-theorem exists_extension (ha : GoodCut r G H a) (b : Bool)
-    (s : Set W3) (hs : ¬Small r G H a s) (hsBelow : s ⊆ Set.Iio a)
-    (hsColor : ∀ x ∈ s, (colorGraph G H b).Adj x a)
-    (selected : Set W3) (hselected : selected ⊆ s) (hcard : #selected < ℵ_ 2) :
-    ∃ y ∈ s, (∀ x ∈ selected, x < y) ∧
-      ∀ x ∈ selected, (colorGraph G H b).Adj x y := by
-  obtain ⟨cutoff, hcutoff, hbound⟩ :=
-    ErdosRadoGCHAsym.exists_strict_bound_of_small_of_IsOmegaTwoSup ha.isOmegaTwoSup
-      (mk_le_alephOne_of_lt_alephTwo hcard) (fun x hx => hsBelow (hselected hx))
-  have hsmall : Small r G H a ((⋃ x : selected, {y | ¬(colorGraph G H b).Adj x.val y}) ∪ Set.Iic cutoff) :=
-    union_small ha (iUnion_small ha _ hcard fun x =>
-      nonneighbors_small ha b (hsBelow (hselected x.property)) (hsColor x.val (hselected x.property)))
-      (bounded_interval_small ha hcutoff)
-  obtain ⟨y, hys, hy⟩ := Set.not_subset.mp fun h => hs (small_mono h hsmall)
-  exact ⟨y, hys, fun x hx => (hbound x hx).trans (lt_of_not_ge fun h => hy (Or.inr h)),
-    fun x hx => Classical.byContradiction fun hxy => hy (Or.inl (Set.mem_iUnion.mpr ⟨⟨x, hx⟩, hxy⟩))⟩
-
 theorem exists_core (ha : GoodCut r G H a) (b : Bool)
     (s : Set W3) (hs : ¬Small r G H a s) (hsBelow : s ⊆ Set.Iio a)
     (hsColor : ∀ x ∈ s, (colorGraph G H b).Adj x a) :
