@@ -4,7 +4,7 @@ Licensed under the Apache License, Version 2.0.
 -/
 module
 
-public import Erdos1172.Part3RelationalDecisionFusion
+public import Erdos1172.Part3CountableDecisionFusion
 public import Erdos1172.Part3LocalCountableIntersection
 
 @[expose] public section

@@ -5,7 +5,7 @@ Licensed under the Apache License, Version 2.0.
 module
 
 public import Erdos1172.Part3NamedAvoidance
-public import Erdos1172.Part3ConstrainedDecisionFusion
+public import Erdos1172.Part3CountableDecisionFusion
 
 @[expose] public section
 
@@ -47,7 +47,7 @@ theorem mk_active_le (index : Local r a ↪ W1) (i : W1) : #(Active index i) ≤
     ⟨fun c => ⟨index c.val, c.property⟩,
       fun _ _ h => Subtype.ext (index.injective (congrArg Subtype.val h))⟩
   exact (Cardinal.mk_le_of_injective e.injective).trans
-    (Erdos1172Part3CountableDecisionFusion.mk_Iio_W1_le_aleph0 i)
+    (Erdos1172Part3RelationalDecisionFusion.mk_Iio_W1_le_aleph0 i)
 
 theorem exists_extension_controlled (hclosed : CountablyClosed P)
     (ha : GoodCut r σ H source a) (b : Bool) (U : RegularName P W2)

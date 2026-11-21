@@ -4,7 +4,7 @@ Licensed under the Apache License, Version 2.0.
 -/
 module
 
-public import Erdos1172.Part3ConstrainedDecisionFusion
+public import Erdos1172.Part3DecisionSelection
 
 @[expose] public section
 
@@ -14,7 +14,8 @@ public import Erdos1172.Part3ConstrainedDecisionFusion
 Labels need not have a linear order, and the relation between two labels
 may depend on the current condition. Countable extension and persistence
 supply an omegaOne family of coherent decisions. No final omegaOne lower
-bound is used.
+bound is used. The clique versions in `Part3ConstrainedDecisionFusion` and
+`Part3CountableDecisionFusion` are special cases.
 -/
 
 open Cardinal Ordinal Set Order
@@ -25,7 +26,11 @@ open ErdosRadoCHAsym (W1)
 open Erdos1172Part3FunctionDecisions (FunctionDecisions)
 open Erdos1172Part3ClosedDecisionSystem (CountablyClosed)
 open Erdos1172Part3DecisionSelection (exists_function_decisions_of_dense)
-open Erdos1172Part3CountableDecisionFusion (mk_Iio_W1_le_aleph0)
+
+theorem mk_Iio_W1_le_aleph0 (i : W1) : #(Set.Iio i) ≤ ℵ₀ := by
+  apply Cardinal.lt_aleph_one_iff.mp
+  simpa only [W1, Cardinal.mk_toType, Ordinal.card_omega] using
+    Cardinal.mk_Iio_lt i (by simp [W1])
 
 variable {P L : Type} [Preorder P]
 
