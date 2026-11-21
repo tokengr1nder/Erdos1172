@@ -2,15 +2,13 @@
 
 Author: **Tokengrinder** ([GitHub: tokengr1nder](https://github.com/tokengr1nder))
 
-This standalone Lean 4 development formalizes Parts (ii), (iii), and (iv) of [Erdős Problem 1172](https://www.erdosproblems.com/1172) together with a countable-color partial step toward the original Part (i), assembled from Baumgartner–Hajnal–Todorčević (`[BHT93, p. 2]`, [`arXiv:math/9311207`](https://arxiv.org/abs/math/9311207)), the 1999 Budapest conference booklet *Some of Paul's favorite problems* (`[Va99, 7.87]`, p. 13), and Erdős–Hajnal (`[ErHa74, p. 272]`):
+This standalone Lean 4 development formalizes Parts (ii), (iii), and (iv) of [Erdős Problem 1172](https://www.erdosproblems.com/1172), assembled from Baumgartner–Hajnal–Todorčević (`[BHT93, p. 2]`, [`arXiv:math/9311207`](https://arxiv.org/abs/math/9311207)), the 1999 Budapest conference booklet *Some of Paul's favorite problems* (`[Va99, 7.87]`, p. 13), and Erdős–Hajnal (`[ErHa74, p. 272]`):
 
 1. **Parts (ii) and (iii) — new mathematical results:** Proved unconditionally in $\mathrm{ZFC} + \mathrm{GCH}$ (`Cardinal.GCH`), establishing
    $$\omega_3 \to (\omega_2 + \omega_1,\, \omega_2 + \omega)^2 \qquad\text{and}\qquad \omega_2 \to (\omega_1^{\omega + 2} + 2,\, \omega_1 + 2)^2.$$
    Both statements match `[BHT93, p. 2]` and `[Va99, 7.87]` verbatim, lie strictly beyond Theorems 3.1 and 4.1 of `[BHT93]`, and were open in the set-theory literature.
 2. **Part (iv) — first formalisation of the known consistency result for $\omega_1 + \omega$:** Erdős and Hajnal (`[ErHa74, p. 272]`, revising `[ErHa71, Problem 10/B]` after Prikry 1972 and Hajnal showed $\omega_2 \not\to [\omega_1 + \omega]^2_{\aleph_1}$ is consistent with $\mathrm{GCH}$ and holds in $L$) asked whether $\omega_2 \to (\omega_1 + \omega)_2^2$, or even $\omega_2 \to (\xi)_2^2$ for all $\xi < \omega_2$, is consistent with $\mathrm{GCH}$. Consistency of $\mathrm{ZFC} + \mathrm{GCH} + \omega_2 \to (\omega_1 + \omega)_2^2$ relative to a huge cardinal was established by **Laver (1982)** ($\forall \alpha < \omega_2,\, \omega_2 \to (\omega_1 \cdot 2 + 1, \alpha)^2$) and strengthened by **Foreman–Hajnal (2003)** ($\forall \alpha < \omega_2,\, \omega_2 \to (\omega_1^2 + 1, \alpha)^2$). We give the **first machine-checked formalisation** of this consistency result for the $\omega_1 + \omega$ case: relative to a huge cardinal (`IsHugeWithTarget κ θ` + ground tail $\mathrm{GCH}$ at $\ge \theta$, or `Cardinal.GCH` + `∃ κ, IsHugeCardinal κ`), the first-order theory $\mathrm{ZFC} + \mathrm{GCH} + \omega_2 \to (\omega_1 + \omega, \omega_1 + \omega)^2$ (`gchPart4Theory`) is syntactically consistent. The stronger simultaneous all-target question $\forall \xi < \omega_2,\, \omega_2 \to (\xi)_2^2$ under $\mathrm{GCH}$ (`[Va99, 7.86]`, [Erdős Problem 1170](https://www.erdosproblems.com/1170)) remains **open** and is not addressed here.
-3. **Partial step toward the open original Part (i):** In `[BHT93, p. 2]` (cropped at the right margin of `[Va99, 7.87]` immediately after `\omega_3 \to (\omega_2`), the original Part (i) problem asks under $\mathrm{GCH}$ whether **$\omega_3 \to (\omega_2 + 2)^2_\omega$** holds for countably infinitely many colors. The `erdosproblems.com/1172` cropped-scan binary reconstruction is omitted from this publication, and the original **$\omega_3 \to (\omega_2 + 2)^2_\omega$ under $\mathrm{GCH}$ remains open**. In its place we publish as a **partial step** toward the original Part (i) the weaker countable-color result proved by our `< \aleph_2$-complete neighborhood-ideal machinery ([Erdos1172/CountableNeighborhoodStep.lean](Erdos1172/CountableNeighborhoodStep.lean)):
-   $$\mathrm{GCH} \;\Longrightarrow\; \omega_3 \to (\omega_2 + 1)^2_\omega,$$
-   which **also follows from the Erdős–Rado theorem** (`[ErRa56]`; `[BHT93, Theorem 2.1]`: $(2^{<\kappa})^+ \to (\kappa + 1)^2_\mu$ for $\mu < \kappa$).
+3. **Original Part (i) (open) and unselected $\omega_2 + 1$ remark:** In `[BHT93, p. 2]` (cropped at the right margin of `[Va99, 7.87]` immediately after `\omega_3 \to (\omega_2`), the original Part (i) problem asks under $\mathrm{GCH}$ whether **$\omega_3 \to (\omega_2 + 2)^2_\omega$** holds for countably infinitely many colors. The `erdosproblems.com/1172` cropped-scan binary reconstruction is omitted from this publication, and the original **$\omega_3 \to (\omega_2 + 2)^2_\omega$ under $\mathrm{GCH}$ remains open** and is not claimed. As an unselected remark in [Erdos1172/CountableNeighborhoodStep.lean](Erdos1172/CountableNeighborhoodStep.lean) (`omegaThree_to_omegaTwo_add_one_countable_of_gch`), our $< \aleph_2$-complete countable-color neighborhood ideal on $\omega_3$ recovers the known $\omega_2 + 1$ relation $\mathrm{GCH} \Rightarrow \omega_3 \to (\omega_2 + 1)^2_\omega$ due to **Erdős and Rado** (`[ErRa56]`; `[BHT93, Theorem 2.1]`: $(2^{<\kappa})^+ \to (\kappa + 1)^2_\mu$ for $\mu < \kappa$).
 
 Every theorem in [Erdos1172/Solution.lean](Erdos1172/Solution.lean) is free of `sorry` and custom axioms, depending solely on Lean's three standard classical axioms `[propext, Classical.choice, Quot.sound]`.
 
@@ -40,22 +38,9 @@ theorem Erdos1172.erdos_1172.parts.iv {κ θ : Cardinal.{0}}
     (hHuge : Erdos1172GroundUltrapower.IsHugeWithTarget κ θ)
     (tail : ∀ μ : Cardinal.{0}, θ ≤ μ → (2 : Cardinal.{0}) ^ μ = Order.succ μ) :
     Erdos1172Part4InternalGCHTheory.gchPart4Theory.is_consistent
-
-/-- Partial step toward original [BHT93, p. 2] Part (i) (ω₃ → (ω₂ + 1)²_ω under GCH):
-proved here via our < ℵ₂-complete countable-color neighborhood-ideal machinery, and
-also entailed by Erdős–Rado ([ErRa56]; [BHT93, Theorem 2.1]). The original
-ω₃ → (ω₂ + 2)²_ω under GCH remains open. -/
-theorem Erdos1172.erdos_1172.variants.part1_omega_two_add_one (hGCH : Cardinal.GCH) :
-    OrdinalCountableRamsey (ω_ 3 : Ordinal.{0}) (ω_ 2 + 1)
-
-/-- Combined summary theorem under GCH for the ω₃ → (ω₂ + 1)²_ω partial step and Parts (ii)–(iv). -/
-theorem Erdos1172.erdos_1172.variants.parts_ii_iii_iv_and_part1_step (hGCH : Cardinal.GCH) :
-    (Erdos1172.Part1CountableStep.{0} ∧ Erdos1172.Part2.{0} ∧ Erdos1172.Part3.{0}) ∧
-    ((∃ κ : Cardinal.{0}, Erdos1172GroundUltrapower.IsHugeCardinal κ) →
-      Erdos1172Part4InternalGCHTheory.gchPart4Theory.is_consistent)
 ```
 
-In addition, [Erdos1172/Solution.lean](Erdos1172/Solution.lean) provides universe-polymorphic `Ordinal.{u}` liftings `Erdos1172.erdos_1172.part2`, `Erdos1172.erdos_1172.part3`, and `Erdos1172.erdos_1172.variants.part1_omega_two_add_one_univ`, together with convenience aliases `Erdos1172.exact_parts23_and_part1_step` and `Erdos1172.exact_parts23_part1_step_and_gchPart4_consistency_of_huge`.
+In addition, [Erdos1172/Solution.lean](Erdos1172/Solution.lean) provides universe-polymorphic `Ordinal.{u}` liftings `Erdos1172.erdos_1172.part2` and `Erdos1172.erdos_1172.part3`, together with convenience aliases `Erdos1172.exact_parts23` and `Erdos1172.exact_parts23_and_gchPart4_consistency_of_huge` (and [Erdos1172/CountableNeighborhoodStep.lean](Erdos1172/CountableNeighborhoodStep.lean) records the unselected Erdős–Rado `ω₂ + 1` remark `Erdos1172CountableNeighborhoodStep.omegaThree_to_omegaTwo_add_one_countable_of_gch`).
 
 ---
 
@@ -65,7 +50,7 @@ In addition, [Erdos1172/Solution.lean](Erdos1172/Solution.lean) provides univers
 
 | Item | Primary Source & Exact Original Wording | Status & Contribution Here |
 |---|---|---|
-| **Original Part (i)** | **`[BHT93, p. 2]`**: $\mathrm{GCH} \Rightarrow \omega_3 \to (\omega_2 + 2)^2_\omega$ (cropped in **`[Va99, 7.87]`** after `\omega_3 \to (\omega_2`; `erdosproblems.com/1172`'s binary reconstruction is omitted here). | **Original $\omega_3 \to (\omega_2 + 2)^2_\omega$ under $\mathrm{GCH}$ remains OPEN.** We publish the weaker countable-color **partial step** $\mathrm{GCH} \Rightarrow \omega_3 \to (\omega_2 + 1)^2_\omega$ (`erdos_1172.variants.part1_omega_two_add_one`) proved by our neighborhood-ideal machinery, which **also follows from Erdős–Rado (`[BHT93, Theorem 2.1]`)**. |
+| **Original Part (i)** | **`[BHT93, p. 2]`**: $\mathrm{GCH} \Rightarrow \omega_3 \to (\omega_2 + 2)^2_\omega$ (cropped in **`[Va99, 7.87]`** after `\omega_3 \to (\omega_2`; `erdosproblems.com/1172`'s binary reconstruction is omitted here). | **Original $\omega_3 \to (\omega_2 + 2)^2_\omega$ under $\mathrm{GCH}$ remains OPEN** (not selected). `CountableNeighborhoodStep.lean` includes only as an unselected remark our neighborhood-ideal proof of $\mathrm{GCH} \Rightarrow \omega_3 \to (\omega_2 + 1)^2_\omega$, crediting **Erdős–Rado (`[ErRa56]`; `[BHT93, Theorem 2.1]`)**. |
 | **Part (ii)** | **`[BHT93, p. 2]`** & **`[Va99, 7.87]`** (verbatim, intact): $\mathrm{GCH} \Rightarrow \omega_3 \to (\omega_2 + \omega_1, \omega_2 + \omega)^2$. | **Previously open** in set theory (`[BHT93]`, Larson 2017, Komjáth 2025). **New proof in $\mathrm{ZFC} + \mathrm{GCH}$ (`erdos_1172.parts.ii`).** |
 | **Part (iii)** | **`[BHT93, p. 2]`** & **`[Va99, 7.87]`** (verbatim, intact): $\mathrm{GCH} \Rightarrow \omega_2 \to (\omega_1^{\omega+2} + 2, \omega_1 + 2)^2$. | **Previously open** in set theory (`[BHT93]`, Larson 2017, Komjáth 2025). **New proof in $\mathrm{ZFC} + \mathrm{GCH}$ (`erdos_1172.parts.iii`).** |
 | **Part (iv)** | **`[ErHa74, p. 272]`** (revising `[ErHa71, Problem 10/B]`): consistency with $\mathrm{GCH}$ of $\omega_2 \to (\omega_1 + \omega)_2^2$, or $\forall \xi < \omega_2,\, \omega_2 \to (\xi)_2^2$. | $\omega_1 + \omega$ case settled mathematically from a huge cardinal by **Laver (1982)** and **Foreman–Hajnal (2003)**; **first formalisation here (`erdos_1172.parts.iv`)**. Stronger $\forall \xi < \omega_2,\, \omega_2 \to (\xi)_2^2$ form remains **open** and is not addressed. |
@@ -98,14 +83,12 @@ lake build Challenge Erdos1172
 lake env lean --trust=0 audit/Statement.lean
 ```
 
-Expected axiom output from `audit/Statement.lean` for all five Comparator declarations:
+Expected axiom output from `audit/Statement.lean` for all three Comparator declarations:
 
 ```text
 'Erdos1172.erdos_1172.parts.ii' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Erdos1172.erdos_1172.parts.iii' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Erdos1172.erdos_1172.parts.iv' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Erdos1172.erdos_1172.variants.part1_omega_two_add_one' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Erdos1172.erdos_1172.variants.parts_ii_iii_iv_and_part1_step' depends on axioms: [propext, Classical.choice, Quot.sound]
 ```
 
 ### Independent Kernel Replay and Comparator Check

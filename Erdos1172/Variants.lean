@@ -10,11 +10,10 @@ public import Erdos1172.ForMathlib.SetTheory.Ordinal.PartitionRelationAPI
 @[expose] public section
 
 /-!
-# Consequences and order bounds for Erdős Problem 1172
+# Order bound for the Part (iii) target in Erdős Problem 1172
 
-This file records unconditional order bounds for Parts 2--3 and the partial step toward
-original Part 1, together with the sharp elementary weakenings obtained by replacing either
-binary target by `2`.
+This file records the unconditional strict upper bound `(ω_ 1) ^ (ω + 2) + 2 < ω_ 2` for the
+large red target in Part (iii).
 -/
 
 open Cardinal Ordinal

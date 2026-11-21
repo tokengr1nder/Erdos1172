@@ -15,28 +15,26 @@ public import Erdos1172.Part4AnonymousInternalLevyValuation
 # Solution Entrypoint for Erdős Problem 1172
 
 This module assembles the proved endpoints for [Erdős Problem 1172](https://www.erdosproblems.com/1172),
-matching the five Comparator declarations in `Challenge.lean` (`comparator.json`) as well as
+matching the three Comparator declarations in `Challenge.lean` (`comparator.json`) as well as
 universe-polymorphic and audit aliases:
 
 * **New GCH results (`[BHT93, p. 2]`, `[Va99, 7.87]` — previously open):**
   * `Erdos1172.erdos_1172.parts.ii` : `GCH → ω₃ → (ω₂ + ω₁, ω₂ + ω)²`
   * `Erdos1172.erdos_1172.parts.iii` : `GCH → ω₂ → (ω₁^(ω + 2) + 2, ω₁ + 2)²`
 * **Part (iv) (`[ErHa74, p. 272]` — first formalisation of Laver 1982 / Foreman–Hajnal 2003):**
-  * `Erdos1172.erdos_1172.parts.iv` : `IsHugeWithTarget κ θ → (∀ μ ≥ θ, 2^μ = μ⁺) → Con(ZFC + GCH + ω₂ → (ω₁ + ω)₂²)`
+  * `Erdos1172.erdos_1172.parts.iv` :
+    `IsHugeWithTarget κ θ → (∀ μ ≥ θ, 2^μ = μ⁺) → Con(ZFC + GCH + ω₂ → (ω₁ + ω)₂²)`
     (for the `ω₁ + ω` case; the stronger simultaneous `∀ ξ < ω₂, ω₂ → (ξ)²_2` form is open).
-* **Partial step toward the open original Part (i) (`[BHT93, p. 2]`, `[Va99, 7.87]`):**
-  * `Erdos1172.erdos_1172.variants.part1_omega_two_add_one` : `GCH → ω₃ → (ω₂ + 1)²_ω`
-    (`OrdinalCountableRamsey (ω_ 3) (ω_ 2 + 1)`), proved via our `< ℵ₂`-complete countable-color
-    neighborhood-ideal machinery (`Erdos1172CountableNeighborhoodStep`); this weaker countable-color
-    relation also follows from the Erdős–Rado theorem (`ErRa56`; `BHT93`, Theorem 2.1). The
-    original `[BHT93, p. 2]` Part (i) question `ω₃ → (ω₂ + 2)²_ω` under `GCH` remains **open**
-    (and `erdosproblems.com/1172`'s cropped-scan binary reconstruction is omitted).
-* **Combined summary & aliases:**
-  * `Erdos1172.erdos_1172.variants.parts_ii_iii_iv_and_part1_step` : combined `GCH` + huge-cardinal
-    summary theorem for Parts (ii)–(iv) and the `ω₃ → (ω₂ + 1)²_ω` partial step
-  * `Erdos1172.erdos_1172.part2`, `erdos_1172.part3`, and
-    `Erdos1172.erdos_1172.variants.part1_omega_two_add_one_univ` : universe-polymorphic
-    `Ordinal.{u}` liftings
+* **Scope note on original Part (i) (`[BHT93, p. 2]`, `[Va99, 7.87]` — open):**
+  * The original `[BHT93, p. 2]` Part (i) question `ω₃ → (ω₂ + 2)²_ω` under `GCH` remains **open**
+    (and `erdosproblems.com/1172`'s cropped-scan binary reconstruction is omitted). As an
+    unselected remark, `Erdos1172CountableNeighborhoodStep.omegaThree_to_omegaTwo_add_one_countable_of_gch`
+    records our `< ℵ₂`-complete countable-color neighborhood-ideal proof of `GCH → ω₃ → (ω₂ + 1)²_ω`,
+    which is due to Erdős and Rado (`[ErRa56]`; `[BHT93, Theorem 2.1]`).
+* **Universe-polymorphic liftings & combined aliases:**
+  * `Erdos1172.erdos_1172.part2` and `Erdos1172.erdos_1172.part3` : universe-polymorphic
+    `Ordinal.{u}` liftings of Parts (ii) and (iii)
+  * `Erdos1172.exact_parts23` and `Erdos1172.exact_parts23_and_gchPart4_consistency_of_huge`
 -/
 
 namespace Erdos1172
@@ -55,20 +53,10 @@ theorem erdos_1172.parts.iii (hGCH : Cardinal.GCH) :
     OrdinalRamsey (ω_ 2 : Ordinal.{0}) (ω_ 1 ^ (ω + 2) + 2) (ω_ 1 + 2) :=
   Erdos1172Part3Solution.part3_of_gch hGCH
 
-/-- **Partial step toward original `[BHT93, p. 2]` Part (i)** (`ω₃ → (ω₂ + 1)²_ω` under `GCH`):
-every countable-color pair coloring `Sym2 (ω_ 3).ToType → ℕ` admits a monochromatic subset of
-order type `ω₂ + 1`. Proved here via our `< ℵ₂`-complete countable-color neighborhood-ideal
-machinery (`Erdos1172CountableNeighborhoodStep`), and also entailed by Erdős–Rado (`ErRa56`;
-`BHT93`, Theorem 2.1). The original `[BHT93, p. 2]` / `[Va99, 7.87]` Part (i) question
-`ω₃ → (ω₂ + 2)²_ω` under `GCH` remains open. -/
-theorem erdos_1172.variants.part1_omega_two_add_one (hGCH : Cardinal.GCH) :
-    OrdinalCountableRamsey (ω_ 3 : Ordinal.{0}) (ω_ 2 + 1) :=
-  Erdos1172CountableNeighborhoodStep.omegaThree_to_omegaTwo_add_one_countable_of_gch hGCH
-
-/-- Combined GCH theorem for the countable-color partial step `ω₃ → (ω₂ + 1)²_ω` and Parts (ii)–(iii). -/
-theorem exact_parts23_and_part1_step (hGCH : Cardinal.GCH) :
-    Part1CountableStep.{0} ∧ Part2.{0} ∧ Part3.{0} :=
-  ⟨erdos_1172.variants.part1_omega_two_add_one hGCH, erdos_1172.parts.ii hGCH, erdos_1172.parts.iii hGCH⟩
+/-- Combined GCH theorem for Parts (ii) and (iii). -/
+theorem exact_parts23 (hGCH : Cardinal.GCH) :
+    Part2.{0} ∧ Part3.{0} :=
+  ⟨erdos_1172.parts.ii hGCH, erdos_1172.parts.iii hGCH⟩
 
 /-- **Erdős Problem 1172, Part (iv)** (`[ErHa74, p. 272]`, `ω₁ + ω` relative consistency;
 Laver 1982, Foreman–Hajnal 2003): if `κ` is huge with target `θ` and ground `GCH` holds at
@@ -86,27 +74,18 @@ theorem exact_gchPart4Theory_is_consistent_of_hugeWithTarget {κ θ : Cardinal.{
     Erdos1172Part4InternalGCHTheory.gchPart4Theory.is_consistent :=
   erdos_1172.parts.iv hHuge tail
 
-/-- **Combined summary under `GCH`**: the countable-color partial step `ω₃ → (ω₂ + 1)²_ω`
-(toward the open original `[BHT93, p. 2]` Part (i) `ω₃ → (ω₂ + 2)²_ω`) and Parts (ii)–(iii)
-hold in `ZFC + GCH`, and if a huge cardinal exists (`∃ κ, IsHugeCardinal κ`), then
-`ZFC + GCH + ω₂ → (ω₁ + ω, ω₁ + ω)²` (`gchPart4Theory`) is syntactically consistent. -/
-theorem erdos_1172.variants.parts_ii_iii_iv_and_part1_step (hGCH : Cardinal.GCH) :
-    (Part1CountableStep.{0} ∧ Part2.{0} ∧ Part3.{0}) ∧
-    ((∃ κ : Cardinal.{0}, IsHugeCardinal κ) →
-      Erdos1172Part4InternalGCHTheory.gchPart4Theory.is_consistent) := by
-  refine ⟨exact_parts23_and_part1_step hGCH, fun hHuge => ?_⟩
+/-- Combined closed-hypothesis theorem for Parts (ii)–(iv) under `Cardinal.GCH` and
+`∃ κ, IsHugeCardinal κ`. -/
+theorem exact_parts23_and_gchPart4_consistency_of_huge
+    (hGCH : Cardinal.GCH) (hHuge : ∃ κ : Cardinal.{0}, IsHugeCardinal κ) :
+    (Part2.{0} ∧ Part3.{0}) ∧
+    Erdos1172Part4InternalGCHTheory.gchPart4Theory.is_consistent := by
+  refine ⟨exact_parts23 hGCH, ?_⟩
   obtain ⟨κ, θ, hκθ⟩ := hHuge
   have hθ : θ.IsInaccessible := hκθ.inaccessible_right
   exact erdos_1172.parts.iv hκθ fun μ hμ => by
     obtain ⟨o, rfl⟩ := Cardinal.mem_range_aleph_iff.mpr (hθ.aleph0_lt.le.trans hμ)
     rw [hGCH o, Cardinal.succ_aleph, Order.succ_eq_add_one]
-
-/-- Combined closed-hypothesis theorem under `Cardinal.GCH` and `∃ κ, IsHugeCardinal κ`. -/
-theorem exact_parts23_part1_step_and_gchPart4_consistency_of_huge
-    (hGCH : Cardinal.GCH) (hHuge : ∃ κ : Cardinal.{0}, IsHugeCardinal κ) :
-    (Part1CountableStep.{0} ∧ Part2.{0} ∧ Part3.{0}) ∧
-    Erdos1172Part4InternalGCHTheory.gchPart4Theory.is_consistent :=
-  ⟨exact_parts23_and_part1_step hGCH, (erdos_1172.variants.parts_ii_iii_iv_and_part1_step hGCH).2 hHuge⟩
 
 section UniverseLift
 
@@ -171,28 +150,12 @@ theorem ordinalRamsey_lift_iff (α β γ : Ordinal.{0}) :
       rw [← hcompl.compl_eq, SimpleGraph.compl_adj]
       exact ⟨hxy, fun hr => hedge.2 (by simpa using hr)⟩
 
-theorem ordinalCountableRamsey_lift_iff (α β : Ordinal.{0}) :
-    OrdinalCountableRamsey.{u} (Ordinal.lift.{u, 0} α) (Ordinal.lift.{u, 0} β) ↔
-    OrdinalCountableRamsey.{0} α β := by
-  obtain ⟨e⟩ := toType_lift_orderIso.{u} α
-  constructor
-  · intro h col
-    obtain ⟨n, s, hs, hst⟩ := h (fun p => col (p.map e))
-    refine ⟨n, e '' s, ?_, typeLT_image_eq_of_lift e hst⟩
-    rintro _ ⟨x, hx, rfl⟩ _ ⟨y, hy, rfl⟩ hxy
-    exact hs x hx y hy (fun h' => hxy (congrArg e h'))
-  · intro h col
-    obtain ⟨n, s, hs, hst⟩ := h (fun p => col (p.map e.symm))
-    refine ⟨n, e ⁻¹' s, fun x hx y hy hxy => ?_, by rw [typeLT_preimage_orderIso e s, hst]⟩
-    have hcol : col s(e.symm (e x), e.symm (e y)) = n :=
-      hs (e x) hx (e y) hy (fun h' => hxy (e.injective h'))
-    rwa [e.symm_apply_apply, e.symm_apply_apply] at hcol
-
 theorem lift_pow_nat (a : Ordinal.{0}) : ∀ n : ℕ,
     Ordinal.lift.{u, 0} (a ^ (n : Ordinal.{0})) = (Ordinal.lift.{u, 0} a) ^ (n : Ordinal.{u})
   | 0 => by simp
   | n + 1 => by
-      simp only [Nat.cast_add, Nat.cast_one, Ordinal.opow_add_one, Ordinal.lift_mul, lift_pow_nat a n]
+      simp only [Nat.cast_add, Nat.cast_one, Ordinal.opow_add_one, Ordinal.lift_mul,
+                 lift_pow_nat a n]
 
 theorem lift_omega_opow_omega :
     Ordinal.lift.{u, 0} ((ω_ 1 : Ordinal.{0}) ^ ω) = (ω_ 1 : Ordinal.{u}) ^ ω := by
@@ -203,7 +166,8 @@ theorem lift_omega_opow_omega :
     obtain ⟨y, hy⟩ := (Ordinal.liftInitialSeg.{u, 0}).mem_range_of_le hlt.le
     have hy' : Ordinal.lift.{u, 0} y = (ω_ 1 : Ordinal.{u}) ^ ω := hy
     rw [← hy', Ordinal.lift_lt,
-        Ordinal.lt_opow_of_isSuccLimit (Ordinal.omega_pos 1).ne' Ordinal.isSuccLimit_omega0] at hlt
+        Ordinal.lt_opow_of_isSuccLimit (Ordinal.omega_pos 1).ne'
+          Ordinal.isSuccLimit_omega0] at hlt
     obtain ⟨c, hc, hcy⟩ := hlt
     obtain ⟨n, rfl⟩ := Ordinal.lt_omega0.mp hc
     refine not_lt_of_ge (Ordinal.lift_le.mp ?_) hcy
@@ -226,19 +190,12 @@ theorem lift_omega_opow_omega_add_two :
 
 end UniverseLift
 
-/-- Universe-polymorphic (`Ordinal.{u}`) form of the partial step `GCH → ω₃ → (ω₂ + 1)²_ω`. -/
-theorem erdos_1172.variants.part1_omega_two_add_one_univ :
-    Cardinal.GCH → OrdinalCountableRamsey (ω_ 3) (ω_ 2 + 1) := by
-  intro hGCH
-  have h := (ordinalCountableRamsey_lift_iff (ω_ 3) (ω_ 2 + 1)).mpr
-    (erdos_1172.variants.part1_omega_two_add_one hGCH)
-  simpa [Ordinal.lift_omega, Ordinal.lift_ofNat, Ordinal.lift_one, Ordinal.lift_add] using h
-
 /-- Universe-polymorphic (`Ordinal.{u}`) form of Part (ii) (`[BHT93, p. 2]`, `[Va99, 7.87]`). -/
 theorem erdos_1172.part2 :
     Cardinal.GCH → OrdinalRamsey (ω_ 3) (ω_ 2 + ω_ 1) (ω_ 2 + ω) := by
   intro hGCH
-  have h := (ordinalRamsey_lift_iff (ω_ 3) (ω_ 2 + ω_ 1) (ω_ 2 + ω)).mpr (erdos_1172.parts.ii hGCH)
+  have h :=
+    (ordinalRamsey_lift_iff (ω_ 3) (ω_ 2 + ω_ 1) (ω_ 2 + ω)).mpr (erdos_1172.parts.ii hGCH)
   simpa [Ordinal.lift_omega, Ordinal.lift_ofNat, Ordinal.lift_one, Ordinal.lift_add,
          Ordinal.lift_omega0] using h
 
@@ -246,7 +203,9 @@ theorem erdos_1172.part2 :
 theorem erdos_1172.part3 :
     Cardinal.GCH → OrdinalRamsey (ω_ 2) (ω_ 1 ^ (ω + 2) + 2) (ω_ 1 + 2) := by
   intro hGCH
-  have h := (ordinalRamsey_lift_iff (ω_ 2) (ω_ 1 ^ (ω + 2) + 2) (ω_ 1 + 2)).mpr (erdos_1172.parts.iii hGCH)
+  have h :=
+    (ordinalRamsey_lift_iff (ω_ 2) (ω_ 1 ^ (ω + 2) + 2) (ω_ 1 + 2)).mpr
+      (erdos_1172.parts.iii hGCH)
   simpa [Ordinal.lift_add, lift_omega_opow_omega_add_two, Ordinal.lift_omega,
          Ordinal.lift_ofNat, Ordinal.lift_one] using h
 

@@ -23,16 +23,18 @@ problem booklet `[Va99, 7.87]`, p. 13; Erdős–Hajnal `[ErHa74, p. 272]`):
 1. **Generalized Continuum Hypothesis (`Cardinal.GCH`)**:
    - Equivalent to `∀ o, ℶ_ o = ℵ_ o` (`gch_iff_beth_eq_aleph`) and to `2 ^ κ = κ⁺` for every
      infinite cardinal `κ` (`gch_iff_infinite_two_pow_eq_succ`).
-2. **Binary & Countable-Color Ordinal Partition Relations (`OrdinalRamsey α β γ` and `OrdinalCountableRamsey α β`)**:
+2. **Binary & Countable-Color Ordinal Partition Relations (`OrdinalRamsey α β γ` and
+   `OrdinalCountableRamsey α β`)**:
    - `OrdinalRamsey α β γ` is equivalent to the standard `[α]² → {0, 1}` coloring formulation
      with strictly increasing embeddings `β.ToType ↪o α.ToType` and `γ.ToType ↪o α.ToType`
      (`ordinalRamsey_iff_pairColoring`), instantiated at Parts (ii) and (iii)
      (`parts_ii_pairColoring`, `parts_iii_pairColoring`).
    - `OrdinalCountableRamsey α β` is equivalent to the standard `[α]² → ℕ` countable-color
      formulation with strictly increasing embeddings `β.ToType ↪o α.ToType`
-     (`ordinalCountableRamsey_iff_pairColoring`), instantiated at the partial step
-     `ω₃ → (ω₂ + 1)²_ω` (`part1_omega_two_add_one_pairColoring`) toward the open original
-     `[BHT93, p. 2]` Part (i) question `ω₃ → (ω₂ + 2)²_ω`.
+     (`ordinalCountableRamsey_iff_pairColoring`), instantiated at the unselected remark
+     `ω₃ → (ω₂ + 1)²_ω` (`omegaThree_to_omegaTwo_add_one_pairColoring`, due to Erdős–Rado
+     `[ErRa56]` / `[BHT93, Theorem 2.1]`), while the original `[BHT93, p. 2]` Part (i) question
+     `ω₃ → (ω₂ + 2)²_ω` under `GCH` remains open.
 3. **Huge Cardinal Hypothesis (`IsHugeWithTarget κ θ` / `IsHugeCardinal κ`)**:
    - Automatically entails strong inaccessibility of both `κ` and `θ` (`huge_inaccessible_pair`),
      and yields the ground ultrapower elementary embedding `j : ZFSet.{0} → targetClass U`
@@ -46,8 +48,9 @@ problem booklet `[Va99, 7.87]`, p. 13; Erdős–Hajnal `[ErHa74, p. 272]`):
    - Exact two-valued (`V Prop`) Tarski realization of `fullGCHSentence` and `part4Sentence`
      (`realize_fullGCHSentence_prop`, `realize_part4Sentence_prop`).
 5. **Axiom Audit**:
-   - `#print axioms` on all five `comparator.json` endpoints and every audit theorem below
-     confirms dependence solely on `[propext, Classical.choice, Quot.sound]`.
+   - `#print axioms` on all three `comparator.json` endpoints (`parts.ii`, `parts.iii`, `parts.iv`),
+     the unselected remark `omegaThree_to_omegaTwo_add_one_countable_of_gch`, and every audit
+     theorem below confirms dependence solely on `[propext, Classical.choice, Quot.sound]`.
 -/
 
 namespace StatementAudit
@@ -173,10 +176,10 @@ theorem ordinalCountableRamsey_iff_pairColoring (α β : Ordinal.{0}) :
     · exact absurd rfl hne
     · rw [Sym2.eq_swap]; exact hf y x hgt
 
-theorem part1_omega_two_add_one_pairColoring (hGCH : Cardinal.GCH) :
+theorem omegaThree_to_omegaTwo_add_one_pairColoring (hGCH : Cardinal.GCH) :
     PairColoringCountableRamsey (ω_ 3) (ω_ 2 + 1) :=
   (ordinalCountableRamsey_iff_pairColoring _ _).mp
-    (Erdos1172.erdos_1172.variants.part1_omega_two_add_one hGCH)
+    (Erdos1172CountableNeighborhoodStep.omegaThree_to_omegaTwo_add_one_countable_of_gch hGCH)
 
 theorem parts_ii_pairColoring (hGCH : Cardinal.GCH) :
     PairColoringRamsey (ω_ 3) (ω_ 2 + ω_ 1) (ω_ 2 + ω) :=
@@ -264,29 +267,25 @@ theorem realize_part4Sentence_prop :
 #check Erdos1172.erdos_1172.parts.ii
 #check Erdos1172.erdos_1172.parts.iii
 #check Erdos1172.erdos_1172.parts.iv
-#check Erdos1172.erdos_1172.variants.part1_omega_two_add_one
-#check Erdos1172.erdos_1172.variants.parts_ii_iii_iv_and_part1_step
-#check Erdos1172.erdos_1172.variants.part1_omega_two_add_one_univ
 #check Erdos1172.erdos_1172.part2
 #check Erdos1172.erdos_1172.part3
-#check Erdos1172.exact_parts23_and_part1_step
-#check Erdos1172.exact_parts23_part1_step_and_gchPart4_consistency_of_huge
+#check Erdos1172.exact_parts23
+#check Erdos1172.exact_parts23_and_gchPart4_consistency_of_huge
+#check Erdos1172CountableNeighborhoodStep.omegaThree_to_omegaTwo_add_one_countable_of_gch
 
 #print axioms Erdos1172.erdos_1172.parts.ii
 #print axioms Erdos1172.erdos_1172.parts.iii
 #print axioms Erdos1172.erdos_1172.parts.iv
-#print axioms Erdos1172.erdos_1172.variants.part1_omega_two_add_one
-#print axioms Erdos1172.erdos_1172.variants.parts_ii_iii_iv_and_part1_step
-#print axioms Erdos1172.erdos_1172.variants.part1_omega_two_add_one_univ
 #print axioms Erdos1172.erdos_1172.part2
 #print axioms Erdos1172.erdos_1172.part3
-#print axioms Erdos1172.exact_parts23_and_part1_step
-#print axioms Erdos1172.exact_parts23_part1_step_and_gchPart4_consistency_of_huge
+#print axioms Erdos1172.exact_parts23
+#print axioms Erdos1172.exact_parts23_and_gchPart4_consistency_of_huge
+#print axioms Erdos1172CountableNeighborhoodStep.omegaThree_to_omegaTwo_add_one_countable_of_gch
 #print axioms gch_iff_beth_eq_aleph
 #print axioms gch_iff_infinite_two_pow_eq_succ
 #print axioms ordinalRamsey_iff_pairColoring
 #print axioms ordinalCountableRamsey_iff_pairColoring
-#print axioms part1_omega_two_add_one_pairColoring
+#print axioms omegaThree_to_omegaTwo_add_one_pairColoring
 #print axioms parts_ii_pairColoring
 #print axioms parts_iii_pairColoring
 #print axioms huge_inaccessible_pair

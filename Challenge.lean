@@ -5,11 +5,9 @@ Licensed under the Apache License, Version 2.0.
 module
 
 public import Mathlib.Combinatorics.SimpleGraph.Clique
-public import Mathlib.Data.Sym.Sym2
 public import Mathlib.Order.Filter.CardinalInter
 public import Mathlib.Order.Filter.Ultrafilter.Basic
 public import Mathlib.SetTheory.Cardinal.Aleph
-public import Mathlib.SetTheory.Cardinal.Continuum
 public import Mathlib.SetTheory.Ordinal.Exponential
 
 @[expose] public section
@@ -17,7 +15,7 @@ public import Mathlib.SetTheory.Ordinal.Exponential
 /-!
 # Challenge Statements for Erdős Problem 1172
 
-This self-contained Mathlib-only module states the five Comparator target theorems for
+This self-contained Mathlib-only module states the three Comparator target theorems for
 [Erdős Problem 1172](https://www.erdosproblems.com/1172), together with every definition
 appearing in their types:
 
@@ -31,15 +29,14 @@ appearing in their types:
   target `θ` (`IsHugeWithTarget κ θ`) and ground `GCH` at `≥ θ`, formalising the consistency
   theorem established by Laver (1982) and Foreman–Hajnal (2003). The stronger simultaneous
   all-target question `∀ ξ < ω₂, ω₂ → (ξ)²_2` under `GCH` (`[Va99, 7.86]`, Problem 1170) is open.
-* **Partial step toward original Part (i) (`erdos_1172.variants.part1_omega_two_add_one`):**
-  `Cardinal.GCH → ω₃ → (ω₂ + 1)²_ω` (`OrdinalCountableRamsey (ω_ 3) (ω_ 2 + 1)`), proved via our
-  `< ℵ₂`-complete countable-color neighborhood-ideal machinery and also entailed by Erdős–Rado
-  (`ErRa56`; `BHT93`, Theorem 2.1). The original un-cropped `[BHT93, p. 2]` / `[Va99, 7.87]`
-  Part (i) question `ω₃ → (ω₂ + 2)²_ω` under `GCH` remains **open** (and the cropped-scan binary
-  reconstruction on `erdosproblems.com/1172` is omitted).
-* **Combined summary (`erdos_1172.variants.parts_ii_iii_iv_and_part1_step`):** Under `Cardinal.GCH`,
-  the countable-color partial step `Part1CountableStep.{0}` and `Part2.{0}`, `Part3.{0}` hold, and
-  the existence of a huge cardinal (`∃ κ, IsHugeCardinal κ`) implies `gchPart4Theory.is_consistent`.
+* **Scope note on original Part (i) (open):**
+  In `[BHT93, p. 2]` (cropped at the right margin of `[Va99, 7.87]` after `\omega_3 \to (\omega_2`),
+  the original Part (i) question asks under `GCH` whether `ω₃ → (ω₂ + 2)²_ω` holds for countably
+  infinitely many colors; it remains **open** and is not claimed here (and the cropped-scan binary
+  reconstruction on `erdosproblems.com/1172` is omitted). As an unselected remark in
+  `Erdos1172/CountableNeighborhoodStep.lean`, our `< ℵ₂`-complete countable-color neighborhood ideal
+  on `ω₃` recovers the known `ω₂ + 1` case `GCH → ω₃ → (ω₂ + 1)²_ω` due to Erdős–Rado (`[ErRa56]`;
+  `[BHT93, Theorem 2.1]`).
 
 Definitions included below:
 
@@ -48,10 +45,10 @@ Definitions included below:
    and the first-order theory `ZFC` over `L_ZFC = {∅, pair, ω, P, ⋃, ∈}`, reproduced verbatim
    from Han–van Doorn's Flypitch foundation (`Flypitch4`).
 2. The closed parameter-free `L_ZFC`-sentences `fullGCHSentence` (`∀ κ ≥ ω, 2^|κ| = |κ|⁺`),
-   `part4Sentence` (`ω₂ → (ω₁ + ω, ω₁ + ω)²`), and `gchPart4Theory := ZFC ∪ {fullGCHSentence, part4Sentence}`.
-3. Kanamori's canonical `[θ]^{ot = κ}` huge-cardinal predicates `IsHugeWithTarget` and `IsHugeCardinal`.
-4. `Cardinal.CH`, `Cardinal.GCH`, `OrdinalRamsey`, `OrdinalCountableRamsey`, and the target
-   abbreviations `Erdos1172.Part1CountableStep`, `Part2`, `Part3`.
+   `part4Sentence` (`ω₂ → (ω₁ + ω, ω₁ + ω)²`), and
+   `gchPart4Theory := ZFC ∪ {fullGCHSentence, part4Sentence}`.
+3. Kanamori's canonical `[θ]^{ot = κ}` huge-cardinal predicate `IsHugeWithTarget`.
+4. `Cardinal.GCH` and `OrdinalRamsey`.
 -/
 
 set_option autoImplicit true
@@ -725,15 +722,9 @@ def IsHugeWithTarget (κ θ : Cardinal.{u}) : Prop :=
       CardinalInterFilter (U : Filter (HugeFiberSpace κ θ)) κ ∧
       FineOn U Subtype.val ∧
       NormalOn U Subtype.val
-
-/-- `κ` is a huge cardinal if it is huge with some target cardinal `θ > κ`. -/
-def IsHugeCardinal (κ : Cardinal.{u}) : Prop :=
-  ∃ θ : Cardinal.{u}, IsHugeWithTarget κ θ
 end Erdos1172GroundUltrapower
 
 namespace Cardinal
-/-- The Continuum Hypothesis (`2^ℵ₀ = ℵ₁`) at universe `0`. -/
-def CH : Prop := (𝔠 : Cardinal.{0}) = ℵ_ 1
 /-- The Generalized Continuum Hypothesis (`∀ o, 2^(ℵ_ o) = ℵ_(o + 1)`) at universe `0`. -/
 def GCH : Prop := ∀ o : Ordinal.{0}, (2 : Cardinal.{0}) ^ ℵ_ o = ℵ_ (Order.succ o)
 end Cardinal
@@ -746,28 +737,7 @@ def OrdinalRamsey (α β γ : Ordinal.{u}) : Prop :=
   ∀ red blue : SimpleGraph α.ToType, IsCompl red blue →
     (∃ s, red.IsClique s ∧ typeLT s = β) ∨
     (∃ s, blue.IsClique s ∧ typeLT s = γ)
-
-/-- Countable-color balanced ordinary ordinal partition relation `α → (β)²_ω`: for every
-coloring `col : Sym2 α.ToType → ℕ` of unordered pairs from `α.ToType` with `ℕ`-many colors,
-there exist a color `n : ℕ` and a subset `s : Set α.ToType` of order type `typeLT s = β`
-all of whose distinct pairs receive color `n`. -/
-def OrdinalCountableRamsey (α β : Ordinal.{u}) : Prop :=
-  ∀ col : Sym2 α.ToType → ℕ,
-    ∃ (n : ℕ) (s : Set α.ToType),
-      (∀ x ∈ s, ∀ y ∈ s, x ≠ y → col s(x, y) = n) ∧
-      typeLT s = β
 end PartitionRelation
-
-namespace Erdos1172
-/-- Countable-color partial-step target `ω₃ → (ω₂ + 1)²_ω` toward the open original
-`[BHT93, p. 2]` / `[Va99, 7.87]` Part (i) question `ω₃ → (ω₂ + 2)²_ω` under `GCH` (also
-entailed under `GCH` by Erdős–Rado / `[BHT93, Theorem 2.1]`). -/
-abbrev Part1CountableStep : Prop := OrdinalCountableRamsey (ω_ 3 : Ordinal.{u}) (ω_ 2 + 1)
-/-- Part (ii) target `ω₃ → (ω₂ + ω₁, ω₂ + ω)²` (`[BHT93, p. 2]`, `[Va99, 7.87]`). -/
-abbrev Part2 : Prop := OrdinalRamsey (ω_ 3 : Ordinal.{u}) (ω_ 2 + ω_ 1) (ω_ 2 + ω)
-/-- Part (iii) target `ω₂ → (ω₁^(ω + 2) + 2, ω₁ + 2)²` (`[BHT93, p. 2]`, `[Va99, 7.87]`). -/
-abbrev Part3 : Prop := OrdinalRamsey (ω_ 2 : Ordinal.{u}) (ω_ 1 ^ (ω + 2) + 2) (ω_ 1 + 2)
-end Erdos1172
 
 namespace Erdos1172
 
@@ -790,25 +760,6 @@ theorem erdos_1172.parts.iv {κ θ : Cardinal.{0}}
     (hHuge : Erdos1172GroundUltrapower.IsHugeWithTarget κ θ)
     (tail : ∀ μ : Cardinal.{0}, θ ≤ μ → (2 : Cardinal.{0}) ^ μ = Order.succ μ) :
     Erdos1172Part4InternalGCHTheory.gchPart4Theory.is_consistent :=
-  sorry
-
-/-- **Partial step toward original `[BHT93, p. 2]` Part (i)** (`ω₃ → (ω₂ + 1)²_ω` under `GCH`):
-every countable-color pair coloring `Sym2 (ω_ 3).ToType → ℕ` admits a monochromatic subset of
-order type `ω₂ + 1`. Proved here via our `< ℵ₂`-complete countable-color neighborhood-ideal
-machinery, and also entailed by Erdős–Rado (`ErRa56`; `BHT93`, Theorem 2.1). The original
-`[BHT93, p. 2]` / `[Va99, 7.87]` Part (i) question `ω₃ → (ω₂ + 2)²_ω` under `GCH` remains open. -/
-theorem erdos_1172.variants.part1_omega_two_add_one (hGCH : Cardinal.GCH) :
-    OrdinalCountableRamsey (ω_ 3 : Ordinal.{0}) (ω_ 2 + 1) :=
-  sorry
-
-/-- **Combined summary under `GCH`**: the countable-color partial step `ω₃ → (ω₂ + 1)²_ω`
-(toward the open original `[BHT93, p. 2]` Part (i) `ω₃ → (ω₂ + 2)²_ω`) and Parts (ii)–(iii)
-hold in `ZFC + GCH`, and if a huge cardinal exists (`∃ κ, IsHugeCardinal κ`), then
-`ZFC + GCH + ω₂ → (ω₁ + ω, ω₁ + ω)²` (`gchPart4Theory`) is syntactically consistent. -/
-theorem erdos_1172.variants.parts_ii_iii_iv_and_part1_step (hGCH : Cardinal.GCH) :
-    (Part1CountableStep.{0} ∧ Part2.{0} ∧ Part3.{0}) ∧
-    ((∃ κ : Cardinal.{0}, Erdos1172GroundUltrapower.IsHugeCardinal κ) →
-      Erdos1172Part4InternalGCHTheory.gchPart4Theory.is_consistent) :=
   sorry
 
 end Erdos1172

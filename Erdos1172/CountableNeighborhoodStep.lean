@@ -9,13 +9,14 @@ public import Erdos1172.NeighborhoodIdealCore
 @[expose] public section
 
 /-!
-# Countable-Color Neighborhood Ideal and the `ω₃ → (ω₂ + 1)²_ω` Partial Step
+# Countable-Color Neighborhood Ideal and the Unselected `ω₃ → (ω₂ + 1)²_ω` Remark
 
 In Baumgartner, Hajnal, and Todorčević (`[BHT93, p. 2]`, `arXiv:math/9311207`) and `[Va99, 7.87]`,
 the original Part (i) problem asks whether `GCH` implies `ω₃ → (ω₂ + 2)²_ω`, which remains **open**.
-This module establishes the weaker countable-color partial step `GCH → ω₃ → (ω₂ + 1)²_ω`
-(`omegaThree_to_omegaTwo_add_one_countable_of_gch`) via our `< ℵ₂`-complete neighborhood-ideal
-machinery on `ω₃` (also entailed by Erdős–Rado, `ErRa56`; `BHT93`, Theorem 2.1).
+As an unselected background remark (`omegaThree_to_omegaTwo_add_one_countable_of_gch`), this module
+notes that our `< ℵ₂`-complete neighborhood-ideal machinery on `ω₃` extends to countably many
+colors and recovers the known `ω₂ + 1` relation `GCH → ω₃ → (ω₂ + 1)²_ω` due to Erdős and Rado
+(`[ErRa56]`; `[BHT93, Theorem 2.1]`).
 -/
 
 open Cardinal Ordinal Set Function Order
@@ -124,8 +125,9 @@ theorem omegaExists_core {r : OmegaCode ↪ W3} {col : Sym2 W3 → ℕ} {a : W3}
     (omegaIUnion_small ha) (omegaBounded_small ha) (colorGraph col n)
     (omegaNonneighbors_small ha n) s hs hsBelow hsColor
 
-/-- **Partial step toward original `[BHT93, p. 2]` Part (i)**: under `GCH`, the countable-color
-`< ℵ₂`-complete neighborhood ideal on `ω₃` proves `ω₃ → (ω₂ + 1)²_ω`. -/
+/-- **Unselected remark (Erdős–Rado `[ErRa56]`; `[BHT93, Theorem 2.1]`)**: under `GCH`, the
+countable-color `< ℵ₂`-complete neighborhood ideal on `ω₃` recovers `ω₃ → (ω₂ + 1)²_ω`, while
+the original `[BHT93, p. 2]` Part (i) question `ω₃ → (ω₂ + 2)²_ω` under `GCH` remains open. -/
 theorem omegaThree_to_omegaTwo_add_one_countable_of_gch (hGCH : GCH) :
     OrdinalCountableRamsey (ω_ 3 : Ordinal.{0}) (ω_ 2 + 1) := by
   intro col

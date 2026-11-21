@@ -18,9 +18,10 @@ public import Mathlib.SetTheory.Ordinal.Exponential
 # Statement Definitions for Erdős Problem 1172
 
 This self-contained Mathlib-only module defines every object appearing in the formal
-statements of Parts (ii)–(iv) of [Erdős Problem 1172](https://www.erdosproblems.com/1172) and
-the countable-color partial step `ω₃ → (ω₂ + 1)²_ω` toward the open original Part (i)
-(`ω₃ → (ω₂ + 2)²_ω` under `GCH`), assembled from Baumgartner–Hajnal–Todorčević
+statements of Parts (ii)–(iv) of [Erdős Problem 1172](https://www.erdosproblems.com/1172)
+(together with `OrdinalCountableRamsey` for the unselected Erdős–Rado `ω₂ + 1` remark in
+`Erdos1172/CountableNeighborhoodStep.lean`; the original `[BHT93, p. 2]` Part (i) question
+`ω₃ → (ω₂ + 2)²_ω` under `GCH` remains open), assembled from Baumgartner–Hajnal–Todorčević
 (`[BHT93, p. 2]`, `arXiv:math/9311207`), the 1999 Budapest conference problem booklet
 (`[Va99, 7.87]`, p. 13), and Erdős–Hajnal (`[ErHa74, p. 272]`):
 
@@ -29,10 +30,12 @@ the countable-color partial step `ω₃ → (ω₂ + 1)²_ω` toward the open or
    and the first-order theory `ZFC` over `L_ZFC = {∅, pair, ω, P, ⋃, ∈}`, reproduced verbatim
    from Han–van Doorn's Flypitch foundation (`Flypitch4`).
 2. The closed parameter-free `L_ZFC`-sentences `fullGCHSentence` (`∀ κ ≥ ω, 2^|κ| = |κ|⁺`),
-   `part4Sentence` (`ω₂ → (ω₁ + ω, ω₁ + ω)²`), and `gchPart4Theory := ZFC ∪ {fullGCHSentence, part4Sentence}`.
-3. Kanamori's canonical `[θ]^{ot = κ}` huge-cardinal predicates `IsHugeWithTarget` and `IsHugeCardinal`.
+   `part4Sentence` (`ω₂ → (ω₁ + ω, ω₁ + ω)²`), and
+   `gchPart4Theory := ZFC ∪ {fullGCHSentence, part4Sentence}`.
+3. Kanamori's canonical `[θ]^{ot = κ}` huge-cardinal predicates `IsHugeWithTarget` and
+   `IsHugeCardinal`.
 4. `Cardinal.CH`, `Cardinal.GCH`, `OrdinalRamsey`, `OrdinalCountableRamsey`, and the target
-   abbreviations `Erdos1172.Part1CountableStep`, `Part2`, `Part3`.
+   abbreviations `Erdos1172.Part2` and `Part3`.
 -/
 
 set_option autoImplicit true
@@ -740,10 +743,6 @@ def OrdinalCountableRamsey (α β : Ordinal.{u}) : Prop :=
 end PartitionRelation
 
 namespace Erdos1172
-/-- Countable-color partial-step target `ω₃ → (ω₂ + 1)²_ω` toward the open original
-`[BHT93, p. 2]` / `[Va99, 7.87]` Part (i) question `ω₃ → (ω₂ + 2)²_ω` under `GCH` (also
-entailed under `GCH` by Erdős–Rado / `[BHT93, Theorem 2.1]`). -/
-abbrev Part1CountableStep : Prop := OrdinalCountableRamsey (ω_ 3 : Ordinal.{u}) (ω_ 2 + 1)
 /-- Part (ii) target `ω₃ → (ω₂ + ω₁, ω₂ + ω)²` (`[BHT93, p. 2]`, `[Va99, 7.87]`). -/
 abbrev Part2 : Prop := OrdinalRamsey (ω_ 3 : Ordinal.{u}) (ω_ 2 + ω_ 1) (ω_ 2 + ω)
 /-- Part (iii) target `ω₂ → (ω₁^(ω + 2) + 2, ω₁ + 2)²` (`[BHT93, p. 2]`, `[Va99, 7.87]`). -/
