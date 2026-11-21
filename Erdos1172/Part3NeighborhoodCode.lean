@@ -28,9 +28,7 @@ theorem cof_W2 : Order.cof W2 = ℵ_ 2 := by
 instance : IsRegularCardinalOrder W2 where
   type_lt_le_ord_cof := by rw [cof_W2, Cardinal.ord_aleph, Ordinal.type_toType]
 
-theorem alephZero_lt_cof_W2 : ℵ₀ < Order.cof W2 := by
-  rw [cof_W2]
-  exact Cardinal.aleph0_lt_aleph.mpr (by norm_num)
+theorem alephZero_lt_cof_W2 : ℵ₀ < Order.cof W2 := by simp_all
 
 theorem mk_Code_le (hGCH : GCH) : #Code ≤ ℵ_ 2 := by
   refine SmallUnionCode.mk_code_le (μ := ℵ₀) Cardinal.one_le_aleph0

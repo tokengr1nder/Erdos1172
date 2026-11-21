@@ -140,12 +140,7 @@ def track (p : Condition) (f : W1 → W1) : Condition where
   side := insert f p.side
   side_countable := p.side_countable.insert f
 
-theorem cof_W1 : Order.cof W1 = ℵ_ 1 := by
-  have hreg : (ℵ_ 1 : Cardinal.{0}).IsRegular := by
-    simpa using Cardinal.isRegular_aleph_add_one (0 : Ordinal.{0})
-  calc
-    Order.cof W1 = (ω_ 1 : Ordinal.{0}).cof := Ordinal.cof_toType _
-    _ = ℵ_ 1 := by simpa only [Cardinal.ord_aleph] using hreg.cof_ord
+theorem cof_W1 : Order.cof W1 = ℵ_ 1 := by simp_all
 
 theorem exists_bound_of_countable (s : Set W1) (hs : s.Countable) :
     ∃ b : W1, ∀ i ∈ s, i < b := by

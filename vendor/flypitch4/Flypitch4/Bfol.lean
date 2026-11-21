@@ -107,12 +107,11 @@ lemma boolean_realize_term_subst (v : ℕ → S) :
       (subst_realize v (boolean_realize_term v (lift_term s m) DVec.nil) m) t xs =
     boolean_realize_term v (subst_term t s m) xs
   | _, m, preterm.var k, s, _ => by
-      simp only [boolean_realize_term, subst_term, subst_realize_lt, subst_realize_gt,
-                 subst_realize_var_eq]
+      simp only [boolean_realize_term, subst_term, subst_realize_gt]
       rcases Nat.lt_trichotomy k m with h | h | h
-      · simp [h, Nat.lt_asymm h]
+      · simp [h]
       · subst h; simp
-      · simp [h, Nat.lt_asymm h]
+      · simp [h]
   | _, _, preterm.func _, _, _ => rfl
   | _, m, preterm.app t₁ t₂, s, xs => by
       simp only [boolean_realize_term, subst_term]
@@ -129,7 +128,7 @@ lemma boolean_realize_term_subst_lift (v : ℕ → S) (x : S) (m : ℕ) :
       · have hmk1 : m < k + 1 := Nat.lt_succ_of_le h
         simp only [if_pos h, subst_realize_gt _ _ hmk1, Nat.add_sub_cancel]
       · have hkm : k < m := Nat.lt_of_not_le h
-        simp only [if_neg h, boolean_realize_term, subst_realize_lt _ _ hkm]
+        simp only [if_neg h, subst_realize_lt _ _ hkm]
   | _, preterm.func _, _ => rfl
   | _, preterm.app t₁ t₂, xs => by
       simp only [boolean_realize_term, lift_term_at]
@@ -680,13 +679,13 @@ lemma boolean_realize_bounded_formula_irrel' {n n'} {v₁ : DVec S n} {v₂ : DV
     boolean_realize_bounded_formula v (bd_and f g) DVec.nil =
     boolean_realize_bounded_formula v f DVec.nil ⊓
     boolean_realize_bounded_formula v g DVec.nil := by
-  simp [bd_and, bd_not, bd_or, imp]
+  simp [bd_and, bd_not, imp]
 
 @[simp] lemma boolean_realize_bounded_formula_ex {n} {v : DVec S n}
     {f : bounded_formula L (n + 1)} :
     boolean_realize_bounded_formula v (bd_ex f) DVec.nil =
     ⨆ x : S, boolean_realize_bounded_formula (DVec.cons x v) f DVec.nil := by
-  simp [bd_ex, bd_not, bd_all, imp, compl_iInf]
+  simp [bd_ex, bd_not, imp, compl_iInf]
 
 @[simp] lemma boolean_realize_bounded_formula_biimp {n} {v : DVec S n}
     {f g : bounded_formula L n} :
@@ -709,7 +708,7 @@ lemma boolean_realize_bounded_formula_irrel' {n n'} {v₁ : DVec S n} {v₂ : DV
   · have hlt : n < m := Nat.lt_of_le_of_ne h hn
     apply boolean_realize_bounded_formula_irrel'
     · intro k hk _; simp [DVec.trunc_nth]
-    · simp [bounded_preformula.cast]
+    · simp
 
 /-! ## boolean_realize_sentence_bd_apps_rel — src/bfol.lean:621-634 -/
 
@@ -823,7 +822,7 @@ lemma boolean_realize_bounded_formula_insert_lift {n l} (v : DVec S n) (x : S) (
           simp [DVec.insert_nth_lt x v (by exact hkn) hkn1 (by exact hkm)]
         · by_cases hkm' : k = m
           · subst hkm'
-            simp [hkm, DVec.insert_nth]
+            simp [DVec.insert_nth]
           · have hkm2 : m < k := Nat.lt_of_le_of_ne (Nat.le_of_not_lt hkm) (Ne.symm hkm')
             simp only [Nat.lt_asymm hkm2, hkm2, if_false, if_true]
             by_cases hkn1 : k < n + 1
@@ -869,21 +868,21 @@ lemma boolean_realize_subst_formula0 {n} (S : bStructure L β) [Nonempty S]
   -- RHS = boolean_realize_formula (fun k => if h : k < n+1 then (brt_v_t :: v).nth k h else y) f.fst []
   apply boolean_realize_formula_congr'
   intro k
-  simp only [subst_realize, boolean_realize_term, DVec.nth]
+  simp only [subst_realize, DVec.nth]
   -- The bounded term realization
   rw [← boolean_realize_bounded_term_eq' (v₁ := v) y t DVec.nil]
   by_cases hk : k < n + 1
-  · simp only [dif_pos hk, DVec.nth]
+  · simp only [dif_pos hk]
     cases k with
-    | zero => simp [subst_realize, boolean_realize_bounded_term]
+    | zero => simp [boolean_realize_bounded_term]
     | succ k =>
       have h2k : k < n := Nat.lt_of_succ_lt_succ hk
-      simp only [subst_realize, Nat.zero_lt_succ, if_false, Nat.lt_irrefl, if_false]
+      simp only [Nat.zero_lt_succ, if_false, Nat.lt_irrefl, if_false]
       simp [dif_pos h2k, DVec.nth]
-  · simp only [dif_neg hk, subst_realize]
+  · simp only [dif_neg hk]
     have h2k : 0 < k := Nat.pos_of_ne_zero (by omega)
     have h3k : ¬(k - 1 < n) := by omega
-    simp [Nat.not_lt.mp hk, h2k, h3k, dif_neg h3k]
+    simp [h2k, h3k, dif_neg h3k]
 
 end bfol
 

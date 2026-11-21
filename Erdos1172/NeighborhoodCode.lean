@@ -32,9 +32,7 @@ theorem cof_W3 : Order.cof W3 = ℵ_ 3 := by
 instance : IsRegularCardinalOrder W3 where
   type_lt_le_ord_cof := by rw [cof_W3, Cardinal.ord_aleph, Ordinal.type_toType]
 
-theorem alephZero_lt_cof_W3 : ℵ₀ < Order.cof W3 := by
-  rw [cof_W3, ← Cardinal.aleph_zero]
-  exact Cardinal.aleph_lt_aleph.mpr (by norm_num)
+theorem alephZero_lt_cof_W3 : ℵ₀ < Order.cof W3 := by simp_all
 
 theorem mk_taggedCode_le {K : Type} [Countable K] (hGCH : GCH) :
     #(SmallUnionCode.Code W1 (K × W3)) ≤ ℵ_ 3 := by

@@ -82,9 +82,7 @@ noncomputable def truncate (p : Raw) (a : Cut) : Carrier a := by
     exact hi (if_neg hia)⟩
 
 @[simp] theorem value_truncate (p : Raw) (a : Cut) (i : W2) :
-    value (truncate p a) i = if (i : Cut) < a then p.val i else none := by
-  classical
-  rfl
+    value (truncate p a) i = if (i : Cut) < a then p.val i else none := by aesop
 
 @[simp] theorem truncate_self {a : Cut} (p : Carrier a) : truncate p.val a = p := by
   classical

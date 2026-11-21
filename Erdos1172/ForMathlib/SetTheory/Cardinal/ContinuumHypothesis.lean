@@ -28,9 +28,7 @@ The formulation follows Jech/Kunen: `GCH` asserts that for every ordinal `o`,
 namespace Cardinal
 
 /-- The Continuum Hypothesis, unfolded to the power form $2^{\aleph_0} = \aleph_1$. -/
-theorem CH_iff : CH ↔ (2 : Cardinal.{0}) ^ ℵ₀ = ℵ_ 1 := by
-  rw [two_power_aleph0]
-  exact Iff.rfl
+theorem CH_iff : CH ↔ (2 : Cardinal.{0}) ^ ℵ₀ = ℵ_ 1 := by aesop
 
 /-- GCH implies CH: apply GCH at `o = 0` and use `ℵ_ (Order.succ 0) = ℵ_ 1`. -/
 theorem GCH.toCH (h : GCH) : CH := by

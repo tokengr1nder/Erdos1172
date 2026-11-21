@@ -144,8 +144,8 @@ variable {β}
     boolean_realize_bounded_formula v (subset'' t₁ t₂) DVec.nil =
     boolean_realize_bounded_term v t₁ DVec.nil ⊆ᴮ boolean_realize_bounded_term v t₂ DVec.nil := by
   simp only [subset'', boolean_realize_bounded_formula,
-             boolean_realize_bounded_formula_mem' (β := β),
-             boolean_realize_bounded_term_subst_lift (S := V β), V_forall]
+             
+             V_forall]
   rw [subset_unfold'
     (x := boolean_realize_bounded_term (S := V β) v t₁ DVec.nil)
     (u := boolean_realize_bounded_term (S := V β) v t₂ DVec.nil)]
@@ -168,8 +168,8 @@ variable {β}
   simp only [Ord_f, ewo_f, epsilon_trichotomy_f, epsilon_well_founded_f, is_transitive_f,
              boolean_realize_bounded_formula, boolean_realize_bounded_formula_and,
              boolean_realize_bounded_formula_not, boolean_realize_bounded_formula_or,
-             boolean_realize_bounded_formula_ex, boolean_realize_bounded_formula_mem' (β := β),
-             boolean_realize_bounded_formula_subset' (β := β),
+             boolean_realize_bounded_formula_ex, 
+             
              boolean_realize_bounded_term_emptyset' (β := β),
              boolean_realize_bounded_term, DVec.nth, V_forall, V_exists, V_eq]
   unfold bSet.Ord epsilon_well_orders epsilon_trichotomy epsilon_well_founded is_transitive
@@ -202,8 +202,8 @@ variable {β}
 lemma bSet_models_emptyset : ⊤ ⊩[V β] axiom_of_emptyset := by
   change ⊤ ≤ _
   simp only [axiom_of_emptyset, boolean_realize_sentence_all,
-             boolean_realize_bounded_formula_not, boolean_realize_bounded_formula,
-             V_eq, boolean_realize_bounded_term_emptyset' (β := β)]
+             boolean_realize_bounded_formula_not, 
+             boolean_realize_bounded_term_emptyset' (β := β)]
   exact le_iInf (fun x => empty_spec)
 
 -- axiom of ordered pairs: ∀ x y z w, pair(x,y) = pair(z,w) ↔ x=z ∧ y=w
@@ -211,7 +211,7 @@ lemma bSet_models_ordered_pairs : ⊤ ⊩[V β] axiom_of_ordered_pairs := by
   change ⊤ ≤ _
   simp only [axiom_of_ordered_pairs, boolean_realize_sentence_all, boolean_realize_bounded_formula,
              boolean_realize_bounded_formula_biimp, boolean_realize_bounded_formula_and,
-             boolean_realize_bounded_term_pair' (β := β), boolean_realize_bounded_term,
+             boolean_realize_bounded_term,
              DVec.nth, V_eq, V_forall]
   apply le_iInf; intro a; apply le_iInf; intro b; apply le_iInf; intro x; apply le_iInf; intro y
   change ⊤ ≤ bihimp (pair a b =ᴮ pair x y) (a =ᴮ x ⊓ b =ᴮ y)
@@ -227,7 +227,7 @@ lemma bSet_models_ordered_pairs : ⊤ ⊩[V β] axiom_of_ordered_pairs := by
 lemma bSet_models_extensionality : ⊤ ⊩[V β] axiom_of_extensionality := by
   change ⊤ ≤ _
   simp only [axiom_of_extensionality, boolean_realize_sentence_all, boolean_realize_bounded_formula,
-             boolean_realize_bounded_formula_biimp, boolean_realize_bounded_formula_mem' (β := β),
+             boolean_realize_bounded_formula_biimp, 
              boolean_realize_bounded_term, DVec.nth, V_forall, V_eq]
   apply le_iInf; intro x; apply le_iInf; intro y
   change ⊤ ≤ _root_.imp (⨅ z : bSet β, bihimp (z ∈ᴮ x) (z ∈ᴮ y)) (x =ᴮ y)
@@ -326,10 +326,10 @@ lemma bSet_models_collection {n} (ϕ : bounded_formula L_ZFC (n + 2)) :
   match xs with
   | DVec.cons u xs' =>
     simp only [boolean_realize_bounded_formula, boolean_realize_bounded_formula_and,
-               boolean_realize_bounded_formula_ex, boolean_realize_bounded_formula_mem' (β := β),
-               boolean_realize_bounded_term, DVec.nth, V_forall, V_exists, V_eq,
+               boolean_realize_bounded_formula_ex, 
+               DVec.nth, V_forall, V_exists, V_eq,
                boolean_realize_formula_insert_lift2 (S := V β), realize_lift2_at2 (β := β),
-               realize_lift3_at2 (β := β), boolean_realize_subst_formula0 (S := V β)]
+               boolean_realize_subst_formula0 (S := V β)]
     have hsubst (v' w' w : bSet β) :
         boolean_realize_bounded_formula (S := V β)
           (DVec.cons w (DVec.cons w' (DVec.cons v' (DVec.cons u xs'))))
@@ -372,9 +372,9 @@ lemma bSet_models_union : ⊤ ⊩[V β] axiom_of_union := by
   change ⊤ ≤ _
   simp only [axiom_of_union, boolean_realize_sentence_all, boolean_realize_bounded_formula,
              boolean_realize_bounded_formula_biimp, boolean_realize_bounded_formula_and,
-             boolean_realize_bounded_formula_ex, boolean_realize_bounded_formula_mem' (β := β),
-             boolean_realize_bounded_term_Union' (β := β), boolean_realize_bounded_term, DVec.nth,
-             V_forall, V_exists, V_eq]
+             boolean_realize_bounded_formula_ex, 
+             boolean_realize_bounded_term, DVec.nth,
+             V_forall, V_exists]
   apply le_iInf; intro u; apply le_iInf; intro x
   change ⊤ ≤ bihimp (x ∈ᴮ bv_union u) (⨆ y : bSet β, y ∈ᴮ u ⊓ x ∈ᴮ y)
   -- goal: ⊤ ≤ bihimp (x ∈ bv_union u) (⨆ y, y ∈ u ⊓ x ∈ y)
@@ -386,9 +386,9 @@ lemma bSet_models_union : ⊤ ⊩[V β] axiom_of_union := by
 lemma bSet_models_powerset : ⊤ ⊩[V β] axiom_of_powerset := by
   change ⊤ ≤ _
   simp only [axiom_of_powerset, boolean_realize_sentence_all, boolean_realize_bounded_formula,
-             boolean_realize_bounded_formula_biimp, boolean_realize_bounded_formula_mem' (β := β),
-             boolean_realize_bounded_term_Powerset' (β := β), boolean_realize_bounded_term, DVec.nth,
-             V_forall, V_eq]
+             boolean_realize_bounded_formula_biimp, 
+             boolean_realize_bounded_term, DVec.nth,
+             V_forall]
   apply le_iInf; intro z; apply le_iInf; intro y
   change ⊤ ≤ bihimp (y ∈ᴮ bv_powerset z) (⨅ x : bSet β, _root_.imp (x ∈ᴮ y) (x ∈ᴮ z))
   -- goal: ⊤ ≤ bihimp (y ∈ bv_powerset z) (⨅ x, x ∈ y ⟹ x ∈ z)
@@ -400,15 +400,15 @@ lemma bSet_models_powerset : ⊤ ⊩[V β] axiom_of_powerset := by
 -- axiom of infinity (src/zfc.lean:332-347)
 lemma bSet_models_infinity : ⊤ ⊩[V β] axiom_of_infinity := by
   change ⊤ ≤ _
-  simp only [axiom_of_infinity, boolean_realize_sentence_all,
+  simp only [axiom_of_infinity, 
              boolean_realize_bounded_formula, boolean_realize_bounded_formula_and,
-             boolean_realize_bounded_formula_ex, boolean_realize_bounded_formula_not,
+             boolean_realize_bounded_formula_ex, 
              boolean_realize_bounded_formula_mem' (β := β),
-             boolean_realize_bounded_formula_subset' (β := β),
+             
              boolean_realize_bounded_term_emptyset' (β := β),
              boolean_realize_bounded_term_omega' (β := β),
              boolean_realize_bounded_term, DVec.nth, Ord_f_is_Ord (β := β),
-             V_forall, V_exists, V_eq]
+             V_forall, V_exists]
   change ⊤ ≤
     (((∅ : bSet β) ∈ᴮ bSet.omega ⊓
       ⨅ x : bSet β, _root_.imp (x ∈ᴮ bSet.omega)
@@ -440,11 +440,11 @@ lemma bSet_models_infinity : ⊤ ⊩[V β] axiom_of_infinity := by
 lemma bSet_models_regularity : ⊤ ⊩[V β] axiom_of_regularity := by
   change ⊤ ≤ _
   simp only [axiom_of_regularity, boolean_realize_sentence_all, boolean_realize_bounded_formula,
-             boolean_realize_bounded_formula_mem' (β := β),
+             
              boolean_realize_bounded_term_emptyset' (β := β),
              boolean_realize_bounded_formula_not, boolean_realize_bounded_formula_ex,
              boolean_realize_bounded_formula_and, boolean_realize_bounded_term, DVec.nth,
-             V_forall, V_exists, V_eq]
+             V_forall, V_exists]
   apply le_iInf; intro x
   rw [← _root_.deduction]
   -- goal: ⊤ ⊓ (x =ᴮ ∅)ᶜ ≤ ⨆ y, y ∈ x ⊓ (⨅ z, z ∈ x ⟹ (z ∈ y)ᶜ)
@@ -457,10 +457,10 @@ lemma bSet_models_Zorn : ⊤ ⊩[V β] zorns_lemma := by
   simp only [zorns_lemma, boolean_realize_sentence_all, boolean_realize_bounded_formula,
              boolean_realize_bounded_formula_not, boolean_realize_bounded_formula_and,
              boolean_realize_bounded_formula_ex, boolean_realize_bounded_formula_or,
-             boolean_realize_bounded_formula_subset' (β := β),
-             boolean_realize_bounded_formula_mem' (β := β),
+             
+             
              boolean_realize_bounded_term_emptyset' (β := β),
-             boolean_realize_bounded_term_Union' (β := β),
+             
              boolean_realize_bounded_term, DVec.nth, V_forall, V_exists, V_eq]
   change ⊤ ≤ ⨅ X : bSet β, _root_.imp (X =ᴮ ∅)ᶜ
     (_root_.imp (⨅ y : bSet β,

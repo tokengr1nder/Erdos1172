@@ -48,7 +48,7 @@ lemma subst_realize2 {S : Type u} (v : ℕ → S) (x x' : S) (n₁ n₂ k : ℕ)
     Fol.subst_realize (Fol.subst_realize v x' (n₁ + n₂)) x n₁ k =
     Fol.subst_realize (Fol.subst_realize v x n₁) x' (n₁ + n₂ + 1) k := by
   simp only [subst_realize]
-  split_ifs with h1 h2 h3 h4 h5 h6 h7 h8 <;> simp_all [subst_realize] <;> omega
+  split_ifs with h1 h2 h3 h4 h5 h6 h7 h8 <;> simp_all <;> omega
 
 lemma subst_realize2_0 {S : Type u} (v : ℕ → S) (x x' : S) (n k : ℕ) :
     Fol.subst_realize (Fol.subst_realize v x' n) x 0 k =
@@ -133,7 +133,7 @@ lemma lift_term_at2_small : ∀ {l} (t : preterm L l) (n n') {m m'}, m' ≤ m �
     lift_term_at (lift_term_at t n m) n' m' = lift_term_at (lift_term_at t n' m') n (m + n')
   | _, preterm.var k, n, n', m, m', H => by
       simp only [lift_term_at]
-      split_ifs <;> simp_all [lift_term_at] <;> omega
+      split_ifs <;> simp_all <;> omega
   | _, preterm.func _, _, _, _, _, _ => rfl
   | _, preterm.app t₁ t₂, n, n', m, m', H => by
       simp only [lift_term_at, lift_term_at2_small t₁ n n' H, lift_term_at2_small t₂ n n' H]
@@ -142,7 +142,7 @@ lemma lift_term_at2_medium : ∀ {l} (t : preterm L l) {n} (n') {m m'}, m ≤ m'
     lift_term_at (lift_term_at t n m) n' m' = lift_term_at t (n + n') m
   | _, preterm.var k, n, n', m, m', H₁, H₂ => by
       simp only [lift_term_at]
-      split_ifs <;> simp_all [lift_term_at] <;> omega
+      split_ifs <;> simp_all <;> omega
   | _, preterm.func _, _, _, _, _, _, _ => rfl
   | _, preterm.app t₁ t₂, n, n', m, m', H₁, H₂ => by
       simp only [lift_term_at, lift_term_at2_medium t₁ n' H₁ H₂, lift_term_at2_medium t₂ n' H₁ H₂]
@@ -347,7 +347,7 @@ lemma realize_term_subst_lift {S : Structure L} (v : ℕ → S) (x : S) (m : ℕ
         simp only [if_pos h, subst_realize_gt _ _ hmk1, Nat.add_sub_cancel]
       · -- lift gives k, subst_realize gives v k (since k < m)
         have hkm : k < m := Nat.lt_of_not_le h
-        simp only [if_neg h, realize_term, subst_realize_lt _ _ hkm]
+        simp only [if_neg h, subst_realize_lt _ _ hkm]
   | _, preterm.func _, _ => rfl
   | _, preterm.app t₁ t₂, xs => by
       simp only [realize_term, lift_term_at]
@@ -541,7 +541,7 @@ namespace bounded_preterm
 
 @[simp] lemma cast_rfl {n} {h : n ≤ n} : ∀ {l} (t : bounded_preterm L n l), t.cast h = t := by
   intros l t; induction t with
-  | bd_var k => simp [bounded_preterm.cast, Fin.ext_iff]
+  | bd_var k => simp [bounded_preterm.cast]
   | bd_func => rfl
   | bd_app _ _ iht ihs => simp [bounded_preterm.cast, iht, ihs]
 
@@ -615,7 +615,7 @@ lemma realize_bounded_term_eq {S : Structure L} {n} {v₁ : DVec S n} {v₂ : �
     (lift_bounded_term_at t n' m).fst = t.fst ↑' n' # m
   | _, bd_var k, n', m => by
       simp only [lift_bounded_term_at, bounded_preterm.fst, lift_term_at]
-      split_ifs with h <;> simp [h]
+      split_ifs with h <;> simp
   | _, bd_func _, _, _ => rfl
   | _, bd_app t₁ t₂, n', m => by
       simp [lift_bounded_term_fst t₁ n' m, lift_bounded_term_fst t₂ n' m]
@@ -628,7 +628,7 @@ notation:0 t "[" s " /// " n "]" => @subst_bounded_term _ n _ _ t s
     (h : k.1 = n) : (subst_bounded_term (bd_var k) s).fst = s.fst ↑' n # 0 := by
   have h₂ : ¬(k.1 < n) := by omega
   have h₃ : ¬(n < k.1) := by omega
-  simp only [subst_bounded_term, h₂, h₃, dite_false, if_false]
+  simp only [subst_bounded_term, h₂, h₃, dite_false]
   exact (bounded_preterm.cast_fst _ (s ↑ᵇ n)).trans (lift_bounded_term_fst s n 0)
 
 @[simp] lemma subst_bounded_term_fst {n n'} : ∀ {l} (t : bounded_preterm L (n + n' + 1) l)
@@ -637,9 +637,8 @@ notation:0 t "[" s " /// " n "]" => @subst_bounded_term _ n _ _ t s
       rcases Nat.lt_trichotomy k.1 n with h | h | h
       · simp [h, subst_bounded_term]
       · rw [subst_bounded_term_var_eq s k h]
-        simp [subst_term, subst_realize, h]
-      · simp [subst_bounded_term, h, Nat.not_lt.mpr (Nat.le_of_lt h), subst_term, subst_realize,
-              Nat.lt_asymm h]
+        simp [subst_realize, h]
+      · simp [subst_bounded_term, h, Nat.not_lt.mpr (Nat.le_of_lt h), subst_realize]
   | _, bd_func f, _ => rfl
   | _, bd_app t₁ t₂, s => by
       exact congrArg₂ preterm.app (subst_bounded_term_fst t₁ s)
@@ -803,8 +802,8 @@ def realize_bounded_formula_iff_aux {S : Structure L} :
         | zero => simp [DVec.nth, subst_realize]
         | succ k =>
           have hk' : k < n := Nat.lt_of_succ_lt_succ hk
-          simp only [DVec.nth, subst_realize, Nat.zero_lt_succ, ↓reduceIte, Nat.succ_ne_zero,
-                     if_false, Nat.add_sub_cancel]
+          simp only [DVec.nth, subst_realize, Nat.zero_lt_succ, ↓reduceIte, 
+                     Nat.add_sub_cancel]
           exact hv k hk'
       -- f : bounded_preformula L (n+1) 0; DVec.cons x v₁ : DVec S (n+1)
       -- goal: realize_bounded_formula (DVec.cons x v₁) f x✝ ↔ realize_formula (subst_realize v₂ x 0) f.fst DVec.nil

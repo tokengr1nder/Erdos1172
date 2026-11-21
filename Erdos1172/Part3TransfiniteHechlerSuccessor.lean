@@ -86,9 +86,7 @@ noncomputable def fromStep (hGCH : GCH) (i : W2) (p : Condition (Earlier hGCH i)
 
 theorem value_fromStep (hGCH : GCH) (i : W2) (p : Condition (Earlier hGCH i)) (j : W2) :
     value (fromStep hGCH i p) j =
-      if j = i then pack (encodedData hGCH i p) else value p.base j := by
-  classical
-  rfl
+      if j = i then pack (encodedData hGCH i p) else value p.base j := by aesop
 
 theorem dataAt_fromStep (hGCH : GCH) (i : W2) (p : Condition (Earlier hGCH i)) :
     dataAt (fromStep hGCH i p) i = encodedData hGCH i p := by

@@ -51,9 +51,7 @@ noncomputable def replace {a b : Cut} (hab : a ≤ b) (p : Carrier b)
 
 @[simp] theorem value_replace {a b : Cut} (hab : a ≤ b) (p : Carrier b)
     (q : Carrier a) (i : W2) :
-    value (replace hab p q) i = if (i : Cut) < a then value q i else value p i := by
-  classical
-  rfl
+    value (replace hab p q) i = if (i : Cut) < a then value q i else value p i := by aesop
 
 theorem truncate_replace {a b c : Cut} (hab : a ≤ b) (hca : c ≤ a)
     (p : Carrier b) (q : Carrier a) :

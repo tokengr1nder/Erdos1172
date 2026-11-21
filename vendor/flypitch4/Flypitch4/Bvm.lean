@@ -242,7 +242,7 @@ scoped infixl:80 " ∈ᴮ " => mem
 
 -- src/bvm.lean:286
 lemma mem_unfold {u v : bSet 𝔹} : u ∈ᴮ v = ⨆ (i : v.type), v.bval i ⊓ u =ᴮ v.func i := by
-  cases v; simp [mem, bv_eq]
+  cases v; simp [mem]
 
 -- src/bvm.lean:295
 theorem mem_mk {α : Type u} (A : α → bSet 𝔹) (B : α → 𝔹) (a : α) :
@@ -410,7 +410,7 @@ theorem bv_eq_trans {x y z : bSet 𝔹} : (x =ᴮ y ⊓ y =ᴮ z) ≤ x =ᴮ z :
     -- Then for each a'', use trans_fwd i a' a'' to get A i =ᴮ A'' a''
     suffices h : A i ∈ᴮ mk α' A' B' ⊓ mk α' A' B' =ᴮ mk α'' A'' B'' ≤ A i ∈ᴮ mk α'' A'' B'' by
       exact le_trans (le_inf mem_y yz_eq_avail) h
-    simp only [mem, bv_eq, func]
+    simp only [mem, bv_eq]
     rw [iSup_inf_eq]
     apply iSup_le; intro a'
     -- Goal: B' a' ⊓ A i =ᴮ A' a' ⊓ ((⨅ ⟹ ⨆) ⊓ (⨅ ⟹ ⨆)) ≤ ⨆ a'', B'' a'' ⊓ A i =ᴮ A'' a''
@@ -458,7 +458,7 @@ theorem bv_eq_trans {x y z : bSet 𝔹} : (x =ᴮ y ⊓ y =ᴮ z) ≤ x =ᴮ z :
         ≤ ⨆ a', B' a' ⊓ A' a' =ᴮ A'' i'' := by
       -- From second component of y=z: ⨅ a'', B'' a'' ⟹ ⨆ a', B' a' ⊓ A' a' =ᴮ A'' a''
       -- specialized at i'', plus B'' i''
-      simp only [bv_eq, func]
+      simp only [bv_eq]
       calc (((⨅ a, B a ⟹ ⨆ a', B' a' ⊓ A a =ᴮ A' a') ⊓
              (⨅ a', B' a' ⟹ ⨆ a, B a ⊓ A a =ᴮ A' a')) ⊓
             ((⨅ a', B' a' ⟹ ⨆ a'', B'' a'' ⊓ A' a' =ᴮ A'' a'') ⊓
@@ -482,7 +482,7 @@ theorem bv_eq_trans {x y z : bSet 𝔹} : (x =ᴮ y ⊓ y =ᴮ z) ≤ x =ᴮ z :
           apply iSup_le; intro a'
           -- Goal: B' a' ⊓ A' a' =ᴮ A'' i'' ⊓ xy_eq ≤ ⨆ a, B a ⊓ A a =ᴮ A'' i''
           -- From xy_eq, second component: B' a' ⟹ ⨆ a, B a ⊓ A a =ᴮ A' a'
-          simp only [bv_eq, func]
+          simp only [bv_eq]
           -- Extract ⨆ a, B a ⊓ A a =ᴮ A' a' using B' a' and xy_eq's second component
           have xy_step2 : B' a' ⊓ A' a' =ᴮ A'' i'' ⊓
               ((⨅ a, B a ⟹ ⨆ a', B' a' ⊓ A a =ᴮ A' a') ⊓
@@ -895,8 +895,8 @@ lemma bot_of_mem_empty {x : bSet 𝔹} {Γ : 𝔹} (H : Γ ≤ x ∈ᴮ ∅) : �
 @[simp] lemma subst_congr_insert1_left {u w v : bSet 𝔹} :
     u =ᴮ w ≤ bSet.insert1 u v =ᴮ bSet.insert1 w v := by
   cases v with | mk α A B =>
-  simp only [bSet.insert1, bSet.insert, bv_eq, mem, iInf_option, iSup_option,
-    top_inf_eq, inf_top_eq]
+  simp only [bSet.insert1, bSet.insert, bv_eq, iInf_option, iSup_option,
+    top_inf_eq]
   apply le_inf
   · -- Forward
     apply le_inf
@@ -1000,7 +1000,7 @@ lemma eq_of_eq_singleton {x y : bSet 𝔹} {c : 𝔹} (h : c ≤ (bSet.insert1 x
     -- x ∈ {x} = ⊤, so ⊤ ⟹ x ∈ {y} = x ∈ {y}
     have hmem : x ∈ᴮ bSet.insert1 x ∅ = ⊤ := by
       rw [show bSet.insert1 x ∅ = insert x ∅ from rfl, mem_insert1]
-      simp [bv_eq_refl, mem_unfold, exists_over_empty]
+      simp [bv_eq_refl, mem_unfold]
     unfold imp
     rw [hmem, compl_top, bot_sup_eq]
   rw [mem_eq] at h2
@@ -1045,7 +1045,7 @@ lemma two_term_mixture_h_star (a₁ a₂ : 𝔹) (h_anti : a₁ ⊓ a₂ = ⊥) 
       (bool_map u₁ u₂) i =ᴮ (bool_map u₁ u₂) j := by
   intro ⟨bi⟩ ⟨bj⟩
   cases bi <;> cases bj <;> simp [bool_map, bv_eq_refl]
-  all_goals simp [bool_map, h_anti, inf_comm]
+  all_goals simp [h_anti, inf_comm]
 
 -- src/bvm.lean:937 — Mixing Lemma
 lemma mixing_lemma' {ι : Type u} (a : ι → 𝔹) (τ : ι → bSet 𝔹)
@@ -1057,7 +1057,7 @@ lemma mixing_lemma' {ι : Type u} (a : ι → 𝔹) (τ : ι → bSet 𝔹)
     apply le_iInf; intro ⟨i_z_fst, i_z_snd⟩
     rw [← deduction]
     -- bval (mixture a τ) ⟨j, i_z_snd⟩ = ⨆ k, a k ⊓ (τ j).func i_z_snd ∈ᴮ τ k
-    simp only [bval_mixture, mixture, func, bval]
+    simp only [mixture, func, bval]
     rw [inf_iSup_eq]
     apply iSup_le; intro j
     -- a i ⊓ a j ⊓ (τ j).func i_z_snd ∈ᴮ τ j ≤ (τ i_z_fst).func i_z_snd ∈ᴮ τ i
@@ -1083,7 +1083,7 @@ lemma mixing_lemma' {ι : Type u} (a : ι → 𝔹) (τ : ι → bSet 𝔹)
     -- and bval ⟨i, i_z⟩ ⊓ eq ≤ func ⟨i, i_z⟩ ∈ mixture...
     apply le_trans _ (mem_mk' (mixture a τ) ⟨i, i_z⟩)
     -- goal: a i ⊓ (τ i).bval i_z ≤ (mixture a τ).bval ⟨i, i_z⟩
-    simp only [bval_mixture, mixture, func]
+    simp only [mixture, func]
     -- bval ⟨i, i_z⟩ = ⨆ j, a j ⊓ (τ i).func i_z ∈ᴮ τ j
     apply le_iSup_of_le i
     -- a i ⊓ (τ i).bval i_z ≤ a i ⊓ (τ i).func i_z ∈ᴮ τ i
@@ -1133,7 +1133,7 @@ lemma B_small_witness_supr :
     -- ϕ x ≤ ϕ (B_small_witness.func b): note B_small_witness_spec b : ϕ (func b) = b.val = ϕ x
     have h := @B_small_witness_spec _ _ ϕ b
     -- h : ϕ (B_small_witness.func b) = b.val = ϕ x
-    simp only [b, Subtype.coe_mk] at h
+    simp only [b] at h
     exact h.symm.le
   · apply iSup_le; intro b
     apply le_iSup_of_le (fiber_lift b).val
@@ -1609,7 +1609,7 @@ def subset' {u : bSet 𝔹} {α : Type u} {S : α → bSet 𝔹} (h : core u S) 
 def subset'_partial_order {u : bSet 𝔹} {α : Type u} {S : α → bSet 𝔹} (h : core u S) :
     PartialOrder α where
   le := subset' h
-  le_refl := by intro a; simp [subset', bv_eq_refl]
+  le_refl := by intro a; simp [subset']
   le_trans := by
     intro a b c
     simp only [subset']
@@ -2348,7 +2348,7 @@ lemma bv_powerset_congr {Γ : 𝔹} {x y : bSet 𝔹} (H : Γ ≤ x =ᴮ y) :
   -- Γ ⊓ z ∈ᴮ set_of_indicator χ ≤ z ∈ᴮ x
   apply le_trans inf_le_right
   -- z ∈ᴮ set_of_indicator χ ≤ z ∈ᴮ x
-  simp only [mem_unfold, set_of_indicator_bval, set_of_indicator_func]
+  simp only [mem_unfold, set_of_indicator_func]
   apply iSup_le; intro i
   apply le_iSup_of_le i
   exact inf_le_inf_right _ (H_χ i)

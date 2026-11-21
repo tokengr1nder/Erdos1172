@@ -32,10 +32,7 @@ theorem GCH.two_power_aleph_one (h : GCH) :
 
 /-- GCH at `ℵ₂`. -/
 theorem GCH.two_power_aleph_two (h : GCH) :
-    (2 : Cardinal.{0}) ^ ℵ_ 2 = ℵ_ 3 := by
-  have h2 := h (2 : Ordinal)
-  norm_num at h2
-  exact h2
+    (2 : Cardinal.{0}) ^ ℵ_ 2 = ℵ_ 3 := by aesop
 
 /-- Under CH, `ℵ₁` is closed under countable cardinal powers. -/
 theorem CH.aleph_one_power_aleph_zero (h : CH) :

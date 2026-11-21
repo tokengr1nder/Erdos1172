@@ -84,9 +84,7 @@ noncomputable def castCoeff
   simp [castCoeff]
 
 theorem castCoeff_add (f g : Ordinal.{u} →₀ ℕ) :
-    castCoeff (f + g) = castCoeff f + castCoeff g := by
-  ext e
-  simp [castCoeff, Nat.cast_add]
+    castCoeff (f + g) = castCoeff f + castCoeff g := by aesop
 
 theorem castCoeff_single (e : Ordinal.{u}) (n : ℕ) :
     castCoeff (Finsupp.single e n) =
@@ -98,11 +96,7 @@ theorem castCoeff_single (e : Ordinal.{u}) (n : ℕ) :
   · simp [hed]
 
 theorem castCoeff_support (f : Ordinal.{u} →₀ ℕ) :
-    (castCoeff f).support = f.support := by
-  simpa [castCoeff] using
-    (Finsupp.support_mapRange_of_injective
-      (e := fun n : ℕ ↦ (n : Ordinal.{u})) (Nat.cast_zero) f
-        Nat.cast_injective)
+    (castCoeff f).support = f.support := by aesop
 
 theorem castCoeff_natCoeff (o : Ordinal.{u}) :
     castCoeff (natCoeff o) = Ordinal.CNF.coeff ω o := by

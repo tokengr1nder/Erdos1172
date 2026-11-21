@@ -27,9 +27,7 @@ def IsOmegaOneSup (top : W2) : Prop :=
   ∃ seq : W1 → W2, StrictMono seq ∧ IsLUB (Set.range seq) top
 
 private theorem cof_omega_succ (n : Ordinal.{0}) :
-    Order.cof (ω_ (n + 1)).ToType = ℵ_ (n + 1) := by
-  rw [Ordinal.cof_toType]
-  simpa only [Cardinal.ord_aleph] using (Cardinal.isRegular_aleph_add_one n).cof_ord
+    Order.cof (ω_ (n + 1)).ToType = ℵ_ (n + 1) := by simp_all
 
 /-- The points which are `ω₁`-suprema form a stationary subset of `ω₂`. -/
 theorem isStationary_isOmegaOneSup_omegaTwo :

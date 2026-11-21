@@ -49,7 +49,7 @@ theorem mk_index_le (n : ℕ) : #(Index n) ≤ ℵ_ 1 := by
 theorem typeLT_index (n : ℕ) : typeLT (Index n) = (ω_ 1 : Ordinal.{0}) ^ (↑(n + 1) : Ordinal) := by
   induction n with
   | zero =>
-    simp only [Index, indexLinearOrder, Nat.rec_zero, Nat.zero_add, Nat.cast_one, Ordinal.opow_one]
+    simp only [Index, Nat.rec_zero, Nat.zero_add, Nat.cast_one, Ordinal.opow_one]
     exact Ordinal.type_toType _
   | succ n ih =>
     change Ordinal.type (Prod.Lex ((· < ·) : W1 → W1 → Prop)

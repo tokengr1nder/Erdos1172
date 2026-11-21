@@ -398,14 +398,14 @@ open Cardinal in
 /-- The cardinality of `(ordinalMk η).Type` is `η.card`.
     Port of `ordinal.mk_card` (src/pSet_ordinal.lean:645). -/
 lemma ordinalMk_card {η : Ordinal} : Cardinal.mk (ordinalMk η).Type = η.card := by
-  simp [ordinalMk_type, Cardinal.mk_toType]
+  simp [Cardinal.mk_toType]
 
 open Cardinal in
 @[simp] lemma mk_omega_eq_mk_omega :
     Cardinal.mk (PSet.omega).Type = ℵ₀ := by
   simp only [PSet.omega]
   rw [show (⟨ULift ℕ, fun n => PSet.ofNat n.down⟩ : PSet).Type = ULift ℕ from rfl]
-  simp [Cardinal.mk_uLift, Cardinal.mk_nat]
+  simp [Cardinal.mk_nat]
 
 /-! ### Ordinal arithmetic helpers (src lines 668-697) -/
 
