@@ -96,8 +96,4 @@ def retractionCompletionOrderIso (π : P →o Q) (H : ExactLifts π) (s : Q →o
     (DFunLike.ext _ _ (regularPullback_sectionRegularPullback π H s Hπs Hsπ))
     (DFunLike.ext _ _ (sectionRegularPullback_regularPullback π H s Hπs Hsπ))
 
-@[simp] theorem retractionCompletionOrderIso_apply (π : P →o Q) (H : ExactLifts π)
-    (s : Q →o P) (Hπs : ∀ q, π (s q) = q) (Hsπ : ∀ p, s (π p) ≤ p)
-    (A : Completion Q) : retractionCompletionOrderIso π H s Hπs Hsπ A = completionHom π H A := rfl
-
 end Erdos1172PosetProjection

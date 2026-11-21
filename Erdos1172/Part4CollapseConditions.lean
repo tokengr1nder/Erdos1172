@@ -56,13 +56,9 @@ instance conditionInhabited : Inhabited (Condition α) := ⟨⊤⟩
 @[simp] theorem le_iff_prefix {p q : Condition α} :
     p ≤ q ↔ q.entries <+: p.entries := Iff.rfl
 
-@[simp] theorem top_entries : (⊤ : Condition α).entries = [] := rfl
-
 def cone (p : Condition α) : Set (Condition α) := Set.Iic p
 
 def Compatible (p q : Condition α) : Prop := ∃ r, r ≤ p ∧ r ≤ q
-
-@[simp] theorem mem_cone {p q : Condition α} : q ∈ cone p ↔ q ≤ p := Iff.rfl
 
 theorem compatible_iff_prefix_comparable {p q : Condition α} :
     Compatible p q ↔ p.entries <+: q.entries ∨ q.entries <+: p.entries := by
@@ -79,9 +75,6 @@ theorem compatible_iff_comparable {p q : Condition α} :
   exact or_comm
 
 def extend (p : Condition α) (s : List α) : Condition α := ⟨p.entries ++ s⟩
-
-@[simp] theorem extend_entries (p : Condition α) (s : List α) :
-    (extend p s).entries = p.entries ++ s := rfl
 
 theorem extend_le (p : Condition α) (s : List α) : extend p s ≤ p :=
   p.entries.prefix_append s

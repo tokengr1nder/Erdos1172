@@ -72,10 +72,4 @@ theorem indexEquiv_label (o : Ordinal.{u}) (p : Point U a o.ToType) :
 
 variable [PartialOrder P] [Nonempty P]
 
-local instance pointNonempty : Nonempty (Point U a P) := ⟨diagonal U a (Classical.choice inferInstance)⟩
-
-instance completionAlgebra : NontrivialCompleteBooleanAlgebra (Completion (Point U a P)) where
-  toCompleteBooleanAlgebra := completionCompleteBooleanAlgebra
-  bot_lt_top := bot_lt_top
-
 end Erdos1172Shioya.UltrapowerStage

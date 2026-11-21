@@ -33,16 +33,10 @@ abbrev Positive (B : Type u) [Bot B] := {b : B // b ≠ ⊥}
 
 variable {B : Type u} [CompleteBooleanAlgebra B]
 
-instance positiveNonempty [Nontrivial B] : Nonempty (Positive B) :=
-  ⟨⟨⊤, top_ne_bot⟩⟩
-
 /-- The lower set of positive conditions below a Boolean element. -/
 def elementLowerSet (b : B) : LowerSet (Positive B) :=
   ⟨{p | p.val ≤ b}, fun p q hpq hq =>
     (show q.val ≤ p.val from hpq).trans hq⟩
-
-@[simp] theorem mem_elementLowerSet (b : B) (p : Positive B) :
-    p ∈ elementLowerSet b ↔ p.val ≤ b := Iff.rfl
 
 /-- Pseudocomplementation of lower sets agrees with Boolean complement.
 If a positive condition is not disjoint from `b`, its intersection with `b`
@@ -119,8 +113,6 @@ def completionHom : CompleteLatticeHom B (Completion (Positive B)) where
   toFun := element
   map_sSup' := element_sSup
   map_sInf' := element_sInf
-
-@[simp] theorem completionHom_apply (b : B) : completionHom b = element b := rfl
 
 theorem completionHom_injective : Function.Injective (completionHom (B := B)) :=
   element_injective

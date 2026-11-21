@@ -31,29 +31,6 @@ namespace bSet
 section lemmas
 variable {𝔹 : Type u} [NontrivialCompleteBooleanAlgebra 𝔹] {Γ : 𝔹}
 
--- src/bvm_extras2.lean:20
-lemma prod_subset {x₁ x₂ y₁ y₂ : bSet 𝔹} (H_sub₁ : Γ ≤ x₁ ⊆ᴮ x₂) (H_sub₂ : Γ ≤ y₁ ⊆ᴮ y₂) :
-    Γ ≤ prod x₁ y₁ ⊆ᴮ prod x₂ y₂ := by
-  rw [subset_unfold']
-  apply le_iInf; intro pr; rw [← deduction]
-  -- Goal: Γ ⊓ pr ∈ prod x₁ y₁ ≤ pr ∈ prod x₂ y₂
-  set ctx := Γ ⊓ pr ∈ᴮ prod x₁ y₁
-  have hmem : ctx ≤ pr ∈ᴮ prod x₁ y₁ := inf_le_right
-  obtain ⟨v, Hv, w, Hw, H_eq⟩ := mem_prod_iff₂.mp hmem
-  apply mem_prod_iff₂.mpr
-  exact ⟨v, mem_of_mem_subset (inf_le_left.trans H_sub₁) Hv,
-         w, mem_of_mem_subset (inf_le_left.trans H_sub₂) Hw, H_eq⟩
-
--- src/bvm_extras2.lean:29
-lemma prod_subset_left {x₁ x₂ y : bSet 𝔹} (H_sub : Γ ≤ x₁ ⊆ᴮ x₂) :
-    Γ ≤ prod x₁ y ⊆ᴮ prod x₂ y :=
-  prod_subset H_sub subset_self
-
--- src/bvm_extras2.lean:32
-lemma prod_subset_right {x y₁ y₂ : bSet 𝔹} (H_sub : Γ ≤ y₁ ⊆ᴮ y₂) :
-    Γ ≤ prod x y₁ ⊆ᴮ prod x y₂ :=
-  prod_subset subset_self H_sub
-
 end lemmas
 
 -- ============================================================
@@ -63,16 +40,6 @@ end lemmas
 section inj_inverse_surj
 variable {𝔹 : Type u} [NontrivialCompleteBooleanAlgebra 𝔹] {x y f : bSet 𝔹} {Γ : 𝔹}
   (H_func : Γ ≤ is_func' x y f) (H_inj : Γ ≤ is_inj f)
-
--- src/bvm_extras2.lean:41
-lemma inj_inverse.is_total_surj (H_surj : Γ ≤ is_surj x y f) :
-    Γ ≤ is_total y x (inj_inverse H_func H_inj) := by
-  have heq := bv_symm (image_eq_codomain_of_surj H_surj)
-  -- is_total z x g = ⨅ w, w ∈ z ⟹ ⨆ w', w' ∈ x ⊓ pair w w' ∈ g
-  -- B_ext (fun z => is_total z x g): z appears only in w ∈ z
-  apply bv_rw' heq (ϕ := fun z => is_total z x (inj_inverse H_func H_inj))
-  · exact B_ext_iInf (h := fun w => B_ext_imp (h₁ := B_ext_mem_right) (h₂ := B_ext_const))
-  · exact inj_inverse_is_total H_func H_inj
 
 -- src/bvm_extras2.lean:48
 lemma inj_inverse.is_function_surj (H_surj : Γ ≤ is_surj x y f) :
@@ -220,10 +187,6 @@ lemma Ord_binary_inter {x y : bSet 𝔹} {Γ : 𝔹} (H₁ : Γ ≤ Ord x) (H₂
 section compl
 
 def compl (x y : bSet 𝔹) : bSet 𝔹 := comprehend (fun z => (z ∈ᴮ y)ᶜ) x
-
--- src/bvm_extras2.lean:126
-lemma compl_subset {x y : bSet 𝔹} {Γ : 𝔹} : Γ ≤ compl x y ⊆ᴮ x :=
-  subset.mk_subset
 
 -- src/bvm_extras2.lean:129
 lemma mem_compl_iff {x y : bSet 𝔹} {z : bSet 𝔹} {Γ : 𝔹} :
@@ -531,11 +494,6 @@ lemma Ord.eq_of_not_mem {x y : bSet 𝔹} {Γ : 𝔹} (H₁ : Γ ≤ Ord x) (H�
     (H_nmem₁ : Γ ≤ (x ∈ᴮ y)ᶜ) (H_nmem₂ : Γ ≤ (y ∈ᴮ x)ᶜ) : Γ ≤ x =ᴮ y := by
   rw [Ord.eq_iff_not_mem H₁ H₂]; exact ⟨H_nmem₁, H_nmem₂⟩
 
--- src/bvm_extras2.lean:160
-lemma eq_iff_not_mem_of_Ord {x y z : bSet 𝔹} {Γ : 𝔹} (H_mem₁ : Γ ≤ x ∈ᴮ z) (H_mem₂ : Γ ≤ y ∈ᴮ z)
-    (H_ord : Γ ≤ Ord z) : Γ ≤ x =ᴮ y ↔ (Γ ≤ (x ∈ᴮ y)ᶜ ∧ Γ ≤ (y ∈ᴮ x)ᶜ) :=
-  Ord.eq_iff_not_mem (Ord_of_mem_Ord H_mem₁ H_ord) (Ord_of_mem_Ord H_mem₂ H_ord)
-
 -- src/bvm_extras2.lean:248
 lemma Ord.le_iff_lt_or_eq {x y : bSet 𝔹} {Γ : 𝔹} (H₁ : Γ ≤ Ord x) (H₂ : Γ ≤ Ord y) :
     Γ ≤ x ⊆ᴮ y ↔ (Γ ≤ x ∈ᴮ y ⊔ x =ᴮ y) := by
@@ -578,20 +536,6 @@ lemma Ord.lt_of_not_le {x y : bSet 𝔹} {Γ : 𝔹} (H₁ : Γ ≤ Ord x) (H₂
     exact bv_exfalso (bv_absurd _ hsub (inf_le_right.trans H_not_le))
   -- Case y∈x: done
   have h3 : (y ∈ᴮ x) ⊓ Γ ≤ y ∈ᴮ x := inf_le_left
-  exact le_trans (le_inf H_tri le_rfl) (bv_or_elim_left (bv_or_elim_left h1 h2) h3)
-
--- src/bvm_extras2.lean:271
-lemma Ord.resolve_lt {x y : bSet 𝔹} {Γ : 𝔹} (H₁ : Γ ≤ Ord x) (H₂ : Γ ≤ Ord y) :
-    Γ ≤ (x ∈ᴮ y)ᶜ → Γ ≤ y ∈ᴮ x ⊔ y =ᴮ x := by
-  intro H_not_mem
-  -- By trichotomy: x=y ∨ x∈y ∨ y∈x
-  -- x∈y is ruled out; x=y → y=x; y∈x is direct
-  have H_tri := Ord.trichotomy H₁ H₂
-  have h1 : (x =ᴮ y) ⊓ Γ ≤ y ∈ᴮ x ⊔ y =ᴮ x :=
-    le_sup_of_le_right (bv_symm inf_le_left)
-  have h2 : (x ∈ᴮ y) ⊓ Γ ≤ y ∈ᴮ x ⊔ y =ᴮ x :=
-    bv_exfalso (bv_absurd (x ∈ᴮ y) inf_le_left (inf_le_right.trans H_not_mem))
-  have h3 : (y ∈ᴮ x) ⊓ Γ ≤ y ∈ᴮ x ⊔ y =ᴮ x := le_sup_of_le_left inf_le_left
   exact le_trans (le_inf H_tri le_rfl) (bv_or_elim_left (bv_or_elim_left h1 h2) h3)
 
 -- src/bvm_extras2.lean:280
@@ -851,28 +795,6 @@ lemma eps_iso_mem {x y f z₁ z₂ : bSet 𝔹} {Γ : 𝔹} (H₂ : Γ ≤ eps_i
     {w₂} (H_mem'''' : Γ ≤ w₂ ∈ᴮ y) (H_mem_pr₂ : Γ ≤ pair z₂ w₂ ∈ᴮ f) : Γ ≤ w₁ ∈ᴮ w₂ :=
   (strong_eps_hom_unfold (strong_eps_hom_of_eps_iso H₂)
     z₁ H_mem z₂ H_mem' w₁ H_mem''' w₂ H_mem'''' H_mem_pr₁ H_mem_pr₂).mp H_mem''
-
--- src/bvm_extras2.lean:385
-lemma eps_iso_mem' {x y f z₁ z₂ : bSet 𝔹} {Γ : 𝔹} (H₂ : Γ ≤ eps_iso x y f)
-    (H_mem : Γ ≤ z₁ ∈ᴮ x) (H_mem' : Γ ≤ z₂ ∈ᴮ x)
-    {w₁} (H_mem''' : Γ ≤ w₁ ∈ᴮ y) (H_mem_pr₁ : Γ ≤ pair z₁ w₁ ∈ᴮ f)
-    {w₂} (H_mem'''' : Γ ≤ w₂ ∈ᴮ y) (H_mem_pr₂ : Γ ≤ pair z₂ w₂ ∈ᴮ f)
-    (H_mem'' : Γ ≤ w₁ ∈ᴮ w₂) : Γ ≤ z₁ ∈ᴮ z₂ :=
-  (strong_eps_hom_unfold (strong_eps_hom_of_eps_iso H₂)
-    z₁ H_mem z₂ H_mem' w₁ H_mem''' w₂ H_mem'''' H_mem_pr₁ H_mem_pr₂).mpr H_mem''
-
--- src/bvm_extras2.lean:388
-lemma eps_iso_not_mem {x y f z₁ z₂ : bSet 𝔹} {Γ : 𝔹} (H₂ : Γ ≤ eps_iso x y f)
-    (H_mem : Γ ≤ z₁ ∈ᴮ x) (H_mem' : Γ ≤ z₂ ∈ᴮ x) (H_mem'' : Γ ≤ (z₁ ∈ᴮ z₂)ᶜ)
-    {w₁} (H_mem''' : Γ ≤ w₁ ∈ᴮ y) (H_mem_pr₁ : Γ ≤ pair z₁ w₁ ∈ᴮ f)
-    {w₂} (H_mem'''' : Γ ≤ w₂ ∈ᴮ y) (H_mem_pr₂ : Γ ≤ pair z₂ w₂ ∈ᴮ f) : Γ ≤ (w₁ ∈ᴮ w₂)ᶜ := by
-  simp only [← imp_bot]; rw [← deduction]
-  set ctx' := Γ ⊓ w₁ ∈ᴮ w₂
-  have h_z12 : ctx' ≤ z₁ ∈ᴮ z₂ :=
-    eps_iso_mem' (inf_le_left.trans H₂) (inf_le_left.trans H_mem) (inf_le_left.trans H_mem')
-      (inf_le_left.trans H_mem''') (inf_le_left.trans H_mem_pr₁)
-      (inf_le_left.trans H_mem'''') (inf_le_left.trans H_mem_pr₂) inf_le_right
-  exact bv_absurd _ h_z12 (inf_le_left.trans H_mem'')
 
 -- src/bvm_extras2.lean:394
 lemma eps_iso_not_mem' {x y f z₁ z₂ : bSet 𝔹} {Γ : 𝔹} (H₂ : Γ ≤ eps_iso x y f)

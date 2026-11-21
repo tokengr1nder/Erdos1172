@@ -93,7 +93,6 @@ noncomputable def V : bStructure L_ZFC β :=
           exact mem_congr (inf_le_left.trans inf_le_left) (inf_le_left.trans inf_le_right) inf_le_right
   }
 
-@[simp] lemma carrier_V : ↥(V β) = bSet β := rfl
 @[simp] lemma V_forall {C : (V β) → β} : (⨅ (x : V β), C x) = ⨅ (x : bSet β), C x := rfl
 @[simp] lemma V_exists {C : (V β) → β} : (⨆ (x : V β), C x) = ⨆ (x : bSet β), C x := rfl
 @[simp] lemma V_eq {a b : V β} : (V β).eq a b = a =ᴮ b := rfl
@@ -159,11 +158,6 @@ variable {β}
       (t₂ ↑ᵇ' 1 # 0) DVec.nil) = _
   rw [boolean_realize_bounded_term_subst_lift (S := V β) v x t₁ DVec.nil,
     boolean_realize_bounded_term_subst_lift (S := V β) v x t₂ DVec.nil]
-
-@[simp] lemma fin_0 {n : ℕ} : (0 : Fin (n + 1)).1 = 0 := rfl
-@[simp] lemma fin_1 {n : ℕ} : (1 : Fin (n + 2)).1 = 1 := rfl
-@[simp] lemma fin_2 {n : ℕ} : (2 : Fin (n + 3)).1 = 2 := rfl
-@[simp] lemma fin_3 {n : ℕ} : (3 : Fin (n + 4)).1 = 3 := rfl
 
 -- ============================================================
 -- Ordinal predicates (src/zfc.lean:307-327)
@@ -500,11 +494,6 @@ theorem bSet_models_ZFC : ⊤ ⊩ₜ[V β] ZFC := by
     · exact bSet_models_regularity
     · exact bSet_models_Zorn
   · exact bSet_models_collection _
-
-/-- ZFC is consistent. -/
-theorem ZFC_consistent {β : Type 0} [NontrivialCompleteBooleanAlgebra β] :
-    SentTheory.is_consistent ZFC :=
-  consis_of_exists_bmodel (β := β) (S := V β) bSet_models_ZFC
 
 /- This core extraction retains the source ZFC theory and all its proofs.
 It omits the subsequent functional-relation formulas and CH forcing endpoints.

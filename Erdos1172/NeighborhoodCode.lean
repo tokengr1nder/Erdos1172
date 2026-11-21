@@ -48,12 +48,6 @@ theorem mk_taggedCode_le {K : Type} [Countable K] (hGCH : GCH) :
       _ = ℵ_ 3 := Cardinal.mul_eq_self (Cardinal.aleph0_le_aleph 3)
   · exact hGCH.aleph_three_power_aleph_one.le
 
-theorem mk_Atom_le : #Atom ≤ ℵ_ 3 := by
-  simp only [Atom, Cardinal.mk_prod, Cardinal.lift_id, Cardinal.mk_fin,
-    W3, Cardinal.mk_toType, Ordinal.card_omega]
-  exact (mul_le_mul' (Cardinal.natCast_le_aleph0.trans (Cardinal.aleph0_le_aleph 3)) le_rfl).trans_eq
-    (Cardinal.mul_eq_self (Cardinal.aleph0_le_aleph 3))
-
 theorem mk_Code_le (hGCH : GCH) : #Code ≤ ℵ_ 3 := mk_taggedCode_le hGCH
 
 noncomputable def rank (hGCH : GCH) : Code ↪ W3 :=
@@ -98,11 +92,6 @@ theorem mk_unionRanks_le_gen {B : Type} (hGCH : GCH)
   simp only [Cardinal.lift_id, W1, Cardinal.mk_toType, Ordinal.card_omega]
   exact (Cardinal.power_le_power_right (mk_localCode_le_gen r a)).trans_eq
     hGCH.aleph_two_power_aleph_one
-
-theorem mk_unionRanks_le (hGCH : GCH) (r : Code ↪ W3) (a : W3) :
-    #(Set.range (fun c : W1 → LocalCode r a =>
-      r (SmallUnionCode.union (fun i => (c i).val)))) ≤ ℵ_ 2 :=
-  mk_unionRanks_le_gen hGCH r a
 
 theorem exists_unionBound_gen {B : Type} (hGCH : GCH)
     (r : SmallUnionCode.Code W1 B ↪ W3) (a : W3) :

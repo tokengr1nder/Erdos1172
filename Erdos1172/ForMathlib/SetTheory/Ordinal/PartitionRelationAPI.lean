@@ -55,29 +55,4 @@ theorem swap {α β γ : Ordinal.{u}} (h : OrdinalRamsey α β γ) :
   · exact Or.inr ⟨s, hs, hstype⟩
   · exact Or.inl ⟨s, hs, hstype⟩
 
-/-- If the source contains the blue target, then `α → (2, γ)²`. -/
-theorem two_left {α γ : Ordinal.{u}} (hγ : γ ≤ α) : OrdinalRamsey α 2 γ := by
-  classical
-  intro red blue hcompl
-  by_cases hred : ∃ x y, red.Adj x y
-  · obtain ⟨x, y, hxy⟩ := hred
-    refine Or.inl ⟨{x, y}, ?_, ?_⟩
-    · rw [SimpleGraph.isClique_pair]
-      exact fun _ ↦ hxy
-    · rw [Ordinal.type_fintype, ← Nat.card_eq_fintype_card,
-        Nat.card_coe_set_eq, Set.ncard_pair hxy.ne]
-      simp
-  · have huniv : typeLT (Set.univ : Set α.ToType) = α :=
-      (OrderIso.Set.univ.ordinalType_congr).trans (Ordinal.type_toType α)
-    obtain ⟨t, -, httype⟩ :=
-      Ordinal.exists_subset_typeLT_eq (Set.univ : Set α.ToType) (hγ.trans_eq huniv.symm)
-    refine Or.inr ⟨t, ?_, httype⟩
-    intro x _ y _ hxy
-    rw [← hcompl.compl_eq, SimpleGraph.compl_adj]
-    exact ⟨hxy, fun h ↦ hred ⟨x, y, h⟩⟩
-
-/-- If the source contains the red target, then `α → (β, 2)²`. -/
-theorem two_right {α β : Ordinal.{u}} (hβ : β ≤ α) : OrdinalRamsey α β 2 :=
-  (two_left hβ).swap
-
 end OrdinalRamsey

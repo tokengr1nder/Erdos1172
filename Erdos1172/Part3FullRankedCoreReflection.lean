@@ -36,7 +36,6 @@ open Erdos1172Part3CompleteRestrictionNames (pullRegular lift_pull_implies)
 open Erdos1172Part3StationaryDecisions (StationaryAt)
 open Erdos1172Part3RegularNeighborhoodCode (Code eval rank blockRank)
 open Erdos1172Part3RankedCoreBlockAssembly (GoodCoreCut)
-open Erdos1172Part3FullSourceCubes (Cube)
 open Erdos1172Part3NeighborhoodCode (alephZero_lt_cof_W2)
 open OrdinalRamsey (HasCliqueOfType)
 

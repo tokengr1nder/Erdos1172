@@ -50,14 +50,9 @@ theorem belowAlphabet_cardinal_lt (κ : Cardinal.{u}) (i : κ.ord.ToType) :
 
 variable {I : Type u} {A : I → Type v}
 
-@[simp] theorem factor_zero_eq_top {α : Type v} :
-    (0 : Erdos1172Collapse.Condition α) = ⊤ := rfl
-
 instance productOrderTop : OrderTop (ProductCondition A) where
   top := 0
   le_top _ _ := le_top
-
-@[simp] theorem top_apply (i : I) : (⊤ : ProductCondition A) i = ⊤ := rfl
 
 theorem le_iff_prefixes {p q : ProductCondition A} :
     p ≤ q ↔ ∀ i, (q i).entries <+: (p i).entries := Iff.rfl
@@ -79,52 +74,5 @@ def restrict (s : Set I) (p : ProductCondition A) : ProductCondition A := by
     (hi : i ∉ s) (p : ProductCondition A) : restrict s p i = ⊤ := by
   classical
   exact DFinsupp.filter_apply_neg p hi
-
-theorem restrict_supported (s : Set I) (p : ProductCondition A) :
-    SupportedOn s (restrict s p) :=
-  fun _ hi => restrict_apply_of_not_mem hi p
-
-theorem restrict_eq_self_iff {s : Set I} {p : ProductCondition A} :
-    restrict s p = p ↔ SupportedOn s p := by
-  constructor
-  · intro h i hi
-    exact (congrArg (fun q : ProductCondition A => q i) h.symm).trans
-      (restrict_apply_of_not_mem hi p)
-  · intro h
-    apply DFinsupp.ext
-    intro i
-    by_cases hi : i ∈ s
-    · exact restrict_apply_of_mem hi p
-    · exact (restrict_apply_of_not_mem hi p).trans (h i hi).symm
-
-@[simp] theorem restrict_idempotent (s : Set I) (p : ProductCondition A) :
-    restrict s (restrict s p) = restrict s p :=
-  restrict_eq_self_iff.mpr (restrict_supported s p)
-
-@[simp] theorem restrict_top (s : Set I) : restrict s (⊤ : ProductCondition A) = ⊤ :=
-  restrict_eq_self_iff.mpr (fun _ _ => rfl)
-
-@[simp] theorem restrict_univ (p : ProductCondition A) : restrict Set.univ p = p :=
-  restrict_eq_self_iff.mpr (fun _ hi => (hi (Set.mem_univ _)).elim)
-
-@[simp] theorem restrict_empty (p : ProductCondition A) : restrict ∅ p = ⊤ := by
-  apply DFinsupp.ext
-  intro i
-  exact restrict_apply_of_not_mem (Set.notMem_empty i) p
-
-/-- Use the first condition on the selected coordinates and the second outside. -/
-def splice (s : Set I) (q p : ProductCondition A) : ProductCondition A := by
-  classical
-  exact q.piecewise p s
-
-@[simp] theorem splice_apply_of_mem {s : Set I} {i : I}
-    (hi : i ∈ s) (q p : ProductCondition A) : splice s q p i = q i := by
-  classical
-  simp only [splice, DFinsupp.piecewise_apply, if_pos hi]
-
-@[simp] theorem splice_apply_of_not_mem {s : Set I} {i : I}
-    (hi : i ∉ s) (q p : ProductCondition A) : splice s q p i = p i := by
-  classical
-  simp only [splice, DFinsupp.piecewise_apply, if_neg hi]
 
 end Erdos1172LevyCollapse

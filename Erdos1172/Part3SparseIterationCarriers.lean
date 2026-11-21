@@ -54,8 +54,6 @@ def value {a : Cut} (p : Carrier a) (i : W2) : Option Datum := p.val.val i
     (h : ∀ i, value p i = value q i) : p = q :=
   Subtype.ext (Subtype.ext (funext h))
 
-@[simp] theorem value_empty (a : Cut) (i : W2) : value (empty a) i = none := rfl
-
 theorem value_none_of_not_lt {a : Cut} (p : Carrier a) {i : W2}
     (hi : ¬ (i : Cut) < a) : value p i = none := by
   by_contra h
@@ -97,13 +95,6 @@ noncomputable def truncate (p : Raw) (a : Cut) : Carrier a := by
     rfl
   · simp only [value_truncate, if_neg hi, value_none_of_not_lt p hi]
 
-@[simp] theorem truncate_empty (a b : Cut) : truncate (empty a).val b = empty b := by
-  classical
-  apply carrier_ext
-  intro i
-  simp only [value_truncate, empty, emptyRaw]
-  split <;> rfl
-
 theorem truncate_truncate (p : Raw) {a b : Cut} (hab : a ≤ b) :
     truncate (truncate p b).val a = truncate p a := by
   classical
@@ -117,9 +108,6 @@ theorem truncate_truncate (p : Raw) {a b : Cut} (hab : a ≤ b) :
 
 def embed {a b : Cut} (hab : a ≤ b) (p : Carrier a) : Carrier b :=
   ⟨p.val, fun i hi => (p.property i hi).trans_le hab⟩
-
-@[simp] theorem value_embed {a b : Cut} (hab : a ≤ b) (p : Carrier a) (i : W2) :
-    value (embed hab p) i = value p i := rfl
 
 @[simp] theorem truncate_embed {a b : Cut} (hab : a ≤ b) (p : Carrier a) :
     truncate (embed hab p).val a = p := truncate_self p

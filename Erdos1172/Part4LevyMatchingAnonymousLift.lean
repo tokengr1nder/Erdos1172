@@ -123,12 +123,6 @@ instance : NontrivialCompleteBooleanAlgebra (LocalizedBelow W m₀) where
   toCompleteBooleanAlgebra := inferInstance
   bot_lt_top := lt_of_le_of_ne bot_le fun h => m₀.property (congrArg Subtype.val h).symm
 
-@[simp] theorem val_bot : (⊥ : LocalizedBelow W m₀).val = ⊥ := rfl
-@[simp] theorem val_top : (⊤ : LocalizedBelow W m₀).val = m₀.val := rfl
-@[simp] theorem val_inf (x y : LocalizedBelow W m₀) : (x ⊓ y : LocalizedBelow W m₀).val = x.val ⊓ y.val := rfl
-@[simp] theorem val_sup (x y : LocalizedBelow W m₀) : (x ⊔ y : LocalizedBelow W m₀).val = x.val ⊔ y.val := rfl
-@[simp] theorem val_compl (x : LocalizedBelow W m₀) : (xᶜ : LocalizedBelow W m₀).val = m₀.val ⊓ x.valᶜ := rfl
-
 /-- Complete Boolean restriction homomorphism `w ↦ w ⊓ m₀.val` onto `LocalizedBelow W m₀`. -/
 def restrict : CompleteLatticeHom W (LocalizedBelow W m₀) where
   toFun w := ⟨w ⊓ m₀.val, inf_le_right⟩
@@ -145,8 +139,6 @@ def restrict : CompleteLatticeHom W (LocalizedBelow W m₀) where
     · refine le_inf inf_le_left (le_sInf fun w hw => ?_)
       have hmem : w ⊓ m₀.val ∈ (fun x => x ⊓ m₀.val) '' S := ⟨w, hw, rfl⟩
       exact (inf_le_right.trans (sInf_le hmem)).trans inf_le_left)
-
-@[simp] theorem val_restrict (w : W) : (restrict m₀ w).val = w ⊓ m₀.val := rfl
 
 end LocalizedBelow
 end LocalizedBelow

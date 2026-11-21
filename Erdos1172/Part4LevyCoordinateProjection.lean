@@ -44,12 +44,6 @@ def evaluationOrderHom (i : I) :
   toFun p := p i
   monotone' := fun _ _ h => h i
 
-@[simp] theorem evaluationOrderHom_apply (i : I) (p : ProductCondition A) :
-    evaluationOrderHom i p = p i := rfl
-
-@[simp] theorem evaluationOrderHom_top (i : I) :
-    evaluationOrderHom (A := A) i ⊤ = ⊤ := rfl
-
 /-- Updating one coordinate gives the exact strengthening lift, without
 changing the other coordinates or assuming an external support bound. -/
 theorem evaluation_exactLifts (i : I) :

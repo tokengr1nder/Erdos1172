@@ -29,7 +29,6 @@ open Erdos1172Part3CompleteRestriction (CompleteRestriction)
 open Erdos1172Part3ClosedDecisionSystem (CliqueDecisions)
 open Erdos1172Part3NamedTraceIdeal (TailAvoid)
 open Erdos1172Part3ProductTraceIdeal
-open Erdos1172Part3FullSourceCubes (Cube)
 open Erdos1172Part3StationarySquareDecisions (Square)
 
 variable {P Q I X : Type} [Preorder P] [Preorder Q] [LinearOrder I] {G : SimpleGraph W2}

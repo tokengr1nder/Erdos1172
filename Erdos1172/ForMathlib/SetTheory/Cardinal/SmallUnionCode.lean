@@ -61,9 +61,6 @@ def eval (atoms : B → Set V) : Code I B → Set V :=
 @[simp] theorem eval_union (atoms : B → Set V) (c : I → Code I B) :
     eval atoms (union c) = ⋃ i, eval atoms (c i) := rfl
 
-@[simp] theorem eval_atom (atoms : B → Set V) (b : B) :
-    eval atoms (atom b : Code I B) = atoms b := rfl
-
 /-- A cardinal bound for the full, infinitarily closed syntax. -/
 theorem mk_code_le {μ κ : Cardinal.{0}}
     (hμ : 1 ≤ μ) (hκ : ℵ₀ ≤ κ) (hI : #I ≤ μ) (hB : #B ≤ κ)

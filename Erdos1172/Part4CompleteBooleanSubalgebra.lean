@@ -67,9 +67,6 @@ theorem sSup_mem {A : CompleteSubalgebra B} {S : Set B}
 @[simp] theorem bot_mem (A : CompleteSubalgebra B) : (⊥ : B) ∈ A :=
   CompleteSublattice.bot_mem (L := A.toCompleteSublattice)
 
-@[simp] theorem top_mem (A : CompleteSubalgebra B) : (⊤ : B) ∈ A :=
-  CompleteSublattice.top_mem (L := A.toCompleteSublattice)
-
 /-- The finite Boolean structure used to equip the same carrier. -/
 def toBooleanSubalgebra (A : CompleteSubalgebra B) : BooleanSubalgebra B where
   toSublattice := A.toCompleteSublattice.toSublattice
@@ -89,15 +86,6 @@ instance subtypeCompleteBooleanAlgebra (A : CompleteSubalgebra B) :
     sInf := c.sInf
     isLUB_sSup := c.isLUB_sSup
     isGLB_sInf := c.isGLB_sInf }
-
-@[simp] theorem coe_bot (A : CompleteSubalgebra B) :
-    ((⊥ : A) : B) = ⊥ := rfl
-
-@[simp] theorem coe_top (A : CompleteSubalgebra B) :
-    ((⊤ : A) : B) = ⊤ := rfl
-
-@[simp] theorem coe_compl {A : CompleteSubalgebra B} (a : A) :
-    ((aᶜ : A) : B) = (a : B)ᶜ := rfl
 
 instance subtypeNontrivial (A : CompleteSubalgebra B) [Nontrivial B] :
     Nontrivial A := by
@@ -119,9 +107,6 @@ theorem inclusion_injective (A : CompleteSubalgebra B) :
     Function.Injective (inclusion A) :=
   Subtype.coe_injective
 
-@[simp] theorem inclusion_compl (A : CompleteSubalgebra B) (a : A) :
-    inclusion A aᶜ = (inclusion A a)ᶜ := rfl
-
 theorem inclusion_sSup (A : CompleteSubalgebra B) (S : Set A) :
     inclusion A (sSup S) = sSup (inclusion A '' S) := rfl
 
@@ -142,15 +127,9 @@ def sInter (F : Set (CompleteSubalgebra B)) : CompleteSubalgebra B where
     intro b hb A hA
     exact A.compl_mem' (hb A hA)
 
-@[simp] theorem mem_sInter {F : Set (CompleteSubalgebra B)} {b : B} :
-    b ∈ sInter F ↔ ∀ A ∈ F, b ∈ A := Iff.rfl
-
 /-- The least complete Boolean subalgebra containing the given generators. -/
 def generated (S : Set B) : CompleteSubalgebra B :=
   sInter {A | S ⊆ (A : Set B)}
-
-@[simp] theorem mem_generated {S : Set B} {b : B} :
-    b ∈ generated S ↔ ∀ A : CompleteSubalgebra B, S ⊆ A → b ∈ A := Iff.rfl
 
 theorem subset_generated {S : Set B} : S ⊆ generated S :=
   fun _ hb _A hA => hA hb
@@ -162,13 +141,5 @@ theorem generated_le {S : Set B} {A : CompleteSubalgebra B}
 theorem generated_le_iff {S : Set B} {A : CompleteSubalgebra B} :
     generated S ≤ A ↔ S ⊆ A :=
   ⟨fun h => subset_generated.trans h, generated_le⟩
-
-@[simp] theorem generated_coe (A : CompleteSubalgebra B) :
-    generated (A : Set B) = A :=
-  le_antisymm (generated_le (Set.Subset.refl _)) subset_generated
-
-@[simp] theorem generated_idempotent (S : Set B) :
-    generated (generated S : Set B) = generated S :=
-  generated_coe (generated S)
 
 end Erdos1172CompleteSubalgebra

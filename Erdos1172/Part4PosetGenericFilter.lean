@@ -66,11 +66,5 @@ theorem completionHom_condition_eq_iSup (π : P →o Q) (H : ExactLifts π) (q :
     intro r
     exact (condition_le_completionHom_iff π H r.val (condition q)).mpr (condition_mono r.property)
 
--- The underlying complete Boolean algebra is the one used by condition.
-local instance genericCompletionNCBA (I : Type u) [Preorder I] [Nonempty I] :
-    NontrivialCompleteBooleanAlgebra (Completion I) where
-  toCompleteBooleanAlgebra := completionCompleteBooleanAlgebra
-  bot_lt_top := bot_lt_top
-
 end Presentation
 end Erdos1172PosetGeneric

@@ -285,20 +285,6 @@ theorem naturalSum_comm (a b : Ordinal.{u}) :
     naturalSum a b = naturalSum b a := by
   simp [naturalSum, add_comm]
 
-@[simp] theorem naturalSum_zero_right (a : Ordinal.{u}) :
-    naturalSum a 0 = a := by
-  have hzero : natCoeff 0 = 0 := by
-    ext e
-    apply Nat.cast_injective (R := Ordinal.{u})
-    rw [← castCoeff_apply, castCoeff_natCoeff,
-      Ordinal.CNF.coeff_zero_apply]
-    simp
-  rw [naturalSum, hzero, add_zero, evalNatCoeff_natCoeff]
-
-@[simp] theorem naturalSum_zero_left (a : Ordinal.{u}) :
-    naturalSum 0 a = a := by
-  rw [naturalSum_comm, naturalSum_zero_right]
-
 theorem naturalSum_strictMono_left (b : Ordinal.{u}) :
     StrictMono (fun a ↦ naturalSum a b) := by
   intro a a' haa'

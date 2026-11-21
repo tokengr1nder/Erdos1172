@@ -24,12 +24,11 @@ namespace Erdos1172Part3NamedCubeTraceBounds
 
 open ErdosRadoCHAsym (W1 W2)
 open Erdos1172Part3RegularMembership
-open Erdos1172Part3ProductTraceIdeal (CoreTrace productTrace rowCore cubeTrace squareTrace)
+open Erdos1172Part3ProductTraceIdeal (CoreTrace productTrace rowCore)
 open Erdos1172Part3FunctionDecisions (FunctionDecisions)
 open Erdos1172Part3DecisionSelection (exists_function_decisions_of_dense)
 open Erdos1172Part3ClosedDecisionSystem (CliqueDecisions)
 open Erdos1172Part3StationarySquareDecisions (Square)
-open Erdos1172Part3FullSourceCubes (Cube)
 open Erdos1172Part3HechlerOrder (exists_bound_of_countable)
 
 variable {P I : Type} [Preorder P] [LinearOrder I] {G H : SimpleGraph W2}

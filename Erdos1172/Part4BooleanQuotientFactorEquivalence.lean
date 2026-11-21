@@ -67,10 +67,4 @@ def factorOrderIso (e : CompleteLatticeHom B C) :
     intro p q
     exact (iteration_le_iff e p q).symm
 
-@[simp] theorem factorOrderIso_apply (e : CompleteLatticeHom B C)
-    (p : Condition (quotientName e)) : factorOrderIso e p = toFactor e p := rfl
-
-@[simp] theorem factorOrderIso_symm_apply (e : CompleteLatticeHom B C)
-    (p : FactorCondition e) : (factorOrderIso e).symm p = ofFactor e p := rfl
-
 end Erdos1172BooleanQuotient

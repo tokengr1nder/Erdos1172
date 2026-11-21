@@ -36,15 +36,9 @@ instance singleton_bSet : Singleton (bSet 𝔹) (bSet 𝔹) :=
     x ∈ᴮ ({y} : bSet 𝔹) = x =ᴮ y ⊔ x ∈ᴮ (∅ : bSet 𝔹) :=
   show x ∈ᴮ bSet.insert1 y ∅ = _ from mem_insert1
 
--- src/bvm_extras.lean:24
-@[simp] lemma insert1_bval_none {u v : bSet 𝔹} : (bSet.insert1 u ({v})).bval none = ⊤ := rfl
-
 -- src/bvm_extras.lean:27
 @[simp] lemma insert1_bval_some {u v : bSet 𝔹} {i} :
     (bSet.insert1 u ({v})).bval (some i) = (bval ({v} : bSet 𝔹)) i := rfl
-
--- src/bvm_extras.lean:30
-@[simp] lemma insert1_func_none {u v : bSet 𝔹} : (bSet.insert1 u ({v})).func none = u := rfl
 
 -- src/bvm_extras.lean:33
 @[simp] lemma insert1_func_some {u v : bSet 𝔹} {i} :
@@ -128,33 +122,6 @@ lemma eq_inserted_of_eq_singleton {x y z : bSet 𝔹} :
   -- hR: {x} =ᴮ insert1 y {z} ≤ y =ᴮ x
   exact hR.trans (le_of_eq bv_eq_symm)
 
--- src/bvm_extras.lean:69
-lemma insert1_symm (y z : bSet 𝔹) : ⊤ ≤ bSet.insert1 y ({z} : bSet 𝔹) =ᴮ bSet.insert1 z ({y} : bSet 𝔹) := by
-  -- w ∈ insert1 y {z} = w =ᴮ y ⊔ w =ᴮ z = w ∈ insert1 z {y}
-  have hmem : ∀ (a b w : bSet 𝔹),
-      w ∈ᴮ bSet.insert1 a ({b} : bSet 𝔹) = w =ᴮ a ⊔ w =ᴮ b := fun a b w => by
-    show w ∈ᴮ insert a ({b} : bSet 𝔹) = _
-    rw [mem_insert1]
-    have : w ∈ᴮ (∅ : bSet 𝔹) = ⊥ := by rw [mem_unfold]; exact exists_over_empty _
-    show w =ᴮ a ⊔ w ∈ᴮ insert b (∅ : bSet 𝔹) = _
-    rw [mem_insert1, this, sup_bot_eq]
-  apply mem_ext
-  · apply le_iInf; intro w; rw [← deduction, hmem y z w, hmem z y w, top_inf_eq]
-    exact le_of_eq (sup_comm _ _)
-  · apply le_iInf; intro w; rw [← deduction, hmem z y w, hmem y z w, top_inf_eq]
-    exact le_of_eq (sup_comm _ _)
-
--- src/bvm_extras.lean:78
-lemma eq_inserted_of_eq_singleton' {x y z : bSet 𝔹} :
-    ({x} : bSet 𝔹) =ᴮ bSet.insert1 y ({z} : bSet 𝔹) ≤ x =ᴮ z := by
-  -- {x} =ᴮ insert1 y {z} and insert1 y {z} =ᴮ insert1 z {y} (by insert1_symm)
-  -- so {x} =ᴮ insert1 z {y} ≤ x =ᴮ z (by eq_inserted_of_eq_singleton with y ↔ z)
-  -- use bv_eq_trans: {x} =ᴮ insert1 y {z} ⊓ insert1 y {z} =ᴮ insert1 z {y} ≤ {x} =ᴮ insert1 z {y}
-  have step1 : ({x} : bSet 𝔹) =ᴮ bSet.insert1 y ({z} : bSet 𝔹)
-      ≤ ({x} : bSet 𝔹) =ᴮ bSet.insert1 z ({y} : bSet 𝔹) :=
-    le_trans (le_inf le_rfl (le_top.trans (insert1_symm y z))) bv_eq_trans
-  exact le_trans step1 eq_inserted_of_eq_singleton
-
 -- src/bvm_extras.lean:81
 def binary_union (x y : bSet 𝔹) : bSet 𝔹 := bv_union ({x, y} : bSet 𝔹)
 
@@ -167,9 +134,6 @@ scoped infix:81 " ∩ᴮ " => bSet.binary_inter
 -- src/bvm_extras.lean:88
 @[simp] lemma binary_inter_bval {x y : bSet 𝔹} {i : x.type} :
     (x ∩ᴮ y).bval i = x.bval i ⊓ (x.func i) ∈ᴮ y := rfl
-
--- src/bvm_extras.lean:90
-@[simp] lemma binary_inter_type {x y : bSet 𝔹} : (x ∩ᴮ y).type = x.type := rfl
 
 -- src/bvm_extras.lean:92
 @[simp] lemma binary_inter_func {x y : bSet 𝔹} {i} : (x ∩ᴮ y).func i = x.func i := rfl
@@ -238,18 +202,6 @@ lemma subset_binary_inter_iff {x y z : bSet 𝔹} {Γ} :
     apply mem_binary_inter_iff.mpr
     exact ⟨mem_of_mem_subset (le_trans inf_le_left H₁) inf_le_right, mem_of_mem_subset (le_trans inf_le_left H₂) inf_le_right⟩
 
--- src/bvm_extras.lean:126
-lemma binary_inter_symm {x y : bSet 𝔹} {Γ} : Γ ≤ x ∩ᴮ y =ᴮ y ∩ᴮ x := by
-  apply mem_ext
-  · apply le_iInf; intro z; rw [← deduction]
-    have h : Γ ⊓ z ∈ᴮ (x ∩ᴮ y) ≤ z ∈ᴮ x ∧ Γ ⊓ z ∈ᴮ (x ∩ᴮ y) ≤ z ∈ᴮ y :=
-      mem_binary_inter_iff.mp inf_le_right
-    exact mem_binary_inter_iff.mpr ⟨h.2, h.1⟩
-  · apply le_iInf; intro z; rw [← deduction]
-    have h : Γ ⊓ z ∈ᴮ (y ∩ᴮ x) ≤ z ∈ᴮ y ∧ Γ ⊓ z ∈ᴮ (y ∩ᴮ x) ≤ z ∈ᴮ x :=
-      mem_binary_inter_iff.mp inf_le_right
-    exact mem_binary_inter_iff.mpr ⟨h.2, h.1⟩
-
 -- src/bvm_extras.lean:132
 lemma B_congr_binary_inter_left {y : bSet 𝔹} : B_congr (fun x => x ∩ᴮ y) := by
   intro x₁ x₂ Γ H_eq
@@ -262,19 +214,6 @@ lemma B_congr_binary_inter_left {y : bSet 𝔹} : B_congr (fun x => x ∩ᴮ y) 
     have h : Γ ⊓ z ∈ᴮ (x₂ ∩ᴮ y) ≤ z ∈ᴮ x₂ ∧ Γ ⊓ z ∈ᴮ (x₂ ∩ᴮ y) ≤ z ∈ᴮ y :=
       mem_binary_inter_iff.mp inf_le_right
     exact mem_binary_inter_iff.mpr ⟨bv_rw'' (le_trans inf_le_left (bv_symm H_eq)) h.1 B_ext_mem_right, h.2⟩
-
--- src/bvm_extras.lean:139
-lemma B_congr_binary_inter_right {y : bSet 𝔹} : B_congr (fun x => y ∩ᴮ x) := by
-  intro x₁ x₂ Γ H_eq
-  apply mem_ext
-  · apply le_iInf; intro z; rw [← deduction]
-    have h : Γ ⊓ z ∈ᴮ (y ∩ᴮ x₁) ≤ z ∈ᴮ y ∧ Γ ⊓ z ∈ᴮ (y ∩ᴮ x₁) ≤ z ∈ᴮ x₁ :=
-      mem_binary_inter_iff.mp inf_le_right
-    exact mem_binary_inter_iff.mpr ⟨h.1, bv_rw'' (le_trans inf_le_left H_eq) h.2 B_ext_mem_right⟩
-  · apply le_iInf; intro z; rw [← deduction]
-    have h : Γ ⊓ z ∈ᴮ (y ∩ᴮ x₂) ≤ z ∈ᴮ y ∧ Γ ⊓ z ∈ᴮ (y ∩ᴮ x₂) ≤ z ∈ᴮ x₂ :=
-      mem_binary_inter_iff.mp inf_le_right
-    exact mem_binary_inter_iff.mpr ⟨h.1, bv_rw'' (le_trans inf_le_left (bv_symm H_eq)) h.2 B_ext_mem_right⟩
 
 -- src/bvm_extras.lean:146
 lemma binary_inter_subset_left {x y : bSet 𝔹} {Γ} : Γ ≤ x ∩ᴮ y ⊆ᴮ x := by
@@ -289,23 +228,6 @@ lemma binary_inter_subset_right {x y : bSet 𝔹} {Γ} : Γ ≤ x ∩ᴮ y ⊆�
   have h : Γ ⊓ z ∈ᴮ (x ∩ᴮ y) ≤ z ∈ᴮ x ∧ Γ ⊓ z ∈ᴮ (x ∩ᴮ y) ≤ z ∈ᴮ y :=
     mem_binary_inter_iff.mp inf_le_right
   exact h.2
-
--- src/bvm_extras.lean:158
-lemma unordered_pair_symm (x y : bSet 𝔹) {Γ : 𝔹} : Γ ≤ ({x, y} : bSet 𝔹) =ᴮ {y, x} := by
-  -- z ∈ᴮ {x, y} = z =ᴮ x ⊔ z =ᴮ y, z ∈ᴮ {y, x} = z =ᴮ y ⊔ z =ᴮ x
-  have mem_bot : ∀ (w : bSet 𝔹), w ∈ᴮ (∅ : bSet 𝔹) = ⊥ := fun w => by
-    rw [mem_unfold]; exact exists_over_empty _
-  apply mem_ext
-  all_goals {
-    apply le_iInf; intro z; rw [← deduction]
-    simp only [mem_insert1, mem_singleton_bSet, mem_bot, sup_bot_eq]
-    exact le_trans inf_le_right (le_of_eq (sup_comm _ _))
-  }
-
--- src/bvm_extras.lean:166
-lemma binary_union_symm {x y : bSet 𝔹} {Γ} : Γ ≤ binary_union x y =ᴮ binary_union y x := by
-  unfold binary_union
-  exact B_congr_bv_union (unordered_pair_symm x y)
 
 -- src/bvm_extras.lean:179
 /-- The successor operation on sets (in particular von Neumann ordinals) -/
@@ -359,10 +281,6 @@ lemma succ_eq_binary_union {x : bSet 𝔹} {Γ} : Γ ≤ succ x =ᴮ binary_unio
       exact le_trans h1 (le_trans (le_trans eq_of_mem_singleton' (le_of_eq bv_eq_symm)) le_sup_left)
     · -- y =ᴮ x ⊓ z ∈ y ≤ z =ᴮ x ⊔ z ∈ x: z ∈ x via subst_congr_mem_right
       exact le_trans subst_congr_mem_right le_sup_right
-
--- src/bvm_extras.lean:204
-lemma succ_eq_binary_union' {x : bSet 𝔹} {Γ} : Γ ≤ succ x =ᴮ binary_union x ({x} : bSet 𝔹) :=
-  bv_trans succ_eq_binary_union binary_union_symm
 
 -- src/bvm_extras.lean:207
 @[reducible] def pair (x y : bSet 𝔹) : bSet 𝔹 := ({{x}, {x, y}} : bSet 𝔹)
@@ -435,35 +353,6 @@ lemma pair_congr {x₁ x₂ y₁ y₂ : bSet 𝔹} {Γ : 𝔹} (H₁ : Γ ≤ x�
 -- src/bvm_extras.lean:273
 @[simp] lemma B_ext_pair_mem_right {x y : bSet 𝔹} : B_ext (fun z => pair x z ∈ᴮ y) :=
   B_ext_term (fun w => w ∈ᴮ y) (fun z => pair x z) B_ext_mem_left B_congr_pair_right
-
--- src/bvm_extras.lean:276
-lemma eq_of_eq_pair'_left {x z y : bSet 𝔹} : pair x y =ᴮ pair z y ≤ x =ᴮ z := by
-  -- pair x y =ᴮ pair z y → {x} ∈ pair z y (from bv_eq_unfold at index none)
-  -- {x} ∈ pair z y = {x} =ᴮ {z} ⊔ {x} =ᴮ {z,y}
-  -- Both cases give x =ᴮ z: first by eq_of_eq_singleton, second by eq_inserted_of_eq_singleton
-  have hL : pair x y =ᴮ pair z y ≤ ({x} : bSet 𝔹) ∈ᴮ pair z y := by
-    rw [bv_eq_unfold]
-    apply inf_le_left.trans
-    apply iInf_le_of_le (none : (pair x y).type)
-    -- (pair x y).bval none = ⊤, (pair x y).func none = {x}
-    simp only [show (pair x y).bval (none : (pair x y).type) = ⊤ from rfl,
-               show (pair x y).func (none : (pair x y).type) = ({x} : bSet 𝔹) from rfl,
-               top_imp, le_refl]
-  -- {x} ∈ pair z y = {x} =ᴮ {z} ⊔ ({x} ∈ (insert ({z,y}) ∅)) = {x} =ᴮ {z} ⊔ {x} =ᴮ {z,y}
-  have hmem : ({x} : bSet 𝔹) ∈ᴮ pair z y = ({x} : bSet 𝔹) =ᴮ ({z} : bSet 𝔹) ⊔ ({x} : bSet 𝔹) =ᴮ ({z, y} : bSet 𝔹) := by
-    show ({x} : bSet 𝔹) ∈ᴮ insert ({z} : bSet 𝔹) (insert ({z, y} : bSet 𝔹) ∅) = _
-    rw [mem_insert1]
-    have : ({x} : bSet 𝔹) ∈ᴮ (∅ : bSet 𝔹) = ⊥ := by rw [mem_unfold]; exact exists_over_empty _
-    show ({x} : bSet 𝔹) =ᴮ ({z} : bSet 𝔹) ⊔ ({x} : bSet 𝔹) ∈ᴮ insert ({z, y} : bSet 𝔹) ∅ = _
-    rw [mem_insert1, this, sup_bot_eq]
-  rw [hmem] at hL
-  -- hL: pair x y =ᴮ pair z y ≤ {x} =ᴮ {z} ⊔ {x} =ᴮ {z,y}
-  calc pair x y =ᴮ pair z y
-      ≤ ({x} : bSet 𝔹) =ᴮ ({z} : bSet 𝔹) ⊔ ({x} : bSet 𝔹) =ᴮ ({z, y} : bSet 𝔹) := hL
-    _ ≤ x =ᴮ z := by
-          apply sup_le
-          · exact eq_of_eq_singleton le_rfl
-          · exact eq_inserted_of_eq_singleton
 
 -- src/bvm_extras.lean:287
 lemma inserted_eq_of_insert_eq {y v w : bSet 𝔹} :
@@ -700,15 +589,6 @@ lemma pair_eq_pair_iff {x y x' y' : bSet 𝔹} {Γ : 𝔹} :
 @[simp] lemma prod_bval {v w : bSet 𝔹} {a b} :
     (prod v w).bval (a, b) = v.bval a ⊓ w.bval b := rfl
 
--- src/bvm_extras.lean:362
-@[simp] lemma prod_type_forall {v w : bSet 𝔹} {ϕ : (prod v w).type → 𝔹} :
-    (⨅ (z : (prod v w).type), ϕ z) = ⨅ (z : v.type × w.type), ϕ z := rfl
-
--- src/bvm_extras.lean:366
-@[simp] lemma prod_check_bval {x y : PSet.{u}} {pr} :
-    (prod (check x) (check y) : bSet 𝔹).bval pr = ⊤ := by
-  cases pr; simp only [prod_bval, check_bval_top, top_inf_eq]
-
 -- src/bvm_extras.lean:371
 lemma prod_mem_old {v w x y : bSet 𝔹} :
     x ∈ᴮ v ⊓ y ∈ᴮ w ≤ pair x y ∈ᴮ prod v w := by
@@ -937,27 +817,6 @@ lemma prod_ext {S₁ S₂ x y : bSet 𝔹} {Γ : 𝔹}
       le_trans (le_inf (H_spec₂.trans inf_le_right) Hvw_S₂) bv_imp_elim
     exact subst_congr_mem_left' (bv_symm H_eq) Hvw_S₁
 
--- src/bvm_extras.lean:489
-@[simp] lemma check_singleton {x : PSet.{u}} {Γ : 𝔹} :
-    Γ ≤ check ({x} : PSet) =ᴮ ({check x} : bSet 𝔹) := by
-  have h : check ({x} : PSet) = ({check x} : bSet 𝔹) := by
-    show check (PSet.insert x ∅) = bSet.insert1 (check x) ∅
-    rw [check_insert]; simp [check_empty_eq_empty]
-  rw [h]; exact bv_refl
-
--- src/bvm_extras.lean:494
-@[simp] lemma check_unordered_pair {x y : PSet.{u}} {Γ} :
-    Γ ≤ check ({x, y} : PSet) =ᴮ ({check x, check y} : bSet 𝔹) := by
-  have h : check ({x, y} : PSet) = ({check x, check y} : bSet 𝔹) := by
-    show check (PSet.insert x (PSet.insert y ∅)) = bSet.insert1 (check x) (bSet.insert1 (check y) ∅)
-    rw [check_insert, check_insert]; simp [check_empty_eq_empty]
-  rw [h]; exact bv_refl
-
--- src/bvm_extras.lean:499
-@[simp] lemma eq_unordered_pair_of_eq {a b c d : bSet 𝔹} {Γ} (H₁ : Γ ≤ a =ᴮ c)
-    (H₂ : Γ ≤ b =ᴮ d) : Γ ≤ ({a, b} : bSet 𝔹) =ᴮ {c, d} :=
-  bv_trans (subst_congr_insert1_left' H₁) (subst_congr_insert1_left'' H₂)
-
 -- src/bvm_extras.lean:506
 -- (In Lean 4 port, PSet.pair is PSet.pSet_pair from PSetOrdinal.lean)
 lemma check_pset_pair {x y : PSet.{u}} {Γ} :
@@ -1020,32 +879,6 @@ lemma check_pset_prod {x y : PSet.{u}} {Γ : 𝔹} :
   have hmem₂ : Γ ⊓ (pair w₁ v₁ ∈ᴮ g ⊓ pair w₂ v₂ ∈ᴮ g) ≤ pair w₂ v₂ ∈ᴮ f :=
     mem_of_mem_subset (le_trans inf_le_left H_sub) (inf_le_right.trans inf_le_right)
   exact le_trans (le_inf hspec (le_inf hmem₁ hmem₂)) bv_imp_elim
-
--- src/bvm_extras.lean:548
-@[reducible] def is_functional (f : bSet 𝔹) : 𝔹 :=
-  ⨅ z, (⨆ w, pair z w ∈ᴮ f) ⟹ (⨆ w', ⨅ w'', pair z w'' ∈ᴮ f ⟹ w' =ᴮ w'')
-
--- src/bvm_extras.lean:551
-lemma is_functional_of_is_func (f : bSet 𝔹) {Γ} (H : Γ ≤ is_func f) : Γ ≤ is_functional f := by
-  unfold is_functional
-  apply le_iInf; intro z; rw [← deduction]
-  -- Γ ⊓ ⨆ w, pair z w ∈ᴮ f ≤ ⨆ w', ⨅ w'', pair z w'' ∈ᴮ f ⟹ w' =ᴮ w''
-  rw [inf_comm]
-  calc (⨆ w, pair z w ∈ᴮ f) ⊓ Γ
-      ≤ ⨆ w, pair z w ∈ᴮ f ⊓ Γ := (iSup_inf_eq _ _).le
-    _ ≤ ⨆ w', ⨅ w'', pair z w'' ∈ᴮ f ⟹ w' =ᴮ w'' := by
-        apply iSup_le; intro w
-        apply le_iSup_of_le w
-        apply le_iInf; intro w'; rw [← deduction]
-        -- pair z w ∈ f ⊓ Γ ⊓ pair z w' ∈ f ≤ w =ᴮ w'
-        -- is_func f says: pair z w ∈ f ⊓ pair z w' ∈ f ⟹ (z =ᴮ z ⟹ w =ᴮ w')
-        have hspec : pair z w ∈ᴮ f ⊓ Γ ⊓ pair z w' ∈ᴮ f ≤
-            pair z w ∈ᴮ f ⊓ pair z w' ∈ᴮ f ⟹ (z =ᴮ z ⟹ w =ᴮ w') :=
-          le_trans (le_trans (inf_le_left.trans inf_le_right) H)
-            (iInf_le _ z |>.trans (iInf_le _ z) |>.trans (iInf_le _ w) |>.trans (iInf_le _ w'))
-        have hmem : pair z w ∈ᴮ f ⊓ Γ ⊓ pair z w' ∈ᴮ f ≤ pair z w ∈ᴮ f ⊓ pair z w' ∈ᴮ f :=
-          le_inf (inf_le_left.trans inf_le_left) inf_le_right
-        exact le_trans (le_inf (le_trans (le_inf hspec hmem) bv_imp_elim) bv_refl) bv_imp_elim
 
 -- src/bvm_extras.lean:561
 @[reducible] def is_total (x y f : bSet 𝔹) : 𝔹 :=
@@ -1248,10 +1081,6 @@ lemma mem_image_iff {x y b f : bSet 𝔹} {Γ} :
 def preimage (x y f : bSet 𝔹) : bSet 𝔹 :=
   subset.mk (fun i : x.type => ⨆ b, b ∈ᴮ y ⊓ pair (x.func i) b ∈ᴮ f)
 
--- src/bvm_extras.lean:671
-@[simp] lemma preimage_subset {x y f} {Γ : 𝔹} : Γ ≤ preimage x y f ⊆ᴮ x :=
-  subset.mk_subset
-
 -- src/bvm_extras.lean:673
 @[simp] lemma mem_preimage {x y a b f : bSet 𝔹} {Γ}
     (H_mem : Γ ≤ pair a b ∈ᴮ f) (H_mem'' : Γ ≤ a ∈ᴮ x) (H_mem' : Γ ≤ b ∈ᴮ y) :
@@ -1417,109 +1246,6 @@ lemma factor_image_is_function {x y f : bSet 𝔹} {Γ} (H_is_function : Γ ≤ 
             have himage := mem_image hpair_f hxi hyj
             exact subst_congr_mem_left' (bv_symm heq) (prod_mem hxi himage)
 
--- src/bvm_extras.lean:740
-lemma check_is_total {x y f : PSet.{u}} (H_total : PSet.is_total x y f) {Γ : 𝔹} :
-    Γ ≤ is_total (check x) (check y) (check f) := by
-  cases y with | mk yα yA =>
-  cases x with | mk xα xA =>
-  -- After cases: check_cast, check_cast_symm are id (types are definitionally equal)
-  rw [is_total_iff_is_total']
-  apply le_iInf; intro i
-  simp only [check_bval_top, top_imp]
-  -- Goal: Γ ≤ ⨆ j, (check (PSet.mk yα yA)).bval j ⊓
-  --            pair ((check (PSet.mk xα xA)).func i) ((check (PSet.mk yα yA)).func j) ∈ᴮ check f
-  -- .func and .bval are definitional from `check = bSet.mk ...`
-  -- (check (PSet.mk xα xA)).func i = check (xA i) definitionally
-  -- (check (PSet.mk yα yA)).bval j = ⊤ definitionally
-  -- (check (PSet.mk yα yA)).func j = check (yA j) definitionally
-  obtain ⟨w, Hw_mem, Hw_pair⟩ := H_total (xA i) (PSet.func_mem (PSet.mk xα xA) i)
-  obtain ⟨j₀, Hj₀⟩ := Hw_mem
-  apply le_iSup_of_le j₀
-  simp only [check_bval_top, top_inf_eq]
-  -- Goal: Γ ≤ pair (check (xA i)) (check (yA j₀)) ∈ᴮ check f
-  -- pSet_pair (xA i) (yA j₀) ∈ f
-  have Hpair : PSet.pSet_pair (xA i) (yA j₀) ∈ f :=
-    (PSet.pSet_pair_mem_congr_right Hj₀).mp Hw_pair
-  exact subst_congr_mem_left' check_pset_pair (check_mem Hpair)
-
--- src/bvm_extras.lean:757
--- Helper: membership in check f as iSup over indices
-private lemma check_mem_as_iSup {f : PSet.{u}} {𝔹 : Type u} [NontrivialCompleteBooleanAlgebra 𝔹]
-    {z : bSet 𝔹} : z ∈ᴮ (check f : bSet 𝔹) = ⨆ k : f.Type, z =ᴮ check (f.Func k) := by
-  cases f with | mk α A =>
-  simp only [mem_unfold, check, bSet.bval, bSet.func, top_inf_eq, PSet.mk_func]
-  rfl
-
-lemma check_is_func {x y f : PSet.{u}} (H_func : PSet.is_func x y f) {Γ : 𝔹} :
-    Γ ≤ is_function (check x) (check y) (check f) := by
-  -- is_function = is_func' ⊓ (check f ⊆ prod (check x) (check y))
-  refine le_inf (le_inf ?_ (check_is_total (PSet.is_total_of_is_func H_func))) ?_
-  · -- Goal: Γ ≤ is_func (check f)
-    apply le_iInf; intro w₁; apply le_iInf; intro w₂
-    apply le_iInf; intro v₁; apply le_iInf; intro v₂
-    rw [← deduction, ← deduction]
-    -- For each pair of indices k₁, k₂, prove the branch
-    -- For each pair of indices, prove the branch using PSet.is_func
-    suffices key : ∀ k₁ k₂ : f.Type,
-        Γ ⊓ (pair w₁ v₁ =ᴮ check (f.Func k₁) ⊓ pair w₂ v₂ =ᴮ check (f.Func k₂)) ⊓ w₁ =ᴮ w₂ ≤ v₁ =ᴮ v₂ by
-      -- Γ₀ ≤ ⨆ k₁ k₂, Γ_kk via iSup distribution
-      -- Rewrite pair wᵢ vᵢ ∈ check f as ⨆ k, A k, then distribute ⊓ over ⨆
-      rw [show pair w₁ v₁ ∈ᴮ (check f : bSet 𝔹) = ⨆ k₁ : f.Type, pair w₁ v₁ =ᴮ check (f.Func k₁)
-          from check_mem_as_iSup,
-          show pair w₂ v₂ ∈ᴮ (check f : bSet 𝔹) = ⨆ k₂ : f.Type, pair w₂ v₂ =ᴮ check (f.Func k₂)
-          from check_mem_as_iSup]
-      -- Now goal: Γ ⊓ ((⨆ k₁, A k₁) ⊓ (⨆ k₂, B k₂)) ⊓ C ≤ P
-      -- Use simp to distribute completely, then iSup_le
-      simp only [iSup_inf_eq', inf_iSup_eq', inf_assoc]
-      apply iSup_le; intro k₁
-      apply iSup_le; intro k₂
-      -- After simp, k₁/k₂ may be swapped relative to key's expectation
-      -- Try key k₂ k₁ with re-association
-      have h := key k₂ k₁; simp only [inf_assoc] at h; exact h
-    intro k₁ k₂
-    set Γ_kk := Γ ⊓ (pair w₁ v₁ =ᴮ check (f.Func k₁) ⊓ pair w₂ v₂ =ᴮ check (f.Func k₂)) ⊓ w₁ =ᴮ w₂
-    by_cases h_pos : ⊥ < Γ_kk
-    · obtain ⟨ij₁, hij₁⟩ := PSet.subset_prod_of_is_func H_func k₁
-      obtain ⟨ij₂, hij₂⟩ := PSet.subset_prod_of_is_func H_func k₂
-      simp only [PSet.pSet_prod, PSet.mk_func] at hij₁ hij₂
-      have hfk₁_bveq : Γ_kk ≤ check (f.Func k₁) =ᴮ pair (check (x.Func ij₁.1)) (check (y.Func ij₁.2)) := by
-        have h : (⊤ : 𝔹) ≤ check (f.Func k₁) =ᴮ check (PSet.pSet_pair (x.Func ij₁.1) (y.Func ij₁.2)) :=
-          check_bv_eq hij₁
-        rw [check_pset_pair_eq] at h; exact le_trans le_top h
-      have hfk₂_bveq : Γ_kk ≤ check (f.Func k₂) =ᴮ pair (check (x.Func ij₂.1)) (check (y.Func ij₂.2)) := by
-        have h : (⊤ : 𝔹) ≤ check (f.Func k₂) =ᴮ check (PSet.pSet_pair (x.Func ij₂.1) (y.Func ij₂.2)) :=
-          check_bv_eq hij₂
-        rw [check_pset_pair_eq] at h; exact le_trans le_top h
-      have hpair₁ : Γ_kk ≤ pair w₁ v₁ =ᴮ pair (check (x.Func ij₁.1)) (check (y.Func ij₁.2)) :=
-        bv_trans (inf_le_left.trans (inf_le_right.trans inf_le_left)) hfk₁_bveq
-      have hpair₂ : Γ_kk ≤ pair w₂ v₂ =ᴮ pair (check (x.Func ij₂.1)) (check (y.Func ij₂.2)) :=
-        bv_trans (inf_le_left.trans (inf_le_right.trans inf_le_right)) hfk₂_bveq
-      have hw_eq : Γ_kk ≤ w₁ =ᴮ w₂ := inf_le_right
-      have hw₁ : Γ_kk ≤ w₁ =ᴮ check (x.Func ij₁.1) := (pair_eq_pair_iff.mp hpair₁).1
-      have hv₁ : Γ_kk ≤ v₁ =ᴮ check (y.Func ij₁.2) := (pair_eq_pair_iff.mp hpair₁).2
-      have hw₂ : Γ_kk ≤ w₂ =ᴮ check (x.Func ij₂.1) := (pair_eq_pair_iff.mp hpair₂).1
-      have hv₂ : Γ_kk ≤ v₂ =ᴮ check (y.Func ij₂.2) := (pair_eq_pair_iff.mp hpair₂).2
-      have hx_bveq : Γ_kk ≤ check (x.Func ij₁.1) =ᴮ check (x.Func ij₂.1) :=
-        bv_trans (bv_symm hw₁) (bv_trans hw_eq hw₂)
-      have hEquiv_x : PSet.Equiv (x.Func ij₁.1) (x.Func ij₂.1) :=
-        check_eq_reflect h_pos hx_bveq
-      have hmemf₁ : PSet.pSet_pair (x.Func ij₁.1) (y.Func ij₁.2) ∈ f :=
-        PSet.mem_iff.mpr ⟨k₁, hij₁.symm⟩
-      have hmemf₂ : PSet.pSet_pair (x.Func ij₂.1) (y.Func ij₂.2) ∈ f :=
-        PSet.mem_iff.mpr ⟨k₂, hij₂.symm⟩
-      have hEquiv_y : PSet.Equiv (y.Func ij₁.2) (y.Func ij₂.2) :=
-        PSet.eq_of_is_func_of_eq H_func hmemf₁ hmemf₂ hEquiv_x
-      have hy_bveq : Γ_kk ≤ check (y.Func ij₁.2) =ᴮ check (y.Func ij₂.2) :=
-        le_trans le_top (check_eq hEquiv_y)
-      exact bv_trans hv₁ (bv_trans hy_bveq (bv_symm hv₂))
-    · rw [bot_lt_iff_not_le_bot, not_not] at h_pos
-      exact le_trans h_pos bot_le
-  · -- Goal: Γ ≤ check f ⊆ prod (check x) (check y)
-    -- Use subst_congr_subset_right : a ⊆ b ⊓ b =ᴮ c ≤ a ⊆ c
-    have h_sub : Γ ≤ check f ⊆ᴮ check (PSet.pSet_prod x y) :=
-      check_subset (PSet.subset_prod_of_is_func H_func)
-    exact le_trans (le_inf h_sub check_pset_prod) subst_congr_subset_right
-
 -- src/bvm_extras.lean:797
 def function_of_func' {x y f : bSet 𝔹} {Γ} (_H_is_func' : Γ ≤ is_func' x y f) : bSet 𝔹 :=
   f ∩ᴮ (prod x y)
@@ -1528,11 +1254,6 @@ def function_of_func' {x y f : bSet 𝔹} {Γ} (_H_is_func' : Γ ≤ is_func' x 
 lemma function_of_func'_subset {x y f : bSet 𝔹} {Γ} {H_is_func' : Γ ≤ is_func' x y f} :
     Γ ≤ function_of_func' H_is_func' ⊆ᴮ f :=
   binary_inter_subset_left
-
--- src/bvm_extras.lean:804
-lemma mem_function_of_func'_iff {x y f : bSet 𝔹} {Γ} {H_is_func' : Γ ≤ is_func' x y f} {z} :
-    Γ ≤ z ∈ᴮ (function_of_func' H_is_func') ↔ Γ ≤ z ∈ᴮ f ∧ Γ ≤ z ∈ᴮ (prod x y) :=
-  mem_binary_inter_iff
 
 -- src/bvm_extras.lean:807
 @[reducible] def is_inj (f : bSet 𝔹) : 𝔹 :=
@@ -1565,66 +1286,6 @@ lemma factor_image_is_injective_function {x y f : bSet 𝔹} {Γ : 𝔹}
 lemma is_func'_of_is_injective_function {x y f : bSet 𝔹} {Γ}
     (H : Γ ≤ is_injective_function x y f) : Γ ≤ is_func' x y f :=
   is_func'_of_is_function (le_trans H inf_le_left)
-
--- src/bvm_extras.lean:828
-lemma check_is_injective_function {x y f : PSet.{u}}
-    (H_inj : PSet.is_injective_function x y f) {Γ : 𝔹} :
-    Γ ≤ bSet.is_injective_function (check x) (check y) (check f) := by
-  refine le_inf (check_is_func H_inj.1) ?_
-  apply le_iInf; intro w₁; apply le_iInf; intro w₂
-  apply le_iInf; intro v₁; apply le_iInf; intro v₂
-  rw [← deduction]
-  suffices key : ∀ k₁ k₂ : f.Type,
-      Γ ⊓ (pair w₁ v₁ =ᴮ check (f.Func k₁) ⊓ (pair w₂ v₂ =ᴮ check (f.Func k₂) ⊓ v₁ =ᴮ v₂)) ≤ w₁ =ᴮ w₂ by
-    -- Goal: Γ ⊓ (pair w₁ v₁ ∈ check f ⊓ pair w₂ v₂ ∈ check f ⊓ v₁ =ᴮ v₂) ≤ w₁ =ᴮ w₂
-    -- Rewrite membership as iSup, distribute
-    rw [show pair w₁ v₁ ∈ᴮ (check f : bSet 𝔹) = ⨆ k₁ : f.Type, pair w₁ v₁ =ᴮ check (f.Func k₁)
-        from check_mem_as_iSup,
-        show pair w₂ v₂ ∈ᴮ (check f : bSet 𝔹) = ⨆ k₂ : f.Type, pair w₂ v₂ =ᴮ check (f.Func k₂)
-        from check_mem_as_iSup]
-    simp only [iSup_inf_eq', inf_iSup_eq', inf_assoc]
-    apply iSup_le; intro k₁
-    apply iSup_le; intro k₂
-    exact key k₂ k₁
-  intro k₁ k₂
-  set Γ_kk := Γ ⊓ (pair w₁ v₁ =ᴮ check (f.Func k₁) ⊓ (pair w₂ v₂ =ᴮ check (f.Func k₂) ⊓ v₁ =ᴮ v₂))
-  by_cases h_pos : ⊥ < Γ_kk
-  · obtain ⟨ij₁, hij₁⟩ := PSet.subset_prod_of_is_func H_inj.1 k₁
-    obtain ⟨ij₂, hij₂⟩ := PSet.subset_prod_of_is_func H_inj.1 k₂
-    simp only [PSet.pSet_prod, PSet.mk_func] at hij₁ hij₂
-    have hfk₁_bveq : Γ_kk ≤ check (f.Func k₁) =ᴮ pair (check (x.Func ij₁.1)) (check (y.Func ij₁.2)) := by
-      have h : (⊤ : 𝔹) ≤ check (f.Func k₁) =ᴮ check (PSet.pSet_pair (x.Func ij₁.1) (y.Func ij₁.2)) :=
-        check_bv_eq hij₁
-      rw [check_pset_pair_eq] at h; exact le_trans le_top h
-    have hfk₂_bveq : Γ_kk ≤ check (f.Func k₂) =ᴮ pair (check (x.Func ij₂.1)) (check (y.Func ij₂.2)) := by
-      have h : (⊤ : 𝔹) ≤ check (f.Func k₂) =ᴮ check (PSet.pSet_pair (x.Func ij₂.1) (y.Func ij₂.2)) :=
-        check_bv_eq hij₂
-      rw [check_pset_pair_eq] at h; exact le_trans le_top h
-    have hpair₁ : Γ_kk ≤ pair w₁ v₁ =ᴮ pair (check (x.Func ij₁.1)) (check (y.Func ij₁.2)) :=
-      bv_trans (inf_le_right.trans inf_le_left) hfk₁_bveq
-    have hpair₂ : Γ_kk ≤ pair w₂ v₂ =ᴮ pair (check (x.Func ij₂.1)) (check (y.Func ij₂.2)) :=
-      bv_trans (inf_le_right.trans (inf_le_right.trans inf_le_left)) hfk₂_bveq
-    have hv_eq : Γ_kk ≤ v₁ =ᴮ v₂ := inf_le_right.trans (inf_le_right.trans inf_le_right)
-    have hw₁ : Γ_kk ≤ w₁ =ᴮ check (x.Func ij₁.1) := (pair_eq_pair_iff.mp hpair₁).1
-    have hv₁ : Γ_kk ≤ v₁ =ᴮ check (y.Func ij₁.2) := (pair_eq_pair_iff.mp hpair₁).2
-    have hw₂ : Γ_kk ≤ w₂ =ᴮ check (x.Func ij₂.1) := (pair_eq_pair_iff.mp hpair₂).1
-    have hv₂ : Γ_kk ≤ v₂ =ᴮ check (y.Func ij₂.2) := (pair_eq_pair_iff.mp hpair₂).2
-    have hy_bveq : Γ_kk ≤ check (y.Func ij₁.2) =ᴮ check (y.Func ij₂.2) :=
-      bv_trans (bv_symm hv₁) (bv_trans hv_eq hv₂)
-    have hEquiv_y : PSet.Equiv (y.Func ij₁.2) (y.Func ij₂.2) :=
-      check_eq_reflect h_pos hy_bveq
-    have hmemf₁ : PSet.pSet_pair (x.Func ij₁.1) (y.Func ij₁.2) ∈ f :=
-      PSet.mem_iff.mpr ⟨k₁, hij₁.symm⟩
-    have hmemf₂ : PSet.pSet_pair (x.Func ij₂.1) (y.Func ij₂.2) ∈ f :=
-      PSet.mem_iff.mpr ⟨k₂, hij₂.symm⟩
-    have hEquiv_x : PSet.Equiv (x.Func ij₁.1) (x.Func ij₂.1) :=
-      H_inj.2 (x.Func ij₁.1) (x.Func ij₂.1) (y.Func ij₁.2) (y.Func ij₂.2)
-        ⟨hmemf₁, hmemf₂, hEquiv_y⟩
-    have hx_bveq : Γ_kk ≤ check (x.Func ij₁.1) =ᴮ check (x.Func ij₂.1) :=
-      le_trans le_top (check_eq hEquiv_x)
-    exact bv_trans hw₁ (bv_trans hx_bveq (bv_symm hw₂))
-  · rw [bot_lt_iff_not_le_bot, not_not] at h_pos
-    exact le_trans h_pos bot_le
 
 -- src/bvm_extras.lean:868
 @[simp] lemma eq_of_is_inj_of_eq {x y x' y' f : bSet 𝔹} {Γ : 𝔹}
@@ -1675,10 +1336,6 @@ lemma funext {x y f g : bSet 𝔹} {Γ : 𝔹} (H₁ : Γ ≤ is_function x y f)
 -- src/bvm_extras.lean:895
 def larger_than (x y : bSet 𝔹) : 𝔹 :=
   ⨆ S, ⨆ f, S ⊆ᴮ x ⊓ (is_func' S y f) ⊓ (is_surj S y f)
-
--- src/bvm_extras.lean:897
-lemma is_surj_empty {Γ : 𝔹} : Γ ≤ is_surj (∅ : bSet 𝔹) ∅ ∅ :=
-  forall_empty
 
 -- src/bvm_extras.lean:900
 lemma function_of_func'_is_function {x y f : bSet 𝔹} {Γ} (H_is_func' : Γ ≤ is_func' x y f) :
@@ -1772,11 +1429,6 @@ lemma image_eq_codomain_of_surj {x y f : bSet 𝔹} {Γ}
   rw [mem_image_iff]
   exact ⟨hmem, le_trans (le_inf hspec hmem) bv_imp_elim⟩
 
--- src/bvm_extras.lean:946
-@[simp] lemma larger_than_domain_subset {Γ : 𝔹} {x y S : bSet 𝔹}
-    (HS : Γ ≤ ⨆ f, S ⊆ᴮ x ⊓ (is_func' S y f) ⊓ (is_surj S y f)) : Γ ≤ S ⊆ᴮ x := by
-  exact le_trans HS (iSup_le (fun f => le_trans (le_trans inf_le_left inf_le_left) (le_refl _)))
-
 -- src/bvm_extras.lean:950
 def injects_into (x y : bSet 𝔹) : 𝔹 := ⨆ f, (is_func' x y f) ⊓ is_inj f
 
@@ -1807,17 +1459,6 @@ lemma injects_into_iff_injection_into {x y : bSet 𝔹} {Γ} :
     Γ ≤ injects_into x y ↔ Γ ≤ injection_into x y :=
   ⟨injection_into_of_injects_into, injects_into_of_injection_into⟩
 
--- src/bvm_extras.lean:972
-lemma check_injects_into {x y : PSet.{u}} (H_inj : PSet.injects_into x y) {Γ : 𝔹} :
-    Γ ≤ bSet.injects_into (check x) (check y) := by
-  -- injects_into = ∃ f, is_injective_function x y f
-  -- bSet.injects_into = ⨆ f, is_func' f ⊓ is_inj f
-  obtain ⟨f, hf_inj⟩ := H_inj
-  apply le_iSup_of_le (check f)
-  refine le_inf ?_ ?_
-  · exact is_func'_of_is_function (check_is_func hf_inj.1)
-  · exact le_trans (check_is_injective_function hf_inj) inf_le_right
-
 -- src/bvm_extras.lean:981
 @[reducible] def is_surj_onto (x y f : bSet 𝔹) : 𝔹 := (is_func' x y f) ⊓ (is_surj x y f)
 
@@ -1832,24 +1473,6 @@ def surjects_onto (x y : bSet 𝔹) : 𝔹 := ⨆ f, is_surj_onto x y f
 def B_ext_is_total_right (S f : bSet 𝔹) : B_ext (fun z => is_total S z f) :=
   B_ext_iInf (h := fun _ => B_ext_imp (h₁ := B_ext_const)
     (h₂ := B_ext_iSup (h := fun _ => B_ext_inf B_ext_mem_right B_ext_const)))
-
-def B_ext_is_surj_codomain (S f : bSet 𝔹) : B_ext (fun z => is_surj S z f) :=
-  B_ext_iInf (h := fun _ => B_ext_imp (h₁ := B_ext_mem_right) (h₂ := B_ext_const))
-
-@[simp] lemma B_ext_larger_than_right {y : bSet 𝔹} : B_ext (fun z => larger_than y z) :=
-  B_ext_iSup (h := fun S => B_ext_iSup (h := fun f =>
-    B_ext_inf (B_ext_inf B_ext_const
-      (B_ext_inf B_ext_const (B_ext_is_total_right S f)))
-    (B_ext_is_surj_codomain S f)))
-
--- src/bvm_extras.lean:988
--- larger_than z y = ⨆ S f, S ⊆ z ⊓ is_func' S y f ⊓ is_surj S y f
--- B_ext as function of z: S ⊆ z = ⨅ j, S.bval j ⟹ S.func j ∈ z
-@[simp] lemma B_ext_larger_than_left {y : bSet 𝔹} : B_ext (fun z => larger_than z y) :=
-  -- larger_than z y = ⨆ S f, S ⊆ z ⊓ is_func' S y f ⊓ is_surj S y f
-  -- B_ext (fun z => S ⊆ z) = B_ext_subset_right
-  B_ext_iSup (h := fun S => B_ext_iSup (h := fun f =>
-    B_ext_inf (B_ext_inf B_ext_subset_right B_ext_const) B_ext_const))
 
 -- src/bvm_extras.lean:991
 -- injects_into z y = ⨆ f, is_func' z y f ⊓ is_inj f
@@ -1887,12 +1510,6 @@ def pointed_extension {x y : bSet 𝔹} {Γ : 𝔹} {S f : bSet 𝔹}
   subset.mk (fun pr : (prod x y).type =>
     (x.func pr.1 ∈ᴮ S ⟹ pair (x.func pr.1) (y.func pr.2) ∈ᴮ f) ⊓
     ((x.func pr.1 ∈ᴮ S)ᶜ ⟹ (y.func pr.2) =ᴮ b))
-
--- src/bvm_extras.lean:1023
-@[simp] lemma pointed_extension_func {x y : bSet 𝔹} {Γ : 𝔹} {S f b : bSet 𝔹}
-    {H_b : Γ ≤ b ∈ᴮ y} {H_S : Γ ≤ S ⊆ᴮ x} {H_surj : Γ ≤ is_func' S y f ⊓ is_surj S y f}
-    {pr : (prod x y).type} :
-    (pointed_extension b H_b H_S H_surj).func pr = pair (x.func pr.1) (y.func pr.2) := rfl
 
 -- src/bvm_extras.lean:1072-1215: All lemmas about pointed_extension
 -- These are sorry-stubbed since they require heavy tactic work.
@@ -2206,107 +1823,6 @@ lemma larger_than_of_surjects_onto {x y : bSet 𝔹} {Γ} (H_surj : Γ ≤ surje
   -- Need: is_func' x y f ⊓ is_surj x y f ≤ x ⊆ x ⊓ is_func' x y f ⊓ is_surj x y f
   apply le_inf (le_inf ?_ inf_le_left) inf_le_right
   exact le_top.trans subset_self
-
--- src/bvm_extras.lean:1238
-lemma check_not_is_func {x y f : PSet.{u}} (H : ¬ PSet.is_func x y f) :
-    ∀ {Γ : 𝔹}, (Γ ≤ is_function (check x) (check y) (check f) → Γ ≤ (⊥ : 𝔹)) := by
-  rw [PSet.is_func_iff] at H
-  simp only [not_and_or] at H
-  intro Γ H'
-  have H'_func' : Γ ≤ is_func' (check x) (check y) (check f) := H'.trans inf_le_left
-  have H'_sub : Γ ≤ check f ⊆ᴮ prod (check x) (check y) := H'.trans inf_le_right
-  rcases H with H_notsubset | H_notfunc
-  · -- Case 1: ¬ f ⊆ pSet_prod x y
-    have h_notsubset : (Γ : 𝔹) ≤ (check f ⊆ᴮ check (PSet.pSet_prod x y))ᶜ :=
-      check_not_subset H_notsubset
-    have h_subset : Γ ≤ check f ⊆ᴮ check (PSet.pSet_prod x y) :=
-      le_trans (le_inf H'_sub (bv_symm check_pset_prod)) subst_congr_subset_right
-    exact le_trans (le_inf h_subset h_notsubset) (le_of_eq inf_compl_eq_bot)
-  · -- Case 2: ¬ ∀ z ∈ x, ∃ w, pSet_pair z w ∈ f ∧ ∀ v, pSet_pair z v ∈ f → Equiv v w
-    push_neg at H_notfunc
-    obtain ⟨z, Hz_mem, Hz⟩ := H_notfunc
-    -- Hz : ∀ w, pSet_pair z w ∈ f → ∃ v, pSet_pair z v ∈ f ∧ ¬ Equiv v w
-    -- From totality, get w with pair (check z) w ∈ check f and w ∈ check y
-    have h_z_mem : (Γ : 𝔹) ≤ check z ∈ᴮ check x := check_mem Hz_mem
-    have H_total := is_total_of_is_func' H'_func'
-    have h_ex : Γ ≤ ⨆ w, w ∈ᴮ check y ⊓ pair (check z) w ∈ᴮ check f :=
-      le_trans (le_inf (le_trans H_total (iInf_le _ (check z))) h_z_mem) bv_imp_elim
-    -- Use instantiate_existential_over_check to extract a classical index into y
-    -- First need ⊥ < Γ by contradiction
-    suffices h : Γ ≤ ⊥ from h
-    by_contra H_nonzero
-    have H_nonzero' : ⊥ < Γ := bot_lt_iff_ne_bot.mpr
-      (fun heq => H_nonzero (heq.symm ▸ le_refl ⊥))
-    -- Extract classical index i_y : y.Type such that pair (check z) (check (y.Func i_y)) ∈ check f
-    -- at context Γ' ⊆ Γ with Γ' > ⊥
-    let i_y := @instantiate_existential_over_check 𝔹 _ (fun w => pair (check z) w ∈ᴮ check f)
-        B_ext_pair_mem_right y Γ H_nonzero' h_ex
-    -- HΓ' : ⊥ < pair (check z) (check (y.Func i_y)) ∈ᴮ check f ⊓ Γ
-    have HΓ'_pos := @instantiate_existential_over_check_spec 𝔹 _
-        (fun w => pair (check z) w ∈ᴮ check f) B_ext_pair_mem_right y Γ H_nonzero' h_ex
-    -- Γ' = pair (check z) (check (y.Func i_y)) ∈ᴮ check f ⊓ Γ
-    let Γ' := pair (check z) (check (y.Func i_y)) ∈ᴮ check f ⊓ Γ
-    have HΓ'_le_Γ : Γ' ≤ Γ := inf_le_right
-    have HΓ'_le_pair : Γ' ≤ pair (check z) (check (y.Func i_y)) ∈ᴮ check f := inf_le_left
-    have HΓ'_func' : Γ' ≤ is_func' (check x) (check y) (check f) := HΓ'_le_Γ.trans H'_func'
-    -- Apply Hz: pSet_pair z (y.Func i_y) is in f → ∃ v, pSet_pair z v ∈ f ∧ ¬ Equiv v (y.Func i_y)
-    -- First: pSet_pair z (y.Func i_y) ∈ f?
-    -- We have Γ' ≤ pair (check z) (check (y.Func i_y)) ∈ check f
-    -- This doesn't directly give pSet_pair z (y.Func i_y) ∈ f classically.
-    -- Instead, use classical case analysis:
-    rcases Classical.em (PSet.pSet_pair z (y.Func i_y) ∈ f) with H_mem_pset | H_notmem_pset
-    · -- pSet_pair z (y.Func i_y) ∈ f: use Hz to get witness b
-      obtain ⟨b, Hb_mem, Hb_neq⟩ := Hz _ H_mem_pset
-      have H_neq : Γ' ≤ (check b =ᴮ check (y.Func i_y))ᶜ :=
-        le_trans le_top (check_not_eq Hb_neq)
-      have H_b_pair_mem : Γ' ≤ pair (check z) (check b) ∈ᴮ check f := by
-        exact le_trans le_top (by rw [← check_pset_pair_eq]; exact check_mem Hb_mem)
-      have H_eq : Γ' ≤ check b =ᴮ check (y.Func i_y) :=
-        eq_of_is_func_of_eq (is_func_of_is_func' HΓ'_func') bv_refl H_b_pair_mem HΓ'_le_pair
-      exact false_of_bot_lt_and_le_bot HΓ'_pos
-        (le_trans (le_inf H_eq H_neq) (le_of_eq inf_compl_eq_bot))
-    · -- pSet_pair z (y.Func i_y) ∉ f: contradiction with HΓ'_le_pair
-      rw [← check_pset_pair_eq] at HΓ'_le_pair
-      exact false_of_bot_lt_and_le_bot HΓ'_pos (check_not_mem H_notmem_pset HΓ'_le_pair)
-
--- src/bvm_extras.lean:1273
-lemma check_not_is_surj {x y f : PSet.{u}} (H : ¬ PSet.is_surj x y f) :
-    ∀ {Γ : 𝔹}, Γ ≤ is_surj (check x) (check y) (check f) → Γ ≤ (⊥ : 𝔹) := by
-  -- Unfold PSet.is_surj and negate
-  simp only [PSet.is_surj] at H
-  push_neg at H
-  obtain ⟨b, Hb₁, Hb₂⟩ := H
-  -- Convert Hb₂ to pSet_pair form: ∀ a ∈ x, pSet_pair a b ∉ f
-  have Hb₂' : ∀ a : PSet.{u}, a ∈ x → PSet.pSet_pair a b ∉ f := by
-    intro a ha hm
-    apply Hb₂ a ha
-    rwa [← PSet.pSet_pair_sound, ← PSet.mem_iff]
-  intro Γ H_surj
-  -- From is_surj applied to check b ∈ check y
-  have hb_mem : Γ ≤ check b ∈ᴮ check y := check_mem Hb₁
-  have h_spec : Γ ≤ check b ∈ᴮ check y ⟹ ⨆ w, w ∈ᴮ check x ⊓ pair w (check b) ∈ᴮ check f :=
-    le_trans H_surj (iInf_le _ (check b))
-  have h_ex : Γ ≤ ⨆ w, w ∈ᴮ check x ⊓ pair w (check b) ∈ᴮ check f :=
-    le_trans (le_inf h_spec hb_mem) bv_imp_elim
-  -- Rewrite to indexed form: ⨆ i : (check x).type, ...
-  rw [← @bounded_exists _ _ (check x) (fun w => pair w (check b) ∈ᴮ check f)
-      (h_congr := B_ext_pair_mem_left)] at h_ex
-  -- h_ex : Γ ≤ ⨆ i : (check x).type, (check x).bval i ⊓ pair ((check x).func i) (check b) ∈ check f
-  -- Each term is ≤ ⊥ since pair (check (x.Func (check_cast i))) (check b) ∉ check f
-  apply le_trans h_ex
-  apply iSup_le; intro i_a
-  simp only [check_bval_top, top_inf_eq, check_func]
-  -- Goal: pair (check (x.Func (check_cast i_a))) (check b) ∈ᴮ check f ≤ ⊥
-  have hxa_mem : x.Func (check_cast i_a) ∈ x := PSet.func_mem x (check_cast i_a)
-  have hpair_not : PSet.pSet_pair (x.Func (check_cast i_a)) b ∉ f := Hb₂' _ hxa_mem
-  rw [← check_pset_pair_eq]
-  exact check_not_mem hpair_not le_rfl
-
--- src/bvm_extras.lean:1291
-lemma bot_lt_of_true {b : 𝔹} (H : ∀ {Γ}, Γ ≤ b) : ⊥ < b := by
-  have := @H ⊤
-  rw [top_le_iff] at this
-  simp [this]
 
 -- ============================================================
 -- src/bvm_extras.lean lines 1300-1900
@@ -3225,65 +2741,6 @@ lemma injects_into_trans {x y z : bSet 𝔹} {Γ : 𝔹}
             (is_func'_comp_inj (inf_le_left.trans inf_le_left) (inf_le_right.trans inf_le_left)
               (inf_le_left.trans inf_le_right) (inf_le_right.trans inf_le_right))
 
--- src/bvm_extras.lean:1636
-lemma injection_into_trans {x y z : bSet 𝔹} {Γ : 𝔹}
-    (H₁ : Γ ≤ injection_into x y) (H₂ : Γ ≤ injection_into y z) :
-    Γ ≤ injection_into x z := by
-  rw [← injects_into_iff_injection_into] at H₁ H₂ ⊢
-  exact injects_into_trans H₁ H₂
-
--- src/bvm_extras.lean:1639
-lemma AE_of_check_func_check₀ (x y : PSet.{u}) {f : bSet 𝔹} {Γ : 𝔹}
-    (H : Γ ≤ is_func' (check x) (check y) f) (H_nonzero : ⊥ < Γ) :
-    ∀ (i : x.Type), ∃ (j : y.Type),
-      ⊥ < (is_func' (check x) (check y) f) ⊓
-          (pair (check (x.Func i)) (check (y.Func j))) ∈ᴮ f := by
-  cases y with | mk α A =>
-  intro i
-  have H_total := is_total_of_is_func' H
-  have H_ex : Γ ≤ ⨆ w₂, w₂ ∈ᴮ (check (PSet.mk α A) : bSet 𝔹) ⊓
-      pair (check (x.Func i)) w₂ ∈ᴮ f :=
-    le_trans (le_inf (H_total.trans (iInf_le _ (check (x.Func i)))) mem_check_of_mem)
-      bv_imp_elim
-  rw [← @bounded_exists 𝔹 _ (check (PSet.mk α A) : bSet 𝔹)
-      (fun w₂ => pair (check (x.Func i)) w₂ ∈ᴮ f)
-      (h_congr := B_ext_pair_mem_right)] at H_ex
-  simp only [check_bval_top, top_inf_eq] at H_ex
-  -- H_ex : Γ ≤ ⨆ j : α, pair (check (x.Func i)) (check (A j)) ∈ᴮ f
-  have H_combined : ⊥ < ⨆ j : α, is_func' (check x) (check (PSet.mk α A)) f ⊓
-      pair (check (x.Func i)) (check (A j)) ∈ᴮ f :=
-    lt_of_lt_of_le H_nonzero (le_trans (le_inf H H_ex) (le_of_eq inf_iSup_eq'))
-  exact nonzero_wit H_combined
-
--- src/bvm_extras.lean:1653
-lemma AE_of_check_func_check (x y : PSet.{u}) {f : bSet 𝔹} {Γ : 𝔹}
-    (H : Γ ≤ is_func' (check x) (check y) f) (H_nonzero : ⊥ < Γ) :
-    ∀ (i : x.Type), ∃ (j : y.Type) (Γ' : 𝔹) (_H_nonzero' : ⊥ < Γ') (_H_le : Γ' ≤ Γ),
-      Γ' ≤ (is_func' (check x) (check y) f) ∧
-      Γ' ≤ (pair (check (x.Func i)) (check (y.Func j))) ∈ᴮ f := by
-  cases y with | mk α A =>
-  intro i
-  have H_total := is_total_of_is_func' H
-  have H_ex : Γ ≤ ⨆ w₂, w₂ ∈ᴮ (check (PSet.mk α A) : bSet 𝔹) ⊓
-      pair (check (x.Func i)) w₂ ∈ᴮ f :=
-    le_trans (le_inf (H_total.trans (iInf_le _ (check (x.Func i)))) mem_check_of_mem)
-      bv_imp_elim
-  rw [← @bounded_exists 𝔹 _ (check (PSet.mk α A) : bSet 𝔹)
-      (fun w₂ => pair (check (x.Func i)) w₂ ∈ᴮ f)
-      (h_congr := B_ext_pair_mem_right)] at H_ex
-  simp only [check_bval_top, top_inf_eq] at H_ex
-  -- H_ex : Γ ≤ ⨆ j : α, pair (check (x.Func i)) (check (A j)) ∈ᴮ f
-  -- Combined: Γ ≤ is_func' ... ⊓ ⨆ j, pair ... ∈ f = ⨆ j, is_func' ... ⊓ pair ... ∈ f
-  have H_supr : Γ ≤ ⨆ j : α,
-      is_func' (check x) (check (PSet.mk α A)) f ⊓ pair (check (x.Func i)) (check (A j)) ∈ᴮ f :=
-    le_trans (le_inf H H_ex) (le_of_eq inf_iSup_eq')
-  obtain ⟨j, Hj⟩ := nonzero_wit' H_nonzero H_supr
-  exact ⟨j,
-    is_func' (check x) (check (PSet.mk α A)) f ⊓ pair (check (x.Func i)) (check (A j)) ∈ᴮ f ⊓ Γ,
-    Hj,
-    inf_le_right,
-    ⟨inf_le_left.trans inf_le_left, inf_le_left.trans inf_le_right⟩⟩
-
 -- src/bvm_extras.lean:1692
 lemma exists_surjection_of_surjects_onto {x y : bSet 𝔹} {Γ : 𝔹}
     (H_surj : Γ ≤ surjects_onto x y) :
@@ -3298,55 +2755,6 @@ lemma exists_surjection_of_surjects_onto {x y : bSet 𝔹} {Γ : 𝔹}
 def functions (x y : bSet 𝔹) : bSet 𝔹 :=
   set_of_indicator (fun s : (bv_powerset (prod x y) : bSet 𝔹).type =>
     is_function x y ((bv_powerset (prod x y)).func s))
-
--- src/bvm_extras.lean:1703
-@[simp] lemma functions_func {x y : bSet 𝔹} {i} :
-    (functions x y).func i = (bv_powerset (prod x y)).func i := rfl
-
--- src/bvm_extras.lean:1705
-@[simp] lemma functions_bval {x y : bSet 𝔹} {i} :
-    (functions x y).bval i = is_function x y ((bv_powerset (prod x y)).func i) := rfl
-
--- src/bvm_extras.lean:1707
-@[simp] lemma functions_type {x y : bSet 𝔹} :
-    (functions x y).type = (bv_powerset (prod x y)).type := rfl
-
--- src/bvm_extras.lean:1709
-lemma mem_functions_iff {g x y : bSet 𝔹} {Γ : 𝔹} :
-    (Γ ≤ g ∈ᴮ functions x y) ↔ (Γ ≤ is_function x y g) := by
-  constructor
-  · intro H
-    -- g ∈ functions x y = ⨆ i, is_function x y ((𝒫 (prod x y)).func i) ⊓ g =ᴮ (𝒫 (prod x y)).func i
-    rw [mem_unfold] at H
-    apply H.trans; apply iSup_le; intro i
-    simp only [functions_bval, functions_func]
-    -- Each branch: is_function x y ((𝒫 prod x y).func i) ⊓ g =ᴮ (𝒫 prod x y).func i ≤ is_function x y g
-    exact bv_rw' (H := inf_le_right) (ϕ := fun f => is_function x y f)
-      (h_congr := B_ext_is_function_right) (H_new := inf_le_left)
-  · intro H
-    -- Need: Γ ≤ g ∈ᴮ functions x y
-    -- Since g ⊆ prod x y (from is_function), g ∈ 𝒫 (prod x y) by bv_powerset_spec
-    rw [mem_unfold]; unfold functions set_of_indicator
-    -- is_function x y g = is_func x y g ⊓ is_total x y g ⊓ g ⊆ prod x y
-    have Hfunc := H
-    simp only [is_function] at Hfunc
-    have Hsub : Γ ≤ g ⊆ᴮ prod x y := Hfunc.trans inf_le_right
-    -- g ∈ 𝒫 (prod x y) means ∃ f, g =ᴮ set_of_indicator f ⊓ ...
-    have Hsub2 := bv_powerset_spec.mp Hsub
-    rw [mem_unfold] at Hsub2
-    -- Hsub2 : Γ ≤ ⨆ i, (𝒫 prod x y).bval i ⊓ g =ᴮ (𝒫 prod x y).func i
-    -- Carry both Hsub2 and H through the iSup distribution
-    apply (le_inf Hsub2 H).trans
-    -- (⨆ i, bval_i ⊓ g =ᴮ fi) ⊓ is_function x y g ≤ ⨆ j, is_function x y fj ⊓ g =ᴮ fj
-    apply (iSup_inf_eq _ _).le.trans
-    apply iSup_le; intro i; apply le_iSup_of_le i
-    -- LHS: (bval_i ⊓ g =ᴮ fi) ⊓ is_function x y g
-    -- Need: is_function x y fi ⊓ g =ᴮ fi
-    refine le_inf ?_ (inf_le_left.trans inf_le_right)
-    -- is_function x y fi via bv_rw' from g =ᴮ fi and is_function x y g
-    -- H : LHS ≤ fi =ᴮ g (symmetrized), H_new : LHS ≤ is_function x y g, gives is_function x y fi
-    exact bv_rw' (H := bv_symm (inf_le_left.trans inf_le_right))
-      (h_congr := B_ext_is_function_right) (H_new := inf_le_right)
 
 -- ============================================================
 -- src/bvm_extras.lean:1732-1798: function_mk' section
@@ -3795,12 +3203,6 @@ lemma injective_function_inverse_is_injective_function {x y f : bSet 𝔹}
     Γ ≤ is_injective_function (image x y f) x (injective_function_inverse H_inj) :=
   le_inf (inj_inverse_is_function _ _) (inj_inverse_is_inj _ _)
 
--- src/bvm_extras.lean:1898
-lemma injective_function_inverse_is_inj {x y f : bSet 𝔹}
-    {H_inj : Γ ≤ is_injective_function x y f} :
-    Γ ≤ is_inj (injective_function_inverse H_inj) :=
-  injective_function_inverse_is_injective_function.trans inf_le_right
-
 end injective_function_inverse_section
 
 -- ============================================================
@@ -3904,10 +3306,6 @@ def functionMk {u : bSet 𝔹} (F : u.type → bSet 𝔹)
 -- src/bvm_extras.lean:1972: check' named check'' to avoid collision
 def check'' {α : Type u} (A : α → bSet 𝔹) : bSet 𝔹 := ⟨α, A, fun _ => ⊤⟩
 
-@[simp] lemma check''_type {α : Type u} {A : α → bSet 𝔹} : (check'' A).type = α := rfl
-@[simp] lemma check''_bval {α : Type u} {A : α → bSet 𝔹} {i} : (check'' A).bval i = ⊤ := rfl
-@[simp] lemma check''_func {α : Type u} {A : α → bSet 𝔹} {i} : (check'' A).func i = A i := rfl
-
 -- src/bvm_extras.lean:1978
 lemma functionMk_is_func {u : bSet 𝔹} (F : u.type → bSet 𝔹)
     (h_congr : ∀ i j, u.func i =ᴮ u.func j ≤ F i =ᴮ F j) :
@@ -3989,72 +3387,6 @@ lemma functionMk_is_func {u : bSet 𝔹} (F : u.type → bSet 𝔹)
                 le_trans h_ui_uj (h_congr i j)
               -- v₁ =ᴮ v₂ via v₁ =ᴮ F i =ᴮ F j =ᴮ v₂ (symm)
               exact bv_trans hv1_Fi (bv_trans h_Fi_Fj (bv_symm hv2_Fj))
-
--- src/bvm_extras.lean:2041
-lemma functionMk_inj_of_inj {u : bSet 𝔹} {F : u.type → bSet 𝔹}
-    (h_inj : ∀ i j, i ≠ j → F i =ᴮ F j ≤ ⊥)
-    (h_congr : ∀ i j, u.func i =ᴮ u.func j ≤ F i =ᴮ F j) :
-    (⊤ : 𝔹) ≤ is_inj (functionMk F h_congr) := by
-  -- is_inj f = ⨅ w₁ w₂ v₁ v₂, pair w₁ v₁ ∈ f ⊓ pair w₂ v₂ ∈ f ⊓ v₁ =ᴮ v₂ ⟹ w₁ =ᴮ w₂
-  apply le_iInf; intro w₁; apply le_iInf; intro w₂
-  apply le_iInf; intro v₁; apply le_iInf; intro v₂
-  rw [← deduction, top_inf_eq]
-  -- Goal: pair w₁ v₁ ∈ functionMk ⊓ pair w₂ v₂ ∈ functionMk ⊓ v₁ =ᴮ v₂ ≤ w₁ =ᴮ w₂
-  have hmem_left : pair w₁ v₁ ∈ᴮ (functionMk F h_congr : bSet 𝔹) ≤
-      ⨆ i : u.type, u.bval i ⊓ pair w₁ v₁ =ᴮ pair (u.func i) (F i) := by
-    simp only [mem_unfold, functionMk_type, functionMk_bval, functionMk_func]; exact le_rfl
-  have hmem_right : pair w₂ v₂ ∈ᴮ (functionMk F h_congr : bSet 𝔹) ≤
-      ⨆ j : u.type, u.bval j ⊓ pair w₂ v₂ =ᴮ pair (u.func j) (F j) := by
-    simp only [mem_unfold, functionMk_type, functionMk_bval, functionMk_func]; exact le_rfl
-  -- Carry context through double iSup
-  calc pair w₁ v₁ ∈ᴮ (functionMk F h_congr) ⊓ pair w₂ v₂ ∈ᴮ (functionMk F h_congr) ⊓ v₁ =ᴮ v₂
-      ≤ (⨆ i, u.bval i ⊓ pair w₁ v₁ =ᴮ pair (u.func i) (F i)) ⊓
-          (pair w₁ v₁ ∈ᴮ (functionMk F h_congr) ⊓ pair w₂ v₂ ∈ᴮ (functionMk F h_congr) ⊓ v₁ =ᴮ v₂) :=
-        le_inf (inf_le_left.trans (inf_le_left.trans hmem_left)) le_rfl
-    _ ≤ ⨆ i, (u.bval i ⊓ pair w₁ v₁ =ᴮ pair (u.func i) (F i)) ⊓
-          (pair w₁ v₁ ∈ᴮ (functionMk F h_congr) ⊓ pair w₂ v₂ ∈ᴮ (functionMk F h_congr) ⊓ v₁ =ᴮ v₂) :=
-        (iSup_inf_eq _ _).le
-    _ ≤ w₁ =ᴮ w₂ := by
-        apply iSup_le; intro i
-        calc (u.bval i ⊓ pair w₁ v₁ =ᴮ pair (u.func i) (F i)) ⊓
-              (pair w₁ v₁ ∈ᴮ (functionMk F h_congr) ⊓ pair w₂ v₂ ∈ᴮ (functionMk F h_congr) ⊓ v₁ =ᴮ v₂)
-            ≤ (⨆ j, u.bval j ⊓ pair w₂ v₂ =ᴮ pair (u.func j) (F j)) ⊓
-                ((u.bval i ⊓ pair w₁ v₁ =ᴮ pair (u.func i) (F i)) ⊓
-                  (pair w₁ v₁ ∈ᴮ (functionMk F h_congr) ⊓ pair w₂ v₂ ∈ᴮ (functionMk F h_congr) ⊓ v₁ =ᴮ v₂)) :=
-              le_inf (inf_le_right.trans (inf_le_left.trans (inf_le_right.trans hmem_right))) le_rfl
-          _ ≤ ⨆ j, (u.bval j ⊓ pair w₂ v₂ =ᴮ pair (u.func j) (F j)) ⊓
-                ((u.bval i ⊓ pair w₁ v₁ =ᴮ pair (u.func i) (F i)) ⊓
-                  (pair w₁ v₁ ∈ᴮ (functionMk F h_congr) ⊓ pair w₂ v₂ ∈ᴮ (functionMk F h_congr) ⊓ v₁ =ᴮ v₂)) :=
-              (iSup_inf_eq _ _).le
-          _ ≤ w₁ =ᴮ w₂ := by
-              apply iSup_le; intro j
-              set ctx5 := (u.bval j ⊓ pair w₂ v₂ =ᴮ pair (u.func j) (F j)) ⊓
-                    ((u.bval i ⊓ pair w₁ v₁ =ᴮ pair (u.func i) (F i)) ⊓
-                      (pair w₁ v₁ ∈ᴮ (functionMk F h_congr) ⊓ pair w₂ v₂ ∈ᴮ (functionMk F h_congr) ⊓ v₁ =ᴮ v₂))
-              -- w₁ =ᴮ u.func i, v₁ =ᴮ F i
-              have hw1_ui : ctx5 ≤ w₁ =ᴮ u.func i :=
-                inf_le_right.trans (inf_le_left.trans (inf_le_right.trans eq_of_eq_pair_left))
-              have hv1_Fi : ctx5 ≤ v₁ =ᴮ F i :=
-                inf_le_right.trans (inf_le_left.trans (inf_le_right.trans eq_of_eq_pair_right))
-              -- w₂ =ᴮ u.func j, v₂ =ᴮ F j
-              have hw2_uj : ctx5 ≤ w₂ =ᴮ u.func j :=
-                inf_le_left.trans (inf_le_right.trans eq_of_eq_pair_left)
-              have hv2_Fj : ctx5 ≤ v₂ =ᴮ F j :=
-                inf_le_left.trans (inf_le_right.trans eq_of_eq_pair_right)
-              -- v₁ =ᴮ v₂
-              have hv12 : ctx5 ≤ v₁ =ᴮ v₂ :=
-                inf_le_right.trans (inf_le_right.trans inf_le_right)
-              by_cases h_ij : i = j
-              · -- i = j: w₁ =ᴮ u.func i =ᴮ u.func j =ᴮ w₂
-                subst h_ij
-                exact bv_trans hw1_ui (bv_symm hw2_uj)
-              · -- i ≠ j: derive contradiction via F i =ᴮ F j ≤ ⊥
-                -- v₁ =ᴮ F i, v₁ =ᴮ v₂, v₂ =ᴮ F j → F i =ᴮ F j
-                have hFiFj : ctx5 ≤ F i =ᴮ F j :=
-                  bv_trans (bv_symm hv1_Fi) (bv_trans hv12 hv2_Fj)
-                have h_bot : ctx5 ≤ ⊥ :=
-                  le_trans hFiFj (h_inj i j h_ij)
-                exact le_trans h_bot bot_le
 
 -- ============================================================
 -- src/bvm_extras.lean:2080-2136: bot_of_mem_self, bot_of_mem_mem
@@ -4192,61 +3524,6 @@ end extras
 section bSet_check_extras
 variable {𝔹 : Type u} [NontrivialCompleteBooleanAlgebra 𝔹]
 
--- src/bvm_extras.lean:2154
-lemma check_powerset_subset_powerset (x : PSet) {Γ : 𝔹} :
-    Γ ≤ (check (PSet.powerset x) : bSet 𝔹) ⊆ᴮ (bv_powerset (check x)) := by
-  -- For each element s of check (PSet.powerset x), show s ∈ bv_powerset (check x), i.e., s ⊆ check x.
-  rw [subset_unfold']
-  apply le_iInf; intro z; rw [← deduction]
-  -- Goal: Γ ⊓ z ∈ check (PSet.powerset x) ≤ z ∈ bv_powerset (check x) = z ⊆ check x
-  rw [mem_powerset_iff]
-  -- Extract index p from z ∈ check (PSet.powerset x)
-  -- mem_unfold: z ∈ check (PSet.powerset x) = ⨆ p, ⊤ ⊓ z =ᴮ check ((PSet.powerset x).Func p)
-  have h_mem : Γ ⊓ z ∈ᴮ (check (PSet.powerset x) : bSet 𝔹) ≤
-      ⨆ p : (PSet.powerset x).Type, z =ᴮ check ((PSet.powerset x).Func p) := by
-    calc Γ ⊓ z ∈ᴮ (check (PSet.powerset x) : bSet 𝔹)
-        ≤ z ∈ᴮ (check (PSet.powerset x) : bSet 𝔹) := inf_le_right
-      _ = ⨆ p, ⊤ ⊓ z =ᴮ check ((PSet.powerset x).Func p) := mem_unfold
-      _ = ⨆ p, z =ᴮ check ((PSet.powerset x).Func p) := by simp [top_inf_eq]
-  -- Carry context through iSup
-  apply (le_inf h_mem le_rfl).trans
-  apply (iSup_inf_eq _ _).le.trans
-  apply iSup_le; intro p
-  -- (PSet.powerset x).Func p ⊆ x (since Func p ∈ powerset x)
-  have h_sub : (PSet.powerset x).Func p ⊆ x :=
-    PSet.mem_powerset.mp (PSet.func_mem _ p)
-  -- check ((PSet.powerset x).Func p) ⊆ check x by check_subset
-  have h_csub : Γ ≤ check ((PSet.powerset x).Func p) ⊆ᴮ (check x : bSet 𝔹) :=
-    check_subset h_sub
-  -- z =ᴮ check ((PSet.powerset x).Func p) ⊓ ctx ≤ z ⊆ check x
-  -- subst_congr_subset_left: (v ⊆ u) ⊓ (a =ᴮ v) ≤ a ⊆ u
-  -- Use: h_csub for check(Func p) ⊆ check x, and inf_le_left for z =ᴮ check(Func p)
-  exact le_trans (le_inf (le_trans le_top (check_subset h_sub)) inf_le_left) subst_congr_subset_left
-
--- src/bvm_extras.lean:2193
-lemma check_functions_subset_functions {x y : PSet.{u}} {Γ : 𝔹} :
-    Γ ≤ (check (PSet.functions x y) : bSet 𝔹) ⊆ᴮ functions (check x) (check y) := by
-  -- For each element w ∈ check (PSet.functions x y), show w ∈ functions (check x) (check y)
-  rw [subset_unfold']; apply le_iInf; intro w; rw [← deduction]
-  -- w ∈ check (PSet.functions x y) = ⨆ i, w =ᴮ check ((PSet.functions x y).Func i)
-  rw [check_mem_as_iSup, inf_iSup_eq']
-  apply iSup_le; intro i
-  -- i : (PSet.functions x y).Type; (PSet.functions x y).Func i ∈ PSet.functions x y
-  have h_mem : (PSet.functions x y).Func i ∈ PSet.functions x y :=
-    PSet.func_mem (PSet.functions x y) i
-  rw [PSet.mem_functions_iff] at h_mem
-  -- check (functions x y).Func i ∈ᴮ functions (check x) (check y)
-  have h_in_func : (⊤ : 𝔹) ≤ check ((PSet.functions x y).Func i) ∈ᴮ functions (check x) (check y) :=
-    mem_functions_iff.mpr (le_trans le_top (check_is_func h_mem))
-  -- Rewrite using w =ᴮ check (Func i)
-  exact bv_rw' (H := inf_le_right) (ϕ := fun z => z ∈ᴮ functions (check x) (check y))
-    (h_congr := B_ext_mem_left) (H_new := le_trans le_top h_in_func)
-
--- src/bvm_extras.lean:2203
-@[simp] lemma check_mem'' {y : PSet} {i : y.Type} :
-    ((check (y.Func i) : bSet 𝔹)) ∈ᴮ (check y) = (⊤ : 𝔹) := by
-  apply top_unique; simp
-
 -- src/bvm_extras.lean:2206
 lemma of_nat_inj' {n k : ℕ} (H_neq : n ≠ k) :
     ((of_nat n : bSet 𝔹) =ᴮ of_nat k) = ⊥ :=
@@ -4257,11 +3534,6 @@ lemma of_nat_mem_of_lt' {k₁ k₂ : ℕ} (H_lt : k₁ < k₂) {Γ : 𝔹} :
     Γ ≤ (of_nat k₁ : bSet 𝔹) ∈ᴮ (of_nat k₂) :=
   check_mem (PSet.ofNat_mem_of_lt H_lt)
 
--- src/bvm_extras.lean:2215
-@[simp] lemma zero_eq_some_none' {Γ : 𝔹} :
-    Γ ≤ (0 : bSet 𝔹) =ᴮ (𝟚 : bSet 𝔹).func (some none) :=
-  bv_refl
-
 end bSet_check_extras
 
 -- ============================================================
@@ -4271,437 +3543,6 @@ end bSet_check_extras
 section powerset_section
 variable {𝔹 : Type u} [NontrivialCompleteBooleanAlgebra 𝔹]
 variable (x : bSet 𝔹)
-
--- src/bvm_extras.lean:2228
--- powerset_injects_F: maps (bv_powerset x).type → (functions x 𝟚).type
--- encodes χ ↦ characteristic function as subset of x × 𝟚
-def powerset_injects_F : (bv_powerset x).type → (functions x 𝟚).type :=
-  fun χ pr =>
-    (x.func pr.1 ∈ᴮ set_of_indicator χ ⊓ ((𝟚 : bSet 𝔹).func pr.2 =ᴮ 0)) ⊔
-    (x.func pr.1 ∈ᴮ subset.mk (fun i => (x.func i ∈ᴮ set_of_indicator χ)ᶜ) ⊓
-      ((𝟚 : bSet 𝔹).func pr.2 =ᴮ 1))
-
--- src/bvm_extras.lean:2231
-lemma mem_powerset_injects_F_iff {Γ : 𝔹} {χ : x.type → 𝔹} {z : bSet 𝔹} :
-    Γ ≤ pair z 0 ∈ᴮ (functions x 𝟚).func (powerset_injects_F x χ) ↔
-    Γ ≤ z ∈ᴮ set_of_indicator χ := by
-  -- (functions x 𝟚).func (powerset_injects_F x χ) = set_of_indicator (powerset_injects_F x χ)
-  -- where u = prod x 𝟚, and .type = x.type × 𝟚.type
-  -- (functions x 𝟚).func (powerset_injects_F x χ)
-  --   = (bv_powerset (prod x 𝟚)).func (powerset_injects_F x χ)  [by functions_func]
-  --   = set_of_indicator (u := prod x 𝟚) (powerset_injects_F x χ)  [definitionally]
-  -- The type of the resulting bSet has:
-  --   .type = x.type × 𝟚.type
-  --   .func (i,j) = (prod x 𝟚).func (i,j) = pair (x.func i) (𝟚.func j)
-  --   .bval (i,j) = powerset_injects_F x χ (i,j)
-  -- For the iff, use: pair z 0 ∈ F(χ) ↔ z ∈ set_of_indicator χ
-  -- where F(χ)(i,j) = (x.func i ∈ set_of_indicator χ ⊓ 𝟚.func j = 0) ⊔ (x.func i ∉ set_of_indicator χ ⊓ 𝟚.func j = 1)
-  -- The iff uses that the only indices contributing to pair z 0 are (i, some none) with z =ᴮ x.func i
-  -- since 𝟚.func (some none) = 0 and 𝟚.func none = 1, and 0 ≠ 1.
-  -- Reduce to indexed iSup form using mem_unfold
-  -- The key unfolding: pair z 0 ∈ᴮ (functions x 𝟚).func (powerset_injects_F x χ)
-  --   = ⨆ pr, (powerset_injects_F x χ pr) ⊓ pair z 0 =ᴮ pair (x.func pr.1) (𝟚.func pr.2)
-  -- This uses functions_func + definitional equality (bv_powerset u).func ξ = set_of_indicator ξ.
-  have hFuncs : pair z 0 ∈ᴮ (functions x 𝟚).func (powerset_injects_F x χ) =
-      ⨆ pr : x.type × (𝟚 : bSet 𝔹).type, (powerset_injects_F x χ pr) ⊓
-        pair z 0 =ᴮ pair (x.func pr.1) ((𝟚 : bSet 𝔹).func pr.2) := by
-    rw [functions_func]; rfl
-  have hSOI : z ∈ᴮ set_of_indicator χ =
-      ⨆ i : x.type, χ i ⊓ z =ᴮ x.func i := by rfl
-  constructor
-  · intro H
-    rw [hFuncs] at H
-    -- H : Γ ≤ ⨆ (i,j), powerset_injects_F x χ (i,j) ⊓ pair z 0 =ᴮ pair (x.func i) (𝟚.func j)
-    -- Goal: Γ ≤ z ∈ set_of_indicator χ = ⨆ i, χ i ⊓ z =ᴮ x.func i (definitionally)
-    apply le_trans H
-    apply iSup_le; intro ⟨i, j⟩
-    simp only [powerset_injects_F, inf_sup_right]
-    apply bv_or_elim
-    · -- Left: (x.func i ∈ set_of_indicator χ ⊓ 𝟚.func j =ᴮ 0) ⊓ pair z 0 =ᴮ pair (x.func i) (𝟚.func j)
-      --       ≤ z ∈ set_of_indicator χ (definitionally = ⨆ k, χ k ⊓ z =ᴮ x.func k)
-      -- From pair_eq_pair_iff: z =ᴮ x.func i, and x.func i ∈ set_of_indicator χ, use bv_rw'
-      set ctx₁ := (x.func i ∈ᴮ set_of_indicator χ ⊓ (𝟚 : bSet 𝔹).func j =ᴮ 0) ⊓
-          pair z 0 =ᴮ pair (x.func i) ((𝟚 : bSet 𝔹).func j)
-      have h_zeq : ctx₁ ≤ z =ᴮ x.func i := (pair_eq_pair_iff.mp inf_le_right).1
-      have h_xi_mem : ctx₁ ≤ x.func i ∈ᴮ set_of_indicator χ := inf_le_left.trans inf_le_left
-      exact bv_rw' (H := h_zeq) (h_congr := B_ext_mem_left) (H_new := h_xi_mem)
-    · -- Right: contradiction 0 =ᴮ 1 from pair eq and 𝟚.func j =ᴮ 1
-      set ctx₂ := (x.func i ∈ᴮ subset.mk (fun i_1 => (x.func i_1 ∈ᴮ set_of_indicator χ)ᶜ) ⊓
-          (𝟚 : bSet 𝔹).func j =ᴮ 1) ⊓ pair z 0 =ᴮ pair (x.func i) ((𝟚 : bSet 𝔹).func j)
-      have h_0eq : ctx₂ ≤ (0 : bSet 𝔹) =ᴮ (𝟚 : bSet 𝔹).func j :=
-        (pair_eq_pair_iff.mp inf_le_right).2
-      have h_1eq : ctx₂ ≤ (𝟚 : bSet 𝔹).func j =ᴮ 1 := inf_le_left.trans inf_le_right
-      exact (bot_of_zero_eq_one (le_trans (le_inf h_0eq h_1eq) bv_eq_trans)).trans bot_le
-  · intro H
-    -- H : Γ ≤ z ∈ set_of_indicator χ (= ⨆ i, χ i ⊓ z =ᴮ x.func i definitionally)
-    -- Use index (i, some none) where j = some none gives 𝟚.func (some none) = 0
-    rw [hFuncs]
-    apply le_trans H
-    apply iSup_le; intro i
-    apply le_iSup_of_le (i, (some none : (𝟚 : bSet 𝔹).type))
-    unfold powerset_injects_F
-    simp only [Prod.fst, Prod.snd]
-    apply le_inf
-    · -- Left branch of disjunction: x.func i ∈ set_of_indicator χ ⊓ 𝟚.func (some none) =ᴮ 0
-      apply le_trans _ le_sup_left
-      apply le_inf
-      · -- x.func i ∈ set_of_indicator χ: from χ i (inf_le_left) and x.func i =ᴮ x.func i (bv_refl)
-        exact le_iSup_of_le i (le_inf inf_le_left bv_refl)
-      · -- 𝟚.func (some none) =ᴮ 0: from zero_eq_some_none'
-        exact bv_symm zero_eq_some_none'
-    · -- pair z 0 =ᴮ pair (x.func i) (𝟚.func (some none))
-      exact pair_congr inf_le_right (bv_symm zero_eq_some_none')
-
--- Helper: under context Γ, if H_ba : χ_b ⊆ χ_a, then compl_a ⊆ compl_b (pointwise under Γ)
-private lemma subset_mk_compl_of_subset {x : bSet 𝔹} {χ_a χ_b : x.type → 𝔹} {Γ : 𝔹}
-    (H_ba : Γ ≤ set_of_indicator χ_b ⊆ᴮ set_of_indicator χ_a) :
-    Γ ≤ subset.mk (fun i => (x.func i ∈ᴮ set_of_indicator χ_a)ᶜ) ⊆ᴮ
-        subset.mk (fun i => (x.func i ∈ᴮ set_of_indicator χ_b)ᶜ) := by
-  rw [subset_unfold]
-  apply le_iInf; intro k'; rw [← deduction]
-  -- Goal: Γ ⊓ (compl_a(k') ⊓ x.bval k') ≤ x.func k' ∈ subset.mk compl_b
-  -- = Γ ⊓ ((x.func k' ∈ χ_a)ᶜ ⊓ x.bval k') ≤ ⨆ k'', x.func k' =ᴮ x.func k'' ⊓ ((x.func k'' ∈ χ_b)ᶜ ⊓ x.bval k'')
-  rw [mem_subset.mk_iff]
-  apply le_iSup_of_le k'
-  apply le_inf (le_trans inf_le_right (le_trans inf_le_left bv_refl))
-  apply le_inf
-  · -- (x.func k' ∈ χ_a)ᶜ ≤ (x.func k' ∈ χ_b)ᶜ under context Γ ⊓ ((x.func k' ∈ χ_a)ᶜ ⊓ x.bval k')
-    -- Context includes Γ, so H_ba applies.
-    -- Use: A ≤ Bᶜ ↔ A ⊓ B ≤ ⊥ (via bv_absurd or le_compl_iff)
-    rw [← imp_bot, ← deduction]
-    -- Goal: Γ ⊓ ((x.func k' ∈ χ_a)ᶜ ⊓ x.bval k') ⊓ (x.func k' ∈ χ_b) ≤ ⊥
-    apply bv_absurd (x.func k' ∈ᴮ set_of_indicator χ_a)
-    · -- Γ ⊓ ((x.func k' ∈ χ_a)ᶜ ⊓ x.bval k') ⊓ x.func k' ∈ χ_b ≤ x.func k' ∈ χ_a
-      -- via H_ba : Γ ≤ χ_b ⊆ χ_a
-      exact mem_of_mem_subset (le_trans (le_trans inf_le_left inf_le_left) H_ba) inf_le_right
-    · -- Γ ⊓ ((x.func k' ∈ χ_a)ᶜ ⊓ x.bval k') ⊓ (x.func k' ∈ χ_b) ≤ (x.func k' ∈ χ_a)ᶜ
-      exact inf_le_left.trans (inf_le_right.trans inf_le_left)
-  · exact inf_le_right.trans inf_le_right
-
--- src/bvm_extras.lean:2249
-lemma powerset_injects_F_ext : ∀ (χ₁ χ₂ : (bv_powerset x).type) {Γ : 𝔹},
-    Γ ≤ (bv_powerset x).func χ₁ =ᴮ (bv_powerset x).func χ₂ →
-    Γ ≤ (functions x 𝟚).func (powerset_injects_F x χ₁) =ᴮ
-        (functions x 𝟚).func (powerset_injects_F x χ₂) := by
-  intro χ₁ χ₂ Γ H
-  have H₁ : Γ ≤ set_of_indicator χ₁ ⊆ᴮ set_of_indicator χ₂ :=
-    le_trans H (le_trans (le_of_eq eq_iff_subset_subset) inf_le_left)
-  have H₂ : Γ ≤ set_of_indicator χ₂ ⊆ᴮ set_of_indicator χ₁ :=
-    le_trans H (le_trans (le_of_eq eq_iff_subset_subset) inf_le_right)
-  -- Prove both subset directions using a helper
-  suffices helper : ∀ (χ_a χ_b : (bv_powerset x).type),
-      Γ ≤ set_of_indicator χ_a ⊆ᴮ set_of_indicator χ_b →
-      Γ ≤ set_of_indicator χ_b ⊆ᴮ set_of_indicator χ_a →
-      Γ ≤ set_of_indicator (powerset_injects_F x χ_a) ⊆ᴮ
-          set_of_indicator (powerset_injects_F x χ_b) by
-    rw [eq_iff_subset_subset]
-    exact le_inf (helper χ₁ χ₂ H₁ H₂) (helper χ₂ χ₁ H₂ H₁)
-  intro χ_a χ_b H_ab H_ba
-  -- Need: subset.mk F(χ_a) ⊆ subset.mk F(χ_b)
-  -- For each index (k, l), F(χ_a)(k,l) ≤ F(χ_b)(k,l) under context Γ
-  -- F(χ)(k,l) = (x.func k ∈ χ ⊓ 𝟚.func l =ᴮ 0) ⊔ (x.func k ∈ compl_χ ⊓ 𝟚.func l =ᴮ 1)
-  -- Left branch: x.func k ∈ χ_a → x.func k ∈ χ_b via H_ab
-  -- Right branch: x.func k ∈ compl_χ_a → x.func k ∈ compl_χ_b via H_ba (via subset_mk_compl_of_subset)
-  have h_compl_sub : Γ ≤ subset.mk (fun i => (x.func i ∈ᴮ set_of_indicator χ_a)ᶜ) ⊆ᴮ
-      subset.mk (fun i => (x.func i ∈ᴮ set_of_indicator χ_b)ᶜ) :=
-    subset_mk_compl_of_subset H_ba
-  rw [subset_unfold]
-  apply le_iInf; intro ⟨k, l⟩; rw [← deduction]
-  apply le_iSup_of_le (k, l)
-  apply le_inf _ bv_refl
-  show Γ ⊓ ((x.func k ∈ᴮ set_of_indicator χ_a ⊓ ((𝟚 : bSet 𝔹).func l =ᴮ 0)) ⊔
-    (x.func k ∈ᴮ subset.mk (fun i => (x.func i ∈ᴮ set_of_indicator χ_a)ᶜ) ⊓
-      ((𝟚 : bSet 𝔹).func l =ᴮ 1))) ≤
-    (x.func k ∈ᴮ set_of_indicator χ_b ⊓ ((𝟚 : bSet 𝔹).func l =ᴮ 0)) ⊔
-    (x.func k ∈ᴮ subset.mk (fun i => (x.func i ∈ᴮ set_of_indicator χ_b)ᶜ) ⊓
-      ((𝟚 : bSet 𝔹).func l =ᴮ 1))
-  rw [inf_sup_left]
-  apply bv_or_elim
-  · -- Left: Γ ⊓ (x.func k ∈ χ_a ⊓ 𝟚.func l =ᴮ 0) ≤ (x.func k ∈ χ_b ⊓ ...) ⊔ ...
-    apply le_sup_left.trans'
-    apply le_inf
-    · exact mem_of_mem_subset (le_trans inf_le_left H_ab) (inf_le_right.trans inf_le_left)
-    · exact inf_le_right.trans inf_le_right
-  · -- Right: Γ ⊓ (x.func k ∈ compl_a ⊓ 𝟚.func l =ᴮ 1) ≤ ... ⊔ (x.func k ∈ compl_b ⊓ ...)
-    apply le_sup_right.trans'
-    apply le_inf
-    · -- x.func k ∈ compl_a → x.func k ∈ compl_b using h_compl_sub
-      exact mem_of_mem_subset (le_trans inf_le_left h_compl_sub) (inf_le_right.trans inf_le_left)
-    · exact inf_le_right.trans inf_le_right
-
--- src/bvm_extras.lean:2301
-lemma powerset_injects_F_subset_prod {χ : x.type → 𝔹} {Γ : 𝔹}
-    (H_le : Γ ≤ set_of_indicator χ ⊆ᴮ x) :
-    Γ ≤ (bv_powerset (prod x 𝟚)).func (powerset_injects_F x χ) ⊆ᴮ prod x 𝟚 := by
-  -- (bv_powerset (prod x 𝟚)).func F(χ) = set_of_indicator F(χ) definitionally
-  -- Use subset_unfold to show ∀ pr, F(χ)(pr) ⟹ pair (x.func pr.1) (𝟚.func pr.2) ∈ prod x 𝟚
-  rw [show (bv_powerset (prod x 𝟚)).func (powerset_injects_F x χ) =
-      set_of_indicator (u := prod x 𝟚) (powerset_injects_F x χ) from rfl]
-  rw [subset_unfold]
-  apply le_iInf; intro ⟨i, j⟩; rw [← deduction]
-  -- goal: Γ ⊓ powerset_injects_F x χ (i,j) ≤ pair (x.func i) (𝟚.func j) ∈ prod x 𝟚
-  -- From F(χ)(i,j), get x.func i ∈ x via H_le or subset.mk_subset
-  have hxi_mem_x : Γ ⊓ powerset_injects_F x χ (i, j) ≤ x.func i ∈ᴮ x := by
-    simp only [powerset_injects_F]
-    rw [inf_sup_left]
-    apply bv_or_elim
-    · -- Left: Γ ⊓ (x.func i ∈ set_of_indicator χ ⊓ ...) ≤ x.func i ∈ x
-      exact mem_of_mem_subset (le_trans inf_le_left H_le) (inf_le_right.trans inf_le_left)
-    · -- Right: Γ ⊓ (x.func i ∈ subset.mk (...) ⊓ ...) ≤ x.func i ∈ x
-      exact mem_of_mem_subset (le_trans le_top subset.mk_subset) (inf_le_right.trans inf_le_left)
-  have htwo_mem : Γ ⊓ powerset_injects_F x χ (i, j) ≤ (𝟚 : bSet 𝔹).func j ∈ᴮ (𝟚 : bSet 𝔹) :=
-    @mem_check_of_mem 𝔹 _ (PSet.ofNat 2) j (Γ := Γ ⊓ powerset_injects_F x χ (i, j))
-  exact prod_mem hxi_mem_x htwo_mem
-
--- src/bvm_extras.lean:2318
-lemma powerset_injects_F_mem : ∀ (i : (bv_powerset x).type) {Γ : 𝔹},
-    Γ ≤ (bv_powerset x).bval i →
-    Γ ≤ (functions x 𝟚).bval (powerset_injects_F x i) ∧ Γ ≤ (⊤ : 𝔹) := by
-  intro χ Γ H_le
-  -- (bv_powerset x).bval χ = set_of_indicator χ ⊆ x
-  change Γ ≤ set_of_indicator χ ⊆ᴮ x at H_le
-  refine ⟨?_, le_top⟩
-  -- (functions x 𝟚).bval (powerset_injects_F x χ) = is_function x 𝟚 F(χ)
-  simp only [functions_bval]
-  -- is_function x 𝟚 F(χ) = is_func' x 𝟚 F(χ) ⊓ F(χ) ⊆ prod x 𝟚
-  refine le_inf (le_inf ?_ ?_) ?_
-  · -- is_func F(χ): for any pair w₁ v₁ and w₂ v₂ in F(χ) with w₁ = w₂, deduce v₁ = v₂
-    -- F(χ)(i,j) = (x.func i ∈ χ ⊓ 𝟚.func j =ᴮ 0) ⊔ (x.func i ∉ χ ⊓ 𝟚.func j =ᴮ 1)
-    -- Helper: membership in F(χ) unfolds to ⊔ pr, F(χ)(pr) ⊓ pair_eq
-    have hF_mem : ∀ (w v : bSet 𝔹), pair w v ∈ᴮ (bv_powerset (prod x 𝟚)).func (powerset_injects_F x χ) ≤
-        ⨆ pr : (prod x 𝟚).type, powerset_injects_F x χ pr ⊓ pair w v =ᴮ (prod x 𝟚).func pr := by
-      intro w v
-      change pair w v ∈ᴮ set_of_indicator (u := prod x 𝟚) (powerset_injects_F x χ) ≤ _
-      simp only [mem_unfold, set_of_indicator_bval, set_of_indicator_func]
-      exact le_refl _
-    apply le_iInf; intro w₁; apply le_iInf; intro w₂
-    apply le_iInf; intro v₁; apply le_iInf; intro v₂
-    rw [← deduction, ← deduction]
-    -- Carry context through first membership iSup
-    -- First, extract pair w₁ v₁ ∈ F(χ) from the context Γ ⊓ (M₁ ⊓ M₂) ⊓ w₁=w₂
-    apply (le_inf (inf_le_left.trans (inf_le_right.trans (inf_le_left.trans (hF_mem w₁ v₁)))) le_rfl).trans
-    apply (iSup_inf_eq _ _).le.trans; apply iSup_le; intro pr₁; obtain ⟨i₁, j₁⟩ := pr₁
-    simp only [prod_func, powerset_injects_F, Prod.fst, Prod.snd]
-    -- Carry context through second membership iSup
-    -- Now extract pair w₂ v₂ ∈ F(χ) from the nested context
-    apply (le_inf (inf_le_right.trans (inf_le_left.trans (inf_le_right.trans
-      (inf_le_right.trans (hF_mem w₂ v₂))))) le_rfl).trans
-    apply (iSup_inf_eq _ _).le.trans; apply iSup_le; intro pr₂; obtain ⟨i₂, j₂⟩ := pr₂
-    simp only [prod_func, powerset_injects_F, Prod.fst, Prod.snd]
-    -- After the two iSup carries + simp, the context has structure:
-    -- (disjunction₂ ⊓ pair_eq₂) ⊓ ((disjunction₁ ⊓ pair_eq₁) ⊓ (Γ ⊓ (M₁ ⊓ M₂) ⊓ w₁=w₂))
-    -- Name it:
-    set ctx2 := ((x.func i₂ ∈ᴮ set_of_indicator χ ⊓ ((𝟚 : bSet 𝔹).func j₂ =ᴮ 0)) ⊔
-          (x.func i₂ ∈ᴮ subset.mk (fun k => (x.func k ∈ᴮ set_of_indicator χ)ᶜ) ⊓
-            ((𝟚 : bSet 𝔹).func j₂ =ᴮ 1))) ⊓
-        pair w₂ v₂ =ᴮ pair (x.func i₂) ((𝟚 : bSet 𝔹).func j₂) ⊓
-      (((x.func i₁ ∈ᴮ set_of_indicator χ ⊓ ((𝟚 : bSet 𝔹).func j₁ =ᴮ 0)) ⊔
-          (x.func i₁ ∈ᴮ subset.mk (fun k => (x.func k ∈ᴮ set_of_indicator χ)ᶜ) ⊓
-            ((𝟚 : bSet 𝔹).func j₁ =ᴮ 1))) ⊓
-        pair w₁ v₁ =ᴮ pair (x.func i₁) ((𝟚 : bSet 𝔹).func j₁) ⊓
-        (Γ ⊓ (pair w₁ v₁ ∈ᴮ (bv_powerset (prod x 𝟚)).func (powerset_injects_F x χ) ⊓
-                pair w₂ v₂ ∈ᴮ (bv_powerset (prod x 𝟚)).func (powerset_injects_F x χ)) ⊓
-          w₁ =ᴮ w₂))
-    -- Access paths in ctx2:
-    -- disjunction₂ = inf_le_left.trans inf_le_left
-    -- pair_eq₂ = inf_le_left.trans inf_le_right
-    -- disjunction₁ = inf_le_right.trans inf_le_left.trans inf_le_left
-    -- pair_eq₁ = inf_le_right.trans inf_le_left.trans inf_le_right
-    -- w₁=w₂ = inf_le_right.trans inf_le_right.trans inf_le_right
-    have hF2 : ctx2 ≤ (x.func i₂ ∈ᴮ set_of_indicator χ ⊓ (𝟚 : bSet 𝔹).func j₂ =ᴮ 0) ⊔
-        (x.func i₂ ∈ᴮ subset.mk (fun k => (x.func k ∈ᴮ set_of_indicator χ)ᶜ) ⊓
-          (𝟚 : bSet 𝔹).func j₂ =ᴮ 1) :=
-      inf_le_left.trans inf_le_left
-    have hw2xi2 : ctx2 ≤ w₂ =ᴮ x.func i₂ :=
-      inf_le_left.trans (inf_le_right.trans eq_of_eq_pair_left)
-    have hv2j2 : ctx2 ≤ v₂ =ᴮ (𝟚 : bSet 𝔹).func j₂ :=
-      inf_le_left.trans (inf_le_right.trans eq_of_eq_pair_right)
-    have hF1 : ctx2 ≤ (x.func i₁ ∈ᴮ set_of_indicator χ ⊓ (𝟚 : bSet 𝔹).func j₁ =ᴮ 0) ⊔
-        (x.func i₁ ∈ᴮ subset.mk (fun k => (x.func k ∈ᴮ set_of_indicator χ)ᶜ) ⊓
-          (𝟚 : bSet 𝔹).func j₁ =ᴮ 1) :=
-      inf_le_right.trans (inf_le_left.trans inf_le_left)
-    have hw1xi1 : ctx2 ≤ w₁ =ᴮ x.func i₁ :=
-      inf_le_right.trans (inf_le_left.trans (inf_le_right.trans eq_of_eq_pair_left))
-    have hv1j1 : ctx2 ≤ v₁ =ᴮ (𝟚 : bSet 𝔹).func j₁ :=
-      inf_le_right.trans (inf_le_left.trans (inf_le_right.trans eq_of_eq_pair_right))
-    have hw12 : ctx2 ≤ w₁ =ᴮ w₂ :=
-      inf_le_right.trans (inf_le_right.trans inf_le_right)
-    -- x.func i₁ =ᴮ x.func i₂ from w₁=xi₁, w₁=w₂, w₂=xi₂
-    have hxi1xi2 : ctx2 ≤ x.func i₁ =ᴮ x.func i₂ :=
-      le_trans (le_inf (bv_symm hw1xi1) (le_trans (le_inf hw12 hw2xi2) bv_eq_trans)) bv_eq_trans
-    -- Helper to extract (x.func i ∉ χ) from subset.mk membership
-    have subset_mk_to_compl : ∀ (i : x.type) {Δ : 𝔹},
-        Δ ≤ x.func i ∈ᴮ subset.mk (fun k => (x.func k ∈ᴮ set_of_indicator χ)ᶜ) →
-        Δ ≤ (x.func i ∈ᴮ set_of_indicator χ)ᶜ := by
-      intro i Δ h
-      rw [mem_subset.mk_iff] at h
-      apply h.trans; apply iSup_le; intro k
-      -- Goal: x.func i =ᴮ x.func k ⊓ ((x.func k ∈ χ)ᶜ ⊓ x.bval k) ≤ (x.func i ∈ χ)ᶜ
-      -- Use bv_rw': from x.func i =ᴮ x.func k and (x.func k ∈ χ)ᶜ, get (x.func i ∈ χ)ᶜ
-      exact bv_rw' (H := inf_le_left)
-        (h_congr := B_ext_neg (h := B_ext_mem_left (y := set_of_indicator χ)))
-        (H_new := inf_le_right.trans inf_le_left)
-    -- Case split on which branch of F(χ)(i₁,j₁)
-    apply le_trans (le_inf le_rfl hF1); apply bv_or_elim_right
-    · -- Case L₁: x.func i₁ ∈ χ ⊓ 𝟚.func j₁ =ᴮ 0
-      set ctxL₁ := ctx2 ⊓ (x.func i₁ ∈ᴮ set_of_indicator χ ⊓ (𝟚 : bSet 𝔹).func j₁ =ᴮ 0)
-      have hmem1 : ctxL₁ ≤ x.func i₁ ∈ᴮ set_of_indicator χ := inf_le_right.trans inf_le_left
-      have hj1_0 : ctxL₁ ≤ (𝟚 : bSet 𝔹).func j₁ =ᴮ 0 := inf_le_right.trans inf_le_right
-      apply le_trans (le_inf le_rfl (inf_le_left.trans hF2)); apply bv_or_elim_right
-      · -- Case LL: x.func i₂ ∈ χ ⊓ 𝟚.func j₂ =ᴮ 0
-        -- v₁ =ᴮ 𝟚.func j₁ =ᴮ 0 =ᴮ 𝟚.func j₂ =ᴮ v₂
-        have hj2_0 : ctxL₁ ⊓ (x.func i₂ ∈ᴮ set_of_indicator χ ⊓ (𝟚 : bSet 𝔹).func j₂ =ᴮ 0) ≤
-            (𝟚 : bSet 𝔹).func j₂ =ᴮ 0 := inf_le_right.trans inf_le_right
-        set ctxLL := ctxL₁ ⊓ (x.func i₂ ∈ᴮ set_of_indicator χ ⊓ (𝟚 : bSet 𝔹).func j₂ =ᴮ 0)
-        -- v₁ =ᴮ 𝟚.func j₁: inf_le_left.trans (inf_le_left.trans hv1j1)
-        -- 𝟚.func j₁ =ᴮ 0: inf_le_left.trans hj1_0
-        -- 0 =ᴮ 𝟚.func j₂: bv_symm hj2_0
-        -- v₂ =ᴮ 𝟚.func j₂: inf_le_left.trans (inf_le_left.trans hv2j2)
-        exact le_trans
-          (le_inf
-            (le_trans (le_inf (inf_le_left.trans (inf_le_left.trans hv1j1))
-              (inf_le_left.trans hj1_0)) bv_eq_trans)
-            (le_trans (le_inf (bv_symm hj2_0)
-              (bv_symm (inf_le_left.trans (inf_le_left.trans hv2j2)))) bv_eq_trans))
-          bv_eq_trans
-      · -- Case LR: x.func i₁ ∈ χ but x.func i₂ ∉ χ — contradiction via x.func i₁ =ᴮ x.func i₂
-        set ctxLR := ctxL₁ ⊓ (x.func i₂ ∈ᴮ subset.mk (fun k => (x.func k ∈ᴮ set_of_indicator χ)ᶜ) ⊓
-            (𝟚 : bSet 𝔹).func j₂ =ᴮ 1)
-        have hnot2_chi : ctxLR ≤ (x.func i₂ ∈ᴮ set_of_indicator χ)ᶜ :=
-          subset_mk_to_compl i₂ (inf_le_right.trans inf_le_left)
-        -- x.func i₁ =ᴮ x.func i₂, x.func i₁ ∈ χ → x.func i₂ ∈ χ
-        have h_xi_lr : ctxLR ≤ x.func i₁ =ᴮ x.func i₂ :=
-          inf_le_left.trans (inf_le_left.trans hxi1xi2)
-        have hmem2_chi : ctxLR ≤ x.func i₂ ∈ᴮ set_of_indicator χ :=
-          bv_rw' (H := bv_symm h_xi_lr)
-            (h_congr := B_ext_mem_left) (H_new := inf_le_left.trans hmem1)
-        exact le_trans (le_inf hmem2_chi hnot2_chi)
-          (le_of_eq inf_compl_eq_bot |>.trans bot_le)
-    · -- Case R₁: x.func i₁ ∉ χ ⊓ 𝟚.func j₁ =ᴮ 1
-      set ctxR₁ := ctx2 ⊓ (x.func i₁ ∈ᴮ subset.mk (fun k => (x.func k ∈ᴮ set_of_indicator χ)ᶜ) ⊓
-          (𝟚 : bSet 𝔹).func j₁ =ᴮ 1)
-      have hnot1_chi : ctxR₁ ≤ (x.func i₁ ∈ᴮ set_of_indicator χ)ᶜ :=
-        subset_mk_to_compl i₁ (inf_le_right.trans inf_le_left)
-      have hj1_1 : ctxR₁ ≤ (𝟚 : bSet 𝔹).func j₁ =ᴮ 1 := inf_le_right.trans inf_le_right
-      apply le_trans (le_inf le_rfl (inf_le_left.trans hF2)); apply bv_or_elim_right
-      · -- Case RL: x.func i₂ ∈ χ but x.func i₁ ∉ χ — contradiction via x.func i₁ =ᴮ x.func i₂
-        set ctxRL := ctxR₁ ⊓ (x.func i₂ ∈ᴮ set_of_indicator χ ⊓ (𝟚 : bSet 𝔹).func j₂ =ᴮ 0)
-        have hmem2 : ctxRL ≤ x.func i₂ ∈ᴮ set_of_indicator χ := inf_le_right.trans inf_le_left
-        -- x.func i₁ =ᴮ x.func i₂, x.func i₁ ∉ χ but x.func i₂ ∈ χ → x.func i₁ ∈ χ — contradiction
-        have h_xi_rl : ctxRL ≤ x.func i₁ =ᴮ x.func i₂ :=
-          inf_le_left.trans (inf_le_left.trans hxi1xi2)
-        have hmem2_via_i1 : ctxRL ≤ x.func i₁ ∈ᴮ set_of_indicator χ :=
-          bv_rw' (H := h_xi_rl)
-            (h_congr := B_ext_mem_left) (H_new := hmem2)
-        exact le_trans (le_inf hmem2_via_i1 (inf_le_left.trans hnot1_chi))
-          (le_of_eq inf_compl_eq_bot |>.trans bot_le)
-      · -- Case RR: x.func i₂ ∉ χ ⊓ 𝟚.func j₂ =ᴮ 1
-        -- v₁ =ᴮ 𝟚.func j₁ =ᴮ 1 =ᴮ 𝟚.func j₂ =ᴮ v₂
-        have hj2_1 : ctxR₁ ⊓ (x.func i₂ ∈ᴮ subset.mk (fun k => (x.func k ∈ᴮ set_of_indicator χ)ᶜ) ⊓
-              (𝟚 : bSet 𝔹).func j₂ =ᴮ 1) ≤
-            (𝟚 : bSet 𝔹).func j₂ =ᴮ 1 := inf_le_right.trans inf_le_right
-        set ctxRR := ctxR₁ ⊓ (x.func i₂ ∈ᴮ subset.mk (fun k => (x.func k ∈ᴮ set_of_indicator χ)ᶜ) ⊓
-            (𝟚 : bSet 𝔹).func j₂ =ᴮ 1)
-        exact le_trans
-          (le_inf
-            (le_trans (le_inf (inf_le_left.trans (inf_le_left.trans hv1j1))
-              (inf_le_left.trans hj1_1)) bv_eq_trans)
-            (le_trans (le_inf (bv_symm hj2_1)
-              (bv_symm (inf_le_left.trans (inf_le_left.trans hv2j2)))) bv_eq_trans))
-          bv_eq_trans
-  · -- is_total x 𝟚 F(χ): every element of x has image in 𝟚
-    rw [is_total_iff_is_total']
-    apply le_iInf; intro i; rw [← deduction]
-    -- ctx₀ = Γ ⊓ x.bval i; case split on x.func i ∈ set_of_indicator χ
-    have h_split : Γ ⊓ x.bval i ≤
-        (Γ ⊓ x.bval i) ⊓ x.func i ∈ᴮ set_of_indicator χ ⊔
-        (Γ ⊓ x.bval i) ⊓ (x.func i ∈ᴮ set_of_indicator χ)ᶜ := by
-      rw [← inf_sup_left]; simp [sup_compl_eq_top]
-    apply le_trans h_split; apply bv_or_elim
-    · -- YES: x.func i ∈ χ, send to j = some none (giving 0 = 𝟚.func (some none))
-      set ctx_iS := (Γ ⊓ x.bval i) ⊓ x.func i ∈ᴮ set_of_indicator χ
-      have hbval : ctx_iS ≤ x.bval i := inf_le_left.trans inf_le_right
-      have hmem_chi : ctx_iS ≤ x.func i ∈ᴮ set_of_indicator χ := inf_le_right
-      apply le_iSup_of_le (some none)
-      -- 𝟚.bval (some none) = ⊤ for check types
-      refine le_inf le_top ?_
-      -- pair (x.func i) (𝟚.func (some none)) ∈ F(χ)
-      -- F(χ) = set_of_indicator (u := prod x 𝟚) (powerset_injects_F x χ) definitionally
-      -- Use change to rewrite to set_of_indicator form for simp to work
-      change ctx_iS ≤ pair (x.func i) ((𝟚 : bSet 𝔹).func (some none)) ∈ᴮ
-          set_of_indicator (u := prod x 𝟚) (powerset_injects_F x χ)
-      rw [mem_unfold]
-      apply le_iSup_of_le (i, some none)
-      simp only [set_of_indicator_bval, set_of_indicator_func, prod_func, prod_bval, powerset_injects_F,
-        check_bval_top, inf_top_eq, Prod.fst, Prod.snd]
-      -- Goal: ctx_iS ≤ powerset_injects_F x χ (i, some none) ⊓ pair (x.func i) (𝟚.func (some none)) =ᴮ pair (x.func i) (𝟚.func (some none))
-      refine le_inf ?_ bv_refl
-      apply bv_or_left
-      exact le_inf hmem_chi bv_refl
-    · -- NO: x.func i ∉ χ, send to j = none (giving 1 = 𝟚.func none)
-      set ctx_iN := (Γ ⊓ x.bval i) ⊓ (x.func i ∈ᴮ set_of_indicator χ)ᶜ
-      have hbval : ctx_iN ≤ x.bval i := inf_le_left.trans inf_le_right
-      have hnot_chi : ctx_iN ≤ (x.func i ∈ᴮ set_of_indicator χ)ᶜ := inf_le_right
-      apply le_iSup_of_le none
-      refine le_inf le_top ?_
-      change ctx_iN ≤ pair (x.func i) ((𝟚 : bSet 𝔹).func none) ∈ᴮ
-          set_of_indicator (u := prod x 𝟚) (powerset_injects_F x χ)
-      rw [mem_unfold]
-      apply le_iSup_of_le (i, none)
-      simp only [set_of_indicator_bval, set_of_indicator_func, prod_func, prod_bval, powerset_injects_F,
-        check_bval_top, inf_top_eq, Prod.fst, Prod.snd]
-      refine le_inf ?_ bv_refl
-      apply bv_or_right
-      -- Need: x.func i ∈ subset.mk (fun k => (x.func k ∈ set_of_indicator χ)ᶜ) ⊓ 𝟚.func none =ᴮ 1
-      refine le_inf ?_ bv_refl
-      -- x.func i ∈ subset.mk (fun k => (x.func k ∈ set_of_indicator χ)ᶜ)
-      rw [mem_subset.mk_iff]
-      apply le_iSup_of_le i
-      -- Goal: ctx_iN ≤ x.func i =ᴮ x.func i ⊓ ((x.func i ∈ set_of_indicator χ)ᶜ ⊓ x.bval i)
-      exact le_inf bv_refl (le_inf hnot_chi hbval)
-  · -- F(χ) ⊆ prod x 𝟚
-    exact @powerset_injects_F_subset_prod 𝔹 _ x χ Γ H_le
-
--- src/bvm_extras.lean:2377
-lemma powerset_injects_F_inj : ∀ (i j : (bv_powerset x).type) {Γ : 𝔹},
-    Γ ≤ (functions x 𝟚).func (powerset_injects_F x i) =ᴮ
-        (functions x 𝟚).func (powerset_injects_F x j) →
-    Γ ≤ (bv_powerset x).func i =ᴮ (bv_powerset x).func j := by
-  intro i j Γ H
-  -- (bv_powerset x).func i = set_of_indicator (u := x) i definitionally
-  -- Use mem_ext: show set_of_indicator i =ᴮ set_of_indicator j via mutual subset
-  -- Translating via mem_powerset_injects_F_iff: z ∈ set_of_indicator i ↔ pair z 0 ∈ F(i)
-  apply mem_ext
-  · -- ∀ z, z ∈ (bv_powerset x).func i → z ∈ (bv_powerset x).func j
-    apply le_iInf; intro z; rw [← deduction]
-    -- goal: Γ ⊓ z ∈ (bv_powerset x).func i ≤ z ∈ (bv_powerset x).func j
-    show Γ ⊓ z ∈ᴮ set_of_indicator i ≤ z ∈ᴮ set_of_indicator j
-    -- Use mem_powerset_injects_F_iff for both directions
-    have hFi : Γ ⊓ z ∈ᴮ set_of_indicator i ≤ pair z 0 ∈ᴮ (functions x 𝟚).func (powerset_injects_F x i) :=
-      (mem_powerset_injects_F_iff (x := x) (χ := i)).mpr inf_le_right
-    have hFi_to_Fj : Γ ⊓ z ∈ᴮ set_of_indicator i ≤ pair z 0 ∈ᴮ (functions x 𝟚).func (powerset_injects_F x j) :=
-      bv_rw'' (H := le_trans inf_le_left H) hFi B_ext_mem_right
-    exact (mem_powerset_injects_F_iff (x := x) (χ := j)).mp hFi_to_Fj
-  · -- ∀ z, z ∈ (bv_powerset x).func j → z ∈ (bv_powerset x).func i
-    apply le_iInf; intro z; rw [← deduction]
-    show Γ ⊓ z ∈ᴮ set_of_indicator j ≤ z ∈ᴮ set_of_indicator i
-    have hFj : Γ ⊓ z ∈ᴮ set_of_indicator j ≤ pair z 0 ∈ᴮ (functions x 𝟚).func (powerset_injects_F x j) :=
-      (mem_powerset_injects_F_iff (x := x) (χ := j)).mpr inf_le_right
-    have hFj_to_Fi : Γ ⊓ z ∈ᴮ set_of_indicator j ≤ pair z 0 ∈ᴮ (functions x 𝟚).func (powerset_injects_F x i) :=
-      bv_rw'' (H := le_trans inf_le_left (bv_symm H)) hFj B_ext_mem_right
-    exact (mem_powerset_injects_F_iff (x := x) (χ := i)).mp hFj_to_Fi
-
--- src/bvm_extras.lean:2387
-noncomputable def powerset_injects_f : bSet 𝔹 :=
-  functionMk' (powerset_injects_F x) (fun _ => ⊤)
-    (powerset_injects_F_ext x) (powerset_injects_F_mem x)
-
--- src/bvm_extras.lean:2389
-lemma powerset_injects_into_functions {Γ : 𝔹} :
-    Γ ≤ injects_into (bv_powerset x) (functions x 𝟚) :=
-  le_iSup_of_le (powerset_injects_f x)
-    (le_inf (is_func'_of_is_function (functionMk'_is_function _ _ _ _))
-            (functionMk'_is_inj _ _ _ _ (powerset_injects_F_inj x)))
 
 end powerset_section
 
@@ -4915,15 +3756,6 @@ lemma injects_into_of_subset {x y : bSet 𝔹} {Γ : 𝔹} (H : Γ ≤ x ⊆ᴮ 
 -- src/bvm_extras.lean:2475
 lemma injects_into_refl {Γ : 𝔹} {x : bSet 𝔹} : Γ ≤ injects_into x x :=
   injects_into_of_subset subset_self
-
--- src/bvm_extras.lean:2478
-lemma bSet_le_of_subset {x y : bSet 𝔹} {Γ : 𝔹} (H : Γ ≤ x ⊆ᴮ y) : Γ ≤ injects_into x y :=
-  injects_into_of_subset H
-
--- src/bvm_extras.lean:2481
-lemma injection_into_of_subset {x y : bSet 𝔹} {Γ : 𝔹} (H : Γ ≤ x ⊆ᴮ y) :
-    Γ ≤ injection_into x y :=
-  injects_into_iff_injection_into.mp (injects_into_of_subset H)
 
 -- src/bvm_extras.lean:2484
 def Card (y : bSet 𝔹) : 𝔹 := Ord y ⊓ ⨅ x, x ∈ᴮ y ⟹ (larger_than y x)ᶜ
@@ -5193,98 +4025,6 @@ lemma check_ewo {x : PSet} (H : PSet.epsilon_well_orders x) {Γ : 𝔹} :
     Γ ≤ Ord (check x : bSet 𝔹) :=
   le_inf (check_ewo H.left) (check_is_transitive H.right)
 
--- src/bvm_extras.lean:2677
-@[simp] lemma Ord_card_ex (κ : Cardinal) {Γ : 𝔹} :
-    Γ ≤ Ord (check (PSet.card_ex κ) : bSet 𝔹) := by
-  apply check_Ord; simp [PSet.card_ex]
-
--- src/bvm_extras.lean:2680
-def closed_under_successor (Γ : 𝔹) (x : bSet 𝔹) := Γ ≤ ⨅ y, y ∈ᴮ x ⟹ succ y ∈ᴮ x
-
--- src/bvm_extras.lean:2682
-def omega_spec (ω : bSet 𝔹) : Prop :=
-  (∀ {Γ : 𝔹}, Γ ≤ not_empty ω ∧ closed_under_successor Γ ω) ∧
-  ∀ (x : bSet 𝔹) {Γ : 𝔹} (H₁ : Γ ≤ ∅ ∈ᴮ x) (H₂ : closed_under_successor Γ x), Γ ≤ ω ⊆ᴮ x
-
--- src/bvm_extras.lean:2684
-lemma omega_closed_under_succ {Γ : 𝔹} : closed_under_successor Γ (bSet.omega) := by
-  unfold closed_under_successor
-  -- Goal: Γ ≤ ⨅ y, y ∈ omega ⟹ succ y ∈ omega
-  apply le_iInf; intro y; rw [← deduction]
-  -- Goal: Γ ⊓ y ∈ omega ≤ succ y ∈ omega
-  -- Extract index k from y ∈ omega
-  have h_ymem : Γ ⊓ y ∈ᴮ (bSet.omega : bSet 𝔹) ≤
-      ⨆ k : ULift ℕ, y =ᴮ bSet.of_nat k.down := by
-    apply inf_le_right.trans
-    -- y ∈ omega = ⨆ k, omega.bval k ⊓ y =ᴮ omega.func k
-    rw [mem_unfold]
-    -- omega.bval k = ⊤ (by check_bval_top), omega.func k = of_nat k.down (by omega_func)
-    apply iSup_le; intro k; apply le_iSup_of_le k
-    change (⊤ : 𝔹) ⊓ y =ᴮ bSet.of_nat k.down ≤ y =ᴮ bSet.of_nat k.down
-    exact inf_le_right
-  -- Carry context and use iSup
-  calc Γ ⊓ y ∈ᴮ (bSet.omega : bSet 𝔹)
-      ≤ (⨆ k : ULift ℕ, y =ᴮ bSet.of_nat k.down) ⊓ (Γ ⊓ y ∈ᴮ (bSet.omega : bSet 𝔹)) :=
-        le_inf h_ymem le_rfl
-    _ ≤ ⨆ k : ULift ℕ, (y =ᴮ bSet.of_nat k.down) ⊓ (Γ ⊓ y ∈ᴮ (bSet.omega : bSet 𝔹)) :=
-        (iSup_inf_eq _ _).le
-    _ ≤ succ y ∈ᴮ (bSet.omega : bSet 𝔹) := by
-        apply iSup_le; intro k
-        -- Context: (y =ᴮ of_nat k.down) ⊓ ctx
-        -- succ y =ᴮ succ (of_nat k.down) = of_nat (k.down + 1)
-        have h_yk : (y =ᴮ bSet.of_nat k.down) ⊓ (Γ ⊓ y ∈ᴮ (bSet.omega : bSet 𝔹)) ≤
-            y =ᴮ bSet.of_nat k.down := inf_le_left
-        -- succ (of_nat k.down) = of_nat (k.down + 1)
-        have h_succ_eq : succ (bSet.of_nat k.down : bSet 𝔹) = bSet.of_nat (k.down + 1) :=
-          (@check_succ_eq_succ_check k.down 𝔹 _).symm
-        -- succ y ∈ omega from y =ᴮ of_nat k.down and of_nat (k.down+1) ∈ omega
-        have h_mem : (y =ᴮ bSet.of_nat k.down) ⊓ (Γ ⊓ y ∈ᴮ (bSet.omega : bSet 𝔹)) ≤
-            bSet.of_nat (k.down + 1) ∈ᴮ (bSet.omega : bSet 𝔹) :=
-          le_top.trans of_nat_mem_omega
-        -- succ y ∈ omega via: succ y =ᴮ succ (of_nat k) (from y =ᴮ of_nat k via B_ext_succ)
-        --                    and succ (of_nat k) = of_nat (k+1) ∈ omega
-        rw [← h_succ_eq] at h_mem
-        -- h_mem : ... ≤ succ (of_nat k) ∈ omega
-        -- succ y ∈ omega from y =ᴮ of_nat k
-        apply bv_rw' (H := h_yk) (ϕ := fun z => succ z ∈ᴮ (bSet.omega : bSet 𝔹))
-        · -- B_ext (fun z => succ z ∈ omega)
-          exact B_ext_term (ϕ := fun v => v ∈ᴮ (bSet.omega : bSet 𝔹)) (t := succ)
-            B_ext_mem_left B_congr_succ
-        · exact h_mem
-
--- src/bvm_extras.lean:2694
-lemma omega_nonempty {Γ : 𝔹} : Γ ≤ not_empty bSet.omega := by
-  unfold not_empty
-  rw [nonempty_iff_exists_mem]
-  exact le_iSup_of_le (of_nat 0) of_nat_mem_omega
-
--- src/bvm_extras.lean:2701
-lemma omega_is_omega : omega_spec (bSet.omega : bSet 𝔹) := by
-  constructor
-  · intro Γ; exact ⟨omega_nonempty, omega_closed_under_succ⟩
-  · intro x Γ H₁ H₂
-    -- Need: Γ ≤ omega ⊆ x
-    -- omega = bSet.mk (ULift ℕ) (fun k => of_nat k.down) (fun _ => ⊤)
-    -- omega ⊆ x = ⨅ k : ULift ℕ, ⊤ ⟹ of_nat k.down ∈ x = ⨅ k, of_nat k.down ∈ x
-    rw [subset_unfold]
-    apply le_iInf; intro k
-    -- Need: Γ ≤ omega.bval k ⟹ omega.func k ∈ x = ⊤ ⟹ of_nat k.down ∈ x
-    simp only [omega_func, check_bval_top, top_imp]
-    -- Need: Γ ≤ of_nat k.down ∈ x, prove by induction on k.down
-    suffices h : ∀ n : ℕ, Γ ≤ of_nat n ∈ᴮ x from h k.down
-    intro n
-    induction n with
-    | zero =>
-        -- of_nat 0 = 0 ∈ x: use H₁ : Γ ≤ ∅ ∈ x and 0 =ᴮ ∅
-        exact bv_rw' (H := @zero_eq_empty 𝔹 _ Γ) (H_new := H₁) (h_congr := B_ext_mem_left)
-    | succ n ih =>
-        -- of_nat (n+1) = succ (of_nat n) ∈ x from H₂ applied to ih
-        rw [@check_succ_eq_succ_check n 𝔹 _]
-        -- Goal: Γ ≤ succ (of_nat n) ∈ x
-        -- From H₂ = closed_under_successor Γ x = Γ ≤ ⨅ y, y ∈ x ⟹ succ y ∈ x
-        -- Specialize at of_nat n: Γ ≤ (of_nat n ∈ x ⟹ succ (of_nat n) ∈ x)
-        exact le_trans (le_inf (le_trans H₂ (iInf_le _ (of_nat n))) ih) bv_imp_elim
-
 -- src/bvm_extras.lean:2714
 lemma Ord_omega {Γ : 𝔹} : Γ ≤ Ord (omega : bSet 𝔹) :=
   le_inf (check_ewo PSet.is_ewo_omega) (check_is_transitive PSet.is_transitive_omega)
@@ -5303,34 +4043,9 @@ lemma Ord_zero {Γ : 𝔹} : Γ ≤ Ord (0 : bSet 𝔹) := Ord_of_nat
 lemma of_nat_subset_omega {n : ℕ} {Γ : 𝔹} : Γ ≤ of_nat n ⊆ᴮ omega :=
   subset_of_mem_transitive (le_trans Ord_omega inf_le_right) of_nat_mem_omega
 
--- src/bvm_extras.lean:2727
-/-- ℵ₁ is defined as: the least ordinal which does not inject into ω -/
-@[reducible] def aleph_one_Ord_spec (x : bSet 𝔹) : 𝔹 :=
-  (injects_into x omega)ᶜ ⊓
-    (Ord x ⊓ (⨅ y, Ord y ⟹ ((injects_into y bSet.omega)ᶜ ⟹ x ⊆ᴮ y)))
-
--- src/bvm_extras.lean:2730
-@[simp] lemma aleph_one_check_exists_mem {𝔹 : Type u} [NontrivialCompleteBooleanAlgebra 𝔹]
-    {Γ : 𝔹} : Γ ≤ exists_mem (check (PSet.card_ex (Cardinal.aleph 1)) : bSet 𝔹) := by
-  apply check_exists_mem
-  have : ∃ z, z ∈ PSet.card_ex (Cardinal.aleph (1 : ℕ)) :=
-    @PSet.card_ex_aleph_exists_mem 1
-  convert this using 2
-  norm_cast
-
 -- src/bvm_extras.lean:2736
 @[simp] lemma B_ext_Ord : B_ext (Ord : bSet 𝔹 → 𝔹) :=
   B_ext_inf B_ext_ewo B_ext_is_transitive
-
--- src/bvm_extras.lean:2741
-/-- The universal property of ℵ₁: it injects into any ordinal larger than ω -/
-@[reducible] def le_of_omega_lt (x : bSet 𝔹) : 𝔹 :=
-  ⨅ z, Ord z ⟹ ((larger_than bSet.omega z)ᶜ ⟹ injects_into x z)
-
--- src/bvm_extras.lean:2743
-@[simp] lemma B_ext_le_of_omega_lt : B_ext (le_of_omega_lt : bSet 𝔹 → 𝔹) := by
-  unfold le_of_omega_lt
-  exact B_ext_iInf (h := fun z => B_ext_imp (h₁ := B_ext_const) (h₂ := B_ext_imp (h₁ := B_ext_const) (h₂ := B_ext_injects_into_left)))
 
 end ordinals
 

@@ -90,12 +90,6 @@ def factorization (e : CompleteLatticeHom B C) : C ≃o Algebra (quotientName e)
 def firstStage (e : CompleteLatticeHom B C) : CompleteLatticeHom B (Algebra (quotientName e)) :=
   (firstStageHom (quotientName e)).comp Erdos1172PositiveBoolean.completionHom
 
-/-- A canonical section value supplies an actual condition for this completion. -/
-instance quotientAlgebraNontrivial (e : CompleteLatticeHom B C) :
-    NontrivialCompleteBooleanAlgebra (Algebra (quotientName e)) := by
-  letI : Nonempty (Condition (quotientName e)) := ⟨iterationSection e (topLabel C)⟩
-  exact { toCompleteBooleanAlgebra := inferInstance, bot_lt_top := bot_lt_top }
-
 /-- The canonical first-stage embedding of the name iteration is the given map
 after identifying the ambient forcing with the completion of the iteration. -/
 theorem factorization_image (e : CompleteLatticeHom B C) (b : B) :

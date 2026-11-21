@@ -40,9 +40,6 @@ coordinate as index type. Its children use the existing ordinal pre-sets. -/
 def segmentPSet {κ : Cardinal.{u}} (i : κ.ord.ToType) : PSet.{u} :=
   PSet.mk (Set.Iio i) (fun j => PSet.ordinalMk j.val.toOrd.val)
 
-@[simp] theorem segmentPSet_type {κ : Cardinal.{u}} (i : κ.ord.ToType) :
-    (segmentPSet i).Type = Set.Iio i := rfl
-
 /-- The new representation has precisely the members of the existing
 canonical ordinal pre-set; only its indexing presentation changes. -/
 theorem segmentPSet_equiv_ordinalMk {κ : Cardinal.{u}} (i : κ.ord.ToType) :

@@ -5,7 +5,8 @@ Licensed under the Apache License, Version 2.0.
 module
 
 public import Mathlib.SetTheory.Cardinal.Cofinality.Club
-public import Erdos1172.ForMathlib.SetTheory.Ordinal.DushnikMiller
+public import Mathlib.SetTheory.Cardinal.Regular
+public import Erdos1172.ForMathlib.SetTheory.Ordinal.PartitionRelationAPI
 
 @[expose] public section
 

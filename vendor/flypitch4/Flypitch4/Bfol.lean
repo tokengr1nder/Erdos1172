@@ -64,15 +64,6 @@ lemma eq_dsymm : ∀ {n} (x y : DVec S n),
   | _, DVec.cons x xs, DVec.cons y ys => by
       simp [S.eq_symm x y, eq_dsymm xs ys]
 
-lemma eq_dtrans : ∀ {n} {x : DVec S n} (y : DVec S n) {z : DVec S n},
-    (DVec.map2 S.eq x y).fInf ⊓ (DVec.map2 S.eq y z).fInf ≤ (DVec.map2 S.eq x z).fInf
-  | _, DVec.nil, DVec.nil, DVec.nil => by simp
-  | _, DVec.cons x xs, DVec.cons y ys, DVec.cons z zs => by
-      simp only [DVec.map2, DVec.fInf_cons]
-      apply le_inf
-      · exact le_trans (inf_le_inf inf_le_left inf_le_left) (S.eq_trans y)
-      · exact le_trans (inf_le_inf inf_le_right inf_le_right) (eq_dtrans ys)
-
 lemma subst_realize_congr1 (v v' : ℕ → S) (x : S) (m : ℕ) :
     (⨅ k : ℕ, S.eq (v k) (v' k)) ≤
     ⨅ k : ℕ, S.eq (subst_realize v x m k) (subst_realize v' x m k) := by
@@ -171,15 +162,6 @@ lemma boolean_realize_term_congr_iInf (v v' : ℕ → S) {l} (t : @preterm L l) 
   have h := boolean_realize_term_congr_gen v v' t xs xs
   simp only [eq_drefl, inf_top_eq] at h
   exact h
-
-lemma boolean_realize_term_subst_congr (v : ℕ → S) {m} (s s' : term L)
-    {l} (t : @preterm L l) (xs : DVec S l) :
-    S.eq (boolean_realize_term v (lift_term s m) DVec.nil)
-         (boolean_realize_term v (lift_term s' m) DVec.nil) ≤
-    S.eq (boolean_realize_term v (subst_term t s m) xs)
-         (boolean_realize_term v (subst_term t s' m) xs) := by
-  rw [← boolean_realize_term_subst, ← boolean_realize_term_subst]
-  exact le_trans (subst_realize_congr2 v _ _ m) (boolean_realize_term_congr_iInf _ _ t xs)
 
 /-! ## boolean_realize_formula -/
 
@@ -402,16 +384,6 @@ notation:51 T " ⊨ᵤ[" β "] " f => Fol.bstatisfied β T f
 def bstatisfied_of_mem {T : Set (formula L)} {f : formula L} (hf : f ∈ T) : T ⊨ᵤ[β] f :=
   fun S v => le_trans (iInf_le _ f) (iInf_le _ hf)
 
-def bstatisfied_weakening {T T' : Set (formula L)} (H : T ⊆ T') {f : formula L}
-    (HT : T ⊨ᵤ[β] f) : T' ⊨ᵤ[β] f := by
-  intro S v
-  refine le_trans ?_ (HT S v)
-  apply iInf_mono
-  intro f'
-  apply le_iInf
-  intro hf'
-  exact iInf_le _ (H hf')
-
 /-! ## boolean_formula_soundness -/
 
 /-- Soundness for boolean-valued semantics: if Γ ⊢ A, then Γ ⊨ᵤ[β] A. -/
@@ -471,9 +443,6 @@ lemma boolean_formula_soundness {Γ : Set (formula L)} {A : formula L}
       boolean_realize_bounded_term v t₁
         (DVec.cons (boolean_realize_bounded_term v t₂ DVec.nil) xs)
 
-@[reducible] def boolean_realize_closed_term (S : bStructure L β) (t : closed_term L) : S :=
-  boolean_realize_bounded_term DVec.nil t DVec.nil
-
 lemma boolean_realize_bounded_term_eq {n} {v₁ : DVec S n} {v₂ : ℕ → S}
     (hv : ∀ k (hk : k < n), v₂ k = v₁.nth k hk) :
     ∀ {l} (t : bounded_preterm L n l) (xs : DVec S l),
@@ -516,67 +485,6 @@ lemma boolean_realize_bounded_term_irrel' {n n'} {v₁ : DVec S n} {v₂ : DVec 
       simp only [bounded_preterm.fst, preterm.app.injEq] at ht
       simp only [boolean_realize_bounded_term]
       rw [ihs h t₂' ht.2 DVec.nil, iht h t₁' ht.1]
-
-lemma boolean_realize_bounded_term_irrel {n} {v₁ : DVec S n}
-    (t : bounded_term L n) (t' : closed_term L) (ht : t.fst = t'.fst) (xs : DVec S 0) :
-    boolean_realize_bounded_term v₁ t xs = boolean_realize_closed_term S t' := by
-  cases xs
-  exact boolean_realize_bounded_term_irrel'
-    (fun m _ hm' => absurd hm' (Nat.not_lt_zero m)) t t' ht DVec.nil
-
-@[simp] lemma boolean_realize_bounded_term_cast_eq_irrel {n m l} {h : n = m}
-    {v : DVec S m} {t : bounded_preterm L n l} (xs : DVec S l) :
-    boolean_realize_bounded_term v (t.cast_eq h) xs =
-    boolean_realize_bounded_term (v.cast h.symm) t xs := by
-  subst h
-  simp only [bounded_preterm.cast_eq, bounded_preterm.cast_rfl, DVec.cast]
-
-@[simp] lemma boolean_realize_bounded_term_dvector_cast_irrel {n m l} {h : n = m}
-    {v : DVec S n} {t : bounded_preterm L n l} {xs : DVec S l} :
-    boolean_realize_bounded_term (v.cast h) (t.cast (Nat.le_of_eq h)) xs =
-    boolean_realize_bounded_term v t xs := by
-  subst h
-  simp only [DVec.cast, bounded_preterm.cast_rfl]
-
-@[simp] lemma boolean_realize_bounded_term_bd_app {n l}
-    (t : bounded_preterm L n (l + 1)) (s : bounded_term L n) (xs : DVec S n)
-    (xs' : DVec S l) :
-    boolean_realize_bounded_term xs (bd_app t s) xs' =
-    boolean_realize_bounded_term xs t
-      (DVec.cons (boolean_realize_bounded_term xs s DVec.nil) xs') := rfl
-
-@[simp] lemma boolean_realize_closed_term_bd_apps {l} (t : closed_preterm L l)
-    (ts : DVec (closed_term L) l) :
-    boolean_realize_closed_term S (bd_apps t ts) =
-    boolean_realize_bounded_term (DVec.nil : DVec S 0) t
-      (ts.map (fun t' => boolean_realize_bounded_term (DVec.nil : DVec S 0) t' DVec.nil)) := by
-  induction ts with
-  | nil => rfl
-  | cons x xs ih => exact ih (bd_app t x)
-
-lemma boolean_realize_bounded_term_bd_apps {n l} (xs : DVec S n)
-    (t : bounded_preterm L n l) (ts : DVec (bounded_term L n) l) :
-    boolean_realize_bounded_term xs (bd_apps t ts) DVec.nil =
-    boolean_realize_bounded_term xs t
-      (ts.map (fun t => boolean_realize_bounded_term xs t DVec.nil)) := by
-  induction ts with
-  | nil => rfl
-  | cons x xs' ih => exact ih (bd_app t x)
-
-@[simp] lemma boolean_realize_cast_bounded_term {n m} {h : n ≤ m} {t : bounded_term L n}
-    {v : DVec S m} :
-    boolean_realize_bounded_term v (t.cast h) DVec.nil =
-    boolean_realize_bounded_term (v.trunc n h) t DVec.nil := by
-  apply boolean_realize_bounded_term_irrel'
-  · intro k hk hk'
-    simp [DVec.trunc_nth]
-  · exact bounded_preterm.cast_fst _ t
-
-/-- When realizing a closed term, the realizing dvector is irrelevant. -/
-@[simp] lemma boolean_realize_closed_term_v_irrel {n} {v : DVec S n} {t : bounded_term L 0} :
-    boolean_realize_bounded_term v (t.cast (Nat.zero_le n)) DVec.nil =
-    boolean_realize_closed_term S t := by
-  simp [boolean_realize_cast_bounded_term]
 
 lemma boolean_realize_bounded_term_subst_lift' {n} (v : DVec S n) (x : S) :
     ∀ {l} (t : bounded_preterm L n l) (xs : DVec S l),
@@ -746,37 +654,9 @@ lemma boolean_realize_bounded_formula_irrel' {n n'} {v₁ : DVec S n} {v₂ : DV
       · exact hf
     | _ => simp [bounded_preformula.fst] at hf
 
-lemma boolean_realize_bounded_formula_irrel {n} {v₁ : DVec S n}
-    (f : bounded_formula L n) (f' : sentence L) (hf : f.fst = f'.fst) (xs : DVec S 0) :
-    boolean_realize_bounded_formula v₁ f xs = boolean_realize_sentence S f' := by
-  cases xs
-  exact boolean_realize_bounded_formula_irrel'
-    (fun m hm hm' => absurd hm' (Nat.not_lt_zero m)) f f' hf DVec.nil
-
 /-! ## boolean_realize_bounded_formula_cast_eq_irrel — src/bfol.lean:536-538 -/
 
-@[simp] lemma boolean_realize_bounded_formula_cast_eq_irrel {n m l} {h : n = m}
-    {v : DVec S m} {f : bounded_preformula L n l} {xs : DVec S l} :
-    boolean_realize_bounded_formula v (f.cast_eq h) xs =
-    boolean_realize_bounded_formula (v.cast h.symm) f xs := by
-  subst h
-  simp [bounded_preformula.cast_eq, DVec.cast]
-
 /-! ## basic simp lemmas for boolean_realize_sentence — src/bfol.lean:543-559 -/
-
-@[simp] lemma boolean_realize_sentence_false :
-    ⟦(bd_falsum : sentence L)⟧[S] = (⊥ : β) := rfl
-
-@[simp] lemma boolean_realize_sentence_imp {f₁ f₂ : sentence L} :
-    ⟦bd_imp f₁ f₂⟧[S] = imp ⟦f₁⟧[S] ⟦f₂⟧[S] := rfl
-
-@[simp] lemma boolean_realize_sentence_not {f : sentence L} :
-    ⟦bd_not f⟧[S] = (⟦f⟧[S])ᶜ := by
-  simp [boolean_realize_sentence, bd_not, imp]
-
-lemma boolean_realize_sentence_dne {f : sentence L} :
-    ⟦bd_not (bd_not f)⟧[S] = ⟦f⟧[S] := by
-  simp [boolean_realize_sentence, bd_not, imp]
 
 @[simp] lemma boolean_realize_sentence_all {f : bounded_formula L 1} :
     ⟦bd_all f⟧[S] = ⨅ x : S, boolean_realize_bounded_formula (DVec.cons x DVec.nil) f DVec.nil :=
@@ -808,11 +688,6 @@ lemma boolean_realize_sentence_dne {f : sentence L} :
     ⨆ x : S, boolean_realize_bounded_formula (DVec.cons x v) f DVec.nil := by
   simp [bd_ex, bd_not, bd_all, imp, compl_iInf]
 
-lemma boolean_realize_bounded_sentence_ex {f : bounded_formula L 1} :
-    boolean_realize_bounded_formula (DVec.nil : DVec S 0) (bd_ex f) DVec.nil =
-    ⨆ x : S, boolean_realize_bounded_formula (DVec.cons x DVec.nil) f DVec.nil :=
-  boolean_realize_bounded_formula_ex
-
 @[simp] lemma boolean_realize_bounded_formula_biimp {n} {v : DVec S n}
     {f g : bounded_formula L n} :
     boolean_realize_bounded_formula v (bd_biimp f g) DVec.nil =
@@ -822,15 +697,6 @@ lemma boolean_realize_bounded_sentence_ex {f : bounded_formula L 1} :
              bihimp, himp_eq, sup_comm, inf_comm, imp]
 
 /-! ## boolean_realize_bounded_formula_bd_apps_rel — src/bfol.lean:596-602 -/
-
-lemma boolean_realize_bounded_formula_bd_apps_rel
-    {n l} (xs : DVec S n) (f : bounded_preformula L n l) (ts : DVec (bounded_term L n) l) :
-    boolean_realize_bounded_formula xs (bd_apps_rel f ts) DVec.nil =
-    boolean_realize_bounded_formula xs f
-      (ts.map (fun t => boolean_realize_bounded_term xs t DVec.nil)) := by
-  induction ts with
-  | nil => rfl
-  | cons t ts ih => exact ih (bd_apprel f t)
 
 /-! ## boolean_realize_cast_bounded_formula — src/bfol.lean:604-619 -/
 
@@ -845,39 +711,12 @@ lemma boolean_realize_bounded_formula_bd_apps_rel
     · intro k hk _; simp [DVec.trunc_nth]
     · simp [bounded_preformula.cast]
 
-@[simp] lemma boolean_realize_cast1_bounded_formula {n} {f : bounded_formula L n}
-    {v : DVec S (n + 1)} :
-    boolean_realize_bounded_formula v f.cast1 DVec.nil =
-    boolean_realize_bounded_formula (v.trunc n (Nat.le_add_right n 1)) f DVec.nil :=
-  boolean_realize_cast_bounded_formula
-
 /-! ## boolean_realize_sentence_bd_apps_rel — src/bfol.lean:621-634 -/
-
-lemma boolean_realize_sentence_bd_apps_rel'
-    {l} (f : presentence L l) (ts : DVec (closed_term L) l) :
-    ⟦bd_apps_rel f ts⟧[S] =
-    boolean_realize_bounded_formula DVec.nil f
-      (ts.map (boolean_realize_closed_term S)) :=
-  boolean_realize_bounded_formula_bd_apps_rel DVec.nil f ts
-
-lemma boolean_realize_bd_apps_rel
-    {l} (R : L.relations l) (ts : DVec (closed_term L) l) :
-    ⟦bd_apps_rel (bd_rel R) ts⟧[S] = S.rel_map R (ts.map (boolean_realize_closed_term S)) :=
-  boolean_realize_bounded_formula_bd_apps_rel DVec.nil (bd_rel R) ts
-
-lemma boolean_realize_sentence_equal (t₁ t₂ : closed_term L) :
-    ⟦bd_equal t₁ t₂⟧[S] = S.eq (boolean_realize_closed_term S t₁)
-      (boolean_realize_closed_term S t₂) := rfl
 
 lemma boolean_realize_sentence_eq (v : ℕ → S) (f : sentence L) :
     boolean_realize_formula v f.fst DVec.nil = ⟦f⟧[S] :=
   boolean_realize_bounded_formula_eq
     (fun k hk => absurd hk (Nat.not_lt_zero k)) f DVec.nil
-
-lemma bstatisfied_in_eq_boolean_realize_sentence [HS : Nonempty S] (f : sentence L) :
-    ⟦f.fst⟧[S]ᵤ = ⟦f⟧[S] := by
-  haveI : Nonempty (ℕ → S) := HS.map (fun x _ => x)
-  simp [boolean_realize_formula_glb, boolean_realize_sentence_eq]
 
 /-! ## forced_in, all_forced_in — src/bfol.lean:647-658 -/
 
@@ -891,10 +730,6 @@ def all_forced_in (x : β) (S : bStructure L β) (T : SentTheory L) : Prop :=
 
 scoped notation:52 x " ⊩ₜ[" S "] " T => Fol.all_forced_in x S T
 
-@[simp] lemma forced_in_not {f : sentence L} {b : β} :
-    (b ⊩[S] (bd_not (bd_not f) : sentence L)) ↔ (b ⊩[S] f) := by
-  simp [forced_in, boolean_realize_sentence, bd_not, imp]
-
 /-! ## forced — src/bfol.lean:674-677 -/
 
 variable (β) in
@@ -904,20 +739,6 @@ def forced (T : SentTheory L) (f : sentence L) : Prop :=
 scoped notation:51 T " ⊨[" β "] " f => Fol.forced β T f
 
 /-! ## bsatisfied_of_forced, forced_of_bsatisfied — src/bfol.lean:680-698 -/
-
-def bsatisfied_of_forced {T : SentTheory L} {f : sentence L} (H : T ⊨[β] f) :
-    T.fst ⊨ᵤ[β] f.fst := by
-  intro S v
-  rw [boolean_realize_sentence_eq]
-  refine le_trans ?_ (H ⟨v 0⟩)
-  rw [le_iInf_iff]
-  intro f'
-  rw [le_iInf_iff]
-  intro hf'
-  refine le_trans (iInf_le _ f'.fst) ?_
-  refine le_trans (iInf_le _ (Set.mem_image_of_mem _ hf')) ?_
-  apply le_of_eq
-  rw [boolean_realize_sentence_eq]
 
 def forced_of_bsatisfied {T : SentTheory L} {f : sentence L}
     (H : T.fst ⊨ᵤ[β] f.fst) : T ⊨[β] f := by
@@ -934,26 +755,7 @@ def forced_of_bsatisfied {T : SentTheory L} {f : sentence L}
   rw [boolean_realize_sentence_eq]
   exact le_trans (iInf_le _ f'') (iInf_le _ hf'')
 
-@[simp] lemma inf_axioms_top_of_models {S : bStructure L β} {T : SentTheory L}
-    (H : ⊤ ⊩ₜ[S] T) : (⨅ f ∈ T, ⟦f⟧[S]) = ⊤ := by
-  apply top_unique
-  exact le_trans H (le_refl _)
-
-lemma forced_absurd {S : bStructure L β} {f : sentence L} {Γ : β}
-    (H₁ : Γ ⊩[S] f) (H₂ : Γ ⊩[S] (bd_not f : sentence L)) : Γ ⊩[S] (bd_falsum : sentence L) := by
-  show Γ ≤ ⊥
-  have hH₂ : Γ ≤ (⟦f⟧[S])ᶜ := by
-    calc Γ ≤ ⟦(bd_not f : sentence L)⟧[S] := H₂
-      _ = (⟦f⟧[S])ᶜ := boolean_realize_sentence_not
-  have : Γ ≤ ⟦f⟧[S] ⊓ (⟦f⟧[S])ᶜ := le_inf H₁ hH₂
-  rw [inf_compl_eq_bot] at this
-  exact this
-
 /-! ## bModel — src/bfol.lean:720-721 -/
-
-variable (β) in
-def bModel (T : SentTheory L) : Type _ :=
-  Σ' (S : bStructure L β), ⊤ ⊩ₜ[S] T
 
 /-! ## boolean_soundness, unprovable_of_model_neg — src/bfol.lean:730-739 -/
 
@@ -961,48 +763,7 @@ theorem boolean_soundness {T : SentTheory L} {A : sentence L} (H : T ⊢ₛ' A) 
     T ⊨[β] A :=
   forced_of_bsatisfied (boolean_formula_soundness (β := β) (Classical.choice H))
 
-lemma unprovable_of_model_neg {T : SentTheory L} {f : sentence L}
-    (S : bStructure L β) (H_model : ⊤ ⊩ₜ[S] T) [H_nonempty : Nonempty S]
-    {Γ : β} (H_nonzero : (⊥ : β) < Γ) (H : Γ ⊩[S] (bd_not f : sentence L)) :
-    ¬(T ⊢ₛ' f) := by
-  intro Hp
-  have hforced := boolean_soundness (β := β) Hp H_nonempty
-  rw [inf_axioms_top_of_models H_model] at hforced
-  have hfabs : Γ ⊩[S] (bd_falsum : sentence L) :=
-    forced_absurd (le_trans le_top hforced) H
-  -- hfabs : Γ ⊩[S] bd_falsum = Γ ≤ ⊥
-  exact absurd (lt_of_lt_of_le H_nonzero hfabs) (lt_irrefl ⊥)
-
 /-! ## boolean_realize_subst_preterm — src/bfol.lean:741-761 -/
-
-lemma boolean_realize_subst_preterm {n l} (t : bounded_preterm L (n + 1) l)
-    (xs : DVec S l) (s : closed_term L) (v : DVec S n) :
-    boolean_realize_bounded_term v (substmax_bounded_term t s) xs =
-    boolean_realize_bounded_term (v.concat (boolean_realize_closed_term S s)) t xs := by
-  induction t with
-  | bd_var k =>
-    by_cases h : k.1 < n
-    · rw [substmax_var_lt k s h]
-      simp only [boolean_realize_bounded_term, DVec.nth]
-      rw [DVec.concat_nth v _ k.1 k.2 h]
-    · have h' : k.1 = n := Nat.le_antisymm (Nat.lt_succ_iff.mp k.2) (Nat.le_of_not_lt h)
-      rw [substmax_var_eq k s h']
-      simp only [boolean_realize_bounded_term]
-      rw [boolean_realize_bounded_term_irrel (s.cast0 n) s
-        (closed_preterm.cast0_fst (n := n) s) xs]
-      simp [DVec.concat_nth_last, h']
-  | bd_func f => rfl
-  | bd_app t₁ t₂ ih₁ ih₂ =>
-      change boolean_realize_bounded_term v (substmax_bounded_term t₁ s)
-        (DVec.cons (boolean_realize_bounded_term v (substmax_bounded_term t₂ s) DVec.nil) xs) = _
-      rw [ih₂ DVec.nil]
-      exact ih₁ _
-
-lemma boolean_realize_subst_term {n} (v : DVec S n) (s : closed_term L)
-    (t : bounded_term L (n + 1)) :
-    boolean_realize_bounded_term v (substmax_bounded_term t s) DVec.nil =
-    boolean_realize_bounded_term (v.concat (boolean_realize_closed_term S s)) t DVec.nil :=
-  boolean_realize_subst_preterm t DVec.nil s v
 
 /-! ## boolean_realize_sentence_bd_alls — src/bfol.lean:763-778 -/
 
@@ -1035,37 +796,9 @@ lemma boolean_realize_sentence_bd_alls {n} {f : bounded_formula L n} :
 
 /-! ## consis_of_exists_bmodel — src/bfol.lean:785-793 -/
 
-/-- If there is a nontrivial boolean model satisfying all sentences in T,
-    then T is consistent. -/
-lemma consis_of_exists_bmodel [Nontrivial β] {T : SentTheory L}
-    {S : bStructure L β} [H_nonempty : Nonempty S] (H : ⊤ ⊩ₜ[S] T) :
-    T.is_consistent := by
-  -- T.is_consistent = ¬(T.fst ⊢' ⊥')
-  intro H_inconsis
-  -- H_inconsis : T.fst ⊢' ⊥' = T ⊢ₛ' (bd_falsum : sentence L)
-  -- boolean_soundness gives T ⊨[β] bd_falsum
-  have hforced := boolean_soundness (β := β) (show T ⊢ₛ' (bd_falsum : sentence L) from H_inconsis) H_nonempty
-  -- Since ⊤ ⊩ₜ[S] T, the inf of all T-values at S equals ⊤
-  rw [inf_axioms_top_of_models H] at hforced
-  -- hforced : ⊤ ⊩[S] bd_falsum, i.e. ⊤ ≤ ⟦bd_falsum⟧[S] = ⊥
-  simp [forced_in] at hforced
-
 /-! ## subst0_bounded_formula_not — src/bfol.lean:799-801 -/
 
-@[simp] lemma subst0_bounded_formula_not {n} (f : bounded_formula L (n + 1))
-    (s : bounded_term L n) :
-    subst0_bounded_formula (bd_not f) s = bd_not (subst0_bounded_formula f s) := by
-  apply bounded_preformula.eq
-  simp [bd_not, subst0_bounded_formula_fst]
-
 /-! ## subst0_bounded_formula_and — src/bfol.lean:803-805 -/
-
-@[simp] lemma subst0_bounded_formula_and {n} (f g : bounded_formula L (n + 1))
-    (s : bounded_term L n) :
-    subst0_bounded_formula (bd_and f g) s =
-    bd_and (subst0_bounded_formula f s) (subst0_bounded_formula g s) := by
-  apply bounded_preformula.eq
-  simp [bd_and, bd_not, subst0_bounded_formula_fst]
 
 /-! ## boolean_realize_bounded_formula_insert_lift — src/bfol.lean:854-872 -/
 

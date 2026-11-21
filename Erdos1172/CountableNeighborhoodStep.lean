@@ -32,13 +32,6 @@ abbrev W3 : Type := Erdos1172NeighborhoodCode.W3
 abbrev OmegaAtom : Type := (ℕ ⊕ Unit) × W3
 abbrev OmegaCode : Type := SmallUnionCode.Code W1 OmegaAtom
 
-theorem mk_OmegaAtom_le : #OmegaAtom ≤ ℵ_ 3 := by
-  simp only [OmegaAtom, Cardinal.mk_prod, Cardinal.lift_id, Cardinal.mk_sum,
-    Cardinal.mk_nat, Cardinal.mk_eq_one, W3, Cardinal.mk_toType, Ordinal.card_omega]
-  have h1 : (ℵ₀ + 1 : Cardinal.{0}) ≤ ℵ_ 3 :=
-    (Cardinal.add_eq_left le_rfl Cardinal.one_le_aleph0).trans_le (Cardinal.aleph0_le_aleph 3)
-  exact (mul_le_mul' h1 le_rfl).trans_eq (Cardinal.mul_eq_self (Cardinal.aleph0_le_aleph 3))
-
 theorem mk_OmegaCode_le (hGCH : GCH) : #OmegaCode ≤ ℵ_ 3 := mk_taggedCode_le hGCH
 
 noncomputable def rank (hGCH : GCH) : OmegaCode ↪ W3 :=

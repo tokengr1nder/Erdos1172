@@ -78,8 +78,6 @@ def root : (n : ℕ) → Prefix n
   | 0 => ()
   | _ + 1 => Sum.inl ()
 
-instance prefixNonempty (n : ℕ) : Nonempty (Prefix n) := ⟨root n⟩
-
 theorem mk_prefix_le (n : ℕ) : #(Prefix n) ≤ ℵ_ 1 := by
   induction n with
   | zero => simpa only [Prefix, Cardinal.mk_unit] using

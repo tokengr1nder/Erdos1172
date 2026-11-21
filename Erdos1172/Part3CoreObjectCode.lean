@@ -68,9 +68,6 @@ def atoms (G H : SimpleGraph W2) : Atom → Set W2
 
 def eval (G H : SimpleGraph W2) : Code → Set W2 := SmallUnionCode.eval (atoms G H)
 
-@[simp] theorem eval_objectName (G H : SimpleGraph W2) (s : Obj) :
-    eval G H (objectName s) = afterRed G s := rfl
-
 theorem mk_Code_le (hGCH : GCH) : #Code ≤ ℵ_ 2 := by
   apply SmallUnionCode.mk_code_le (μ := ℵ₀) Cardinal.one_le_aleph0
     (Cardinal.aleph0_le_aleph 2) Cardinal.mk_nat.le

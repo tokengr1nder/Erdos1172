@@ -22,6 +22,5 @@ namespace Erdos1172Shioya.LevyProduct
 variable {θ : Cardinal.{u}}
 
 abbrev Index (θ : Cardinal.{u}) := θ.ord.ToType
-abbrev Alphabet (i : Index θ) := ULift.{u} Bool ⊕ i.toOrd.val.ToType
 
 end Erdos1172Shioya.LevyProduct

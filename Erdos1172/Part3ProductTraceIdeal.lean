@@ -31,7 +31,6 @@ open Erdos1172Part3RegularNeighborhoodCode (Code GoodCut eval)
 open Erdos1172Part3ControlledCoreProducts (ProductData)
 open Erdos1172Part3NiceCliqueNames (NiceCliqueName)
 open Erdos1172Part3StationarySquareDecisions (Square)
-open Erdos1172Part3FullSourceCubes (Cube)
 
 structure CoreTrace (P I : Type) [Preorder P] [LinearOrder I] (G : SimpleGraph W2) where
   trace : CliqueDecisions P I W2 G → RegularName P (RegularName P W2)
@@ -170,10 +169,6 @@ noncomputable def lineTrace : CoreTrace P W1 G where
     exact Erdos1172Part3NamedTraceIdeal.traceName_of_bound core p U bound
       (fun q hqp i _ x hx => h q hqp i x hx)
   not_small_of_cover := Erdos1172Part3NamedTraceSubsequence.named_cover_not_small
-
-noncomputable def squareTrace : CoreTrace P Square G := (lineTrace (P := P) (G := G)).product
-
-noncomputable def cubeTrace : CoreTrace P Cube G := (squareTrace (P := P) (G := G)).product
 
 variable {H : SimpleGraph W2} {r : Code P I G ↪ W2}
 variable {σ : NiceCliqueName P I W2 G ↪ W2} {source : RegularName P W2} {a : W2}
